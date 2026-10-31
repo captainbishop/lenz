@@ -1,0 +1,7 @@
+PASS: ./ at 375 by 812; content width 360px; 1 images loaded.
+
+PASS: ./ at 1024 by 768; content width 1009px; 1 images loaded.
+
+PASS: ./brand/index.html at 375 by 812; content width 360px; 6 images loaded.
+
+PASS: ./brand/index.html at 1024 by 768; content width 1009px; 6 images loaded.

@@ -1,0 +1,12 @@
+[
+  {
+    "mutant": "conflict",
+    "detected": true,
+    "reason": "Both conflicting signatures escaped; expected one."
+  },
+  {
+    "mutant": "persistence",
+    "detected": true,
+    "reason": "Both conflicting signatures escaped; expected one."
+  }
+]

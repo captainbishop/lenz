@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-26T03:33:02.159Z",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    "new wallet starts at zero with no synthetic asset grant",
+    "funding waits for a matching final receipt from NEAR testnet",
+    "new wallet survives offline reload and does not need a conversation",
+    "encrypted A → B → C handover runs with all three browsers offline",
+    "duplicate and altered payment files cannot add tUSD",
+    "lost settlement response can be retried against real NEAR without duplicating value",
+    "failed storage commit releases no payment and preserves the balance",
+    "testnet notes stay encrypted at rest and identity survives switching views",
+    "tUSD view fits desktop and mobile; the explanation expands by keyboard"
+  ],
+  "transactions": [
+    {
+      "action": "fund",
+      "url": "https://testnet.nearblocks.io/txns/DykRgZFqpMDecZw8K6ULDoVipjKKfQ7v44bSDfUuHQSH"
+    },
+    {
+      "action": "settle-response-lost",
+      "txHash": "AVrA51LvwVVFhn2LrLzKCDhwwc17getYt3RK6Smqteqn",
+      "gasBurnt": "6948974005607"
+    },
+    {
+      "action": "settle-retry",
+      "url": "https://testnet.nearblocks.io/txns/9vyT3cE5AZxE989Yr8aGkjRfbXbGy1LSf9aGeBVdAnNn"
+    }
+  ],
+  "scope": "Disposable Edge contexts; real NEAR testnet funding and settlement, actual offline A → B → C file handover, dropped-response retry. Windows Edge only; no physical phone testing."
+}

@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-10-26T02:21:24.088Z",
+  "endpoint": "https://rpc.testnet.near.org",
+  "network": "testnet",
+  "contract": "ref-finance-101.testnet",
+  "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+  "blockHash": "9ejN3vYo5Jog3AF7i7oTGyNcaiPGuhayrGJpNYg6ZWJc",
+  "blockHeight": 274787654,
+  "query": {
+    "method": "get_pools",
+    "from_index": 0,
+    "limit": 10
+  },
+  "pools": [
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "wrap.testnet",
+        "rft.tokenfactory.testnet"
+      ],
+      "amounts": [
+        "5695096617120867680325899039",
+        "3710829983714"
+      ],
+      "total_fee": 40,
+      "shares_total_supply": "1554829187361429992463146100",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "nusdt.ft-fin.testnet",
+        "nusdc.ft-fin.testnet"
+      ],
+      "amounts": [
+        "237316",
+        "44411"
+      ],
+      "total_fee": 20,
+      "shares_total_supply": "1004950539933059297994661",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "wrap.testnet",
+        "rft.tokenfactory.testnet"
+      ],
+      "amounts": [
+        "805554448087896429993542098",
+        "547314405948"
+      ],
+      "total_fee": 20,
+      "shares_total_supply": "935481959212613114325501328",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "nusdt.ft-fin.testnet",
+        "rft.tokenfactory.testnet"
+      ],
+      "amounts": [
+        "2250008",
+        "9025454475289"
+      ],
+      "total_fee": 30,
+      "shares_total_supply": "1006082382851037149113965",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "nusdt.ft-fin.testnet",
+        "rft.tokenfactory.testnet"
+      ],
+      "amounts": [
+        "0",
+        "0"
+      ],
+      "total_fee": 30,
+      "shares_total_supply": "0",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "banana.ft-fin.testnet",
+        "nusdt.ft-fin.testnet"
+      ],
+      "amounts": [
+        "27324061349",
+        "1826"
+      ],
+      "total_fee": 10,
+      "shares_total_supply": "7012552329147937240612105",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "wrap.testnet",
+        "nusdc.ft-fin.testnet"
+      ],
+      "amounts": [
+        "104356272669360398263955402",
+        "3128"
+      ],
+      "total_fee": 20,
+      "shares_total_supply": "2768956240889205704298434",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "banana.ft-fin.testnet",
+        "nusdc.ft-fin.testnet"
+      ],
+      "amounts": [
+        "2478694",
+        "1"
+      ],
+      "total_fee": 30,
+      "shares_total_supply": "371086484404502681026",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "rft.tokenfactory.testnet",
+        "wrap.testnet"
+      ],
+      "amounts": [
+        "9077430456",
+        "13780356513507131835149548"
+      ],
+      "total_fee": 20,
+      "shares_total_supply": "496705820051013140028734",
+      "amp": 0
+    },
+    {
+      "pool_kind": "SIMPLE_POOL",
+      "token_account_ids": [
+        "wrap.testnet",
+        "rft.tokenfactory.testnet"
+      ],
+      "amounts": [
+        "6041450548359422062239",
+        "3426417"
+      ],
+      "total_fee": 20,
+      "shares_total_supply": "1003408166790851560049594",
+      "amp": 0
+    }
+  ],
+  "scope": "Contract discovery only. No Lenz swap, tUSD pool, funding or verified source-to-bytecode match.",
+  "sources": [
+    "https://guide.rhea.finance/developers/contracts",
+    "https://guide.rhea.finance/developers-1/cli-trading"
+  ]
+}

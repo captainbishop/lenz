@@ -1,0 +1,17 @@
+/* The same light/dark preference applies to the actual chat, wallet and recordings. */
+:root[data-theme=dark] { color-scheme: dark; --ink:#edf3e9; --muted:#b5c7b8; --line:#496153; --danger:#ffaaaa; }
+:root[data-theme=dark] body { background:#14291f; color:var(--ink); }
+:root[data-theme=dark] :is(.workspace,.panel,.conversation-top,.composer,dialog,.wallet-panel) { background:#20382b; color:var(--ink); border-color:var(--line); }
+:root[data-theme=dark] :is(.conversation,.composer form,.bubble,.bubble.financial,.trade-card) { background:#1b3025; color:var(--ink); border-color:var(--line); }
+:root[data-theme=dark] .bubble.outgoing { background:#354c2d; color:var(--ink); border-color:#5a7145; }
+:root[data-theme=dark] :is(input,textarea,select,.code) { background:#14291f; color:var(--ink); border-color:#76957d; }
+:root[data-theme=dark] :is(.secondary,.bubble button,.empty-conversation h3,.file-label) { color:#e1efa6; }
+:root[data-theme=dark] .secondary:hover { background:#35513c; }
+:root[data-theme=dark] :is(.rhea-queue,.profile-privacy,.near-state,.trade-state,.tag) { background:#2b4432; color:var(--ink); border-color:var(--line); }
+:root[data-theme=dark] :is(.avatar,.conversation-top .avatar) { background:#d7e8a1; color:#173f35; }
+:root[data-theme=dark] .identity img { filter:brightness(0) invert(1); }
+:root[data-theme=dark] :is(a,button,summary,input,textarea,select):focus-visible { outline-color:#d5e993; }
+:root[data-theme=dark] dialog::backdrop { background:#06160dc7; }
+:root[data-theme=dark] .money-page #wallet-onboarding { background:#20382b; color:var(--ink); }
+:root[data-theme=dark] :is(.wallet-people .person button,.wallet-entry>button) { color:#e1efa6; }
+:root[data-theme=dark] .wallet-people .person button:hover { background:#35513c; }

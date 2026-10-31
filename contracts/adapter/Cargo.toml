@@ -1,0 +1,23 @@
+[package]
+name = "lenz-rhea-adapter"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { version = "=5.29.1", features = ["legacy"] }
+hex = "=0.4.3"
+
+[dev-dependencies]
+near-sdk = { version = "=5.29.1", features = ["unit-testing", "legacy"] }
+p256 = { version = "=0.13.2", features = ["ecdsa"] }
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+panic = "abort"
+overflow-checks = true

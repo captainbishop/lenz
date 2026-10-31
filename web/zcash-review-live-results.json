@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-10-31T14:05:03.733Z",
+  "ok": true,
+  "checks": [
+    "opening the page makes no wallet, payment or network request",
+    "explicit preparation shows actual amount, fee and fixed recipient with no signing action",
+    "reload and reconnect do not prepare, sign or send; explicit status restores the same review",
+    "review fits narrow, landscape and enlarged text and creates no Lenz identity",
+    "explicit discard clears only the unsigned review and never sends"
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review",
+      "body": {
+        "wallet": "a",
+        "amount": "0.01"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-discard",
+      "body": {
+        "wallet": "a",
+        "id": "4f8c912f-41d0-4a27-92af-03043cd6957c"
+      }
+    }
+  ],
+  "details": "Transaction ad16c0adf9b4ead523d0c8aaa68366907ea086d9c56e9c63b42682bd8f2f64e0. Recipient utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx. Proposed change 0.8898 test ZEC. Wallet's known block 4563325.",
+  "errors": [],
+  "scope": "Actual pinned native unsigned PCZT preparation and local review in isolated Edge. No proof, signature, broadcast, synchronization or existing browser identity access."
+}

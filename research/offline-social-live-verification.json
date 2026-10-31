@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-31T16:16:02.920Z",
+  "ok": true,
+  "checks": [
+    "Eight captured transactions are FINAL and contain no failed outcome",
+    "The actual fund_test action binds the signed ten-tUSD root to Amina",
+    "All four chain-submitted transfers have valid signatures and matching conserved outputs",
+    "The submitted swap matches both offline signatures, recipient and minimum output",
+    "Contract logs show one mint, exact redemption/deposit, actual exchange and one final payout",
+    "Final notes are 4/2/3 tUSD, reserve liability grows by nine and exact swap output reaches the recipient",
+    "Saved browser evidence records no offline API calls or automatic submission on reconnect"
+  ],
+  "rejectedAlterations": [
+    "Recipient balance differs by one base unit",
+    "Invalid offline swap signature"
+  ],
+  "evidenceSha256": "52d0924b2ea7a8d5327cb61dc6d5a1a7bd111109a55c110c269ad303525235a5",
+  "runnerSha256": "2693180b70e2a73791d8dfc3484f014b43b8e064504ce2ada8450602d57f81a8",
+  "scope": "Offline verification of saved live RPC/browser evidence; no new network call, signature or transaction. RPC trust remains required.",
+  "transactionCoverage": "Eight transaction hashes directly returned by the API. The relay also rechecks ancestry by calling settle before submit, but does not return that helper transaction hash."
+}

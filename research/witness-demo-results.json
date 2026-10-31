@@ -1,0 +1,48 @@
+{
+  "kind": "local-witness-delivery-experiment",
+  "runtime": "v24.21.0",
+  "implemented": [
+    "AES-256-GCM capsule encryption",
+    "SHA-256 sparse Merkle paths",
+    "full-snapshot verification",
+    "bounded mirror failover"
+  ],
+  "assumed": [
+    "ideal payment-proof oracle",
+    "trusted finalized checkpoint",
+    "completed decryption-key handover",
+    "one complete available mirror"
+  ],
+  "outcome": "witness-assembled-without-sender-calls",
+  "failureOutcomes": [
+    "competing ancestor rejected",
+    "no available mirror rejected"
+  ],
+  "mirrorFailures": [
+    {
+      "source": "withholding-copy",
+      "reason": "mirror-timeout"
+    }
+  ],
+  "mirrorRequestFields": [
+    "domain",
+    "epoch",
+    "root"
+  ],
+  "metrics": {
+    "plaintextCapsuleBytes": 1104,
+    "serializedEncryptedEnvelopeBytes": 2423,
+    "snapshotEntryCount": 5,
+    "snapshotJsonBytes": 737,
+    "uncompressedMerklePaths": 16,
+    "rawSiblingHashBytes": 131072,
+    "assembledWitnessJsonBytes": 279143,
+    "assemblyMillisecondsOnThisWindowsHost": 64.33
+  },
+  "limits": [
+    "not a payment or ZK proof",
+    "no Android/iPhone/BLE measurement",
+    "ancestor graph visible to holder",
+    "public snapshot/update metadata"
+  ]
+}

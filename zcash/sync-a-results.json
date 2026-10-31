@@ -1,0 +1,9 @@
+{
+  "action": "sync",
+  "wallet": "a",
+  "network": "test",
+  "checkedAt": "2026-10-26T03:19:40.081Z",
+  "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "ok": true,
+  "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+}

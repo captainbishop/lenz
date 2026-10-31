@@ -1,0 +1,25 @@
+{
+  "provider": "https://faucet.testnet.valargroup.dev",
+  "network": "testnet",
+  "address": "ztestsapling1dcpgkmy67lwhhgfv82umyxld8qfmagf6vnjm9f7alm07es6g6pwgd7vh7vv90s4g2zrc6ulpm8t",
+  "state": "submission_pending",
+  "checkedAt": "2026-10-26T03:41:26.813Z",
+  "httpStatus": 200,
+  "response": {
+    "id": "86682e655ef0c9f4142df4a15d3cf7fd",
+    "status": "queued",
+    "amount": "0.125",
+    "broadcastOk": 0,
+    "broadcastNodes": 3,
+    "createdAt": 1792985994
+  },
+  "status": {
+    "id": "86682e655ef0c9f4142df4a15d3cf7fd",
+    "status": "failed",
+    "amount": "0.125",
+    "message": "the wallet cannot pay this address",
+    "broadcastOk": 0,
+    "broadcastNodes": 3,
+    "createdAt": 1792985994
+  }
+}

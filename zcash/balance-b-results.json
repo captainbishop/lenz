@@ -1,0 +1,17 @@
+{
+  "action": "balance",
+  "wallet": "b",
+  "network": "test",
+  "checkedAt": "2026-10-26T03:45:00.069Z",
+  "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "balance": {
+    "chain_tip_height": 4542691,
+    "ironwood_spendable": 0,
+    "orchard_spendable": 0,
+    "sapling_spendable": 0,
+    "total": 0,
+    "transparent_spendable": 0
+  },
+  "ok": true,
+  "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+}

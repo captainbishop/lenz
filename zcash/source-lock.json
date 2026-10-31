@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/zcash/zcash-devtool.git",
+  "revision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "librustzcashRevision": "eb38d7a373661179dbc083a2fd58b3a6c9b25818",
+  "cargoLockSha256": "43473efade4c90ac6f905e97dda34846e4b46f2a7bc1e6906a9ee2464b4e6e5a",
+  "windowsExeSha256": "d992d5fdc8fd29ef31600d0bc8740a1f29a2d05215c683a960de42bd5a63bb6b",
+  "rust": "1.99.1-x86_64-pc-windows-msvc",
+  "scope": "Official developer wallet built locally for disposable testnet integration. This build lock describes the original read/sync executable; later transfer evidence and the separate signer candidate are documented in pczt.md."
+}

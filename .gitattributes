@@ -1,0 +1,6 @@
+# Evidence and build manifests contain hashes of exact source/artifact bytes.
+# Preserve the existing bytes on every host instead of converting line endings.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.png binary
+*.wasm binary
+*.webp binary

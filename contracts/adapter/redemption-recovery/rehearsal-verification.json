@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-31T10:32:51.003Z",
+  "ok": true,
+  "network": "testnet",
+  "reserve": "lenz-redrec-reserve-1793441886009.testnet",
+  "adapter": "lenz-redrec-adapter-1793441886009.testnet",
+  "recipient": "r.lenz-redrec-adapter-1793441886009.testnet",
+  "rehearsalSha256": "a651095c14fc967dbf2cdc61a59254c8c93f97b83750e837149e4242f278e155",
+  "stepCount": 27,
+  "transactionCount": 28,
+  "checks": [
+    "all seven old state entries survive the exact candidate upgrade",
+    "failed original callback follows an actual one-tUSD reserve transfer",
+    "recovery and callback replay transfer no tokens",
+    "only three exact redemptions and three exact signed-recipient refunds occur",
+    "final supply, reserve, adapter and recipient balances conserve all three tUSD"
+  ],
+  "transfers": [
+    {
+      "transaction": "normal redeem",
+      "old_owner_id": "lenz-redrec-reserve-1793441886009.testnet",
+      "new_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz reserve redemption"
+    },
+    {
+      "transaction": "normal payout",
+      "old_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "new_owner_id": "r.lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz authorized Rhea outcome"
+    },
+    {
+      "transaction": "lost redeem",
+      "old_owner_id": "lenz-redrec-reserve-1793441886009.testnet",
+      "new_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz reserve redemption"
+    },
+    {
+      "transaction": "lost payout",
+      "old_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "new_owner_id": "r.lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz authorized Rhea outcome"
+    },
+    {
+      "transaction": "original callback race",
+      "old_owner_id": "lenz-redrec-reserve-1793441886009.testnet",
+      "new_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz reserve redemption"
+    },
+    {
+      "transaction": "race payout",
+      "old_owner_id": "lenz-redrec-adapter-1793441886009.testnet",
+      "new_owner_id": "r.lenz-redrec-adapter-1793441886009.testnet",
+      "amount": "1000000",
+      "memo": "Lenz authorized Rhea outcome"
+    }
+  ],
+  "expectedFailedReceipts": 6,
+  "stateEntries": 7,
+  "scope": "Offline checks of saved FINAL RPC receipts and snapshots. No independent consensus/inclusion proof; no product rollout or exchange swap."
+}

@@ -1,0 +1,17 @@
+{
+  "browser": "156.0.4314.50",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    "private onboarding creates a readable alias and default avatar without personal input",
+    "name and symbol edits preserve account keys, encrypted history and demo vault exactly",
+    "cancel and generated-name preview do not save unwanted changes",
+    "photo upload resizes locally, removes source metadata, and makes no network request",
+    "contact file carries the photo and an existing contact update requires confirmation",
+    "invalid photos fail visibly without changing the saved profile",
+    "failed storage commit leaves the original name and complete saved state intact",
+    "offline reload retains the photo, messages and balance; profile editing works offline",
+    "profile editor fits narrow and desktop screens with visible labelled controls"
+  ],
+  "scope": "Isolated Windows Edge contexts; offline emulation. No phone or physical camera test."
+}

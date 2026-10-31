@@ -1,0 +1,44 @@
+import { refreshPreviewVideos, setPreviewView, pausePreviewMotion } from './home-videos.js';
+const $ = selector => document.querySelector(selector), root = document.documentElement;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const read = key => { try { return localStorage.getItem(key); } catch { return null; } };
+const save = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+let paused = reduced.matches || read('lenz-home-motion') === 'off';
+function motionState() {
+ root.classList.toggle('motion-off', paused); $('#motion-toggle').setAttribute('aria-pressed', String(paused));
+ $('#motion-toggle').textContent = paused ? 'Motion off' : 'Motion on'; pausePreviewMotion(paused);
+ if (paused) { for (const animation of document.getAnimations()) animation.finish(); for(const target of document.querySelectorAll('[data-tilt-surface]')) { target.style.setProperty('--rx','0deg'); target.style.setProperty('--ry','0deg'); } }
+}
+function theme(dark) { root.dataset.theme=dark?'dark':'light'; $('#theme-toggle').textContent=dark?'Light':'Dark'; $('#theme-toggle').setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme'); refreshPreviewVideos(); }
+theme(read('lenz-home-theme')==='dark'); motionState();
+$('#theme-toggle').onclick=()=>{ const dark=root.dataset.theme!=='dark'; theme(dark); save('lenz-home-theme',dark?'dark':'light'); };
+$('#motion-toggle').onclick=()=>{ paused=!paused; save('lenz-home-motion',paused?'off':'on'); motionState(); };
+reduced.addEventListener('change',()=>{paused=reduced.matches||read('lenz-home-motion')==='off';motionState();});
+const reveal=new IntersectionObserver(entries=>{for(const entry of entries) if(entry.isIntersecting){entry.target.classList.add('seen');reveal.unobserve(entry.target);if(!paused)entry.target.animate([{opacity:.35,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.65,.3,1)'});}}, {threshold:.12});
+for(const target of document.querySelectorAll('[data-reveal]'))reveal.observe(target);
+for(const target of document.querySelectorAll('[data-tilt]')){
+ const surface=target.querySelector('[data-tilt-surface]');
+ const reset=()=>{surface.style.setProperty('--rx','0deg');surface.style.setProperty('--ry','0deg');};
+ target.addEventListener('pointermove',event=>{if(paused||reduced.matches||event.pointerType==='touch')return;const rect=target.getBoundingClientRect();surface.style.setProperty('--rx',`${((event.clientY-rect.top)/rect.height-.5)*-5}deg`);surface.style.setProperty('--ry',`${((event.clientX-rect.left)/rect.width-.5)*7}deg`);});
+ target.addEventListener('pointerleave',reset); target.addEventListener('pointercancel',reset);
+}
+const views={
+ wallet:{alt:'Recorded testnet flow: Amina pays Bola, Bola pays Chidi offline, Chidi reconnects and confirms',label:'Receive it. Pass it onward.',text:'Amina sends 1 tUSD to Bola. Bola passes that same value to Chidi while all three are offline. Chidi reconnects to confirm on NEAR.',link:'/money.html',action:'Open wallet'},
+ chat:{alt:'Recorded offline message: encrypted by Amina, shared by file, opened by Bola',label:'A private message can travel offline.',text:'Amina saves an encrypted message and shares its file. Bola opens it offline. The message stays encrypted in storage; routing identities and timing remain visible.',link:'/chat.html',action:'Open conversations'},
+ profile:{alt:'Lenz profile editor with private name and symbol options',label:'A profile can be as simple as a name.',text:'Start with a generated name and symbol, or choose your own photo. No phone number or real name is required.',link:'/money.html',action:'Choose your profile'}
+};
+const tabs=[...document.querySelectorAll('#product-tabs [role=tab]')];
+function activate(tab){
+ for(const item of tabs){item.setAttribute('aria-selected',String(item===tab));item.tabIndex=item===tab?0:-1;}
+ const view=views[tab.dataset.view];setPreviewView(tab.dataset.view,view.alt);
+ $('.product-screen .preview-top span:last-child').textContent=tab.dataset.view==='wallet'?'THE OFFLINE FLOW':tab.dataset.view==='chat'?'PRIVATE CONVERSATIONS':'YOUR PROFILE';
+ $('#product-preview-caption').textContent=tab.dataset.view==='wallet'?'Recorded testnet flow':tab.dataset.view==='chat'?'Private message · recorded flow':'Profile preview';
+ $('#product-preview-scope').textContent=tab.dataset.view==='wallet'?'Offline payments await confirmation.':tab.dataset.view==='chat'?'Opened by its recipient while offline.':'Disposable account · zero tUSD';
+ $('#product-title').textContent=view.label;$('#product-copy').textContent=view.text;$('#product-link').href=view.link;$('#product-link').textContent=`${view.action} ↗`;$('#product-panel').setAttribute('aria-labelledby',tab.id);
+ if(!paused)$('#product-panel').animate([{opacity:.4,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:300,easing:'ease-out'});
+}
+for(const tab of tabs){tab.onclick=()=>activate(tab);tab.onkeydown=event=>{let index=tabs.indexOf(tab);if(['ArrowRight','ArrowDown'].includes(event.key))index=(index+1)%tabs.length;else if(['ArrowLeft','ArrowUp'].includes(event.key))index=(index-1+tabs.length)%tabs.length;else if(event.key==='Home')index=0;else if(event.key==='End')index=tabs.length-1;else return;event.preventDefault();tabs[index].focus();activate(tabs[index]);};}
+for(const detail of document.querySelectorAll('.how-steps details'))detail.addEventListener('toggle',()=>{if(detail.open)for(const sibling of document.querySelectorAll('.how-steps details'))if(sibling!==detail)sibling.open=false;});
+let scheduled=false;
+function scrollState(){scheduled=false;const max=root.scrollHeight-innerHeight;root.style.setProperty('--page-progress',String(max>0?Math.min(1,Math.max(0,scrollY/max)):0));$('.home-nav').classList.toggle('scrolled',scrollY>10);let active='';for(const section of document.querySelectorAll('section[id]'))if(section.getBoundingClientRect().top<innerHeight*.45)active=section.id;for(const link of document.querySelectorAll('.section-nav a')){if(link.getAttribute('href')==='#'+active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');}}
+addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(scrollState);}},{passive:true});addEventListener('resize',scrollState);scrollState();

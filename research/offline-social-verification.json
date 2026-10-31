@@ -1,0 +1,156 @@
+{
+  "checkedAt": "2026-10-31T11:26:19.810Z",
+  "ok": true,
+  "node": {
+    "passed": 54,
+    "failed": 0,
+    "command": "node --test web/near-payment-service.test.mjs web/near-protocol.test.mjs web/rhea-protocol.test.mjs web/trade.test.mjs web/contact-card.test.mjs web/peer.test.mjs"
+  },
+  "browser": {
+    "passed": 50,
+    "failed": 0,
+    "reports": [
+      {
+        "file": "web/offline-social-browser-results.json",
+        "passed": 9,
+        "failed": 0,
+        "sha256": "ecceadba31841fe87171c321ba047870476b1c132ceefff827fb9ef807c50b6a"
+      },
+      {
+        "file": "web/near-wallet-browser-results.json",
+        "passed": 8,
+        "failed": 0,
+        "sha256": "c8ba09ca5652f2b17471d0e8a4a5e313c8abf52d6417cade362b460aa0d92251"
+      },
+      {
+        "file": "web/rhea-wallet-browser-results.json",
+        "passed": 11,
+        "failed": 0,
+        "sha256": "7062d0662a6d28ae518c7f77d331a23ff5ae2508ee7c6db68875713ed22dbf96"
+      },
+      {
+        "file": "web/profile-browser-results.json",
+        "passed": 9,
+        "failed": 0,
+        "sha256": "09e36abe8747e66ed8fe9bcd6daa63647e9826b4f27b4ca7fbba3fbcd8e0418c"
+      },
+      {
+        "file": "web/trade-browser-results.json",
+        "passed": 13,
+        "failed": 0,
+        "sha256": "365b9bd5dfb49f3a2c4be7cfacd395f7221c1b8b8f1f32f469d71e66b7e999f8"
+      }
+    ]
+  },
+  "static": {
+    "routes": 41,
+    "command": "node web/verify-chat-static.mjs"
+  },
+  "networkActions": 0,
+  "scope": "New three-profile social test uses fixture initial backing and records zero API requests; other browser fixtures are explicitly separate from previous live testnet evidence. Actual browser crypto/storage and offline emulation. No new deployment, funding, chain action or user-profile access.",
+  "failures": [
+    "Startup: connection function shadowed by an existing DOM variable; renamed and rerun successfully.",
+    "Social fixture selector matched both preview and message; narrowed to messages region.",
+    "Earlier trade fixture read collapsed legacy balance; updated to open Earlier prototype."
+  ],
+  "limits": [
+    "No physical Android/iPhone/Safari/BLE test",
+    "Offline receipt does not establish global non-spend or authentic reserve funding",
+    "Final settlement and Rhea execution require connectivity",
+    "No account backup/new-device recovery or completed private settlement/Zcash flow"
+  ],
+  "files": [
+    {
+      "file": "web/public/near-payment-service.js",
+      "sha256": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4"
+    },
+    {
+      "file": "web/public/receive-packet.js",
+      "sha256": "092343ae3549287f891b476aa9965a458e9df2fad18226bdba039502cca1c039"
+    },
+    {
+      "file": "web/public/near-chat.js",
+      "sha256": "51a8ca5f1f7522b8cff8b786d50d045b5d1a331fc75a6a5808284b44bd71781f"
+    },
+    {
+      "file": "web/public/near-wallet.js",
+      "sha256": "891db1ea5ded771affa4fe9be0bdc4a3a9725ec713b142d74edf8b7372b714d6"
+    },
+    {
+      "file": "web/public/chat.js",
+      "sha256": "a9e9fbb6262bac1c276ca6296546398b181876437d4c9a428a4d8d4235bde2d9"
+    },
+    {
+      "file": "web/public/chat.html",
+      "sha256": "51e8e35bc893510dc69fc905890b8f34748fb96d8625bf4254f29e7895868c07"
+    },
+    {
+      "file": "web/public/chat-layout.css",
+      "sha256": "d3d8caf459815c7549b466ebc3985e511c9ff09fcad08a2ee54abc1b5175b58e"
+    },
+    {
+      "file": "web/public/rhea-wallet.js",
+      "sha256": "40adeff7bc95c5949db603976f8dd154bd2b5405a83ffc2f9e8ca4f2e84a1c3c"
+    },
+    {
+      "file": "web/public/near-wallet.css",
+      "sha256": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9"
+    },
+    {
+      "file": "web/public/chat-sw.js",
+      "sha256": "77e0e4060dabb125b80094cde138b7337783fe63571d619cd4f52158016f4e2c"
+    },
+    {
+      "file": "web/near-payment-service.test.mjs",
+      "sha256": "45cd6f23018715439fbcb10e14d8ba4977441c205dddbec0af94595300ceb3b1"
+    },
+    {
+      "file": "web/offline-social-browser.test.cjs",
+      "sha256": "b064b4f47e7384505714109e0f63855fb475100628ef4b3d0ad8f3443e5bf3a6"
+    },
+    {
+      "file": "web/near-wallet-browser.test.cjs",
+      "sha256": "440e38ea904ed9bbf791ce8f86d41e08486e367ae1acf92d5b2e21b711b4f9b3"
+    },
+    {
+      "file": "web/trade-browser.test.cjs",
+      "sha256": "693a09f61a1f3d2451161af558816044b2b692ffe9da5c70ed8bfea67a15e0a6"
+    },
+    {
+      "file": "web/profile-browser.test.cjs",
+      "sha256": "e26a8d9b35c9f014414fda3a27de3619e96af58f3ebd4ae6fed8e76be9cf342a"
+    },
+    {
+      "file": "web/public/near-protocol.js",
+      "sha256": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962"
+    },
+    {
+      "file": "web/public/rhea-protocol.js",
+      "sha256": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3"
+    },
+    {
+      "file": "web/public/peer-crypto.js",
+      "sha256": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e"
+    },
+    {
+      "file": "web/public/rhea-config.json",
+      "sha256": "1d008748b1f8fff1da828aab3498448b3014ebff291df77c8d1ed13ededf961d"
+    },
+    {
+      "file": "web/security-proof-offline-timeout.json",
+      "sha256": "0d6c95d9da64d7636747dfdb3c2dee17a393fa6fce5a2ae6cbeca2d1620f3fef"
+    },
+    {
+      "file": "web/offline-social-browser-startup-failure.json",
+      "sha256": "4c28fc9251e782782b6dce6a0fd8f0fe11077e6937fd3953a7a66a816f78e8a8"
+    },
+    {
+      "file": "web/offline-social-browser-failure.json",
+      "sha256": "1409c195c34289db567ab4be0fd5aee5b20d7cdbbc28c426ca6c90a146c867c7"
+    },
+    {
+      "file": "research/offline-social-money.md",
+      "sha256": "e0e9140c2d10aeed78bd9fc330d0e9a0f5d72b5c48cad44c004e0e5d5119b6a8"
+    }
+  ]
+}

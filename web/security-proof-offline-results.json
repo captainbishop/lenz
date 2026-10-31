@@ -1,0 +1,166 @@
+{
+  "withoutCsp": false,
+  "offline": true,
+  "timeoutMs": 180000,
+  "diagnostics": [
+    {
+      "kind": "console",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "kind": "requestfailed",
+      "url": "http://127.0.0.1:4173/server-probe?run=e1f6520fb0e6d79448584657ea9b47b8",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "kind": "requestfailed",
+      "url": "http://127.0.0.1:4173/server-probe?run=aaa305d8988bb7c187bcd4706dff4793",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    }
+  ],
+  "violations": [],
+  "date": "2026-10-30T19:50:12.746Z",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+  "unavailableServerRequired": true,
+  "passed": 25,
+  "failed": 0,
+  "elapsedMs": 39949,
+  "timings": [
+    {
+      "ms": 20022,
+      "stages": [
+        {
+          "stage": "Calculating witness…",
+          "ms": 387
+        },
+        {
+          "stage": "Creating proof…",
+          "ms": 583
+        }
+      ]
+    },
+    {
+      "ms": 19527,
+      "stages": [
+        {
+          "stage": "Calculating witness…",
+          "ms": 324
+        },
+        {
+          "stage": "Creating proof…",
+          "ms": 494
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "name": "app server is unreachable before proving",
+      "pass": true
+    },
+    {
+      "name": "amount parsing preserves cents",
+      "pass": true
+    },
+    {
+      "name": "invalid and zero amounts are rejected",
+      "pass": true
+    },
+    {
+      "name": "insufficient funds do not call the prover",
+      "pass": true
+    },
+    {
+      "name": "self-payments are rejected",
+      "pass": true
+    },
+    {
+      "name": "a failed proof leaves the entire store unchanged",
+      "pass": true
+    },
+    {
+      "name": "an invalid returned proof cannot debit funds",
+      "pass": true
+    },
+    {
+      "name": "Amina creates a real 40.00 payment and keeps 60.00",
+      "pass": true
+    },
+    {
+      "name": "wrong recipient cannot open the packet",
+      "pass": true
+    },
+    {
+      "name": "ciphertext tampering is rejected without credit",
+      "pass": true
+    },
+    {
+      "name": "authenticated wrong workspace root is rejected",
+      "pass": true
+    },
+    {
+      "name": "authenticated altered amount is rejected",
+      "pass": true
+    },
+    {
+      "name": "authenticated altered owner is rejected",
+      "pass": true
+    },
+    {
+      "name": "tampered public transcript is rejected",
+      "pass": true
+    },
+    {
+      "name": "out-of-field public input is rejected",
+      "pass": true
+    },
+    {
+      "name": "an oversized proof is rejected",
+      "pass": true
+    },
+    {
+      "name": "a previously observed local conflict is rejected",
+      "pass": true
+    },
+    {
+      "name": "Bola verifies and receives exactly 40.00",
+      "pass": true
+    },
+    {
+      "name": "repeated receipt changes no stored data",
+      "pass": true
+    },
+    {
+      "name": "Bola creates a real onward 30.00 payment and keeps 10.00",
+      "pass": true
+    },
+    {
+      "name": "replaying a spent receipt cannot restore the old balance",
+      "pass": true
+    },
+    {
+      "name": "missing onward ancestry is rejected",
+      "pass": true
+    },
+    {
+      "name": "Chidi verifies onward ancestry and total remains 100.00",
+      "pass": true
+    },
+    {
+      "name": "serialized state preserves balances and replay protection",
+      "pass": true
+    },
+    {
+      "name": "app server remains unreachable after proving",
+      "pass": true
+    }
+  ]
+}

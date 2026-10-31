@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-10-31T14:06:09.965Z",
+  "wallets": {
+    "a": {
+      "balance": {
+        "action": "balance",
+        "wallet": "a",
+        "network": "test",
+        "checkedAt": "2026-10-31T14:06:08.264Z",
+        "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+        "balance": {
+          "chain_tip_height": 4563325,
+          "ironwood_spendable": 89990000,
+          "orchard_spendable": 0,
+          "sapling_spendable": 0,
+          "total": 89990000,
+          "transparent_spendable": 0
+        },
+        "ok": true,
+        "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+      },
+      "transactions": {
+        "action": "transactions",
+        "wallet": "a",
+        "network": "test",
+        "checkedAt": "2026-10-31T14:06:08.787Z",
+        "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+        "transactions": [
+          {
+            "txid": "3b08a1472e873eb0c665e707cfec37416b230b652d582fd8dddd29ac858b749e",
+            "minedHeight": 4542640
+          },
+          {
+            "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+            "minedHeight": 4563312
+          }
+        ],
+        "ok": true,
+        "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+      }
+    },
+    "b": {
+      "balance": {
+        "action": "balance",
+        "wallet": "b",
+        "network": "test",
+        "checkedAt": "2026-10-31T14:06:09.286Z",
+        "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+        "balance": {
+          "chain_tip_height": 4563325,
+          "ironwood_spendable": 10000000,
+          "orchard_spendable": 0,
+          "sapling_spendable": 0,
+          "total": 10000000,
+          "transparent_spendable": 0
+        },
+        "ok": true,
+        "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+      },
+      "transactions": {
+        "action": "transactions",
+        "wallet": "b",
+        "network": "test",
+        "checkedAt": "2026-10-31T14:06:09.868Z",
+        "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+        "transactions": [
+          {
+            "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+            "minedHeight": 4563312
+          }
+        ],
+        "ok": true,
+        "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+      }
+    }
+  },
+  "scope": "Local native balance/history reads after unsigned preparation and discard. No synchronization or broadcast."
+}

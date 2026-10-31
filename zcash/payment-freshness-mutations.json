@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-31T15:53:46.505Z",
+  "results": [
+    {
+      "guard": "expiry boundary",
+      "rejected": true
+    },
+    {
+      "guard": "request binding",
+      "rejected": true
+    },
+    {
+      "guard": "pre-check integrity",
+      "rejected": true
+    },
+    {
+      "guard": "post-check integrity",
+      "rejected": true
+    }
+  ]
+}

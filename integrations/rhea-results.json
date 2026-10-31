@@ -1,0 +1,22 @@
+{
+  "provider": "rhea",
+  "state": "quote",
+  "network": "testnet",
+  "request": {
+    "network": "testnet",
+    "contract": "ref-finance-101.testnet",
+    "poolId": 0,
+    "tokenIn": "wrap.testnet",
+    "tokenOut": "rft.tokenfactory.testnet",
+    "amountIn": "10000000000000000000000",
+    "slippageBps": 50
+  },
+  "amountOut": "6489758",
+  "minAmountOut": "6457309",
+  "blockHash": "3HWiUR23qdLj1hMHQUYy25zn4kvz7ZdxDFv24gkwRzMv",
+  "blockHeight": 274793414,
+  "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+  "checkedAt": "2026-10-26T03:16:13.732Z",
+  "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed.",
+  "ok": true
+}

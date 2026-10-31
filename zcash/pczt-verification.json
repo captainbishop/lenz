@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-10-31T13:30:56.873Z",
+  "ok": true,
+  "checks": [
+    "Fixed testnet recipient, amount, fee, version and Ironwood bundle",
+    "Original missing-signature failure retained; candidate and cryptographic extraction succeeded",
+    "Wrong amount, excessive fee and wrong recipient rejected for their expected reasons",
+    "Submission, signed artifact and verified transaction share one identity",
+    "Same mined transaction in both wallets, at least ten confirmations and spendable Ironwood notes",
+    "Exact recipient value, sender change and fee conserve the initial balance",
+    "Five actual browser checks match the confirmed native balances without enabling browser sending",
+    "Pinned original binary/dependencies preserved; candidate source, patch and executable match"
+  ],
+  "mutations": [
+    {
+      "name": "wrong received value",
+      "rejected": true
+    },
+    {
+      "name": "foreign transaction in recipient history",
+      "rejected": true
+    },
+    {
+      "name": "insufficient confirmations",
+      "rejected": true
+    },
+    {
+      "name": "changed signed artifact",
+      "rejected": true
+    }
+  ],
+  "files": [
+    {
+      "file": "zcash/pczt-results.json",
+      "sha256": "0211ce496bc5347ebad14961514b6b6add2ca79cda844bb2ceaefc20074a6996"
+    },
+    {
+      "file": "zcash/pczt-support/build.json",
+      "sha256": "4add5e1ddf28a1e802c7d0b46577b992f4869a4c440e0b3742b129f78321ca65"
+    },
+    {
+      "file": "zcash/pczt-support/ironwood-test-signer.patch",
+      "sha256": "0e813cb3f3258e0a64098a0797c74de3f53638fb50528dc65632942631763f89"
+    },
+    {
+      "file": "zcash/pczt-test.mjs",
+      "sha256": "82ca4507d6109958a3c18773791b07ff242996e3741358760ec47df03683c61c"
+    },
+    {
+      "file": "zcash/verify-pczt.mjs",
+      "sha256": "10885eecee1841bee02164c33aaa0698244a8653ef10900e696aaea20f1f03b3"
+    },
+    {
+      "file": "web/zcash-companion-live.test.cjs",
+      "sha256": "50635e0af32d1876030efaf0408b4635b79e81a071e7779757b6f26ae5f5a498"
+    },
+    {
+      "file": "web/zcash-companion-after-pczt-results.json",
+      "sha256": "d43fd59f812a1578ef60c2d90d4d106434ed65854522b431eaec88be6b051a08"
+    }
+  ],
+  "scope": "Saved-evidence consistency and local artifact hashes. Does not independently query chain consensus or rerun signing."
+}

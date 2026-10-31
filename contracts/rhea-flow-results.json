@@ -1,0 +1,240 @@
+{
+  "network": "testnet",
+  "token": "tusd.lenz-dev-1792984696547.testnet",
+  "exchange": "ref-finance-101.testnet",
+  "account": "lenz-dev-1792984696547.testnet",
+  "steps": {
+    "redeemed tUSD is available": {
+      "balance": "8000000"
+    },
+    "register account on Rhea": {
+      "finality": "FINAL",
+      "txHash": "3Th1C4rNCpYjURBE4bP77duuHUwhqYuSgne5tHUUDueB",
+      "receiptIds": [
+        "6C6ZpiXBrgAUUdGE2YXwhCskp71p7msqCwuXGN19CBw5",
+        "2QH5dCgRsFVskRt3kktFp3hvY6Qs6nSB6jjr5uTM5gie"
+      ],
+      "gasBurnt": "2774405069778",
+      "value": {
+        "total": "200000000000000000000000",
+        "available": "198980000000000000000000"
+      }
+    },
+    "register Rhea on tUSD": {
+      "finality": "FINAL",
+      "txHash": "BfaPKYZs74rncbJGL8m8JUreRs9W15oE7oicKUCUR3fZ",
+      "receiptIds": [
+        "6hQKTcGp3eUPpvHn9uto5uch2E9EBW8mauKnAT6Wn4Ur",
+        "FgH3Z7zHBEGoKQK1zJEaZDj3rff9JnspQpo94wgkjXHK",
+        "FDqgrMxsKtYa7etUVcgk64Hq7KEUh1wQsLPx2fpceDpa",
+        "ARcej7YqKEd8gUceEx1i6JPWKmxzTV7iQSVBgXyHJSsn"
+      ],
+      "gasBurnt": "2673477610600",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "register recipient on wrapped NEAR": {
+      "finality": "FINAL",
+      "txHash": "9X4t1zuM2PM6Ch4Ju2XZvYxwYLdmxJDtjZShmsAKNARR",
+      "receiptIds": [
+        "9Duo7bpZirExWroAh3eyciqvcLwSVRu53UNYkpQJ1xfM",
+        "9WkHSdwLw1Ryo8fXAhwh4NfiAJ3z2cmQCH7tYuaR1jaJ",
+        "H2atruXNvq37x7xjKPrYj4YVheGPr4HX3Bse4qhJbcUg",
+        "Bv1ZivcJxzcefHJGF1pLAWUF8Dmvdv5jwUF8mh2NxmGL"
+      ],
+      "gasBurnt": "2514991381964",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "register Rhea on wrapped NEAR": {
+      "finality": "FINAL",
+      "txHash": "J4makrb5Zdsb2819b7d5CGTntmabhPwXiSdPjaJERFoz",
+      "receiptIds": [
+        "RiXyqgC1nXnF7fejtabApguCQhLTWNAbLqhQSCcXWbA",
+        "AY2sKwFLxPveAtyzXD1zLBKtr8WKHjPZhKqzkKuCeZjb",
+        "G2p4fyrF4ZJCcS4ZT7VN6dJPUPxaf3bnjmFZpdscdfxF",
+        "2sW4hegtrdSVZNuAyPRqvsw4kYWSDsscSYgQ1gZvqtPm"
+      ],
+      "gasBurnt": "2403198644323",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "register token pair in the Rhea account": {
+      "finality": "FINAL",
+      "txHash": "DbzAALE6QQs5ctNBUNzyddKWvtcBmWj4bgjVr4WUQJ9p",
+      "receiptIds": [
+        "53DFiMjoowTnohdsFAh4DVobvjW2P1CpMeV2m9nyGQGu",
+        "BW8wsZcz16rJxSNLiuJms2VteaGuDbYqjUvN2o1DwCRS"
+      ],
+      "gasBurnt": "3740590816204",
+      "value": ""
+    },
+    "wrap faucet-funded test NEAR": {
+      "finality": "FINAL",
+      "txHash": "xRSKynjoryRyezkLvi2PjAR1nSSW76KPnrZ8jzCjVX1",
+      "receiptIds": [
+        "DBUMVjfniUom4W63gE3bGoo9Dub8Lsb3dP6Xd5RVNAa3",
+        "EzSiBVPFefNwYCSZVT7buK4Xtx5hNagEcADKvwCAo7QK"
+      ],
+      "gasBurnt": "1854381002789",
+      "value": ""
+    },
+    "deposit six redeemed tUSD": {
+      "finality": "FINAL",
+      "txHash": "E6MpLYXaer687Rrs21Yc32vAALvNmHTVjPjSK5QN3Hb2",
+      "receiptIds": [
+        "FQpz6FYK7kecv95QnSe9v8HPx9KkU3tvnmGv7PJBWsyv",
+        "5YmWRiS2afsPjCeqLAB6Mhsk5cqn1WBiQKUErbcXfTE9",
+        "E5aAqMHxc2G4MifDVtnHZK9FH1ZHnhsstcVmKSEhabvS",
+        "8NWsJrbF3481uAkGPeBe9s9xBn7Vewjk9uVUovCVxfHa",
+        "EtJV6GBVnJZgrR8iuPPLFZ45euSuuSnYhzUBBJ4Ru1n1",
+        "3BnNQ9hmguyyA6Kx4joUWKehhNpicFByMky6kKAP5M86"
+      ],
+      "gasBurnt": "8128756828172",
+      "value": "6000000"
+    },
+    "deposit wrapped test NEAR": {
+      "finality": "FINAL",
+      "txHash": "3fdPxPQtb6ankNgbGjAh637ttjHJVmdav7MPFiTeucYy",
+      "receiptIds": [
+        "4SMaSN8UdQcPWhWNTyqbpw7ecXzRw7QAqeFxQNLKrLBT",
+        "4qtR9xVHLQqR2emKpmsdyDxUMiMM7xDd2kWkGcntJJdv",
+        "AVMTWvnWNCoy3gz67ujSDiXRhqeSNGiXmMgoaGE7BQzt",
+        "4GQwdyjw8YAsrvKqfxAP9HrGFWdoCAkS6mjeC7KJPK4c",
+        "X2tcST5XqSQD1kU47dF8Hq6Y3RQzPZp5zsybC9Quuza",
+        "3y7cPCZykrtPbo7oEDDqmSTDP1ZC47bf15ibky5WdgM5"
+      ],
+      "gasBurnt": "7644856258618",
+      "value": "100000000000000000000000"
+    },
+    "create tUSD and wrapped NEAR test pool": {
+      "finality": "FINAL",
+      "txHash": "CDxwkXVfALUXLHWP4yP2jTQtdTiEYFVvZMSxHc88Eb5D",
+      "receiptIds": [
+        "GQExJSTar264s7Yodrs5dByo5nE23CqDhAfXKiTgfdDj",
+        "FaayZk8qtQ83VnfyKXr6Dty3JfsFb89h4cJ8Jgpp8U2X",
+        "BGTNXRRSx3jAXUEyAsUp4Ukt7c1kTYndXcUSFtrWaCvq",
+        "GGVsGdZ1YJuF9xjHNiEsNzBqfR4tZsXTq8ZmkvmnapL5"
+      ],
+      "gasBurnt": "3593254141789",
+      "value": 2870
+    },
+    "fund test pool liquidity": {
+      "finality": "FINAL",
+      "txHash": "5ZDDyW6oyT6oMQxsxxVSt4TGTyDqPpAKBcjXJXEoxcMJ",
+      "receiptIds": [
+        "FChqF2UMbNHxC2wKC16rcWRcWBTJXrwR89jiDhyo28QV",
+        "FaVGfqRExUQEw9RjNeYna9Tqud39SwbMkmEWV2gvmRW6",
+        "BgWJar1prZDoyj8c3chQd3MbdtgJg5nkp61XjTWockHd",
+        "4uDEWvAeokVRTreD4w6mgtEVmA1Fh4rMNDeyB5d4py8L"
+      ],
+      "gasBurnt": "4889253524891",
+      "value": "1000000000000000000000000"
+    },
+    "reject an impossible minimum without debiting deposits": {
+      "rejected": {
+        "message": "Smart contract panicked: panicked at 'E68: slippage error', ref-exchange/src/simple_pool.rs:313:9",
+        "txHash": "7JqBa2AnZBJGA48f2C1w1zwPzDY8AskRkt1zKhEHcoAZ"
+      },
+      "before": {
+        "tusd.lenz-dev-1792984696547.testnet": "1000000",
+        "wrap.testnet": "0"
+      }
+    },
+    "swap one tUSD under the quoted output bound": {
+      "quote": {
+        "provider": "rhea",
+        "state": "quote",
+        "network": "testnet",
+        "request": {
+          "network": "testnet",
+          "contract": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenIn": "tusd.lenz-dev-1792984696547.testnet",
+          "tokenOut": "wrap.testnet",
+          "amountIn": "1000000",
+          "slippageBps": 50
+        },
+        "amountOut": "16631929970821175489787",
+        "minAmountOut": "16548770320967069612338",
+        "blockHash": "AhrKu85fsK6gxD3pn4Z1htvsjw4XRt1bpTaWaNoL9df",
+        "blockHeight": 274796757,
+        "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+        "checkedAt": "2026-10-26T03:47:47.564Z",
+        "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed."
+      },
+      "receipt": {
+        "finality": "FINAL",
+        "txHash": "TjNJWAG8kPhn1zwgmDMCJeEFVjcWz7zFLebECzDKLN2",
+        "receiptIds": [
+          "FJ3o45ni4mLQadHVVLhEiTcsWMuLGKmyebnpMkqePd33",
+          "26M8DMHtkLhRmPhUVjbgjPrQFDyLJomRMF2YBUWxy3y8"
+        ],
+        "gasBurnt": "5028302160426",
+        "value": "16631929970821175489787"
+      },
+      "before": {
+        "tusd.lenz-dev-1792984696547.testnet": "1000000",
+        "wrap.testnet": "0"
+      },
+      "after": {
+        "tusd.lenz-dev-1792984696547.testnet": "0",
+        "wrap.testnet": "16631929970821175489787"
+      },
+      "received": "16631929970821175489787"
+    },
+    "withdraw exchange output into the authorized NEP-141 account": {
+      "receipt": {
+        "finality": "FINAL",
+        "txHash": "SZeoXnvpBQyKeFaETUVyXCv4fFtxqyuPLecmfPeMA5Y",
+        "receiptIds": [
+          "GKfc4v8HfYfNRcpyjeMTxoa6n9oubPigDiKzKfR9bcYU",
+          "HeV8sZykzsvZJ6toRtHJ3NJtUaoouiGw49wJDjL4iujQ",
+          "9WFgLXD2ktnyFVMfop56JofoMDgxXpakoxoMRQmjmmaq",
+          "3X8fR8fDmavzeRaHNNRL82moNJNsyCjEVeK4E9bxHEwu",
+          "CCPQYoKtKuJiBvHQFfLxjRDKZPg5SL92m4C14JV5s1Lr",
+          "A26eU7KMAPz5gZ8HVk1dzyWhSezUpW6s9g1Juq66FoYj"
+        ],
+        "gasBurnt": "8383275766076",
+        "value": "16631929970821175489787"
+      },
+      "before": "0",
+      "after": "16631929970821175489787"
+    }
+  },
+  "checks": [
+    "pool remains funded and the output owner is registered"
+  ],
+  "interfaceSource": "https://guide.rhea.finance/developers-1/cli-trading",
+  "scope": "Disposable NEAR testnet account: redeemed reserve tUSD, Rhea liquidity, bounded direct swap and withdrawal. No offline Rhea authorization adapter or production privacy claim.",
+  "exchangeCodeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+  "checkedAt": "2026-10-26T03:48:28.998Z",
+  "failures": [
+    {
+      "step": "register token pair in the Rhea account",
+      "message": "Smart contract panicked: panicked at 'assertion failed: `(left == right)`\n  left: `0`,\n right: `1`: Requires attached deposit of exactly 1 yoctoNEAR', /usr/local/cargo/registry/src/github.com-1ecc6299db9ec823/near-sdk-3.1.0/src/utils/mod.rs:22:5"
+    }
+  ],
+  "poolId": 2870,
+  "pool": {
+    "pool_kind": "SIMPLE_POOL",
+    "token_account_ids": [
+      "tusd.lenz-dev-1792984696547.testnet",
+      "wrap.testnet"
+    ],
+    "amounts": [
+      "6000000",
+      "83368070029178824510213"
+    ],
+    "total_fee": 25,
+    "shares_total_supply": "1000041679692022674547781",
+    "amp": 0
+  },
+  "ok": true
+}

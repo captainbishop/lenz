@@ -1,0 +1,377 @@
+{
+  "contract": "lenz-reentry-1792990439397.testnet",
+  "payer": "lenz-dev-1792984696547.testnet",
+  "oldSha256": "68f68edc97595afa42ea38e610dbf3ad299597efe215f593956fbd881e69faea",
+  "newSha256": "be94412f5384d3a291874696e568f943219f7b99cd88084544849e2fd4d97aa8",
+  "steps": {
+    "deploy original Wasm": {
+      "finality": "FINAL",
+      "txHash": "CR6U7RdmpeckiMDt36AShS32bv7Kk63mpGFvmCjkEyLZ",
+      "receiptIds": [
+        "DQFodt1owUFW8dexS9YAcaHJ8mjjPuhQhyZSUxi6EPEQ",
+        "Cu2m86NpsRuErBY9xCBLnX5r2wZhZLhWac3XXJFFFyKo"
+      ],
+      "gasBurnt": "25338525773659",
+      "value": ""
+    },
+    "fund original reserve": {
+      "finality": "FINAL",
+      "txHash": "EeLUKMNWuWYKkTtdzAbeaisehujaY6ScpsSw1vsUmK3S",
+      "receiptIds": [
+        "G8EwfzuEJHn2uU95tQW8ebkzJywZihQgjbRzfGknyNFC",
+        "6YyPobZFLntHtT8khf7raGAW39NZEpu12QPUGWBhMyGT",
+        "5gPZUyE35miPtdeySvc79GP2K43oStMSy6A3drVQ4XR",
+        "CjSDjXodBaoq9x213s5QXbus9JTEreSDurnJ44Gejirv"
+      ],
+      "gasBurnt": "4583388396519",
+      "value": {
+        "id": "root:05bfcfa10bd4cc7fa73385b962d666fa0aaef8a992aa85ac4da4ac95b5e6cd25",
+        "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+        "amount": "100000000"
+      }
+    },
+    "settle old offline path": {
+      "finality": "FINAL",
+      "txHash": "4ABGy5hnzkHxTNFNui5MSSwNnVQ2mj5jk93r29T5wWor",
+      "receiptIds": [
+        "Gb9MqpqZsXhusnXVCrAWsXJKu4n5VAsrTdsMtCPYdpGn",
+        "CjspBaeNa1anGDRdMBVSbMaWXebFASbEtS1pjtLNdXur",
+        "DERMD8pecdPVckepr4r2cMHyhLryWPkyXP7jXQ2qAGqt",
+        "88Pns62VqbKPduCnJaZ1TevLGJvTrFtvCL5s2UE1YApH"
+      ],
+      "gasBurnt": "6871123435925",
+      "value": [
+        {
+          "id": "04aa711564fc72c83d60d175f95b476cdfd3086997f395d9086f951d6b875355",
+          "input": "root:05bfcfa10bd4cc7fa73385b962d666fa0aaef8a992aa85ac4da4ac95b5e6cd25",
+          "outputs": [
+            {
+              "id": "04aa711564fc72c83d60d175f95b476cdfd3086997f395d9086f951d6b875355:0",
+              "owner": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+              "amount": "20000000"
+            },
+            {
+              "id": "04aa711564fc72c83d60d175f95b476cdfd3086997f395d9086f951d6b875355:1",
+              "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+              "amount": "80000000"
+            }
+          ],
+          "block_height": 274803809
+        },
+        {
+          "id": "86c82d50032d509f22441c2e1fb2599838a020dc58a14d8bda21c3cfdabbfc90",
+          "input": "04aa711564fc72c83d60d175f95b476cdfd3086997f395d9086f951d6b875355:0",
+          "outputs": [
+            {
+              "id": "86c82d50032d509f22441c2e1fb2599838a020dc58a14d8bda21c3cfdabbfc90:0",
+              "owner": "03e9be7079bd8f72378431f50aadb777c5f2ecafbf2368735fa1bc7cd312207799",
+              "amount": "8000000"
+            },
+            {
+              "id": "86c82d50032d509f22441c2e1fb2599838a020dc58a14d8bda21c3cfdabbfc90:1",
+              "owner": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+              "amount": "12000000"
+            }
+          ],
+          "block_height": 274803809
+        }
+      ]
+    },
+    "register old balance account": {
+      "finality": "FINAL",
+      "txHash": "7QWY4TTLMjT7jEFaPEPnVaW4wgYVGavDo8gLeG2bxPsa",
+      "receiptIds": [
+        "GtfpLb9HuTXFRVCGkhqCPCHDPcCWhEABriK4oyykrtDH",
+        "CFDAup5J5kCPNEb3zVLEPMZUfAmCw3eMsyyyDsstDfNA",
+        "EB54VfXcTfoWfQQfk2QjAosQAveK4BsMKbXZNLLtnvut",
+        "Gab5Qt2HcPCBkNdBfoJbbWaHhdNFkhdSmSJxvbd266oV"
+      ],
+      "gasBurnt": "2663155145144",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "redeem old note": {
+      "finality": "FINAL",
+      "txHash": "6XMqVyfArur3xqYLD1Vryn7d6Thf5thrH3XNDAyD8kMV",
+      "receiptIds": [
+        "2oUEQYwEHJZnGVaoUKnEJb8pjB3vMHy5ywC8wXJAcru4",
+        "Azz4ucRSWwf7o2PN652rnoj1Fod14JQXWnPGPhNyZMrX",
+        "Dg7niG88xYQL4SpWey6Et8NZ5yMzhsrzdKPEXui8QnhH",
+        "DyxA8gkkyveJEtbKmNqxpLaubiyrXogADjBh1dn2mRSE"
+      ],
+      "gasBurnt": "4716312667260",
+      "value": "8000000"
+    },
+    "snapshot old storage": [
+      {
+        "key": "b0UAAAByb290OjA1YmZjZmExMGJkNGNjN2ZhNzMzODViOTYyZDY2NmZhMGFhZWY4YTk5MmFhODVhYzRkYTRhYzk1YjVlNmNkMjU=",
+        "value": "RQAAAHJvb3Q6MDViZmNmYTEwYmQ0Y2M3ZmE3MzM4NWI5NjJkNjY2ZmEwYWFlZjhhOTkyYWE4NWFjNGRhNGFjOTViNWU2Y2QyNUIAAAAwM2MzZTFjN2ViODM1NDNmYWI3ODc5ZWM4NzU2MDNjYTgzMWQ5YzAyNWQwOGUzYmU2ZDhhN2VmN2Q5MjY2Y2UwYmQA4fUFAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "bkIAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkwOjA=",
+        "value": "QgAAADg2YzgyZDUwMDMyZDUwOWYyMjQ0MWMyZTFmYjI1OTk4MzhhMDIwZGM1OGExNGQ4YmRhMjFjM2NmZGFiYmZjOTA6MEIAAAAwM2U5YmU3MDc5YmQ4ZjcyMzc4NDMxZjUwYWFkYjc3N2M1ZjJlY2FmYmYyMzY4NzM1ZmExYmM3Y2QzMTIyMDc3OTkAEnoAAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "bkIAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkwOjE=",
+        "value": "QgAAADg2YzgyZDUwMDMyZDUwOWYyMjQ0MWMyZTFmYjI1OTk4MzhhMDIwZGM1OGExNGQ4YmRhMjFjM2NmZGFiYmZjOTA6MUIAAAAwMzM4ZmQ0ZTM1YmVhYjE1YmQwZTY5ODg5YzNlYTdkZWVjZDA3ZTM0Mjc4M2ViOTJmYWY4ODEwZGI3NjFiOTNkOTUAG7cAAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "bkIAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1OjA=",
+        "value": "QgAAADA0YWE3MTE1NjRmYzcyYzgzZDYwZDE3NWY5NWI0NzZjZGZkMzA4Njk5N2YzOTVkOTA4NmY5NTFkNmI4NzUzNTU6MEIAAAAwMzM4ZmQ0ZTM1YmVhYjE1YmQwZTY5ODg5YzNlYTdkZWVjZDA3ZTM0Mjc4M2ViOTJmYWY4ODEwZGI3NjFiOTNkOTUALTEBAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "bkIAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1OjE=",
+        "value": "QgAAADA0YWE3MTE1NjRmYzcyYzgzZDYwZDE3NWY5NWI0NzZjZGZkMzA4Njk5N2YzOTVkOTA4NmY5NTFkNmI4NzUzNTU6MUIAAAAwM2MzZTFjN2ViODM1NDNmYWI3ODc5ZWM4NzU2MDNjYTgzMWQ5YzAyNWQwOGUzYmU2ZDhhN2VmN2Q5MjY2Y2UwYmQAtMQEAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "bkUAAAByb290OjA1YmZjZmExMGJkNGNjN2ZhNzMzODViOTYyZDY2NmZhMGFhZWY4YTk5MmFhODVhYzRkYTRhYzk1YjVlNmNkMjU=",
+        "value": "RQAAAHJvb3Q6MDViZmNmYTEwYmQ0Y2M3ZmE3MzM4NWI5NjJkNjY2ZmEwYWFlZjhhOTkyYWE4NWFjNGRhNGFjOTViNWU2Y2QyNUIAAAAwM2MzZTFjN2ViODM1NDNmYWI3ODc5ZWM4NzU2MDNjYTgzMWQ5YzAyNWQwOGUzYmU2ZDhhN2VmN2Q5MjY2Y2UwYmQA4fUFAAAAAAAAAAAAAAAA"
+      },
+      {
+        "key": "ckAAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkw",
+        "value": "QAAAADg2YzgyZDUwMDMyZDUwOWYyMjQ0MWMyZTFmYjI1OTk4MzhhMDIwZGM1OGExNGQ4YmRhMjFjM2NmZGFiYmZjOTBCAAAAMDRhYTcxMTU2NGZjNzJjODNkNjBkMTc1Zjk1YjQ3NmNkZmQzMDg2OTk3ZjM5NWQ5MDg2Zjk1MWQ2Yjg3NTM1NTowAgAAAEIAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkwOjBCAAAAMDNlOWJlNzA3OWJkOGY3MjM3ODQzMWY1MGFhZGI3NzdjNWYyZWNhZmJmMjM2ODczNWZhMWJjN2NkMzEyMjA3Nzk5ABJ6AAAAAAAAAAAAAAAAAEIAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkwOjFCAAAAMDMzOGZkNGUzNWJlYWIxNWJkMGU2OTg4OWMzZWE3ZGVlY2QwN2UzNDI3ODNlYjkyZmFmODgxMGRiNzYxYjkzZDk1ABu3AAAAAAAAAAAAAAAAAGEsYRAAAAAA"
+      },
+      {
+        "key": "ckAAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1",
+        "value": "QAAAADA0YWE3MTE1NjRmYzcyYzgzZDYwZDE3NWY5NWI0NzZjZGZkMzA4Njk5N2YzOTVkOTA4NmY5NTFkNmI4NzUzNTVFAAAAcm9vdDowNWJmY2ZhMTBiZDRjYzdmYTczMzg1Yjk2MmQ2NjZmYTBhYWVmOGE5OTJhYTg1YWM0ZGE0YWM5NWI1ZTZjZDI1AgAAAEIAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1OjBCAAAAMDMzOGZkNGUzNWJlYWIxNWJkMGU2OTg4OWMzZWE3ZGVlY2QwN2UzNDI3ODNlYjkyZmFmODgxMGRiNzYxYjkzZDk1AC0xAQAAAAAAAAAAAAAAAEIAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1OjFCAAAAMDNjM2UxYzdlYjgzNTQzZmFiNzg3OWVjODc1NjAzY2E4MzFkOWMwMjVkMDhlM2JlNmQ4YTdlZjdkOTI2NmNlMGJkALTEBAAAAAAAAAAAAAAAAGEsYRAAAAAA"
+      },
+      {
+        "key": "dB4AAABsZW56LWRldi0xNzkyOTg0Njk2NTQ3LnRlc3RuZXQ=",
+        "value": "ABJ6AAAAAAAAAAAAAAAAAA=="
+      },
+      {
+        "key": "dCIAAABsZW56LXJlZW50cnktMTc5Mjk5MDQzOTM5Ny50ZXN0bmV0",
+        "value": "AM97BQAAAAAAAAAAAAAAAA=="
+      },
+      {
+        "key": "U1RBVEU=",
+        "value": "AQAAAHQA4fUFAAAAAAAAAAAAAAAAfQAAAAAAAAABAAAAbgEAAABjAQAAAHIBAAAAZwEAAABvAM97BQAAAAAAAAAAAAAAAA=="
+      },
+      {
+        "key": "Y0IAAAA4NmM4MmQ1MDAzMmQ1MDlmMjI0NDFjMmUxZmIyNTk5ODM4YTAyMGRjNThhMTRkOGJkYTIxYzNjZmRhYmJmYzkwOjA=",
+        "value": "QAAAADZhMzg4MGI3NjA2YjQ1MTY2NTAyZGQyZTg1ZGUwZjdkOGNhOTZiYjA3MzM1OTA5ZjJlZjIxZWQwZDA1ZGYxMWY="
+      },
+      {
+        "key": "Y0IAAAAwNGFhNzExNTY0ZmM3MmM4M2Q2MGQxNzVmOTViNDc2Y2RmZDMwODY5OTdmMzk1ZDkwODZmOTUxZDZiODc1MzU1OjA=",
+        "value": "QAAAADg2YzgyZDUwMDMyZDUwOWYyMjQ0MWMyZTFmYjI1OTk4MzhhMDIwZGM1OGExNGQ4YmRhMjFjM2NmZGFiYmZjOTA="
+      },
+      {
+        "key": "Y0UAAAByb290OjA1YmZjZmExMGJkNGNjN2ZhNzMzODViOTYyZDY2NmZhMGFhZWY4YTk5MmFhODVhYzRkYTRhYzk1YjVlNmNkMjU=",
+        "value": "QAAAADA0YWE3MTE1NjRmYzcyYzgzZDYwZDE3NWY5NWI0NzZjZGZkMzA4Njk5N2YzOTVkOTA4NmY5NTFkNmI4NzUzNTU="
+      },
+      {
+        "key": "Z0IAAAAwM2MzZTFjN2ViODM1NDNmYWI3ODc5ZWM4NzU2MDNjYTgzMWQ5YzAyNWQwOGUzYmU2ZDhhN2VmN2Q5MjY2Y2UwYmQ=",
+        "value": ""
+      }
+    ],
+    "upgrade code without initializer": {
+      "finality": "FINAL",
+      "txHash": "Ntqz9szGbGTFFjGUFuKETi2pt9dMGZL1khBoEPNEMsa",
+      "receiptIds": [
+        "CgzsjFeE5q6pR2eJ3siD5P9g9AJFoNdCCo1vHtT3xzXW",
+        "7yQwsLhFbZgLmastEGnH7etaTfXZTmND6j1wMsswCMfZ"
+      ],
+      "gasBurnt": "24265807469812",
+      "value": ""
+    },
+    "all old state bytes survive upgrade": {
+      "entries": 15,
+      "sha256": "081e6aaac301e239f4c0b2be70b8933ab166f4b04b509c4331f08803361fe594"
+    },
+    "insufficient balance and storage revert all changes": [
+      "Smart contract panicked: The account doesn't have enough balance",
+      "Smart contract panicked: Attach enough NEAR for storage"
+    ],
+    "deposit existing tUSD into fresh backed note": {
+      "finality": "FINAL",
+      "txHash": "2G9MqqKPCsdAiQtvwtckQ7TZtbDiUaJzAgaFUkUr6anL",
+      "receiptIds": [
+        "2VFBW96tGmUrvJ6a8ECvrPKGB8TfWvTwjsLhW5iYsN6n",
+        "6n5KBZbyGk7JYS8V1Wc7gwgyoEVvSqK5febyRTgJGWDS",
+        "Hu67yrMQhcsUEkTS6wCj8PCNbRHJN5uYiffrSuzz7er2",
+        "9q8PcMDZoei6Nb54KBqU1pcPej7qEvKkzGGwDfmVvdth"
+      ],
+      "gasBurnt": "4722660416702",
+      "value": {
+        "id": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5",
+        "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+        "amount": "3000000"
+      }
+    },
+    "duplicate deposits and changed-source-terms cannot debit twice": {
+      "finality": "FINAL",
+      "txHash": "B4nAfsfFHocztbep7gvG37mxkHUhj31C7KRJHvAA7mrg",
+      "receiptIds": [
+        "FFPxispUHEsVpWkj9cfMBdrRDn1FH5sn46RNaPkvqZbX",
+        "GWEX56Jngb5WzrUL8p7TMNxj3Z5YoNYS3cCZqJmBQSEG",
+        "DbLPQNBMuA51WV3NRcoCGZgmqsnS82JmfUhdG3F3mMhi",
+        "CdK14UhaDC3BbMfqgbk1KZNAi9eM3Ka45HwHe1f4WbV6"
+      ],
+      "gasBurnt": "3985127742285",
+      "value": {
+        "id": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5",
+        "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+        "amount": "3000000"
+      }
+    },
+    "returned value transfers onward and redeems again": {
+      "settled": {
+        "finality": "FINAL",
+        "txHash": "8udana7YUzmuLduiXQBDrGqpi4RVYsKwWD1sABfYtkCR",
+        "receiptIds": [
+          "5Rr4n8Xv1c6nvoVeFt1PHfAvRPrBNCr1sZ282VswembU",
+          "5p9suZTTp87Zb1akBjP8TezCrqBisFHmrauychmhVaaD",
+          "62DFPWZDTkiTQ44j5aaf6L3CYo1jEjkRWNFa5N2hSvVX",
+          "5s9rFYsEV1FTAtgGZhTGbyn5B8Pzz2fe9WsMh4DxYsNr"
+        ],
+        "gasBurnt": "6925685104652",
+        "value": [
+          {
+            "id": "5b55d85050c8f49cf5913464e8c0af7cf62f8311439757008651e445b9333212",
+            "input": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5",
+            "outputs": [
+              {
+                "id": "5b55d85050c8f49cf5913464e8c0af7cf62f8311439757008651e445b9333212:0",
+                "owner": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+                "amount": "2000000"
+              },
+              {
+                "id": "5b55d85050c8f49cf5913464e8c0af7cf62f8311439757008651e445b9333212:1",
+                "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+                "amount": "1000000"
+              }
+            ],
+            "block_height": 274803885
+          },
+          {
+            "id": "c4b951b8c7dcd1ecae32e7a01f30c8e71c040dc4400052a927848421e6ec1d5a",
+            "input": "5b55d85050c8f49cf5913464e8c0af7cf62f8311439757008651e445b9333212:0",
+            "outputs": [
+              {
+                "id": "c4b951b8c7dcd1ecae32e7a01f30c8e71c040dc4400052a927848421e6ec1d5a:0",
+                "owner": "03e9be7079bd8f72378431f50aadb777c5f2ecafbf2368735fa1bc7cd312207799",
+                "amount": "1000000"
+              },
+              {
+                "id": "c4b951b8c7dcd1ecae32e7a01f30c8e71c040dc4400052a927848421e6ec1d5a:1",
+                "owner": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+                "amount": "1000000"
+              }
+            ],
+            "block_height": 274803885
+          }
+        ]
+      },
+      "redeemed": {
+        "finality": "FINAL",
+        "txHash": "CGtDW4C34budWWGSawuoXPnDg5evzpbarEYyzzTSQpD8",
+        "receiptIds": [
+          "j7ziWF2KrZMRqvB41SRGcViGBk6uyR4yxHymVDu1kaX",
+          "84BR9k8peesYnmAi3uiLDsAfginEQQWyLi6AxWpaAZv3",
+          "H1hrmumNKNFqVfTsxmpGfkBD7piBoi8cHYm2Bm96KemP",
+          "8k7dREJwuwr1RNw14GLvNmWQPTCSWTgF8GaRMpLvjPAg"
+        ],
+        "gasBurnt": "4725692193142",
+        "value": "1000000"
+      }
+    }
+  },
+  "checks": [
+    "deploy original Wasm",
+    "fund original reserve",
+    "settle old offline path",
+    "register old balance account",
+    "redeem old note",
+    "snapshot old storage",
+    "upgrade code without initializer",
+    "all old state bytes survive upgrade",
+    "insufficient balance and storage revert all changes",
+    "deposit existing tUSD into fresh backed note",
+    "duplicate deposits and changed-source-terms cannot debit twice",
+    "returned value transfers onward and redeems again"
+  ],
+  "fixture": {
+    "funding": {
+      "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+      "amount": "100000000",
+      "nonce": "1e99108e8d7b5f9dd39e5b5cab9d1bb1",
+      "signature": "5a585c9a527f70f5ec01918d8dce55dcda3058d8c0704434694d7fb79a93b003bf4b5311265745b4d758761f177d1cb368d702ac6c11b7475fbef8bf075e23d0",
+      "id": "root:05bfcfa10bd4cc7fa73385b962d666fa0aaef8a992aa85ac4da4ac95b5e6cd25"
+    },
+    "path": [
+      {
+        "input": "root:05bfcfa10bd4cc7fa73385b962d666fa0aaef8a992aa85ac4da4ac95b5e6cd25",
+        "recipient": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+        "amount": "20000000",
+        "nonce": "f22861f6105f8caf4d21206689f5e6b0",
+        "signature": "1d10bba9dbb8cfaabfffb49a1e352186bc4344242f5ef7af05f50d8d9f60a9e9c9489e76d25f7bedda87b4025ab372bcf1beaf1e6fea77e0d41e9ff9f175157f"
+      },
+      {
+        "input": "04aa711564fc72c83d60d175f95b476cdfd3086997f395d9086f951d6b875355:0",
+        "recipient": "03e9be7079bd8f72378431f50aadb777c5f2ecafbf2368735fa1bc7cd312207799",
+        "amount": "8000000",
+        "nonce": "b6cd162567a8c5f5fa264286baba4cef",
+        "signature": "ca7e805f298530eb355be94374ace7aae96f0d7d80d462c41fe27004a44ced86548e41b84b547eddce4c23a73f3e5d2a2e658504f6b10914f2c4752e921b735e"
+      }
+    ],
+    "redemption": {
+      "input": "86c82d50032d509f22441c2e1fb2599838a020dc58a14d8bda21c3cfdabbfc90:0",
+      "receiver_id": "lenz-dev-1792984696547.testnet",
+      "nonce": "56a6b120823c7bf7aae4600f10c5b588",
+      "signature": "5c1526f1e038232e885e63271f86a4623f49b70976bc82291f82fc1b28f523225033686bce8eff7fbf0e710ef07039a58a16cc22fee39e1aeeb1b9daef9f41e5"
+    },
+    "deposit": {
+      "contract": "lenz-reentry-1792990439397.testnet",
+      "payer": "lenz-dev-1792984696547.testnet",
+      "amount": "3000000",
+      "source": "abababababababababababababababababababababababababababababababab",
+      "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+      "signature": "daf895bb83db861706937dcaece76a06fa95614be068e71e34eefdc033f00e440fa514a11ac79deac21135d3c827cb262fa8563394b449886b6185d8bbf09e3d",
+      "id": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5"
+    },
+    "onward": [
+      {
+        "input": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5",
+        "recipient": "0338fd4e35beab15bd0e69889c3ea7deecd07e342783eb92faf8810db761b93d95",
+        "amount": "2000000",
+        "nonce": "ddef44b7b08c17097078b9ff7fdfd176",
+        "signature": "231bb7009edf2c45d2cca8602e4ba4a862aa89c2e448ec405489968f05d3a54ab1e8f508a8cb4fe38274c2b9a3d3e167579660d7d171cc97e939aee9c5735d3c"
+      },
+      {
+        "input": "5b55d85050c8f49cf5913464e8c0af7cf62f8311439757008651e445b9333212:0",
+        "recipient": "03e9be7079bd8f72378431f50aadb777c5f2ecafbf2368735fa1bc7cd312207799",
+        "amount": "1000000",
+        "nonce": "59d1c591b9c092f25d514bfefa500d95",
+        "signature": "90b1bd48e44077acbada4a2d585d29be8760428fa455cd579ce1a5db5b4867ce77f0ea7f4cc31343f9fa9c91a16593829320b4d8452811a47e56c67444e883c1"
+      }
+    ],
+    "finalRedemption": {
+      "input": "c4b951b8c7dcd1ecae32e7a01f30c8e71c040dc4400052a927848421e6ec1d5a:0",
+      "receiver_id": "lenz-dev-1792984696547.testnet",
+      "nonce": "4549b18709850262793b78da7487af10",
+      "signature": "32f4f6ac95eb5d393399a3450fcfb715d9b1f7ea05da82e3672c56d98d1a568b8f139009f3d8fb5dbc84c3794f410cafcb6e3ceb656a13d9059a9d556c57e9a5"
+    },
+    "excessive": {
+      "contract": "lenz-reentry-1792990439397.testnet",
+      "payer": "lenz-dev-1792984696547.testnet",
+      "amount": "9000000",
+      "source": "bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc",
+      "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+      "signature": "4b70e4fa588e98317c30efa1a37c85fba615413a2c644da7724009ea85dbc0239f035f9d40829d978786b6ab15836a6723571c1126ee927b67428b07a37db383",
+      "id": "root:e8d5fa659b88a29b02d0a01c0310aab9518425ecfbb4e7fbba322b9947a76f1a"
+    },
+    "otherAmount": {
+      "contract": "lenz-reentry-1792990439397.testnet",
+      "payer": "lenz-dev-1792984696547.testnet",
+      "amount": "2000000",
+      "source": "abababababababababababababababababababababababababababababababab",
+      "owner": "03c3e1c7eb83543fab7879ec875603ca831d9c025d08e3be6d8a7ef7d9266ce0bd",
+      "signature": "69635640d9d4091ecf5c1d87a2e68d76e1ddbb910f01cf6698991c247bf9ffde6650ccf851e9acebb9482fc92afa3e90313438d6261f9639e5e22786a069d012",
+      "id": "root:a8144002debc1548700c4798ab2e98eb2d2effa500046d98d3e0842015d712c5"
+    }
+  },
+  "checkedAt": "2026-10-26T04:55:22.337Z",
+  "ok": true
+}

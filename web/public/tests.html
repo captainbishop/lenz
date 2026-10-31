@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Proof of U · Browser checks</title><link rel="stylesheet" href="./style.css"></head>
+<body><main style="margin:auto;max-width:850px;padding:30px">
+<a href="./">← Return to wallet</a><h1>Browser verification</h1>
+<p>Runs two real proofs and adversarial receipt checks in a fresh in-memory demo. Your saved wallet is untouched. No real funds or chain calls.</p>
+<label><input id="require-offline" type="checkbox"> Require the app server to be unavailable</label>
+<button id="run" class="button primary" disabled>Loading proof tools…</button>
+<p id="progress" role="status" aria-live="polite"></p><ol id="results"></ol>
+<pre id="report" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>
+<script type="module" src="./browser-tests.js"></script></main></body></html>

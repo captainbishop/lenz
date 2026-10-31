@@ -1,0 +1,62 @@
+{
+  "kind": "direct-exchange-research",
+  "elapsedMs": 151,
+  "messages": [
+    {
+      "from": "Amina",
+      "to": "Bola",
+      "text": "Can we exchange 20 demo dollars for 10 demo coins?"
+    },
+    {
+      "from": "Amina",
+      "to": "Bola",
+      "text": "Offer: 20 DEMO-USD for 10 DEMO-COIN. Amina signed both sides of the agreement."
+    },
+    {
+      "from": "Bola",
+      "to": "Amina",
+      "text": "Agreed. Both owners signed the same exchange."
+    },
+    {
+      "from": "Amina",
+      "to": "Chidi",
+      "text": "Passing 6 received demo coins to Chidi, with the signed exchange evidence."
+    }
+  ],
+  "packetBytes": [
+    601,
+    3109,
+    3689,
+    5669
+  ],
+  "balances": [
+    {
+      "person": "Bola",
+      "asset": "DEMO-USD",
+      "value": "20"
+    },
+    {
+      "person": "Amina",
+      "asset": "DEMO-USD",
+      "value": "80"
+    },
+    {
+      "person": "Bola",
+      "asset": "DEMO-COIN",
+      "value": "40"
+    },
+    {
+      "person": "Chidi",
+      "asset": "DEMO-COIN",
+      "value": "6"
+    },
+    {
+      "person": "Amina",
+      "asset": "DEMO-COIN",
+      "value": "4"
+    }
+  ],
+  "localAgreementCount": 2,
+  "settlementModelAgreementCount": 2,
+  "note": "Actual WebCrypto signatures/encryption; independent keys in one process; synthetic roots and settlement model. No chain or transport integration."
+}

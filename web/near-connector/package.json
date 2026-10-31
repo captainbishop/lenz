@@ -1,0 +1,11 @@
+{
+  "name": "lenz-testnet-wallet-connector",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "dependencies": {
+    "near-api-js": "7.4.0"
+  }
+}

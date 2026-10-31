@@ -1,0 +1,138 @@
+{
+  "checkedAt": "2026-10-31T10:06:26.873Z",
+  "scope": "Local native SDK tests and Wasm build of an undeployed adapter candidate. Promise responses are fixtures; no NEAR VM rehearsal or chain transaction ran.",
+  "adapter": {
+    "passed": 26,
+    "failed": 0
+  },
+  "reserve": {
+    "passed": 16,
+    "failed": 0
+  },
+  "mutations": [
+    {
+      "name": "callback-sender",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "swap-signature",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "minimum-output",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "redemption-evidence",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "recovery-stage",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "recovery-read-only",
+      "exitCode": 101,
+      "detected": true
+    }
+  ],
+  "candidate": {
+    "file": "candidate.wasm",
+    "bytes": 309632,
+    "sha256": "53b9b2ebb270ceb643aae7f07fcb4ab852ca47882bd17375b27db04d45bc4a80",
+    "addedExports": [
+      "recover_redemption",
+      "on_redemption_status"
+    ]
+  },
+  "deployedBaseline": {
+    "file": "deployed-v1.wasm",
+    "bytes": 301539,
+    "sha256": "6a01b6fa4e1a1d07d3bfe495d6bbfb97c24182c274b332815e864580f58012e1",
+    "configuredCodeHash": "88ojV8zrzjKJMZeu6uquvj1rVhRZro2AftDqMUCwzqrY"
+  },
+  "sourceComparison": "Only two recovery methods added; existing methods, Borsh state types, field order, storage prefixes and stage discriminants are unchanged. This is a source comparison, not a live storage-preservation rehearsal.",
+  "failures": [
+    {
+      "file": "test-harness-compile-failure.txt",
+      "reason": "New harness tried to clone SDK PromiseResult, which does not implement Clone. Replaced with fresh fixtures; no tests ran in that failed compile."
+    },
+    {
+      "file": "test-before-implementation.txt",
+      "reason": "With nonfunctional recovery stubs, 22 tests passed and 3 behavioral assertions failed. Then implementation passed all 26 tests including an added sibling-order case."
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://docs.near.org/smart-contracts/anatomy/crosscontract",
+      "checked": "2026-10-31",
+      "result": "Retrieved via web tool; independent asynchronous receipts and callback execution."
+    },
+    {
+      "url": "https://docs.rs/near-sdk/5.29.1/near_sdk/env/fn.promise_result_checked.html",
+      "checked": "2026-10-31",
+      "result": "Web tool could not access page. Inspected pinned local near-sdk 5.29.1 source instead."
+    }
+  ],
+  "files": [
+    {
+      "file": "contracts/adapter/src/lib.rs",
+      "sha256": "339d28408234647b9ced9b973175a44340c6d83608ed73325f9cf42e47b52041"
+    },
+    {
+      "file": "contracts/adapter/src/tests.rs",
+      "sha256": "c8ef67df8c9e5ff94aa9a4cca0184b9ee2f85307655569de45727ed0ba214d29"
+    },
+    {
+      "file": "contracts/src/lib.rs",
+      "sha256": "49c7462621c487d60452a03bdac6001f6aad467d62d2f0331133c71e38a7c9fb"
+    },
+    {
+      "file": "contracts/src/tests.rs",
+      "sha256": "671019fa1f459b5d6c51b2ef2d6a19c689bec846fa6a2e8ee10b10187990809d"
+    },
+    {
+      "file": "contracts/adapter/Cargo.lock",
+      "sha256": "65022838191ee88aa4ab8f6e9f8fbdf40253b0dfaab01d1507c64801d133d82e"
+    },
+    {
+      "file": "tooling/check-adapter-mutations.ps1",
+      "sha256": "4c8f5b55ff63ceec9c49a80b386d1ffc70b09798b00d946efb7d53853a203eb7"
+    },
+    {
+      "file": "contracts/adapter/test-output.txt",
+      "sha256": "e00d6af42206ce52ab4b90464e68a92d94da1538ce53100c2cf6d21c8083896c"
+    },
+    {
+      "file": "contracts/test-output.txt",
+      "sha256": "b24a0a9f2d2e2c70f66616dd610ec9a2d93e7274c489f1746d7f55afb93010ad"
+    },
+    {
+      "file": "contracts/adapter/mutation-results.json",
+      "sha256": "b19c4010c6714fe1f9112259b6e1fa3785516cac0321fafe2a200e868a845354"
+    },
+    {
+      "file": "contracts/adapter/wasm-output.txt",
+      "sha256": "2973b31071909eecc8e82b3d827b473663889ab3d3680f7bd5220d96bec18eae"
+    },
+    {
+      "file": "web/public/rhea-config.json",
+      "sha256": "d4bfaddf2aff9ace988b8e57e07c18a0e6ccf4f0b134b87d8fb857446a779d1d"
+    },
+    {
+      "file": "contracts/adapter/deployment.json",
+      "sha256": "0c3146453dbd0fe3418e2f578696536ff3461dacf65949a4e46f7de7d649d4c7"
+    }
+  ],
+  "commands": [
+    "./tooling/build-near.ps1 -Contract adapter -Action test -Offline",
+    "./tooling/build-near.ps1 -Contract reserve -Action test -Offline",
+    "./tooling/build-near.ps1 -Contract adapter -Action wasm -Offline",
+    "./tooling/check-adapter-mutations.ps1"
+  ]
+}

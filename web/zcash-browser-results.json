@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-31T14:02:34.481Z",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "no automatic wallet access or pretend zero before the first native read",
+    "local read displays exact eight-decimal ZEC amounts, native address and unrefreshed status",
+    "network update shows progress, blocks duplicate actions and preserves existing result while waiting",
+    "native error and malformed successful responses preserve old data with an explicit stale label",
+    "switching test accounts hides old values and requires an explicit read",
+    "offline and reconnect events never synchronize or send; page can reload from the shared offline cache",
+    "responsive layout, enlarged text and identity/history preservation"
+  ],
+  "requests": [
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/refresh",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "b"
+      }
+    },
+    {
+      "file": "/api/zcash/status",
+      "input": {
+        "wallet": "a"
+      }
+    }
+  ],
+  "scope": "Isolated Windows Edge; fixture native wallet responses, actual HTTP/browser/cache behavior. No native wallet funding or spending. Existing test Lenz identity/history preserved."
+}

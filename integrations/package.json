@@ -1,0 +1,8 @@
+{
+  "name": "lenz-integration-checks",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@defuse-protocol/intents-sdk": "0.93.0"
+  }
+}

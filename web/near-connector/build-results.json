@@ -1,0 +1,16 @@
+{
+  "package": "near-api-js",
+  "version": "7.4.0",
+  "protocol": "Meteor SDK 3.24.0 web popup",
+  "sources": {
+    "entry.js": "34972161c162b87616ed26dc3b0d87b5400a0c8d610612bab6820b21941e4014",
+    "meteor-popup.js": "366f47d758e7a4c6d0efad55baa5416701c83c4ac0a02b5f4a165b0b406a44df",
+    "package-lock.json": "7477301844fe1181cec296ba399937d6a7e24d3026a4002c5a00a818e6370fe4"
+  },
+  "files": {
+    "connector.js": {
+      "bytes": 108901,
+      "sha256": "e04c91883e95b10b1d1748f53d23b697a5fcd182d2abec42d9404a3376d9cc55"
+    }
+  }
+}

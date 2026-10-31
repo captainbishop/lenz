@@ -1,0 +1,9 @@
+{
+  "contract": "reserve.lenz.testnet",
+  "payer": "payer.testnet",
+  "amount": "3000000",
+  "source": "234b438e8915f7bec798cbbb3be9a54ae401325e4093b2711d128efa7886c216",
+  "owner": "03054a00eba4b0f9b78d0fd4806f1fa8aab0fa06b1bf0156223eccf8b6e9188680",
+  "signature": "201fd3aa030977f20dd83e0b585f9d102c8ea3617f593cce4174862658750eaf6534b76728d8f4ecb3195ad91e73414ca3a2a6b27ab67ba29505efc1287dda9c",
+  "id": "root:bedb53bc032d73022f9f2bd7649d6704397b848b093087a75e94292839636e99"
+}

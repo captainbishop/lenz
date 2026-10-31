@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-31T10:59:14.319Z",
+  "ok": true,
+  "target": "lenz-rhea-1792987934062.testnet",
+  "txHash": "3S7We8EdECFaeDJWKbh3bn6RLzVwETMk7xKEbE1qu2TZ",
+  "stateEntries": 13,
+  "checks": [
+    "one final exact deploy action with successful receipt graph",
+    "all reviewed storage entries unchanged",
+    "public capability bound to verified candidate and deployment"
+  ],
+  "scope": "Saved final RPC receipts and snapshots; no independent consensus proof."
+}

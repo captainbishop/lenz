@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-31T10:51:04.997Z",
+  "results": [
+    {
+      "guard": "artifact",
+      "detected": true
+    },
+    {
+      "guard": "deploy-only",
+      "detected": true
+    },
+    {
+      "guard": "state-preservation",
+      "detected": true
+    },
+    {
+      "guard": "nonfinal-retry",
+      "detected": true
+    }
+  ]
+}

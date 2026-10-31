@@ -1,0 +1,114 @@
+{
+  "checkedAt": "2026-10-31T12:20:42.737Z",
+  "ok": true,
+  "node": {
+    "passed": 16,
+    "command": "node --test --test-reporter=tap zcash/companion.test.mjs web/zcash-relay.test.mjs web/defi-relay.test.mjs"
+  },
+  "browser": [
+    {
+      "file": "web/zcash-browser-results.json",
+      "passed": 7
+    },
+    {
+      "file": "web/offline-social-browser-results.json",
+      "passed": 9
+    },
+    {
+      "file": "web/security-upgrade-results.json",
+      "passed": 4
+    }
+  ],
+  "actualNativeBrowser": {
+    "passed": 5,
+    "completedAt": "2026-10-31T12:14:26.264Z"
+  },
+  "mutations": 2,
+  "cacheRoutes": 44,
+  "funding": {
+    "wallet": "a",
+    "zatoshis": "100000000",
+    "spendablePool": "Ironwood",
+    "source": "Unknown; previous faucet failures preserved"
+  },
+  "limits": [
+    "No outgoing Zcash transaction or offline PCZT signing/proving",
+    "Developer companion wallets are separate from Lenz browser identity",
+    "Two initial browser update failures remain unexplained; later direct/native/browser runs passed",
+    "No private NEAR settlement, deployed Aurora route, safe recovery or phone certification"
+  ],
+  "files": [
+    {
+      "file": "zcash/companion.mjs",
+      "sha256": "63acc8eb78a1c7eac78e812350a7d1a9dd736be74cec8a3d48409a9cec39938e"
+    },
+    {
+      "file": "zcash/wallet.mjs",
+      "sha256": "81044f47d6c300d36783c5a4aa7cfcd13f6ba7b2f95f1c89ab2baf83d6c13011"
+    },
+    {
+      "file": "web/zcash-relay.mjs",
+      "sha256": "db75dbe1f4d1aabf498376b86327cddb5800f1c08fbe6897ae11891a1e88cd2f"
+    },
+    {
+      "file": "web/server.mjs",
+      "sha256": "71049a5fb33edd478fc169131f791bbc967f467c6171f42382c3544ce42b050f"
+    },
+    {
+      "file": "web/public/zcash-lab.html",
+      "sha256": "8037cab4be3b6610082cc9a0c68e8669016580a1415fb8e3308439586f0e644a"
+    },
+    {
+      "file": "web/public/zcash-lab.js",
+      "sha256": "b4a63db76d071335b4c74bd1ce77e76528a27869ed73d4465db752b7725eac57"
+    },
+    {
+      "file": "web/public/zcash-lab.css",
+      "sha256": "c37852a9697f90d86da5987ba914ea235080be29c4be4a1e25ffefb8e888bce8"
+    },
+    {
+      "file": "web/public/chat-sw.js",
+      "sha256": "4d3a951b67d0312095112a0c4c3ae29f0c8f47b75051f4397c3cf88e255cf4b4"
+    },
+    {
+      "file": "zcash/source-lock.json",
+      "sha256": "c3358268053b27ceef29d80d6647874c43436327d9a8d015a60df8b27ac2aaf6"
+    },
+    {
+      "file": "zcash/transactions-a-results.json",
+      "sha256": "b1c48a0895b03e0672245edb61dc0ae54f64d71d9cac3e2e426e8eac6fa57d66"
+    },
+    {
+      "file": "zcash/companion-node-results.txt",
+      "sha256": "d54aee1c3051b9a4a7b3226b11cb4fe74e2e1d9e17a0870ee4ff4047e37e9611"
+    },
+    {
+      "file": "zcash/companion-mutations.json",
+      "sha256": "b9d0ae0ac8ed8666c2505e1936a0bb0f11c7539f5b9a7fa87b3ffa1bb9cc13ca"
+    },
+    {
+      "file": "web/zcash-companion-live-results.json",
+      "sha256": "caba656e1c4b2223cf8ae973559c25bafdd26a9a5deb45edcf9c75e5f4d360ba"
+    },
+    {
+      "file": "web/zcash-companion-live-first-failure.json",
+      "sha256": "37f313a4705b2983beae0c89e62b6998d9aac8c84ab9b9667c5fb376515d5c9d"
+    },
+    {
+      "file": "web/zcash-companion-live-second-failure.json",
+      "sha256": "ac16653f33c0f48faeef1e211131d38f451fe19b0626a67eea905f8d11e919d6"
+    },
+    {
+      "file": "web/zcash-browser-results.json",
+      "sha256": "b9b083c25df0704658fc17b8f88e402d5d053af5cc4b4272cf9c9b5423c799d5"
+    },
+    {
+      "file": "web/offline-social-browser-results.json",
+      "sha256": "1656604cd8ac9c95175a8d70e1614ab89eb7d2e0367c2206e6767dcb6067fa1f"
+    },
+    {
+      "file": "web/security-upgrade-results.json",
+      "sha256": "351ff853e3b419cd8d82349dc69afa0591f0f28799f7a9fa9fb071e9697d4b41"
+    }
+  ]
+}

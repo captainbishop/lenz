@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-31T11:17:23.520Z",
+  "passed": 11,
+  "failed": 0,
+  "checks": [
+    "everyday wallet hides technical import, transaction export and experimental signer controls",
+    "swap screen loads offline with explicit minimum, refund account and public-terms notice",
+    "failed encrypted-vault commit exposes no signed swap and leaves full balance available",
+    "offline signing reserves one tUSD and exports a verifiable browser signature",
+    "receipt checking preserves reservations and identity across failure, reload and forged responses",
+    "resume appears only for the supported stalled stage and never repeats a payment",
+    "pending, interrupted and forged recovery replies keep the original reservation",
+    "cached capability changes hide recovery without changing identity or reserved money",
+    "separate developer tools preserve offline packet import and bounded deposit export",
+    "two tabs cannot reserve the same remaining note",
+    "swap controls reflow at desktop, portrait, landscape and enlarged text"
+  ],
+  "scope": "Isolated Windows Edge. Fixture funding; actual offline signing, storage failure and concurrent tabs. No live swap in this suite."
+}

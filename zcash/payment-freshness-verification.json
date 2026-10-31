@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-10-31T15:53:48.750Z",
+  "ok": true,
+  "actualBrowser": 6,
+  "fixtureBrowser": 8,
+  "observed": {
+    "status": "expired",
+    "serverHeight": 4563629,
+    "walletHeight": 4563325,
+    "expiryHeight": 4563366,
+    "targetHeight": 4563630,
+    "branchMatches": true,
+    "blocksRemaining": 0,
+    "checkedAt": "2026-10-31T15:25:30.587Z"
+  },
+  "unchangedWallets": true,
+  "noNewNativeTransactions": true,
+  "discarded": true,
+  "files": [
+    {
+      "file": "zcash/payment-freshness.mjs",
+      "sha256": "3cd9670d3a72f243fb9e70b64547306fa9bb387e537dab7942bbec008fe8e84f"
+    },
+    {
+      "file": "zcash/payment-review.mjs",
+      "sha256": "b477cdd50de8dc3f5043df1974c0c9de5d2b67898663090a25c2ba978242b5b9"
+    },
+    {
+      "file": "zcash/review-inspector/src/main.rs",
+      "sha256": "37d3881e58f2879a0a248636fac90bf25acb6bda8632675855b41a3d746e5bc4"
+    },
+    {
+      "file": "zcash/review-inspector/Cargo.lock",
+      "sha256": "9f007638df74b292e3e2f91c1e1a628dd34e396c004d6e30a00b1ef220363c53"
+    },
+    {
+      "file": "web/zcash-relay.mjs",
+      "sha256": "6c315137372a6deb4d9a11c139f43295218c58fd0b20e67fcb0a755b10373090"
+    },
+    {
+      "file": "web/public/zcash-lab.html",
+      "sha256": "d5b81f8955db9cebd6b3a13deee0a06fc97dd0366565f647ed6230fad8ec5352"
+    },
+    {
+      "file": "web/public/zcash-lab.js",
+      "sha256": "5936f6ee62bdb7bd28d98f084666b05dc337c92a2558d0f8e3c361ea57bb57a7"
+    },
+    {
+      "file": "web/public/chat-sw.js",
+      "sha256": "964861cfcce8f201a19a5e3149dd38e0bc607e967965f553c2b1cd3725df23e6"
+    },
+    {
+      "file": "web/zcash-freshness-live-results.json",
+      "sha256": "72900167e03f857f25db5f3c653f37961a2becf7c08863bd808586a39d3c1c53"
+    },
+    {
+      "file": "web/zcash-freshness-browser-results.json",
+      "sha256": "cb605e391f78afd52320850493a69007c303061e9d54ad8d8c81a447f0ed815f"
+    }
+  ],
+  "scope": "One actual unsigned payment review; read-only provider height and local wallet observations. Local balance/history reads confirm no changes. No signatures, proofs, submissions, synchronization or user browser identity access."
+}

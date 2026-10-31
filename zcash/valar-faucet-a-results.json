@@ -1,0 +1,22 @@
+{
+  "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+  "httpStatus": 202,
+  "response": {
+    "id": "eba7b7ae464758eb265e8e81fdfb8331",
+    "status": "queued",
+    "amount": "0.125",
+    "broadcastOk": 0,
+    "broadcastNodes": 3,
+    "createdAt": 1792985234
+  },
+  "checkedAt": "2026-10-26T03:30:19.902Z",
+  "status": {
+    "id": "eba7b7ae464758eb265e8e81fdfb8331",
+    "status": "failed",
+    "amount": "0.125",
+    "message": "the wallet cannot pay this address",
+    "broadcastOk": 0,
+    "broadcastNodes": 3,
+    "createdAt": 1792985234
+  }
+}

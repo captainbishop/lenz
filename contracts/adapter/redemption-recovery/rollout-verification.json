@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-10-31T10:54:14.131Z",
+  "ok": true,
+  "target": "lenz-rhea-1792987934062.testnet",
+  "txHash": "3S7We8EdECFaeDJWKbh3bn6RLzVwETMk7xKEbE1qu2TZ",
+  "stateEntries": 13,
+  "checks": [
+    "one final exact deploy action with successful receipt graph",
+    "all reviewed storage entries unchanged",
+    "public capability bound to verified candidate and deployment",
+    "live code/configuration and reserve route remain pinned",
+    "all existing orders and storage unchanged on follow-up read"
+  ],
+  "scope": "Saved final RPC receipts and snapshots; no independent consensus proof. Follow-up reads use the configured testnet RPC. No new recovery, token transfer, funding or injected fault.",
+  "live": {
+    "blockHash": "ERBgpzCujQQgeVd2Rv2oNvuTnWH7y6xpQ9M5JBboe7su",
+    "blockHeight": 275589008,
+    "orders": [
+      {
+        "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+        "stage": "refunded"
+      },
+      {
+        "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+        "stage": "complete"
+      },
+      {
+        "id": "b4552cbc32412d67edf2e908f7e9f7c5bb7a7263fb4bcf14a6d8e1f578346e42",
+        "stage": "refunded"
+      },
+      {
+        "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+        "stage": "complete"
+      },
+      {
+        "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+        "stage": "refunded"
+      },
+      {
+        "id": "ed7af6cb0a1bae7484c7b27b5892428043d9e6cc39ccd7a4eae3b63472d051e1",
+        "stage": "complete"
+      }
+    ]
+  }
+}

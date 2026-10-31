@@ -1,0 +1,176 @@
+import { createIdentity, sealMessage, openMessage, bytes } from './peer-crypto.js';
+import { readState, updateState } from './chat-store.js';
+import { runExchangeScenario } from './peer-scenario.js';
+import { renderProfile, setupContacts } from './contact-ui.js';
+import { paintAvatar, privateName } from './profile-display.js';
+import { setupProfile } from './profile-ui.js';
+import { mountProfilePanels } from './profile-panels.js';
+import { isTrade } from './trade-model.js';
+import { receivePacket } from './receive-packet.js';
+import { saveOffline } from './save-offline.js';
+import { renderMoney, renderTradeCard, setupTrades } from './trade-ui.js';
+import { isNearPayment } from './near-payment-service.js';
+import { loadChatMoney, mountChatMoney, renderChatMoney, renderNearPaymentCard, chatNearContract } from './near-chat.js';
+const $ = selector => document.querySelector(selector);
+mountProfilePanels();
+let active = null, lastPacket = null, busy = false, showThread = null;
+const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
+function status(text, error = false) { $('#status').textContent = text; $('#status').className = error ? 'status error' : 'status'; }
+function element(tag, text, className) { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; }
+function save(value, name) {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(value)], { type: 'application/json' }));
+  const link = element('a'); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function parse(text, limit = 205000) {
+  if (new TextEncoder().encode(text).length > limit) throw new Error('This packet is too large.');
+  return JSON.parse(text);
+}
+function chatPayload(payload) {
+  if (!payload || payload.kind !== 'chat' || typeof payload.text !== 'string' || !payload.text.trim() || bytes(payload.text).length > 16002) throw new Error('This is not a supported chat message.');
+}
+async function action(operation) {
+  if (busy) return;
+  busy = true;
+  $('main').setAttribute('aria-busy', 'true');
+  try { await operation(); channel?.postMessage('changed'); await render(); }
+  catch (error) {
+    status(error.message, true);
+    if ($('#add-contact').open) { $('#contact-feedback').textContent = error.message; $('#contact-feedback').className = 'error'; }
+    if ($('#trade-dialog').open) { $('#trade-feedback').textContent = error.message; }
+    if ($('#handover').open) { $('#handover-feedback').textContent = error.message; }
+    if ($('#edit-profile').open) { $('#profile-feedback').textContent = error.message; }
+  }
+  finally { busy = false; $('main').setAttribute('aria-busy', 'false'); }
+}
+async function render() {
+  const state = await readState();
+  $('#identity-form').hidden = !!state.identity; $('#my-profile').hidden = !state.identity;
+  await renderProfile(state.identity?.profile);
+  const list = $('#contact-list'); list.replaceChildren();
+  $('#people-count').textContent = String(state.contacts.length);
+  active = state.contacts.some(p => p.id === active) ? active : (state.contacts[0]?.id ?? null);
+  for (const contact of state.contacts) {
+    if (!contact.name.toLocaleLowerCase().includes($('#contact-search').value.toLocaleLowerCase())) continue;
+    const button = element('button'); button.type = 'button'; button.setAttribute('aria-pressed', String(contact.id === active));
+    const avatar = element('span', undefined, 'avatar'); avatar.setAttribute('aria-hidden', 'true'); paintAvatar(avatar, contact);
+    const copy = element('span', undefined, 'contact-copy'); copy.append(element('strong', contact.name));
+    const latest = state.messages.findLast(record => [record.packet.from, record.packet.to].includes(contact.id));
+    let preview = 'Start a conversation';
+    if (latest) {
+      const payload = await openMessage(state.identity, contact, latest.packet);
+      preview = isNearPayment(payload) ? 'tUSD payment' : isTrade(payload) ? payload.kind === 'trade-payment' ? 'Demo payment card' : 'Demo trade card' : payload.text;
+    }
+    copy.append(element('small', preview)); button.append(avatar, copy);
+    button.onclick = () => action(async () => { active = contact.id; showThread = true; }); list.append(button);
+  }
+  $('#people-empty').hidden = !!list.children.length;
+  $('#people-empty').textContent = state.contacts.length ? 'No one matches that name.' : 'Your conversations will appear here.';
+  const contact = state.contacts.find(p => p.id === active);
+  if (showThread === null) showThread = !!contact;
+  $('main').classList.toggle('has-conversation', !!contact && showThread);
+  $('#conversation-name').textContent = contact ? contact.name : 'Your conversations';
+  paintAvatar($('#conversation-avatar'), contact ?? {});
+  $('#conversation-subtitle').textContent = contact ? `Encrypted between you and ${contact.name}.` : 'Private messages, saved on this device.';
+  $('#message').disabled = $('#prepare-message').disabled = !contact;
+  const money = await renderMoney(state, contact);
+  const nearMoney = await renderChatMoney(state, contact);
+  const messages = $('#messages'); messages.replaceChildren();
+  if (!contact) {
+    const empty = element('div', undefined, 'empty-conversation'), mark = element('img'); mark.src = '/brand/mark.svg'; mark.alt = '';
+    empty.append(mark, element('h3', 'Talk privately. Use DeFi without internet.'), element('p', state.identity ? 'Add someone using their contact card. Your messages and financial agreements will live in the same conversation.' : 'Use a name you choose, or start with a private profile.'));
+    if (state.identity) { const add = element('button', 'Add someone'); add.type = 'button'; add.onclick = () => $('#show-add-contact').click(); empty.append(add); }
+    messages.append(empty); return;
+  }
+  const history = state.messages.filter(record => [record.packet.from, record.packet.to].includes(contact.id));
+  if (!history.length) messages.append(element('p', 'Your first message starts here.', 'empty'));
+  for (const record of history.slice(-100)) {
+    const payload = await openMessage(state.identity, contact, record.packet);
+    const outgoing = record.packet.from === state.identity.profile.id;
+    const bubble = element('div', undefined, `bubble${outgoing ? ' outgoing' : ''}${isTrade(payload) || isNearPayment(payload) ? ' financial' : ''}`);
+    if (isNearPayment(payload)) bubble.append(await renderNearPaymentCard(payload, record.packet, state, nearMoney));
+    else if (isTrade(payload)) bubble.append(renderTradeCard(payload, record.packet, state, money, reviewOffer));
+    else {
+      chatPayload(payload); bubble.textContent = payload.text;
+      bubble.append(element('small', outgoing ? 'Prepared here · delivery not confirmed' : 'Opened here · sender signature checked'));
+    }
+    if (outgoing) {
+      const download = element('button', isNearPayment(payload) ? 'Save payment file' : isTrade(payload) ? 'Save financial card' : 'Save message'); download.type = 'button';
+      download.onclick = () => save(record.packet, `proof-u-message-${record.packet.id}.json`); bubble.append(download);
+    }
+    messages.append(bubble);
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+function startIdentity(name, privateProfile = false) { return action(async () => {
+  status('Creating your keys on this device…');
+  await updateState(async state => {
+    if (state.identity) throw new Error('This browser already has an identity. Reload to see it.');
+    state.identity = await createIdentity(name);
+    if (privateProfile) state.identity.profile.avatar = 'moon';
+  }); status('Identity saved. Share your card with someone you know.');
+}); }
+const alias = privateName(); $('#private-default-name').textContent = alias; paintAvatar($('#private-default-avatar'), {});
+$('#identity-form').onsubmit = event => { event.preventDefault(); startIdentity($('#name').value); };
+$('#continue-private').onclick = () => startIdentity(alias, true);
+setupProfile({ action, status });
+setupContacts({ action, status, select: id => { active = id; showThread = true; } });
+$('#contact-search').oninput = () => action(async () => {});
+$('#back-people').onclick = () => { showThread = false; $('main').classList.remove('has-conversation'); };
+$('#open-about').onclick = () => $('#about-lenz').showModal();
+$('#receive-message').onclick = () => { $('#handover-feedback').textContent = ''; $('#handover').showModal(); };
+function expose(packet, kind = 'message') {
+  lastPacket = packet; $('#outgoing').value = JSON.stringify(packet); $('#save-message').disabled = false; $('#handover-feedback').textContent = '';
+  $('#handover-label').textContent = kind === 'payment' ? 'Payment ready to share' : 'Message handover';
+  $('#handover-description').textContent = kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Save an encrypted message to share, or open one you received.';
+  $('#save-message').textContent = kind === 'payment' ? 'Save payment file' : 'Save encrypted message';
+  if (!$('#handover').open) $('#handover').showModal();
+}
+const reviewOffer = setupTrades({ action, status, selected: () => active, expose });
+mountChatMoney({ action, status, selected: () => active, expose });
+$('#compose').onsubmit = event => { event.preventDefault(); action(async () => {
+  const payload = { kind: 'chat', text: $('#message').value }; chatPayload(payload);
+  const recipient = active; status('Encrypting your message…');
+  const packet = await updateState(async state => {
+    const contact = state.contacts.find(p => p.id === recipient); if (!contact) throw new Error('Choose a contact first.');
+    if (state.messages.length >= 1000) throw new Error('This prototype has reached its 1,000-message storage limit.');
+    const packet = await sealMessage(state.identity, contact, payload);
+    state.messages.push({ packet }); return packet;
+  });
+  // Expose a handover only after its encrypted history has been committed.
+  expose(packet);
+  $('#message').value = ''; status('Message saved and encrypted. Share the file with your contact.');
+}); };
+$('#save-message').onclick = () => { if (lastPacket) save(lastPacket, `proof-u-message-${lastPacket.id}.json`); };
+$('#incoming-file').onchange = () => action(async () => {
+  const file = $('#incoming-file').files[0]; if (!file) return;
+  if (file.size > 205000) throw new Error('This message file is too large.');
+  $('#incoming').value = await file.text(); status('File loaded. Choose Open message to check it.');
+});
+$('#open-message').onclick = () => action(async () => {
+  const packet = parse($('#incoming').value);
+  const received = await updateState(state => receivePacket(state, packet, false, chatNearContract()));
+  active = received.contactId; showThread = true; const duplicate = received.duplicate;
+  $('#incoming').value = ''; $('#incoming-file').value = ''; status(duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Its sender’s signature is valid.');
+  $('#handover').close();
+});
+$('#run-exchange').onclick = () => action(async () => {
+  $('#run-exchange').disabled = true; status('Running the exchange with independent keys…');
+  try {
+    const report = await runExchangeScenario(); const results = $('#exchange-results'); results.replaceChildren();
+    const list = element('ol');
+    for (const message of report.messages) list.append(element('li', `${message.from} → ${message.to}: ${message.text}`));
+    results.append(list); const balances = element('div', undefined, 'balances');
+    for (const row of report.balances) balances.append(element('span', `${row.person}: ${row.value} ${row.asset}`));
+    results.append(balances, element('p', `Two signed agreements checked locally and applied together in a separate settlement model. ${report.elapsedMs} ms on this browser. No server call during the scenario.`, 'quiet'));
+    const download = element('button', 'Save experiment report', 'secondary'); download.type = 'button'; download.onclick = () => save(report, 'direct-exchange-report.json'); results.append(download);
+    status('Exchange experiment finished. Amina passed 6 of her received demo coins to Chidi.');
+  } finally { $('#run-exchange').disabled = false; }
+});
+$('#prepare-offline').onclick = () => action(async () => {
+  await saveOffline();
+  status('Conversation files saved. Reload once, then this page can open without its server. Browser storage can still be cleared.');
+});
+channel?.addEventListener('message', () => { if (!busy) render().catch(error => status(error.message, true)); });
+try { await loadChatMoney(); } catch { $('#chat-wallet-note').textContent = 'Test dollars are unavailable. Private messages still work.'; }
+try { await render(); status('Private chat is ready.'); }
+catch (error) { status(error.message, true); }

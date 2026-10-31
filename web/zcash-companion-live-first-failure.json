@@ -1,0 +1,47 @@
+{
+  "startedAt": "2026-10-31T11:59:52.607Z",
+  "network": "testnet",
+  "refresh": true,
+  "checks": [
+    "Native wallet A local read"
+  ],
+  "responses": [
+    {
+      "wallet": "a",
+      "refresh": false,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "a",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T11:59:56.469Z",
+        "refreshed": false,
+        "serverHeight": null,
+        "walletHeight": 4542631,
+        "amounts": {
+          "total": "0",
+          "ironwood_spendable": "0",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "0",
+          "pending": "0"
+        },
+        "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    },
+    {
+      "wallet": "a",
+      "refresh": true,
+      "status": 503,
+      "body": {
+        "error": "The local Zcash test wallet is unavailable or could not finish. Any earlier balance may be out of date."
+      }
+    }
+  ],
+  "errors": [],
+  "ok": false,
+  "failure": "AssertionError [ERR_ASSERTION]: The local Zcash test wallet is unavailable or could not finish. Any earlier balance may be out of date.\n\n503 !== 200\n\n    at <workspace>\\web\\zcash-companion-live.test.cjs:20:113"
+}

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-26T03:05:41.847Z",
+  "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
+  "evm": "local Hardhat",
+  "evmTarget": "paris",
+  "verifierSha256": "bff30d5997ef62bd0938d0d8c06470dc6f3e067e2ba14cd99692c68c9de39801",
+  "circuitHash": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
+  "validProofAccepted": true,
+  "alteredPublicInputsRejected": 7,
+  "alteredProofRejected": true,
+  "gasUsed": "302476",
+  "calldataBytes": 996,
+  "deployedBytecodeBytes": 7118,
+  "scope": "TEST-ONLY setup. Existing ownership/nullifier/conservation step; seven public inputs expose commitment graph. Local EVM gas is not NEAR gas or Aurora execution evidence. No private settlement wrapper or Zcash transaction."
+}

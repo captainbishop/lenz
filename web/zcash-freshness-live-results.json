@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-10-31T15:25:31.331Z",
+  "ok": true,
+  "checks": [
+    "opening the page makes no wallet, payment or network request",
+    "explicit preparation shows actual amount, fee and fixed recipient with no signing action",
+    "reload and reconnect do not prepare, sign or send; explicit status restores the same review",
+    "expiry checks require an explicit online action for the displayed request",
+    "review fits narrow, landscape and enlarged text and creates no Lenz identity",
+    "explicit discard clears only the unsigned review and never sends"
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review",
+      "body": {
+        "wallet": "a",
+        "amount": "0.01"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "09937513-54d8-4caa-b454-5e846738d5cd"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4173/api/zcash/review-discard",
+      "body": {
+        "wallet": "a",
+        "id": "09937513-54d8-4caa-b454-5e846738d5cd"
+      }
+    }
+  ],
+  "networkChecks": [
+    {
+      "status": "expired",
+      "serverHeight": 4563629,
+      "walletHeight": 4563325,
+      "expiryHeight": 4563366,
+      "targetHeight": 4563630,
+      "branchMatches": true,
+      "blocksRemaining": 0,
+      "checkedAt": "2026-10-31T15:25:30.587Z"
+    }
+  ],
+  "details": "Transaction abb319718983b7c650780f31bbf349e90c71841f7344237feb9c1a5572465bfa. Recipient utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx. Proposed change 0.8898 test ZEC. Wallet's known block 4563325.",
+  "errors": [],
+  "scope": "Actual pinned native unsigned PCZT preparation and local review in isolated Edge. No proof, signature, broadcast, synchronization or existing browser identity access. Expiry mode explicitly reads the provider height."
+}

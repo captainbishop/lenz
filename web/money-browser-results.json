@@ -1,0 +1,16 @@
+{
+  "browser": "156.0.4314.50",
+  "passed": 8,
+  "failed": 0,
+  "checks": [
+    "wallet profiles and recipient cards work without opening Conversations",
+    "wallets reload offline with the complete account and payment modules cached",
+    "a standalone payment changes both balances after encrypted file handover",
+    "the recipient can pass received value onward from the wallet while offline",
+    "duplicate or altered payment files cannot increase the received balance",
+    "failed payment save leaves no new outgoing file or reduced balance",
+    "chat reads the same identity and balances after wallet use without a reset",
+    "wallet layouts fit desktop and narrow screens with Send and Receive visible"
+  ],
+  "scope": "Three isolated Windows Edge contexts with offline emulation; synthetic money, no settlement."
+}

@@ -1,0 +1,177 @@
+{
+  "network": "testnet",
+  "contract": "tusd.lenz-dev-1792984696547.testnet",
+  "checkedAt": "2026-10-26T03:29:52.256Z",
+  "passed": 7,
+  "checks": [
+    "tUSD grant is minted and reserved in final NEAR state",
+    "A → B → C signatures and onward ownership are produced without RPC calls",
+    "NEAR verifies the browser path and records both transfers",
+    "replaying the same path does not create extra value",
+    "a competing spend is rejected by NEAR",
+    "a failed second signature rolls back the whole path",
+    "recipient redeems the settled note into an actual NEP-141 balance"
+  ],
+  "transactions": [
+    {
+      "action": "fund",
+      "finality": "FINAL",
+      "txHash": "6mi4DpwTwQ4PFJWW1yrwBEvKQwT9sHzGkoAZ4iYBjo8A",
+      "receiptIds": [
+        "BPTojVKu5JzKn6pr64WkgeM8baRKjYDrGgymQaQfEzt7",
+        "8Gev8HkwZf956ADJkcvWbvaKGCPcXMi1GDbwoeTfnJ5a",
+        "HDYy2s7uDmnWpYVSMuV3dHEgRt9CqMDFu4gNwm4Npf45",
+        "FG9JcpQmWyy51iDVAJieq9tkA6C7e2tw8P7scXYn8ovr"
+      ],
+      "gasBurnt": "4620549228918",
+      "value": {
+        "id": "root:3c6fc4deef07878c514937c30a98e1a6395e27d7ea3c42868115a1007a272bae",
+        "owner": "03a62c7c79d93eeb940653ecf4b883017c6bfcb66ac56b4a1fae254c9f25a9adfa",
+        "amount": "100000000"
+      }
+    },
+    {
+      "action": "settle",
+      "finality": "FINAL",
+      "txHash": "452pMKiWtyW5rThJakrnkd9eTKHGya1eaA69w8KtqyZW",
+      "receiptIds": [
+        "HQ61QipvFiNyvjACujMLRP5y8ASf9aNvEsm6gA9scPD3",
+        "EzBbHh3nUP2uhNn4ZF1AAAGcys8k46uRtpN7nr8gJ5d",
+        "VPYf7JX7evf6Q57vj8DoDSSkwWTibcdi425Sqef78XH",
+        "8QQzwLi2gS87Em8zLZYu7SMVotKHFe3o48zo9XMfzzbx"
+      ],
+      "gasBurnt": "6912476727731",
+      "value": [
+        {
+          "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff",
+          "input": "root:3c6fc4deef07878c514937c30a98e1a6395e27d7ea3c42868115a1007a272bae",
+          "outputs": [
+            {
+              "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:0",
+              "owner": "0281a8ceafc394fec0d9275d47144bdfd52997cf1f82db83ab0a09e1a7ad84db43",
+              "amount": "20000000"
+            },
+            {
+              "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:1",
+              "owner": "03a62c7c79d93eeb940653ecf4b883017c6bfcb66ac56b4a1fae254c9f25a9adfa",
+              "amount": "80000000"
+            }
+          ],
+          "block_height": 274794689
+        },
+        {
+          "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788",
+          "input": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:0",
+          "outputs": [
+            {
+              "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788:0",
+              "owner": "03c10d335ed10ff8b212fba4c4c993bf0a87e5501d98f64dcb1396b722758bb137",
+              "amount": "8000000"
+            },
+            {
+              "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788:1",
+              "owner": "0281a8ceafc394fec0d9275d47144bdfd52997cf1f82db83ab0a09e1a7ad84db43",
+              "amount": "12000000"
+            }
+          ],
+          "block_height": 274794689
+        }
+      ]
+    },
+    {
+      "action": "retry",
+      "finality": "FINAL",
+      "txHash": "5xkqFoe98Wbc1ZCBV8bABUNZBUPTDvYidjXJcDkQvjmg",
+      "receiptIds": [
+        "8GYRx9E7xiceNzSdfyWTNaVRTGgZuZMGunzpn22r5V7Q",
+        "9S2NVFDAuUprrGyr3F4VjwxF4QPSTQYRTkQEtBCSSFz5",
+        "FVoYcKceDNKMjx7vqhhuiKFLUq3tnmvPiE3iKYd8rfmY",
+        "Gv82MhuQkvyk8WVnu2RjHgd9AYnYrmDmnp1VZAdBSp82"
+      ],
+      "gasBurnt": "2885778052002",
+      "value": [
+        {
+          "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff",
+          "input": "root:3c6fc4deef07878c514937c30a98e1a6395e27d7ea3c42868115a1007a272bae",
+          "outputs": [
+            {
+              "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:0",
+              "owner": "0281a8ceafc394fec0d9275d47144bdfd52997cf1f82db83ab0a09e1a7ad84db43",
+              "amount": "20000000"
+            },
+            {
+              "id": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:1",
+              "owner": "03a62c7c79d93eeb940653ecf4b883017c6bfcb66ac56b4a1fae254c9f25a9adfa",
+              "amount": "80000000"
+            }
+          ],
+          "block_height": 274794689
+        },
+        {
+          "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788",
+          "input": "a404d1c9d2ed204c426b019fb1cb160222acd2e27c2a50d34a69a0d3627621ff:0",
+          "outputs": [
+            {
+              "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788:0",
+              "owner": "03c10d335ed10ff8b212fba4c4c993bf0a87e5501d98f64dcb1396b722758bb137",
+              "amount": "8000000"
+            },
+            {
+              "id": "a3222e51a4bcfbd51fc899e60c6adfe729da71e7e8fb3f4443240e311ea81788:1",
+              "owner": "0281a8ceafc394fec0d9275d47144bdfd52997cf1f82db83ab0a09e1a7ad84db43",
+              "amount": "12000000"
+            }
+          ],
+          "block_height": 274794689
+        }
+      ]
+    },
+    {
+      "action": "rollback-fixture-fund",
+      "finality": "FINAL",
+      "txHash": "4YXxWqyVs25wbxBsV2cpXL7eubnfv2e3eRaqT1nuYjHY",
+      "receiptIds": [
+        "DEh15qWRfFwWgBnqEYK2BpKYZRABmiEamig1U2PFvnoH",
+        "H6YuCdm5zjircd3Xge5LcCHNzuD6k3EH7QyVEVJWrMUX",
+        "37aGFR2F1BzztnWWe2gSNSBGw45mcDj7ga8qiVrrfJco",
+        "CcZU8x1d3zzowwcntAFXRZGm4ctv3tkjpcLLAHVbnPzH"
+      ],
+      "gasBurnt": "4635262438126",
+      "value": {
+        "id": "root:2d7f1da1730825d96b883cfda920f459f91f8771f59c55683a706191bcde0d37",
+        "owner": "021bfb8532672e5199569facd2764ed5fc3f89e9755dedfcbada636646467178bf",
+        "amount": "5000000"
+      }
+    },
+    {
+      "action": "register-redemption",
+      "finality": "FINAL",
+      "txHash": "FVYoBkpetTQvM91xwxX2peiQfQeni5Ga4SH7iXuve3yg",
+      "receiptIds": [
+        "86tBjR8tTdJzH5issehPo8fXj6EYsCBEwovvDM8MhEbo",
+        "3x9WZz8Nt2JajqrSVqdFFUKZ6zq1QgHBE9jXntWtcYMd",
+        "GMtuYMBxDr78h62V3h5SwPizj8PZ1F7NSdEB2Lga5JJ8",
+        "zGVtkQz1q8QcBeZgRnSvNbfBfEFybjchHxCryiuAmCx"
+      ],
+      "gasBurnt": "2672275145144",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    {
+      "action": "redeem",
+      "finality": "FINAL",
+      "txHash": "J4a8fBFeqk7ARc7nEygGtUTbby7AceC8xo4JmmRbzcyA",
+      "receiptIds": [
+        "2DcrLzViovapBsYNZ56dtB5QKmGHpskv148homXn2Esq",
+        "GYC2yA1w8fmfP95BWjo3S5DMCFAqRWmBMgskqREktMa3",
+        "8bZbeabN4tLmvYdDGZn9qhGfgDF4gPkWf7Pvte8RjmGN",
+        "5ZKXM7zVEWVGa6aRKmxEzRSWyQBfwF4MNaQ32yFeP9aB"
+      ],
+      "gasBurnt": "4735268878167",
+      "value": "8000000"
+    }
+  ],
+  "scope": "Real NEAR testnet funding, P-256 signatures, atomic settlement, duplicate/conflict rejection and NEP-141 redemption. Offline phase uses the browser protocol module in Node; separate Edge tests cover actual offline browser handover."
+}

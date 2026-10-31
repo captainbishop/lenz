@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-31T10:51:12.100Z",
+  "passed": 3,
+  "failed": 0,
+  "checks": [
+    "failed local commit sends no deposit request and exposes no balance",
+    "lost deposit response recovers the same source and credits the refund once",
+    "returned funds remain encrypted and can transfer onward offline after reload"
+  ],
+  "scope": "Isolated Edge; fixture chain refund/deposit, real signing, storage failures, lost-response handling and offline onward transfer. No live chain result in this suite."
+}

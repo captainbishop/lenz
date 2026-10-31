@@ -1,0 +1,22 @@
+{
+  "scope": "Three targeted guard removals in disposable crate copies; not a security audit.",
+  "cases": [
+    {
+      "exitCode": 101,
+      "name": "backing",
+      "detected": true
+    },
+    {
+      "exitCode": 101,
+      "name": "authorization",
+      "detected": true
+    },
+    {
+      "exitCode": 101,
+      "name": "idempotence",
+      "detected": true
+    }
+  ],
+  "checkedAt": "2026-10-26T05:03:49.8511099Z",
+  "detected": 3
+}

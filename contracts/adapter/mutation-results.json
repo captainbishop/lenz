@@ -1,0 +1,37 @@
+{
+  "scope": "Targeted guard removals in disposable crate copies; not a security audit.",
+  "checkedAt": "2026-10-31T10:05:25.0211155Z",
+  "cases": [
+    {
+      "name": "callback-sender",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "swap-signature",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "minimum-output",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "redemption-evidence",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "recovery-stage",
+      "exitCode": 101,
+      "detected": true
+    },
+    {
+      "name": "recovery-read-only",
+      "exitCode": 101,
+      "detected": true
+    }
+  ],
+  "detected": 6
+}

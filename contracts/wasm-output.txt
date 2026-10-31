@@ -1,0 +1,2 @@
+   Compiling lenz-test-dollar v0.1.0 (<workspace>\contracts)
+    Finished `release` profile [optimized] target(s) in 3.79s

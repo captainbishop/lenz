@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-30T19:52:02.172Z",
+  "passed": 8,
+  "failed": 0,
+  "checks": [
+    "page load and forged callback query neither connect nor credit",
+    "testnet login uses the pinned popup adapter without requesting an access key",
+    "failed persistence cannot expose a signing request",
+    "wallet cancellation preserves the exact saved request across reload",
+    "wrong account blocks signing and disconnect retains the Lenz identity",
+    "wallet success without a matching final root cannot credit value",
+    "wallet transaction serializes the exact bounded action; final root credits once",
+    "offline reload keeps funds, disconnect works, and narrow layout fits"
+  ],
+  "signCalls": 4,
+  "localCalls": 0,
+  "scope": "Isolated Edge, Lenz Meteor popup adapter and near-api-js 7.4.0 Borsh serialization; popup, RPC, and chain responses are controlled fixtures. No live chain transaction or real wallet authorization."
+}

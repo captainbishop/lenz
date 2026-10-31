@@ -1,0 +1,101 @@
+{
+  "checkedAt": "2026-10-26T04:24:10.359Z",
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    "disposable browser funds three actual testnet tUSD and gets a live quote",
+    "browser signs offline, saves authorization and preserves reservation after reload",
+    "lost submission response leaves the same order reserved and can be recovered",
+    "saved browser instruction executes on Rhea and exact output reaches signed account"
+  ],
+  "transactions": [
+    {
+      "txHash": "BvYFphZY6HgYFc5CKhF349ASJU8XM53xRYseNgrmvGYy",
+      "stage": "ready",
+      "responseDropped": true
+    },
+    {
+      "txHash": "56FxghTLWPq2JpjxixnQQAV1rZMmfpz8DMRrsDuW5j27",
+      "stage": "funded",
+      "failedReceipts": []
+    },
+    {
+      "txHash": "DcxWdWyrqHjmyudGJ2nUBEucfNtrcYX3eTVQbkFxZLrX",
+      "stage": "deposited",
+      "failedReceipts": []
+    },
+    {
+      "txHash": "EEV3KSsia9SgbuhHzk7EmRhpzYQEp3AsY3GLgwqiD3hq",
+      "stage": "output_on_dex",
+      "failedReceipts": []
+    },
+    {
+      "txHash": "6JkzpA75Gh2yhfvXUSC26AgMXdjN4LspdjdP5VDXyxTM",
+      "stage": "output_available",
+      "failedReceipts": []
+    },
+    {
+      "txHash": "96dFUoRu9sct5pCURX64DbysdXPzLCS96bYXh9h3tSy4",
+      "stage": "complete",
+      "failedReceipts": []
+    }
+  ],
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "packet": {
+    "kind": "lenz-rhea-order-v1",
+    "config": {
+      "network": "testnet",
+      "adapter": "lenz-rhea-1792987934062.testnet",
+      "reserve": "tusd.lenz-dev-1792984696547.testnet",
+      "exchange": "ref-finance-101.testnet",
+      "poolId": 2870,
+      "tokenOut": "wrap.testnet"
+    },
+    "id": "ed7af6cb0a1bae7484c7b27b5892428043d9e6cc39ccd7a4eae3b63472d051e1",
+    "instruction": {
+      "input": "270dc2015bb3cc28534379c30e6cc41a591cf8cfd1eb7cb1ac5a8eb6ca10f71a:0",
+      "owner": "039eb534c1b505325382d3435d8756695c63d9aa50eecad7ccde02c29f0e6cb546",
+      "amount": "1000000",
+      "min_output": "6867175172836856487790",
+      "receiver_id": "lenz-dev-1792984696547.testnet",
+      "nonce": "c6be58399fac24f5a3e5f2eda33347d4",
+      "deadline_ms": "1792992199857",
+      "signature": "e60fbae94727f9a6c3aed61d2068939ceb59a7b1d5483b278489b6ba2675794fd3d398e566dbaf5903ea2bf5160400cf0bf46f3781cd6a45f5a2312b721576c0",
+      "redemption_signature": "6d8d8dafdeb5340902007d23b9c29067d23da155f874a1de3b936f1e234974a2972c661bc6e91f768cf983c37bad835befa08f008005db7faeb1d33451d97f9d"
+    },
+    "root": {
+      "id": "root:27ffb716038399f72c527bb2312bf0c44050d818f77771afe576f7d2d63de56c",
+      "owner": "039eb534c1b505325382d3435d8756695c63d9aa50eecad7ccde02c29f0e6cb546",
+      "amount": "3000000"
+    },
+    "path": [
+      {
+        "input": "root:27ffb716038399f72c527bb2312bf0c44050d818f77771afe576f7d2d63de56c",
+        "recipient": "039eb534c1b505325382d3435d8756695c63d9aa50eecad7ccde02c29f0e6cb546",
+        "amount": "1000000",
+        "nonce": "81c66db54602067ab0134d02c54fb5da",
+        "signature": "3a02a7c21cd476d0b1e7bd3248a929dea6a9f0e36b1c56e7f71bf6eed62cf6302b02a5485ffa9538a5ca403245270e16650fac493c64a1ffb2f39b826ce8855d"
+      }
+    ]
+  },
+  "order": {
+    "id": "ed7af6cb0a1bae7484c7b27b5892428043d9e6cc39ccd7a4eae3b63472d051e1",
+    "instruction": {
+      "input": "270dc2015bb3cc28534379c30e6cc41a591cf8cfd1eb7cb1ac5a8eb6ca10f71a:0",
+      "owner": "039eb534c1b505325382d3435d8756695c63d9aa50eecad7ccde02c29f0e6cb546",
+      "amount": "1000000",
+      "min_output": "6867175172836856487790",
+      "receiver_id": "lenz-dev-1792984696547.testnet",
+      "nonce": "c6be58399fac24f5a3e5f2eda33347d4",
+      "deadline_ms": "1792992199857",
+      "signature": "e60fbae94727f9a6c3aed61d2068939ceb59a7b1d5483b278489b6ba2675794fd3d398e566dbaf5903ea2bf5160400cf0bf46f3781cd6a45f5a2312b721576c0",
+      "redemption_signature": "6d8d8dafdeb5340902007d23b9c29067d23da155f874a1de3b936f1e234974a2972c661bc6e91f768cf983c37bad835befa08f008005db7faeb1d33451d97f9d"
+    },
+    "stage": "complete",
+    "output": "6936540578623087361405",
+    "reason": ""
+  },
+  "before": "28516124305098542756516",
+  "after": "35452664883721630117921",
+  "scope": "Isolated Windows Edge, actual NEAR testnet grant and Rhea execution; offline signing/reload and lost submission response. No user identity or real funds."
+}

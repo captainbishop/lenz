@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-10-31T10:41:54.978Z",
+  "detected": 4,
+  "results": [
+    {
+      "guard": "finality",
+      "detected": true
+    },
+    {
+      "guard": "transaction identity",
+      "detected": true
+    },
+    {
+      "guard": "swap action",
+      "detected": true
+    },
+    {
+      "guard": "receipt summary",
+      "detected": true
+    }
+  ],
+  "scope": "Independent source copies. Removed receipt guards must produce missing-exception assertions."
+}

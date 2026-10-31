@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-30T17:38:56.022Z",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "packages": {
+    "hardhat": "3.21.0",
+    "@nomicfoundation/hardhat-ethers": "4.2.1",
+    "ethers": "6.17.0",
+    "solc": "0.8.38"
+  },
+  "lockSha256": "c5f622e98994cc383d02fcb4f574aa90f051263fe517bd53475080651ce8e31c",
+  "checks": [
+    "local deployment",
+    "successful receipt",
+    "state equals 42",
+    "Recorded event equals 42"
+  ],
+  "scope": "Local Hardhat EVM fixture. No Aurora deployment or Lenz integration."
+}

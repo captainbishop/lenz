@@ -1,0 +1,26 @@
+{
+  "network": "testnet",
+  "contract": "tusd.lenz-dev-1792984696547.testnet",
+  "ready": true,
+  "deployTx": "DB38oXN1CSTNZDM1zcWrYAo8ZpvzuXMRUNcwMayFrgUK",
+  "wasmSha256": "68f68edc97595afa42ea38e610dbf3ad299597efe215f593956fbd881e69faea",
+  "metadata": {
+    "spec": "ft-1.0.0",
+    "name": "Lenz Test Dollar",
+    "symbol": "tUSD",
+    "icon": null,
+    "reference": null,
+    "reference_hash": null,
+    "decimals": 6
+  },
+  "receipt": {
+    "finality": "FINAL",
+    "txHash": "DB38oXN1CSTNZDM1zcWrYAo8ZpvzuXMRUNcwMayFrgUK",
+    "receiptIds": [
+      "3A3RA6uuVg1eQqVYcEb9dnfGNobuAWyS2ShbfYYYbvpw",
+      "AbKG83uHwSF9C8yxgs79J5XLCKAE3GdWENWcGVM1Ev8U"
+    ],
+    "gasBurnt": "25359190856725",
+    "value": ""
+  }
+}

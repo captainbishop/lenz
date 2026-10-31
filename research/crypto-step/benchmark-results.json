@@ -1,0 +1,87 @@
+{
+  "kind": "real-PLONK-local-research-benchmark",
+  "compiler": "circom2 0.2.23 / Circom 2.2.3",
+  "optimization": "O0",
+  "sanityCheck": "compiler-default",
+  "scheme": "snarkjs 0.7.6 PLONK",
+  "curve": "BN254",
+  "constraints": 8892,
+  "wires": 8898,
+  "publicInputs": 7,
+  "setup": "one local contribution; not a production ceremony",
+  "hashes": {
+    "step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
+    "package-lock.json": "62bc330a2f9209daca69d422a94f52465c3e496b92e1c68b39b08a8a75182869",
+    "node_modules/circom2/circom.wasm": "96fc92a93768f38979db6c2bac4b1aa9fc7d66742121a63d4c4792d5b4037162",
+    "build/step.r1cs": "1c7a5fff0389c8c3f76da1eb0903c51dca6d2d63f48d3841051be6e92dfe9c31",
+    "build/step_js/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+    "build/local-test-only.ptau": "cadd3b35a4775afebb14c39671d2ca5d592380beaff39c2b42e30b92734c201e",
+    "build/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+    "build/verification-key.json": "b0cc47c8100d16a59cfc2e40cac208deb454258cd165f60099e52cd9c198e45e"
+  },
+  "runtime": "v24.21.0",
+  "platform": "win32",
+  "arch": "x64",
+  "benchmarkKind": "three observations, not a performance distribution",
+  "samples": [
+    {
+      "label": "A-to-B",
+      "witnessMs": 211.82,
+      "provingMs": 24925.23,
+      "verifyMs": 441.36,
+      "proofEnvelopeBytes": 2241
+    },
+    {
+      "label": "B-to-C",
+      "witnessMs": 208.99,
+      "provingMs": 25193.49,
+      "verifyMs": 29.23,
+      "proofEnvelopeBytes": 2239
+    },
+    {
+      "label": "A-to-B-new-proof",
+      "witnessMs": 229.38,
+      "provingMs": 25461.55,
+      "verifyMs": 51.3,
+      "proofEnvelopeBytes": 2232
+    }
+  ],
+  "bytes": {
+    "wasm": 4368077,
+    "provingKey": 40735788,
+    "verificationKeyJson": 2146,
+    "twoStepCapsuleJson": 5722,
+    "encryptedEnvelopeJson": 11664,
+    "snapshotJson": 334,
+    "assembledWitnessJson": 313456
+  },
+  "peakResidentMiBForWholeProcess": 399.56,
+  "outcomes": [
+    "three real proofs verified",
+    "proof randomization preserves transfer digest/nullifier",
+    "A-to-B-to-C capsule verified without supplying prior spending secrets",
+    "encrypted capsule round trip",
+    "fresh witness assembled after unrelated state update and one mirror timeout"
+  ],
+  "mirrorFailures": [
+    {
+      "source": "withholding-copy",
+      "reason": "mirror-timeout"
+    }
+  ],
+  "assumed": [
+    "trusted fresh checkpoint",
+    "completed capsule-key and recipient-opening handover",
+    "one reachable complete snapshot",
+    "local test setup is trusted for this experiment only"
+  ],
+  "remaining": [
+    "local setup is not production-trusted",
+    "no recursive settlement proof",
+    "no NEAR on-chain verification",
+    "no Zcash value route",
+    "no mobile proving measurement",
+    "ancestor graph visible to capsule holder",
+    "no guaranteed offline redemption"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-30T17:59:54.355Z",
+  "node": {
+    "passed": 20,
+    "failed": 0,
+    "command": "node --test integrations/quotes.test.mjs web/defi-relay.test.mjs contracts/client.test.mjs",
+    "output": "test-output.txt"
+  },
+  "mutations": {
+    "checkedAt": "2026-10-30T17:53:16.731Z",
+    "detected": 2,
+    "results": [
+      {
+        "guard": "signature",
+        "detected": true
+      },
+      {
+        "guard": "freshness",
+        "detected": true
+      }
+    ],
+    "scope": "Independent source copies. Original tests pass; each removed guard causes a missing-rejection assertion."
+  },
+  "dependencyAudit": {
+    "file": "dependency-audit.json",
+    "knownVulnerabilities": 0,
+    "scope": "Only the isolated quote verifier dependencies"
+  },
+  "installation": "../installation-results.json",
+  "auroraLocal": {
+    "file": "../../aurora/local-results.json",
+    "checkedAt": "2026-10-30T17:38:56.022Z",
+    "checks": [
+      "local deployment",
+      "successful receipt",
+      "state equals 42",
+      "Recorded event equals 42"
+    ]
+  },
+  "live": {
+    "file": "../intents-results.json",
+    "ok": false,
+    "error": "NEAR Intents HTTP 401 at /v0/quote: authentication was rejected; confidential quotes need partner API access",
+    "checkedAt": "2026-10-30T17:54:40.759Z"
+  },
+  "signatureScope": "Actual SDK with locally generated test signatures. Production default rejects replacement keys. No live provider signature verified.",
+  "privacyFinding": "SDK 0.1.26 excludes quoteRequest.confidentiality from its signature; HTTPS echo matching is a separate check.",
+  "browserTestsRun": false,
+  "transactionsSent": 0,
+  "sha256": {
+    "integrations/intents.mjs": "e559a9efc1ee4ceb5de99356c0d3465e7064e21368f8fee0ddc6d923b5613b1d",
+    "integrations/quotes.test.mjs": "d5c632429737a7628351cb647a10c29ecbd595a0d6422bf20f4e189cd14c9e5c",
+    "integrations/quote-verifier/index.mjs": "583a86f5a97d399d3787bdcc6743cee8d8b8a90ed15a5b9aeead222dd8c33b9e",
+    "integrations/quote-verifier/test-fixtures.mjs": "c4bc98ce72bf7c6576b17645c857ef7e02ef82234d5cca874dd327a9e10993ad",
+    "integrations/quote-verifier/package-lock.json": "d6c832a2365da5d351a99cbcdf30fa2ac0e90234dd01137e3ad42da9db8bffcc",
+    "integrations/quote-verifier/node_modules/@defuse-protocol/one-click-sdk-typescript/dist/index.mjs": "2b21d82edef5c4a020503bc3ca12e8577e79ac22edf14cc25587be057c18060b",
+    "integrations/quote-verifier-mutations.mjs": "86010d2e4d8f22bfd6a24d6c741d12ae7254383a6458efdd471a078ee98b47e2",
+    "integrations/check-installed.mjs": "1aae78580486ed8255d41216b7025e2881502154cf2fdfb3c7d6d181626465e9"
+  }
+}

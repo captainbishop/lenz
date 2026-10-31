@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-10-30T17:30:15.690Z",
+  "scope": "Read-only receipt recovery; no new transaction, deployment or user profile access. Browser funding and RPC replies are fixtures. Historical RPC checks are live and require RPC trust.",
+  "node": {
+    "passed": 43,
+    "failed": 0,
+    "output": "recovery-test-output.txt",
+    "command": "node --test contracts/adapter-recovery.test.mjs contracts/client.test.mjs contracts/refund-return.test.mjs web/rhea-relay.test.mjs web/rhea-protocol.test.mjs web/near-protocol.test.mjs web/near-deposit.test.mjs web/near-signer.test.mjs"
+  },
+  "browsers": [
+    {
+      "file": "web/rhea-wallet-browser-results.json",
+      "checkedAt": "2026-10-30T17:21:59.423Z",
+      "passed": 8,
+      "failed": 0,
+      "scope": "Isolated Windows Edge. Fixture funding; actual offline signing, storage failure and concurrent tabs. No live swap in this suite."
+    },
+    {
+      "file": "web/near-deposit-browser-results.json",
+      "checkedAt": "2026-10-30T17:22:49.730Z",
+      "passed": 3,
+      "failed": 0,
+      "scope": "Isolated Edge; fixture chain refund/deposit, real signing, storage failures, lost-response handling and offline onward transfer. No live chain result in this suite."
+    }
+  ],
+  "mutations": {
+    "checkedAt": "2026-10-30T17:23:43.916Z",
+    "detected": 4,
+    "results": [
+      {
+        "guard": "finality",
+        "detected": true
+      },
+      {
+        "guard": "transaction identity",
+        "detected": true
+      },
+      {
+        "guard": "swap action",
+        "detected": true
+      },
+      {
+        "guard": "receipt summary",
+        "detected": true
+      }
+    ],
+    "scope": "Independent source copies. Removed receipt guards must produce missing-exception assertions."
+  },
+  "live": {
+    "file": "recovery-live-attempt.json",
+    "checkedAt": "2026-10-30T17:27:23.125Z",
+    "passed": 8,
+    "rpc": "https://test.rpc.fastnear.com",
+    "historyRpc": "https://archival-rpc.testnet.near.org"
+  },
+  "static": {
+    "command": "node web/verify-chat-static.mjs",
+    "routes": 39,
+    "passed": true
+  },
+  "regression": "Contradictory receipt summary test failed before the fix and passed after it. Removing the new summary guard is detected.",
+  "historicalRehearsal": {
+    "file": "recovery-rehearsal.json",
+    "rerun": false
+  },
+  "failuresObserved": [
+    "Original receipt validator accepted a success summary contradicting its returned callback.",
+    "The original live history check stalled and was stopped. Current-node retention started after the saved transactions; the bounded archival check passed."
+  ],
+  "remaining": [
+    "Contract repair for missing callbacks and attention states",
+    "External Meteor approval",
+    "Intents partner access and supported funded route",
+    "Zcash test funding and shielded wallet flow",
+    "Private settlement and safe account recovery"
+  ],
+  "sha256": {
+    "contracts/adapter-recovery.mjs": "b78358d5db45733f9dfc5b6c5053c6f74da780d7151ae61051ae1b745bb88766",
+    "contracts/adapter-recovery.test.mjs": "779791f74850f5b994dd0089cfe494ed0b955b6deaf0c1c77e1ec7344bdf7c3f",
+    "contracts/adapter-recovery-mutations.mjs": "07aa3000b8f353e7a016b0d9cedbbeadecb3d7d68fe7a6b23db5b95c0857b1db",
+    "contracts/adapter-recovery-live.mjs": "ee03c3d8bbd398d4e2ecc45e06179446c7fea86faba7d5cfa5d09d0c6a8dcfbf",
+    "contracts/adapter-client.mjs": "209252ff05d75b41098b4664a204eb03b1dc74a5a0ea76be8e5625b12112fa33",
+    "web/rhea-relay.mjs": "409e55bceef3842936830dd0659c8cfc683dab1c78e21facbdfed9469bf822c9",
+    "web/public/rhea-wallet.js": "d11ac112eb4aea09cf8efe96850c2ffe8d7b68b42c33f86a031c521685632d2b",
+    "web/public/chat-sw.js": "06ac6dadda7e0534e093bee7c86a66b9edfceac0a4449ace7f16f7509a93dd86"
+  }
+}

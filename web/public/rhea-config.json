@@ -1,0 +1,15 @@
+{
+  "network": "testnet",
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "reserve": "tusd.lenz-dev-1792984696547.testnet",
+  "exchange": "ref-finance-101.testnet",
+  "poolId": 2870,
+  "tokenOut": "wrap.testnet",
+  "wasmSha256": "53b9b2ebb270ceb643aae7f07fcb4ab852ca47882bd17375b27db04d45bc4a80",
+  "codeHash": "6dq5B7LSetQyUffc6NgY8Y5dXG2g4tJyboFhbBofVqMy",
+  "exchangeCodeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+  "ready": true,
+  "refundPayer": "lenz-dev-1792984696547.testnet",
+  "recoverRedemption": true,
+  "upgradeTx": "3S7We8EdECFaeDJWKbh3bn6RLzVwETMk7xKEbE1qu2TZ"
+}

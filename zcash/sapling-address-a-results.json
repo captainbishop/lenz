@@ -1,0 +1,10 @@
+{
+  "action": "sapling-address",
+  "wallet": "a",
+  "network": "test",
+  "checkedAt": "2026-10-26T03:36:07.490Z",
+  "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "saplingAddress": "ztestsapling1dcpgkmy67lwhhgfv82umyxld8qfmagf6vnjm9f7alm07es6g6pwgd7vh7vv90s4g2zrc6ulpm8t",
+  "ok": true,
+  "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+}

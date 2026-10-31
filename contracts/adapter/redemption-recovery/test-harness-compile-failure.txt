@@ -1,0 +1,39 @@
+   Compiling lenz-rhea-adapter v0.1.0 (<workspace>\contracts\adapter)
+error[E0599]: no method named `clone` found for enum `PromiseResult` in the current scope
+   --> src\tests.rs:305:46
+    |
+305 |         context(ACCOUNT, 20_000, vec![status.clone()]);
+    |                                              ^^^^^ method not found in `PromiseResult`
+    |
+note: the method `clone` exists on the type `Vec<u8>`
+   --> /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library\core\src\clone.rs:236:4
+
+error[E0599]: no method named `clone` found for enum `PromiseResult` in the current scope
+   --> src\tests.rs:315:37
+    |
+315 |     context(ACCOUNT, 1, vec![status.clone()]); c.on_redemption_status(id.clone());
+    |                                     ^^^^^ method not found in `PromiseResult`
+    |
+note: the method `clone` exists on the type `Vec<u8>`
+   --> /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library\core\src\clone.rs:236:4
+
+error[E0599]: no method named `clone` found for enum `PromiseResult` in the current scope
+   --> src\tests.rs:335:65
+    |
+335 |     for (caller, outcomes) in [("attacker.testnet", vec![status.clone()]),
+    |                                                                 ^^^^^ method not found in `PromiseResult`
+    |
+note: the method `clone` exists on the type `Vec<u8>`
+   --> /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library\core\src\clone.rs:236:4
+
+error[E0599]: no method named `clone` found for enum `PromiseResult` in the current scope
+   --> src\tests.rs:336:50
+    |
+336 |         (ACCOUNT, vec![]), (ACCOUNT, vec![status.clone(), status])] {
+    |                                                  ^^^^^ method not found in `PromiseResult`
+    |
+note: the method `clone` exists on the type `Vec<u8>`
+   --> /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library\core\src\clone.rs:236:4
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `lenz-rhea-adapter` (lib test) due to 4 previous errors

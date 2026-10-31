@@ -1,0 +1,9 @@
+{
+  "name": "proof-u-qr-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "jsqr": "1.4.0",
+    "qrcode-generator": "1.4.4"
+  }
+}

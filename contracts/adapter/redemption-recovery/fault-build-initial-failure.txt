@@ -1,0 +1,31 @@
+   Compiling lenz-redemption-rehearsal-fixture v0.1.0 (<workspace>\contracts\target\redemption-rehearsal-fixture)
+error[E0283]: type annotations needed
+   --> src\lib.rs:203:67
+    |
+203 |         Promise::new(self.reserve.clone()).function_call("redeem".into(),
+    |                                            -------------          ^^^^
+    |                                            |
+    |                                            required by a bound introduced by this call
+    |
+    = note: the type must implement `Into<std::string::String>`
+note: required by a bound in `near_sdk::Promise::function_call`
+   --> <workspace>\tooling\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\near-sdk-5.29.1\src\promise.rs:595:29
+    |
+593 |     pub fn function_call(
+    |            ------------- required by a bound in this associated function
+594 |         self,
+595 |         function_name: impl Into<String>,
+    |                             ^^^^^^^^^^^^ required by this bound in `Promise::function_call`
+help: try using a fully qualified path to specify the expected types
+    |
+203 -         Promise::new(self.reserve.clone()).function_call("redeem".into(),
+203 +         Promise::new(self.reserve.clone()).function_call(<&str as Into<T>>::into("redeem"),
+    |
+help: consider removing this method call, as the receiver has type `&'static str` and `&'static str: Into<std::string::String>` trivially holds
+    |
+203 -         Promise::new(self.reserve.clone()).function_call("redeem".into(),
+203 +         Promise::new(self.reserve.clone()).function_call("redeem",
+    |
+
+For more information about this error, try `rustc --explain E0283`.
+error: could not compile `lenz-redemption-rehearsal-fixture` (lib) due to 1 previous error

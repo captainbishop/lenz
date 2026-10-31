@@ -1,0 +1,21 @@
+{
+  "browser": "156.0.4314.50",
+  "passed": 13,
+  "failed": 0,
+  "checks": [
+    "three independent identities exchange contacts without resetting existing keys",
+    "all three pages reload offline before any money is created",
+    "an offer holds the source balance and shows exact signed amounts",
+    "recipient reviews the inverse amounts before agreeing",
+    "reply updates the original offer and releases change after reload",
+    "received value is sent onward to a third offline browser through the UI",
+    "repeat delivery cannot credit an onward payment twice",
+    "trade histories and reservations are encrypted at rest",
+    "trade and payment cards fit desktop and narrow layouts without clipping",
+    "phone navigation returns to people, filters names and reopens the chosen thread",
+    "a failed state commit exposes no payment and leaves balances and locks intact",
+    "simultaneous payment forms in two tabs cannot reuse the same balance",
+    "no unhandled browser errors during the complete flow"
+  ],
+  "scope": "Three isolated Windows Edge contexts, offline network emulation, real file handover and synthetic assets. No chain or physical-device test."
+}

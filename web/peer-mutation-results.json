@@ -1,0 +1,35 @@
+{
+  "results": [
+    {
+      "name": "second-owner signature",
+      "test": "a missing second signature",
+      "killed": true
+    },
+    {
+      "name": "asset conservation",
+      "test": "asset inflation",
+      "killed": true
+    },
+    {
+      "name": "spent input",
+      "test": "an already spent input",
+      "killed": true
+    },
+    {
+      "name": "network and pool binding",
+      "test": "cross-network and cross-pool",
+      "killed": true
+    },
+    {
+      "name": "settlement deadline",
+      "test": "expiry is checked",
+      "killed": true
+    },
+    {
+      "name": "chat sender authentication",
+      "test": "ciphertext with a forged signature",
+      "killed": true
+    }
+  ],
+  "temporarySources": "<temp>\\proof-u-peer-mutations-hYTGfD"
+}

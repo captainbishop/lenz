@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-31T18:26:56.451Z",
+  "browser": "156.0.4314.50",
+  "passed": 5,
+  "failed": 0,
+  "apiRequests": 0,
+  "checks": [
+    "actual MP4 decodes at 600×660; reduced motion starts paused; play/pause works; dark payment status uses readable contrast",
+    "all six light/dark videos play and retain source background colors; narrow layouts fit",
+    "playing video pauses when it leaves the viewport",
+    "actual wallet/profile follows the chosen theme without changing identity or balances",
+    "offline video playback, seeking and theme switching work; cached wallet identity remains unchanged"
+  ]
+}

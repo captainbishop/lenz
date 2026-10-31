@@ -1,0 +1,130 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 3aa6c5e..7f6b92c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -6,6 +6,10 @@ rust-version = "1.89"
+ license = "MIT OR Apache-2.0"
+ publish = false
+ 
++[[bin]]
++name = "lenz-zcash-pczt"
++path = "src/main.rs"
++
+ [dependencies]
+ anyhow = "1"
+ bip0039 = { version = "0.14", features = ["std", "all-languages"] }
+diff --git a/src/commands/pczt/sign.rs b/src/commands/pczt/sign.rs
+index 49c13f9..b78dfc5 100644
+--- a/src/commands/pczt/sign.rs
++++ b/src/commands/pczt/sign.rs
+@@ -36,6 +36,16 @@ pub(crate) struct Command {
+     /// Path to a file to which to write the PCZT. If not provided, writes to stdout.
+     #[arg(long)]
+     output: Option<PathBuf>,
++
++    /// Required recipient for the bounded Lenz test (Orchard receiver on testnet).
++    #[arg(long)]
++    expected_recipient: String,
++
++    #[arg(long)]
++    expected_value: u64,
++
++    #[arg(long)]
++    maximum_fee: u64,
+ }
+ 
+ impl Command {
+@@ -61,8 +71,59 @@ impl Command {
+         let seed_fp = SeedFingerprint::from_seed(seed.expose_secret())
+             .ok_or_else(|| anyhow!("Invalid seed length"))?;
+ 
++        // This candidate is deliberately restricted to the two-output test flow.
++        // Check actual recipients/commitments, not advisory PCZT address metadata.
++        anyhow::ensure!(params.network_type() == zcash_protocol::consensus::NetworkType::Test, "Testnet only");
++        anyhow::ensure!(*pczt.global().tx_version() == 6, "Version 6 required");
++        anyhow::ensure!(pczt.transparent().inputs().is_empty() && pczt.transparent().outputs().is_empty()
++            && pczt.sapling().spends().is_empty() && pczt.sapling().outputs().is_empty()
++            && pczt.orchard().actions().is_empty(), "Ironwood only");
++        let recipient = match zcash_keys::address::Address::decode(&params, &self.expected_recipient) {
++            Some(zcash_keys::address::Address::Unified(ua)) => ua.orchard().copied(),
++            _ => None,
++        }.ok_or_else(|| anyhow!("Expected a testnet Orchard receiver"))?;
++        let usk = UnifiedSpendingKey::from_seed(&params, seed.expose_secret(), zip32::AccountId::ZERO)?;
++        let fvk = orchard::keys::FullViewingKey::from(usk.orchard());
++        anyhow::ensure!(fvk.scope_for_address(&recipient).is_none(), "Recipient must be external to wallet A");
++        let pczt = Verifier::new(pczt).with_ironwood::<anyhow::Error, _>(|bundle| {
++            use pczt::roles::verifier::OrchardError;
++            let check = || -> anyhow::Result<()> {
++                anyhow::ensure!(bundle.actions().len() == 2, "Expected exactly two Ironwood actions");
++                bundle.verify_cross_address_restriction().map_err(|e| anyhow!("{e:?}"))?;
++                let (mut spent, mut paid, mut change, mut recipients, mut changes) = (0u64, 0u64, 0u64, 0, 0);
++                for action in bundle.actions() {
++                    action.verify_cv_net().map_err(|e| anyhow!("{e:?}"))?;
++                    action.spend().verify_nullifier(Some(&fvk)).map_err(|e| anyhow!("{e:?}"))?;
++                    action.spend().verify_rk(Some(&fvk)).map_err(|e| anyhow!("{e:?}"))?;
++                    action.output().verify_note_commitment(action.spend()).map_err(|e| anyhow!("{e:?}"))?;
++                    spent = spent.checked_add(action.spend().value().ok_or_else(|| anyhow!("Missing input value"))?.inner()).ok_or_else(|| anyhow!("Input overflow"))?;
++                    let output = action.output();
++                    let value = output.value().ok_or_else(|| anyhow!("Missing output value"))?.inner();
++                    let address = output.recipient().as_ref().ok_or_else(|| anyhow!("Missing output recipient"))?;
++                    if address == &recipient {
++                        recipients += 1;
++                        paid = paid.checked_add(value).ok_or_else(|| anyhow!("Output overflow"))?;
++                    } else {
++                        anyhow::ensure!(fvk.scope_for_address(address) == Some(zip32::Scope::Internal), "Change is not owned by wallet A");
++                        changes += 1;
++                        change = change.checked_add(value).ok_or_else(|| anyhow!("Change overflow"))?;
++                    }
++                }
++                anyhow::ensure!(recipients == 1 && changes == 1 && change > 0, "Expected recipient and owned change");
++                anyhow::ensure!(self.expected_value > 0 && paid == self.expected_value, "Unexpected recipient amount");
++                let fee = spent.checked_sub(paid).and_then(|v| v.checked_sub(change)).ok_or_else(|| anyhow!("Value does not conserve"))?;
++                anyhow::ensure!(fee > 0 && fee <= self.maximum_fee, "Fee exceeds authorized bound");
++                eprintln!("Verified Ironwood recipient, owned change, values and commitments; fee {fee} zatoshis");
++                Ok(())
++            };
++            check().map_err(OrchardError::Custom)
++        }).map_err(|e| anyhow!("Bounded test review failed: {e:?}"))?.finish();
++
+         // Find all the spends matching our seed.
+         enum KeyRef {
++            Ironwood {
++                index: usize,
++            },
+             Orchard {
+                 index: usize,
+             },
+@@ -82,6 +143,20 @@ impl Command {
+         }
+         let mut keys = BTreeMap::<zip32::AccountId, Vec<KeyRef>>::new();
+         let pczt = Verifier::new(pczt)
++            .with_ironwood::<Infallible, _>(|bundle| {
++                for (index, action) in bundle.actions().iter().enumerate() {
++                    if let Some(account_index) = action.spend().zip32_derivation().as_ref()
++                        .and_then(|derivation| derivation.extract_account_index(
++                            &seed_fp,
++                            zip32::ChildIndex::hardened(params.network_type().coin_type()),
++                        ))
++                    {
++                        keys.entry(account_index).or_default().push(KeyRef::Ironwood { index });
++                    }
++                }
++                Ok(())
++            })
++            .map_err(|e| anyhow!("Invalid PCZT: {:?}", e))?
+             .with_orchard::<Infallible, _>(|bundle| {
+                 for (index, action) in bundle.actions().iter().enumerate() {
+                     if let Some(account_index) = action
+@@ -164,6 +239,12 @@ impl Command {
+                     .map_err(|e| anyhow!("Failed to derive ZIP 48 account private key: {e:?}"))?;
+             for keyref in spends {
+                 match keyref {
++                    KeyRef::Ironwood { index } => {
++                        signer.sign_ironwood(
++                            UnwrapErr(SysRng), index,
++                            &orchard::keys::SpendAuthorizingKey::from(usk.orchard()),
++                        ).map_err(|e| anyhow!("Failed to sign Ironwood spend {index}: {e:?}"))?;
++                    }
+                     KeyRef::Orchard { index } => {
+                         signer
+                             .sign_orchard(

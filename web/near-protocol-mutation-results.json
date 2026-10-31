@@ -1,0 +1,26 @@
+{
+  "detected": 5,
+  "total": 5,
+  "results": [
+    {
+      "guard": "signature",
+      "detected": true
+    },
+    {
+      "guard": "conflict",
+      "detected": true
+    },
+    {
+      "guard": "recipient",
+      "detected": true
+    },
+    {
+      "guard": "sender",
+      "detected": true
+    },
+    {
+      "guard": "conflict-descendants",
+      "detected": true
+    }
+  ]
+}

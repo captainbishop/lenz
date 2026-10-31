@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-31T14:09:06.684Z",
+  "ok": true,
+  "node": 25,
+  "fixtureBrowser": 6,
+  "actualBrowser": 5,
+  "unchangedNativeBalances": true,
+  "noNewNativeTransactions": true,
+  "files": [
+    {
+      "file": "zcash/payment-review.mjs",
+      "sha256": "3560b05e437cf16de72af736f9897949ebf8bfbd4684c8b90e127e38fd87d1c0"
+    },
+    {
+      "file": "web/zcash-relay.mjs",
+      "sha256": "d4238d737ce0585f43931e0c8d4bd2058606d21e59f04eb4d0f0aca1c311ead3"
+    },
+    {
+      "file": "web/public/zcash-lab.html",
+      "sha256": "68081939eab7cc8a07d9a170b6b669285a16807d119cec1a36a33c1d9fd039f5"
+    },
+    {
+      "file": "web/public/zcash-lab.js",
+      "sha256": "6216fd9800d96392d41039a805815f5567a23500cd8e2e28736669467af2596f"
+    },
+    {
+      "file": "web/public/zcash-lab.css",
+      "sha256": "7347fad1ad8c845e31bd9b3d90ac11504b9ba9453a8ea74075c5ac5b73d3d35c"
+    },
+    {
+      "file": "web/public/chat-sw.js",
+      "sha256": "8edeaf4f48e0c70e140153a03d3acd4e13d4691571104228332d79aed0aaf65f"
+    },
+    {
+      "file": "web/zcash-review-live-results.json",
+      "sha256": "78c228e9e10d68352c81ca5b547e4097a7922cc2244333420179883265042f68"
+    },
+    {
+      "file": "web/zcash-review-browser-results.json",
+      "sha256": "9045ca61c81e35417a1f4ef5b9a17bb0767cb9a16de07cd5eb9bb01d86d86643"
+    },
+    {
+      "file": "zcash/payment-review-native-after.json",
+      "sha256": "3d87dab42ca447e768671a08b2fd72dbc0dd0bcb3467a48117fd8a7e174aa818"
+    }
+  ],
+  "scope": "Unsigned review only. Local tests and saved live evidence; native reads run only with --capture-native. No signing or transaction submission."
+}

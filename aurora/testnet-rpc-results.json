@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-26T02:23:43.117Z",
+  "endpoint": "https://testnet.aurora.dev",
+  "chainId": 1313161555,
+  "block": "274787911",
+  "scope": "read-only RPC; no deployment"
+}

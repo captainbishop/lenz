@@ -1,0 +1,19 @@
+{
+  "withoutCsp": false,
+  "offline": true,
+  "diagnostics": [
+    {
+      "kind": "console",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    }
+  ],
+  "violations": [],
+  "failed": 1,
+  "error": "Proof suite did not complete in 90 seconds",
+  "progress": "Creating proof…",
+  "rows": "PASS: app server is unreachable before proving\nPASS: amount parsing preserves cents\nPASS: invalid and zero amounts are rejected\nPASS: insufficient funds do not call the prover\nPASS: self-payments are rejected\nPASS: a failed proof leaves the entire store unchanged\nPASS: an invalid returned proof cannot debit funds\nPASS: Amina creates a real 40.00 payment and keeps 60.00\nPASS: wrong recipient cannot open the packet\nPASS: ciphertext tampering is rejected without credit\nPASS: authenticated wrong workspace root is rejected\nPASS: authenticated altered amount is rejected\nPASS: authenticated altered owner is rejected\nPASS: tampered public transcript is rejected\nPASS: out-of-field public input is rejected\nPASS: an oversized proof is rejected\nPASS: a previously observed local conflict is rejected\nPASS: Bola verifies and receives exactly 40.00\nPASS: repeated receipt changes no stored data\nRunning: Bola creates a real onward 30.00 payment and keeps 10.00"
+}

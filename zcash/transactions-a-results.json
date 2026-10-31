@@ -1,0 +1,15 @@
+{
+  "action": "transactions",
+  "wallet": "a",
+  "network": "test",
+  "checkedAt": "2026-10-31T12:08:16.937Z",
+  "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "transactions": [
+    {
+      "txid": "3b08a1472e873eb0c665e707cfec37416b230b652d582fd8dddd29ac858b749e",
+      "minedHeight": 4542640
+    }
+  ],
+  "ok": true,
+  "scope": "Developer testnet wallet bridge. Build/address/sync checks alone do not establish a shielded payment or browser wallet integration."
+}

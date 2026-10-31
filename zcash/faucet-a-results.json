@@ -1,0 +1,17 @@
+{
+  "provider": "https://fauzec.com",
+  "network": "testnet",
+  "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+  "request_id": "e724cda7-7e6f-4c23-93e1-9e432d731758",
+  "attemptedAt": "2026-10-26T03:21:14.312Z",
+  "state": "failed",
+  "httpStatus": 503,
+  "response": {
+    "request_id": "e724cda7-7e6f-4c23-93e1-9e432d731758",
+    "network": "testnet",
+    "state": "failed",
+    "outcome": "refused",
+    "error_code": "runtime_unavailable"
+  },
+  "checkedAt": "2026-10-26T03:21:15.187Z"
+}

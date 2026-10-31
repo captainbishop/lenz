@@ -1,0 +1,11 @@
+{
+  "provider": "intents-auth",
+  "checkedAt": "2026-10-26T03:44:57.843Z",
+  "standard": "raw_ed25519",
+  "address": "e0cf4bfb16e9791a3dcf08dff76f4207a2e3724a989cae38aa9735c3d7e529d1",
+  "emptyIntent": true,
+  "ephemeralIdentity": true,
+  "expiresIn": 900,
+  "scope": "Live authentication of a disposable unfunded identity. No token actions or transaction submission. User-session authentication does not grant partner quote access.",
+  "ok": true
+}

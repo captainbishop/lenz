@@ -1,0 +1,3152 @@
+{
+  "runId": "2026-10-31T09-42-28-767Z",
+  "withoutCsp": false,
+  "offline": true,
+  "timeoutMs": 90000,
+  "diagnostics": [
+    {
+      "kind": "console",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "kind": "requestfailed",
+      "url": "http://127.0.0.1:4173/server-probe?run=5a7561e2b9fb8487e5080dc447787705",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "kind": "requestfailed",
+      "url": "http://127.0.0.1:4173/server-probe?run=5665bebc1ac22e0a5b7eacb3cc2230b3",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_FAILED"
+    }
+  ],
+  "violations": [],
+  "date": "2026-10-31T09:43:13.232Z",
+  "browser": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+  "unavailableServerRequired": true,
+  "passed": 25,
+  "failed": 0,
+  "elapsedMs": 41354,
+  "timings": [
+    {
+      "status": "completed",
+      "stages": [
+        {
+          "stage": "Calculating witness…",
+          "ms": 531
+        },
+        {
+          "stage": "Creating proof…",
+          "ms": 817
+        }
+      ],
+      "ms": 21837
+    },
+    {
+      "status": "completed",
+      "stages": [
+        {
+          "stage": "Calculating witness…",
+          "ms": 505
+        },
+        {
+          "stage": "Creating proof…",
+          "ms": 763
+        }
+      ],
+      "ms": 19055
+    }
+  ],
+  "results": [
+    {
+      "name": "app server is unreachable before proving",
+      "pass": true
+    },
+    {
+      "name": "amount parsing preserves cents",
+      "pass": true
+    },
+    {
+      "name": "invalid and zero amounts are rejected",
+      "pass": true
+    },
+    {
+      "name": "insufficient funds do not call the prover",
+      "pass": true
+    },
+    {
+      "name": "self-payments are rejected",
+      "pass": true
+    },
+    {
+      "name": "a failed proof leaves the entire store unchanged",
+      "pass": true
+    },
+    {
+      "name": "an invalid returned proof cannot debit funds",
+      "pass": true
+    },
+    {
+      "name": "Amina creates a real 40.00 payment and keeps 60.00",
+      "pass": true
+    },
+    {
+      "name": "wrong recipient cannot open the packet",
+      "pass": true
+    },
+    {
+      "name": "ciphertext tampering is rejected without credit",
+      "pass": true
+    },
+    {
+      "name": "authenticated wrong workspace root is rejected",
+      "pass": true
+    },
+    {
+      "name": "authenticated altered amount is rejected",
+      "pass": true
+    },
+    {
+      "name": "authenticated altered owner is rejected",
+      "pass": true
+    },
+    {
+      "name": "tampered public transcript is rejected",
+      "pass": true
+    },
+    {
+      "name": "out-of-field public input is rejected",
+      "pass": true
+    },
+    {
+      "name": "an oversized proof is rejected",
+      "pass": true
+    },
+    {
+      "name": "a previously observed local conflict is rejected",
+      "pass": true
+    },
+    {
+      "name": "Bola verifies and receives exactly 40.00",
+      "pass": true
+    },
+    {
+      "name": "repeated receipt changes no stored data",
+      "pass": true
+    },
+    {
+      "name": "Bola creates a real onward 30.00 payment and keeps 10.00",
+      "pass": true
+    },
+    {
+      "name": "replaying a spent receipt cannot restore the old balance",
+      "pass": true
+    },
+    {
+      "name": "missing onward ancestry is rejected",
+      "pass": true
+    },
+    {
+      "name": "Chidi verifies onward ancestry and total remains 100.00",
+      "pass": true
+    },
+    {
+      "name": "serialized state preserves balances and replay protection",
+      "pass": true
+    },
+    {
+      "name": "app server remains unreachable after proving",
+      "pass": true
+    }
+  ],
+  "partial": {
+    "results": [
+      {
+        "name": "app server is unreachable before proving",
+        "pass": true
+      },
+      {
+        "name": "amount parsing preserves cents",
+        "pass": true
+      },
+      {
+        "name": "invalid and zero amounts are rejected",
+        "pass": true
+      },
+      {
+        "name": "insufficient funds do not call the prover",
+        "pass": true
+      },
+      {
+        "name": "self-payments are rejected",
+        "pass": true
+      },
+      {
+        "name": "a failed proof leaves the entire store unchanged",
+        "pass": true
+      },
+      {
+        "name": "an invalid returned proof cannot debit funds",
+        "pass": true
+      },
+      {
+        "name": "Amina creates a real 40.00 payment and keeps 60.00",
+        "pass": true
+      },
+      {
+        "name": "wrong recipient cannot open the packet",
+        "pass": true
+      },
+      {
+        "name": "ciphertext tampering is rejected without credit",
+        "pass": true
+      },
+      {
+        "name": "authenticated wrong workspace root is rejected",
+        "pass": true
+      },
+      {
+        "name": "authenticated altered amount is rejected",
+        "pass": true
+      },
+      {
+        "name": "authenticated altered owner is rejected",
+        "pass": true
+      },
+      {
+        "name": "tampered public transcript is rejected",
+        "pass": true
+      },
+      {
+        "name": "out-of-field public input is rejected",
+        "pass": true
+      },
+      {
+        "name": "an oversized proof is rejected",
+        "pass": true
+      },
+      {
+        "name": "a previously observed local conflict is rejected",
+        "pass": true
+      },
+      {
+        "name": "Bola verifies and receives exactly 40.00",
+        "pass": true
+      },
+      {
+        "name": "repeated receipt changes no stored data",
+        "pass": true
+      },
+      {
+        "name": "Bola creates a real onward 30.00 payment and keeps 10.00",
+        "pass": true
+      },
+      {
+        "name": "replaying a spent receipt cannot restore the old balance",
+        "pass": true
+      },
+      {
+        "name": "missing onward ancestry is rejected",
+        "pass": true
+      },
+      {
+        "name": "Chidi verifies onward ancestry and total remains 100.00",
+        "pass": true
+      },
+      {
+        "name": "serialized state preserves balances and replay protection",
+        "pass": true
+      },
+      {
+        "name": "app server remains unreachable after proving",
+        "pass": true
+      }
+    ],
+    "timings": [
+      {
+        "status": "completed",
+        "stages": [
+          {
+            "stage": "Calculating witness…",
+            "ms": 531
+          },
+          {
+            "stage": "Creating proof…",
+            "ms": 817
+          }
+        ],
+        "ms": 21837
+      },
+      {
+        "status": "completed",
+        "stages": [
+          {
+            "stage": "Calculating witness…",
+            "ms": 505
+          },
+          {
+            "stage": "Creating proof…",
+            "ms": 763
+          }
+        ],
+        "ms": 19055
+      }
+    ]
+  },
+  "runtime": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "hardwareConcurrency": 8,
+    "deviceMemory": 16,
+    "visibility": "visible"
+  },
+  "samples": [
+    {
+      "ms": 2665,
+      "freeMemoryBytes": 5252685824,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 2.692916
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.130515
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 1.743838
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 0.786269
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.636113
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.111376
+        },
+        {
+          "type": "entity_extraction_service.mojom.Extractor",
+          "id": 32100,
+          "cpuTime": 0.049259
+        },
+        {
+          "type": "winrt_app_id.mojom.WinrtAppIdService",
+          "id": 30308,
+          "cpuTime": 0.172666
+        }
+      ],
+      "progress": "",
+      "lastRow": "Running: Amina creates a real 40.00 payment and keeps 60.00",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "running",
+            "stages": []
+          }
+        ]
+      }
+    },
+    {
+      "ms": 12672,
+      "freeMemoryBytes": 5187506176,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 2.882807
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.140331
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 12.299539
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 0.96589
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.677906
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.11144
+        },
+        {
+          "type": "entity_extraction_service.mojom.Extractor",
+          "id": 32100,
+          "cpuTime": 0.050374
+        }
+      ],
+      "progress": "Creating proof…",
+      "lastRow": "Running: Amina creates a real 40.00 payment and keeps 60.00",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "running",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 531
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 817
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ms": 22682,
+      "freeMemoryBytes": 4843036672,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 2.988683
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.140985
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 22.138425
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 1.124439
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.73359
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.111456
+        },
+        {
+          "type": "entity_extraction_service.mojom.Extractor",
+          "id": 32100,
+          "cpuTime": 0.05039
+        }
+      ],
+      "progress": "Creating proof…",
+      "lastRow": "Running: Amina creates a real 40.00 payment and keeps 60.00",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "running",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 531
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 817
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ms": 32702,
+      "freeMemoryBytes": 4966109184,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 3.206083
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.141004
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 32.877634
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 1.299315
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.789227
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.111473
+        },
+        {
+          "type": "entity_extraction_service.mojom.Extractor",
+          "id": 32100,
+          "cpuTime": 0.050407
+        }
+      ],
+      "progress": "Creating proof…",
+      "lastRow": "Running: Bola creates a real onward 30.00 payment and keeps 10.00",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          },
+          {
+            "name": "Amina creates a real 40.00 payment and keeps 60.00",
+            "pass": true
+          },
+          {
+            "name": "wrong recipient cannot open the packet",
+            "pass": true
+          },
+          {
+            "name": "ciphertext tampering is rejected without credit",
+            "pass": true
+          },
+          {
+            "name": "authenticated wrong workspace root is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered amount is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered owner is rejected",
+            "pass": true
+          },
+          {
+            "name": "tampered public transcript is rejected",
+            "pass": true
+          },
+          {
+            "name": "out-of-field public input is rejected",
+            "pass": true
+          },
+          {
+            "name": "an oversized proof is rejected",
+            "pass": true
+          },
+          {
+            "name": "a previously observed local conflict is rejected",
+            "pass": true
+          },
+          {
+            "name": "Bola verifies and receives exactly 40.00",
+            "pass": true
+          },
+          {
+            "name": "repeated receipt changes no stored data",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "completed",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 531
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 817
+              }
+            ],
+            "ms": 21837
+          },
+          {
+            "status": "running",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 505
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 763
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ms": 42713,
+      "freeMemoryBytes": 5234790400,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 3.246156
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.14103
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 43.629246
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 1.44371
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.802501
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.111498
+        }
+      ],
+      "progress": "Creating proof…",
+      "lastRow": "Running: Bola creates a real onward 30.00 payment and keeps 10.00",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          },
+          {
+            "name": "Amina creates a real 40.00 payment and keeps 60.00",
+            "pass": true
+          },
+          {
+            "name": "wrong recipient cannot open the packet",
+            "pass": true
+          },
+          {
+            "name": "ciphertext tampering is rejected without credit",
+            "pass": true
+          },
+          {
+            "name": "authenticated wrong workspace root is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered amount is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered owner is rejected",
+            "pass": true
+          },
+          {
+            "name": "tampered public transcript is rejected",
+            "pass": true
+          },
+          {
+            "name": "out-of-field public input is rejected",
+            "pass": true
+          },
+          {
+            "name": "an oversized proof is rejected",
+            "pass": true
+          },
+          {
+            "name": "a previously observed local conflict is rejected",
+            "pass": true
+          },
+          {
+            "name": "Bola verifies and receives exactly 40.00",
+            "pass": true
+          },
+          {
+            "name": "repeated receipt changes no stored data",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "completed",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 531
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 817
+              }
+            ],
+            "ms": 21837
+          },
+          {
+            "status": "running",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 505
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 763
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "ms": 44018,
+      "freeMemoryBytes": 5374545920,
+      "processes": [
+        {
+          "type": "browser",
+          "id": 2756,
+          "cpuTime": 3.253752
+        },
+        {
+          "type": "renderer",
+          "id": 18500,
+          "cpuTime": 0.14103
+        },
+        {
+          "type": "renderer",
+          "id": 2944,
+          "cpuTime": 45.014694
+        },
+        {
+          "type": "GPU",
+          "id": 11880,
+          "cpuTime": 1.470572
+        },
+        {
+          "type": "network.mojom.NetworkService",
+          "id": 2800,
+          "cpuTime": 0.803217
+        },
+        {
+          "type": "storage.mojom.StorageService",
+          "id": 25612,
+          "cpuTime": 0.111498
+        }
+      ],
+      "progress": "25 passed; 0 failed. All checks completed.",
+      "lastRow": "PASS: app server remains unreachable after proving",
+      "partial": {
+        "results": [
+          {
+            "name": "app server is unreachable before proving",
+            "pass": true
+          },
+          {
+            "name": "amount parsing preserves cents",
+            "pass": true
+          },
+          {
+            "name": "invalid and zero amounts are rejected",
+            "pass": true
+          },
+          {
+            "name": "insufficient funds do not call the prover",
+            "pass": true
+          },
+          {
+            "name": "self-payments are rejected",
+            "pass": true
+          },
+          {
+            "name": "a failed proof leaves the entire store unchanged",
+            "pass": true
+          },
+          {
+            "name": "an invalid returned proof cannot debit funds",
+            "pass": true
+          },
+          {
+            "name": "Amina creates a real 40.00 payment and keeps 60.00",
+            "pass": true
+          },
+          {
+            "name": "wrong recipient cannot open the packet",
+            "pass": true
+          },
+          {
+            "name": "ciphertext tampering is rejected without credit",
+            "pass": true
+          },
+          {
+            "name": "authenticated wrong workspace root is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered amount is rejected",
+            "pass": true
+          },
+          {
+            "name": "authenticated altered owner is rejected",
+            "pass": true
+          },
+          {
+            "name": "tampered public transcript is rejected",
+            "pass": true
+          },
+          {
+            "name": "out-of-field public input is rejected",
+            "pass": true
+          },
+          {
+            "name": "an oversized proof is rejected",
+            "pass": true
+          },
+          {
+            "name": "a previously observed local conflict is rejected",
+            "pass": true
+          },
+          {
+            "name": "Bola verifies and receives exactly 40.00",
+            "pass": true
+          },
+          {
+            "name": "repeated receipt changes no stored data",
+            "pass": true
+          },
+          {
+            "name": "Bola creates a real onward 30.00 payment and keeps 10.00",
+            "pass": true
+          },
+          {
+            "name": "replaying a spent receipt cannot restore the old balance",
+            "pass": true
+          },
+          {
+            "name": "missing onward ancestry is rejected",
+            "pass": true
+          },
+          {
+            "name": "Chidi verifies onward ancestry and total remains 100.00",
+            "pass": true
+          },
+          {
+            "name": "serialized state preserves balances and replay protection",
+            "pass": true
+          },
+          {
+            "name": "app server remains unreachable after proving",
+            "pass": true
+          }
+        ],
+        "timings": [
+          {
+            "status": "completed",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 531
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 817
+              }
+            ],
+            "ms": 21837
+          },
+          {
+            "status": "completed",
+            "stages": [
+              {
+                "stage": "Calculating witness…",
+                "ms": 505
+              },
+              {
+                "stage": "Creating proof…",
+                "ms": 763
+              }
+            ],
+            "ms": 19055
+          }
+        ]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "url": "http://127.0.0.1:4173/tests.html",
+      "ms": 598,
+      "timing": {
+        "startTime": 1793439749733.054,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.763,
+        "responseStart": 8.48,
+        "responseEnd": 22.88
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/style.css",
+      "ms": 600,
+      "timing": {
+        "startTime": 1793439749812.6628,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.545,
+        "responseStart": 5.23,
+        "responseEnd": 22.808
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/browser-tests.js",
+      "ms": 602,
+      "timing": {
+        "startTime": 1793439749813.621,
+        "domainLookupStart": 0.231,
+        "domainLookupEnd": 0.252,
+        "connectStart": 0.252,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.295,
+        "requestStart": 1.438,
+        "responseStart": 16.68,
+        "responseEnd": 34.109
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/wallet.js",
+      "ms": 657,
+      "timing": {
+        "startTime": 1793439749879.2588,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.642,
+        "responseStart": 4.844,
+        "responseEnd": 7.979
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/protocol.js",
+      "ms": 675,
+      "timing": {
+        "startTime": 1793439749880.2021,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.612,
+        "responseStart": 17.498,
+        "responseEnd": 22.282
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/capsule.js",
+      "ms": 680,
+      "timing": {
+        "startTime": 1793439749880.645,
+        "domainLookupStart": 0.139,
+        "domainLookupEnd": 0.155,
+        "connectStart": 0.155,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.518,
+        "requestStart": 2.745,
+        "responseStart": 19.131,
+        "responseEnd": 25.208
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/proof-worker.js",
+      "ms": 685,
+      "timing": {
+        "startTime": 1793439749881.8562,
+        "domainLookupStart": 0.238,
+        "domainLookupEnd": 0.257,
+        "connectStart": 0.257,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.366,
+        "requestStart": 1.764,
+        "responseStart": 27.582,
+        "responseEnd": 34.558
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon.js",
+      "ms": 712,
+      "timing": {
+        "startTime": 1793439749922.9128,
+        "domainLookupStart": 0.218,
+        "domainLookupEnd": 0.238,
+        "connectStart": 0.238,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.848,
+        "requestStart": 0.949,
+        "responseStart": 5.652,
+        "responseEnd": 16.377
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/config.js",
+      "ms": 713,
+      "timing": {
+        "startTime": 1793439749920.6582,
+        "domainLookupStart": 0.188,
+        "domainLookupEnd": 0.204,
+        "connectStart": 0.204,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.985,
+        "requestStart": 1.111,
+        "responseStart": 8.474,
+        "responseEnd": 16.298
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/snarkjs.js",
+      "ms": 722,
+      "timing": {
+        "startTime": 1793439749924.224,
+        "domainLookupStart": 0.178,
+        "domainLookupEnd": 0.194,
+        "connectStart": 0.194,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.854,
+        "requestStart": 0.95,
+        "responseStart": 6.695,
+        "responseEnd": 20.007
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 747,
+      "timing": {
+        "startTime": 1793439749952.837,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.272,
+        "responseStart": 5.082,
+        "responseEnd": 15.184
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon_constants_opt.js",
+      "ms": 768,
+      "timing": {
+        "startTime": 1793439749951.57,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.886,
+        "responseStart": 8.778,
+        "responseEnd": 21.422
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/sw.js",
+      "ms": 1200,
+      "timing": {
+        "startTime": 1793439750406.147,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": -1,
+        "responseStart": 32.745,
+        "responseEnd": 32.745
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "ms": 1220,
+      "timing": {
+        "startTime": 1793439750442.6628,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.339,
+        "responseStart": 7.999,
+        "responseEnd": 9.209
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/index.html",
+      "ms": 1220,
+      "timing": {
+        "startTime": 1793439750443.3958,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.328,
+        "responseStart": 4.725,
+        "responseEnd": 6.66
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home.css",
+      "ms": 1220,
+      "timing": {
+        "startTime": 1793439750444.0898,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.257,
+        "responseStart": 4.525,
+        "responseEnd": 6.495
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home.js",
+      "ms": 1226,
+      "timing": {
+        "startTime": 1793439750455.556,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.299,
+        "responseStart": 3.686,
+        "responseEnd": 16.794
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home-interactive.js",
+      "ms": 1229,
+      "timing": {
+        "startTime": 1793439750456.1948,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.237,
+        "responseStart": 3.58,
+        "responseEnd": 16.732
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/lenz-preview.webp",
+      "ms": 1229,
+      "timing": {
+        "startTime": 1793439750456.7002,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.251,
+        "responseStart": 3.963,
+        "responseEnd": 17.27
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/wallet-preview.webp",
+      "ms": 1234,
+      "timing": {
+        "startTime": 1793439750463.077,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.311,
+        "responseStart": 8.288,
+        "responseEnd": 27.964
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/profile-preview.webp",
+      "ms": 1237,
+      "timing": {
+        "startTime": 1793439750466.421,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.288,
+        "responseStart": 8.01,
+        "responseEnd": 30.804
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/payment-demo.html",
+      "ms": 1240,
+      "timing": {
+        "startTime": 1793439750468.099,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.362,
+        "responseStart": 7.636,
+        "responseEnd": 31.798
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/manifest.webmanifest",
+      "ms": 1242,
+      "timing": {
+        "startTime": 1793439750473.191,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.324,
+        "responseStart": 4.905,
+        "responseEnd": 34.149
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark.svg",
+      "ms": 1244,
+      "timing": {
+        "startTime": 1793439750476.5269,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.314,
+        "responseStart": 4.218,
+        "responseEnd": 36.596
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-reverse.svg",
+      "ms": 1249,
+      "timing": {
+        "startTime": 1793439750479.0159,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.35,
+        "responseStart": 3.47,
+        "responseEnd": 38.24
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-black.svg",
+      "ms": 1250,
+      "timing": {
+        "startTime": 1793439750481.4849,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.263,
+        "responseStart": 4.63,
+        "responseEnd": 41.735
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-white.svg",
+      "ms": 1253,
+      "timing": {
+        "startTime": 1793439750483.274,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.271,
+        "responseStart": 5.983,
+        "responseEnd": 44.761
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon.svg",
+      "ms": 1255,
+      "timing": {
+        "startTime": 1793439750485.262,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.624,
+        "responseStart": 4.719,
+        "responseEnd": 45.192
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-32.png",
+      "ms": 1255,
+      "timing": {
+        "startTime": 1793439750488.5303,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.322,
+        "responseStart": 2.45,
+        "responseEnd": 46.279
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-180.png",
+      "ms": 1261,
+      "timing": {
+        "startTime": 1793439750492.776,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.301,
+        "responseStart": 2.905,
+        "responseEnd": 51.276
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-192.png",
+      "ms": 1264,
+      "timing": {
+        "startTime": 1793439750493.5679,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.36,
+        "responseStart": 2.647,
+        "responseEnd": 51.358
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-512.png",
+      "ms": 1264,
+      "timing": {
+        "startTime": 1793439750494.324,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.26,
+        "responseStart": 2.723,
+        "responseEnd": 51.888
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo.svg",
+      "ms": 1275,
+      "timing": {
+        "startTime": 1793439750503.0679,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.354,
+        "responseStart": 3.371,
+        "responseEnd": 62.978
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-1024.png",
+      "ms": 1275,
+      "timing": {
+        "startTime": 1793439750500.1873,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.296,
+        "responseStart": 8.084,
+        "responseEnd": 64.1
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo-reverse.svg",
+      "ms": 1275,
+      "timing": {
+        "startTime": 1793439750503.8052,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.283,
+        "responseStart": 5.207,
+        "responseEnd": 63.67
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo.png",
+      "ms": 1291,
+      "timing": {
+        "startTime": 1793439750512.0781,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.353,
+        "responseStart": 2.958,
+        "responseEnd": 70.16
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/brand-card.png",
+      "ms": 1291,
+      "timing": {
+        "startTime": 1793439750513.37,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.225,
+        "responseStart": 2.242,
+        "responseEnd": 70.534
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/brand-card.svg",
+      "ms": 1293,
+      "timing": {
+        "startTime": 1793439750512.828,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.255,
+        "responseStart": 3.633,
+        "responseEnd": 70.873
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/tests.html",
+      "ms": 1304,
+      "timing": {
+        "startTime": 1793439750529.8228,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.235,
+        "responseStart": 2.54,
+        "responseEnd": 86.868
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/preview.css",
+      "ms": 1304,
+      "timing": {
+        "startTime": 1793439750529.191,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.301,
+        "responseStart": 3.832,
+        "responseEnd": 87.568
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/index.html",
+      "ms": 1305,
+      "timing": {
+        "startTime": 1793439750528.481,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.337,
+        "responseStart": 5.209,
+        "responseEnd": 87.808
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "ms": 1306,
+      "timing": {
+        "startTime": 1793439750536.612,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.36,
+        "responseStart": 4.4,
+        "responseEnd": 94.918
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 1326,
+      "timing": {
+        "startTime": 1793439750537.253,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.403,
+        "responseStart": 6.845,
+        "responseEnd": 100.792
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 1326,
+      "timing": {
+        "startTime": 1793439750537.941,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.224,
+        "responseStart": 7.158,
+        "responseEnd": 99.323
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 1363,
+      "timing": {
+        "startTime": 1793439750597.5427,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.352,
+        "responseStart": 2.578,
+        "responseEnd": 3.569
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "ms": 1370,
+      "timing": {
+        "startTime": 1793439750605.067,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.307,
+        "responseStart": 2.551,
+        "responseEnd": 3.602
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/index.html",
+      "ms": 1376,
+      "timing": {
+        "startTime": 1793439750611.112,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.301,
+        "responseStart": 2.85,
+        "responseEnd": 3.843
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home.css",
+      "ms": 1383,
+      "timing": {
+        "startTime": 1793439750617.712,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.303,
+        "responseStart": 3.061,
+        "responseEnd": 4.114
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home.js",
+      "ms": 1389,
+      "timing": {
+        "startTime": 1793439750624.268,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.292,
+        "responseStart": 2.425,
+        "responseEnd": 3.3
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/home-interactive.js",
+      "ms": 1395,
+      "timing": {
+        "startTime": 1793439750630.113,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.294,
+        "responseStart": 2.644,
+        "responseEnd": 3.688
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/lenz-preview.webp",
+      "ms": 1401,
+      "timing": {
+        "startTime": 1793439750636.354,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.329,
+        "responseStart": 2.5,
+        "responseEnd": 3.759
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/wallet-preview.webp",
+      "ms": 1408,
+      "timing": {
+        "startTime": 1793439750642.683,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.279,
+        "responseStart": 2.39,
+        "responseEnd": 3.446
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/profile-preview.webp",
+      "ms": 1416,
+      "timing": {
+        "startTime": 1793439750650.021,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.295,
+        "responseStart": 3.514,
+        "responseEnd": 4.62
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/payment-demo.html",
+      "ms": 1423,
+      "timing": {
+        "startTime": 1793439750656.971,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.301,
+        "responseStart": 2.692,
+        "responseEnd": 3.835
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/style.css",
+      "ms": 1430,
+      "timing": {
+        "startTime": 1793439750663.498,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.338,
+        "responseStart": 3.736,
+        "responseEnd": 4.821
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/app.js",
+      "ms": 1437,
+      "timing": {
+        "startTime": 1793439750671.427,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.275,
+        "responseStart": 2.898,
+        "responseEnd": 3.862
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/wallet.js",
+      "ms": 1448,
+      "timing": {
+        "startTime": 1793439750677.688,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.298,
+        "responseStart": 2.515,
+        "responseEnd": 3.646
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/protocol.js",
+      "ms": 1449,
+      "timing": {
+        "startTime": 1793439750683.395,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.292,
+        "responseStart": 3.469,
+        "responseEnd": 4.466
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "ms": 1457,
+      "timing": {
+        "startTime": 1793439750690.085,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.309,
+        "responseStart": 4.22,
+        "responseEnd": 5.144
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/proof-worker.js",
+      "ms": 1463,
+      "timing": {
+        "startTime": 1793439750697.9612,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.34,
+        "responseStart": 2.692,
+        "responseEnd": 3.724
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/capsule.js",
+      "ms": 1473,
+      "timing": {
+        "startTime": 1793439750706.7083,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.305,
+        "responseStart": 4.16,
+        "responseEnd": 5.16
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/config.js",
+      "ms": 1481,
+      "timing": {
+        "startTime": 1793439750715.282,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.341,
+        "responseStart": 2.628,
+        "responseEnd": 3.815
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 1490,
+      "timing": {
+        "startTime": 1793439750721.8162,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.457,
+        "responseStart": 3.436,
+        "responseEnd": 6.368
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/snarkjs.js",
+      "ms": 1519,
+      "timing": {
+        "startTime": 1793439750734.993,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.809,
+        "responseStart": 3.71,
+        "responseEnd": 6.291
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon.js",
+      "ms": 1529,
+      "timing": {
+        "startTime": 1793439750763.678,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.328,
+        "responseStart": 2.735,
+        "responseEnd": 3.973
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon_constants_opt.js",
+      "ms": 1551,
+      "timing": {
+        "startTime": 1793439750770.453,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.587,
+        "responseStart": 5.365,
+        "responseEnd": 13.157
+      },
+      "serviceWorker": true
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 1594,
+      "status": 200,
+      "fromServiceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 1605,
+      "timing": {
+        "startTime": 1793439750808.0088,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.293,
+        "responseStart": 14.373,
+        "responseEnd": 32.961
+      },
+      "serviceWorker": true
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 1699,
+      "status": 200,
+      "fromServiceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 1780,
+      "timing": {
+        "startTime": 1793439750860.966,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.278,
+        "responseStart": 64.645,
+        "responseEnd": 156.307
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/tests.html",
+      "ms": 1917,
+      "timing": {
+        "startTime": 1793439751150.244,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.312,
+        "responseStart": 4.187,
+        "responseEnd": 5.414
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/browser-tests.js",
+      "ms": 1923,
+      "timing": {
+        "startTime": 1793439751157.85,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.325,
+        "responseStart": 2.54,
+        "responseEnd": 3.507
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/manifest.webmanifest",
+      "ms": 1929,
+      "timing": {
+        "startTime": 1793439751164.103,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.283,
+        "responseStart": 2.516,
+        "responseEnd": 3.615
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark.svg",
+      "ms": 1937,
+      "timing": {
+        "startTime": 1793439751169.96,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.289,
+        "responseStart": 2.531,
+        "responseEnd": 3.551
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-reverse.svg",
+      "ms": 1941,
+      "timing": {
+        "startTime": 1793439751175.802,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.313,
+        "responseStart": 2.675,
+        "responseEnd": 3.641
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-black.svg",
+      "ms": 1947,
+      "timing": {
+        "startTime": 1793439751181.582,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.288,
+        "responseStart": 2.841,
+        "responseEnd": 3.884
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/mark-white.svg",
+      "ms": 1954,
+      "timing": {
+        "startTime": 1793439751187.999,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.322,
+        "responseStart": 3.184,
+        "responseEnd": 4.23
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon.svg",
+      "ms": 1961,
+      "timing": {
+        "startTime": 1793439751195.7341,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.309,
+        "responseStart": 2.956,
+        "responseEnd": 4.025
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-32.png",
+      "ms": 1967,
+      "timing": {
+        "startTime": 1793439751202.136,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.386,
+        "responseStart": 1.855,
+        "responseEnd": 3.11
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-180.png",
+      "ms": 1974,
+      "timing": {
+        "startTime": 1793439751209.198,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.315,
+        "responseStart": 1.78,
+        "responseEnd": 2.873
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-192.png",
+      "ms": 1980,
+      "timing": {
+        "startTime": 1793439751214.6653,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.322,
+        "responseStart": 2.018,
+        "responseEnd": 3.035
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-512.png",
+      "ms": 1986,
+      "timing": {
+        "startTime": 1793439751221.6768,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.309,
+        "responseStart": 1.598,
+        "responseEnd": 2.598
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/icon-1024.png",
+      "ms": 1992,
+      "timing": {
+        "startTime": 1793439751227.408,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.281,
+        "responseStart": 1.642,
+        "responseEnd": 2.85
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo.svg",
+      "ms": 1998,
+      "timing": {
+        "startTime": 1793439751233.0789,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.294,
+        "responseStart": 2.733,
+        "responseEnd": 3.747
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo-reverse.svg",
+      "ms": 2007,
+      "timing": {
+        "startTime": 1793439751239.0032,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.289,
+        "responseStart": 2.633,
+        "responseEnd": 3.667
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/logo.png",
+      "ms": 2009,
+      "timing": {
+        "startTime": 1793439751244.668,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.287,
+        "responseStart": 1.629,
+        "responseEnd": 2.588
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/brand-card.svg",
+      "ms": 2015,
+      "timing": {
+        "startTime": 1793439751249.64,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.315,
+        "responseStart": 2.478,
+        "responseEnd": 3.456
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/brand-card.png",
+      "ms": 2021,
+      "timing": {
+        "startTime": 1793439751255.871,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.294,
+        "responseStart": 1.664,
+        "responseEnd": 2.849
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/index.html",
+      "ms": 2026,
+      "timing": {
+        "startTime": 1793439751261.3062,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.302,
+        "responseStart": 2.499,
+        "responseEnd": 3.616
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/brand/preview.css",
+      "ms": 2033,
+      "timing": {
+        "startTime": 1793439751267.227,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.31,
+        "responseStart": 2.891,
+        "responseEnd": 4.359
+      },
+      "serviceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/tests.html",
+      "ms": 2108,
+      "timing": {
+        "startTime": 1793439751309.0159,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.678,
+        "responseStart": 4.868,
+        "responseEnd": 10.833
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/style.css",
+      "ms": 2108,
+      "timing": {
+        "startTime": 1793439751325.82,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.391,
+        "responseStart": 3.53,
+        "responseEnd": 5.035
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/browser-tests.js",
+      "ms": 2109,
+      "timing": {
+        "startTime": 1793439751325.8992,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.524,
+        "responseStart": 4.432,
+        "responseEnd": 4.963
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/wallet.js",
+      "ms": 2112,
+      "timing": {
+        "startTime": 1793439751343.7202,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.19,
+        "responseStart": 4.393,
+        "responseEnd": 6.096
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/protocol.js",
+      "ms": 2113,
+      "timing": {
+        "startTime": 1793439751343.9883,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.074,
+        "responseStart": 5.669,
+        "responseEnd": 7.136
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/capsule.js",
+      "ms": 2114,
+      "timing": {
+        "startTime": 1793439751344.124,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.225,
+        "responseStart": 6.699,
+        "responseEnd": 7.999
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/proof-worker.js",
+      "ms": 2115,
+      "timing": {
+        "startTime": 1793439751344.348,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.245,
+        "responseStart": 6.745,
+        "responseEnd": 7.936
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/config.js",
+      "ms": 2117,
+      "timing": {
+        "startTime": 1793439751352.761,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.494,
+        "responseStart": 2.765,
+        "responseEnd": 3.247
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon.js",
+      "ms": 2118,
+      "timing": {
+        "startTime": 1793439751353.011,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.435,
+        "responseStart": 2.894,
+        "responseEnd": 3.687
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/snarkjs.js",
+      "ms": 2141,
+      "timing": {
+        "startTime": 1793439751353.061,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.471,
+        "responseStart": 3.163,
+        "responseEnd": 4.295
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 2145,
+      "timing": {
+        "startTime": 1793439751357.599,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.279,
+        "responseStart": 4.209,
+        "responseEnd": 4.697
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon_constants_opt.js",
+      "ms": 2152,
+      "timing": {
+        "startTime": 1793439751357.419,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.275,
+        "responseStart": 1.793,
+        "responseEnd": 3.744
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "ms": 2679,
+      "timing": {
+        "startTime": 1793439751903.2778,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.097,
+        "responseStart": 3.404,
+        "responseEnd": 16.163
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/protocol.js",
+      "ms": 2684,
+      "timing": {
+        "startTime": 1793439751919.1301,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.744,
+        "responseStart": 2.072,
+        "responseEnd": 2.612
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/config.js",
+      "ms": 2689,
+      "timing": {
+        "startTime": 1793439751922.702,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.185,
+        "responseStart": 2.527,
+        "responseEnd": 2.846
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon.js",
+      "ms": 2690,
+      "timing": {
+        "startTime": 1793439751922.917,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.207,
+        "responseStart": 2.801,
+        "responseEnd": 3.183
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/snarkjs.js",
+      "ms": 2709,
+      "timing": {
+        "startTime": 1793439751923.257,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.707,
+        "responseStart": 3.175,
+        "responseEnd": 3.917
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon_constants_opt.js",
+      "ms": 2768,
+      "timing": {
+        "startTime": 1793439751949.603,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.198,
+        "responseStart": 1.726,
+        "responseEnd": 7.357
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 2789,
+      "timing": {
+        "startTime": 1793439751949.669,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.29,
+        "responseStart": 6.774,
+        "responseEnd": 8.212
+      },
+      "serviceWorker": false
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 3198,
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 3219,
+      "timing": {
+        "startTime": 1793439752433.213,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.139,
+        "responseStart": 1.941,
+        "responseEnd": 11.966
+      },
+      "serviceWorker": false
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 3488,
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 3565,
+      "timing": {
+        "startTime": 1793439752724.3508,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.122,
+        "responseStart": 1.544,
+        "responseEnd": 56.034
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24663,
+      "timing": {
+        "startTime": 1793439773871.674,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.472,
+        "responseStart": 3.966,
+        "responseEnd": 30.25
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24665,
+      "timing": {
+        "startTime": 1793439773877.5771,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.2,
+        "responseStart": 4.033,
+        "responseEnd": 26.334
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24665,
+      "timing": {
+        "startTime": 1793439773875.3638,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.194,
+        "responseStart": 2.496,
+        "responseEnd": 28.74
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24665,
+      "timing": {
+        "startTime": 1793439773873.527,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.233,
+        "responseStart": 2.313,
+        "responseEnd": 30.635
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24668,
+      "timing": {
+        "startTime": 1793439773879.817,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.641,
+        "responseStart": 3.67,
+        "responseEnd": 27.955
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24677,
+      "timing": {
+        "startTime": 1793439773884.87,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.202,
+        "responseStart": 2.938,
+        "responseEnd": 30.794
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24677,
+      "timing": {
+        "startTime": 1793439773881.302,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.201,
+        "responseStart": 3.891,
+        "responseEnd": 36.533
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "ms": 24681,
+      "timing": {
+        "startTime": 1793439773883.117,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.299,
+        "responseStart": 2.52,
+        "responseEnd": 38.244
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "ms": 24863,
+      "timing": {
+        "startTime": 1793439774085.496,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.377,
+        "responseStart": 2.954,
+        "responseEnd": 13.31
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/protocol.js",
+      "ms": 24865,
+      "timing": {
+        "startTime": 1793439774098.8027,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.297,
+        "responseStart": 3.648,
+        "responseEnd": 4.238
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/config.js",
+      "ms": 24869,
+      "timing": {
+        "startTime": 1793439774104.766,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.247,
+        "responseStart": 2.357,
+        "responseEnd": 3.527
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon.js",
+      "ms": 24871,
+      "timing": {
+        "startTime": 1793439774104.838,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.347,
+        "responseStart": 2.456,
+        "responseEnd": 3.904
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/snarkjs.js",
+      "ms": 24890,
+      "timing": {
+        "startTime": 1793439774104.887,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.387,
+        "responseStart": 2.945,
+        "responseEnd": 4.367
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/poseidon_constants_opt.js",
+      "ms": 24923,
+      "timing": {
+        "startTime": 1793439774129.9011,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.325,
+        "responseStart": 1.737,
+        "responseEnd": 5.277
+      },
+      "serviceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript.js",
+      "ms": 24940,
+      "timing": {
+        "startTime": 1793439774130.096,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.447,
+        "responseStart": 4.74,
+        "responseEnd": 5.185
+      },
+      "serviceWorker": false
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 25354,
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.wasm",
+      "ms": 25377,
+      "timing": {
+        "startTime": 1793439774590.3499,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.152,
+        "responseStart": 1.892,
+        "responseEnd": 9.481
+      },
+      "serviceWorker": false
+    },
+    {
+      "kind": "asset-response",
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 25613,
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/step.zkey",
+      "ms": 25683,
+      "timing": {
+        "startTime": 1793439774849.6592,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.125,
+        "responseStart": 1.677,
+        "responseEnd": 51.596
+      },
+      "serviceWorker": false
+    }
+  ],
+  "workers": [
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "openedMs": 2672,
+      "closedMs": 24502
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24652
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24659
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24660
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24660
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24660
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24663
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24667
+    },
+    {
+      "url": "http://127.0.0.1:4173/vendor/ffjavascript-worker.js",
+      "openedMs": 24669
+    },
+    {
+      "url": "http://127.0.0.1:4173/prover.js",
+      "openedMs": 24855,
+      "closedMs": 43900
+    }
+  ]
+}

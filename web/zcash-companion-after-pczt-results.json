@@ -1,0 +1,70 @@
+{
+  "startedAt": "2026-10-31T13:11:21.567Z",
+  "network": "testnet",
+  "refresh": false,
+  "checks": [
+    "Native wallet A local read",
+    "Wallet A matches confirmed PCZT balance and spendable Ironwood value",
+    "Native wallet B local read",
+    "Wallet B matches confirmed PCZT balance and spendable Ironwood value",
+    "Companion page creates no Lenz identity or wallet storage and has no page errors"
+  ],
+  "responses": [
+    {
+      "wallet": "a",
+      "refresh": false,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "a",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T13:11:24.403Z",
+        "refreshed": false,
+        "serverHeight": null,
+        "walletHeight": 4563325,
+        "amounts": {
+          "total": "89990000",
+          "ironwood_spendable": "89990000",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "89990000",
+          "pending": "0"
+        },
+        "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    },
+    {
+      "wallet": "b",
+      "refresh": false,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "b",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T13:11:25.637Z",
+        "refreshed": false,
+        "serverHeight": null,
+        "walletHeight": 4563325,
+        "amounts": {
+          "total": "10000000",
+          "ironwood_spendable": "10000000",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "10000000",
+          "pending": "0"
+        },
+        "address": "utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    }
+  ],
+  "errors": [],
+  "ok": true,
+  "completedAt": "2026-10-31T13:11:25.979Z",
+  "scope": "Actual pinned native Zcash test wallets through local HTTP and isolated Windows Edge; no fixture responses, funding, signing, sending or existing user profile access."
+}

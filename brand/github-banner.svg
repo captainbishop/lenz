@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="360" viewBox="0 0 1440 360" role="img" aria-labelledby="title desc">
+  <title id="title">Lenz</title>
+  <desc id="desc">Talk privately. Use DeFi without internet.</desc>
+  <rect width="1440" height="360" fill="#173F35"/>
+  <rect width="1440" height="6" fill="#E1EFA6"/>
+  <g transform="translate(64 80) scale(1.5)" fill="none" stroke="#E1EFA6" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 20 V78 Q30 98 50 98 H74"/>
+    <path d="M98 108 V50 Q98 30 78 30 H54"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="304" y="177" fill="#F5F5EF" font-size="88" font-weight="600" letter-spacing="-2">Lenz</text>
+    <text x="308" y="241" fill="#F5F5EF" font-size="34">Talk privately. Use DeFi without internet.</text>
+  </g>
+  <g transform="translate(1164 56) scale(2.3)" fill="none" stroke="#E1EFA6" opacity="0.08" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 20 V78 Q30 98 50 98 H74"/>
+    <path d="M98 108 V50 Q98 30 78 30 H54"/>
+  </g>
+</svg>

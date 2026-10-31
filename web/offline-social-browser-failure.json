@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-31T11:15:19.098Z",
+  "passed": 2,
+  "checks": [
+    "tUSD starts at zero; chat and wallet use the same profile and confirmed contacts",
+    "all three profiles cache and reload chat fully offline before exchanging messages or money"
+  ],
+  "error": "locator.isVisible: Error: strict mode violation: getByText('Meet by the gate after lunch.') resolved to 2 elements:\n    1) <small>Meet by the gate after lunch.</small> aka getByRole('button', { name: 'Amina Meet by the gate after' })\n    2) <div class=\"bubble\">…</div> aka getByText('Meet by the gate after lunch.Opened here · sender signature checked')\n\nCall log:\n\u001b[2m    - checking visibility of getByText('Meet by the gate after lunch.')\u001b[22m\n\n    at <workspace>\\web\\offline-social-browser.test.cjs:43:410\n    at async check (<workspace>\\web\\offline-social-browser.test.cjs:14:30)\n    at async <workspace>\\web\\offline-social-browser.test.cjs:42:5",
+  "errors": [],
+  "apiRequests": []
+}

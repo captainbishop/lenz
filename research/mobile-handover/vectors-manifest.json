@@ -1,0 +1,74 @@
+{
+  "kind": "PUBLIC-TEST-KEYS-ONLY",
+  "envelopeVersion": "proof-u/witness-capsule/v1",
+  "format": "UTF-8 tab-separated hex byte fields; LF line endings",
+  "cases": [
+    {
+      "id": "real-step",
+      "expect": "accept"
+    },
+    {
+      "id": "utf8-payload",
+      "expect": "accept"
+    },
+    {
+      "id": "maximum-payload",
+      "expect": "accept"
+    },
+    {
+      "id": "altered-key",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "altered-nonce",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "altered-ciphertext",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "altered-tag",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "altered-domain",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "altered-handoff",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "truncated-ciphertext",
+      "expect": "reject-auth"
+    },
+    {
+      "id": "short-key",
+      "expect": "reject-format"
+    },
+    {
+      "id": "short-nonce",
+      "expect": "reject-format"
+    },
+    {
+      "id": "short-tag",
+      "expect": "reject-format"
+    },
+    {
+      "id": "empty-ciphertext",
+      "expect": "reject-format"
+    },
+    {
+      "id": "invalid-domain",
+      "expect": "reject-format"
+    },
+    {
+      "id": "invalid-handoff",
+      "expect": "reject-format"
+    }
+  ],
+  "vectorsSha256": "e5b1b26b1c9a8762658311d009f680ceedcd7f39476178a6f09a0ce181ca2e99",
+  "proofSampleSha256": "7686e09c553f9b8b73951419d5e88f7f34425a47abb685edb13a6461395f6171",
+  "note": "Only real-step carries a real proof; other positive payloads exercise encoding/size, not payment validity."
+}

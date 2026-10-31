@@ -1,0 +1,14 @@
+[
+  {
+    "name": "backing",
+    "detected": true
+  },
+  {
+    "name": "participants",
+    "detected": true
+  },
+  {
+    "name": "local-offer",
+    "detected": true
+  }
+]

@@ -1,0 +1,94 @@
+{
+  "checkedAt": "2026-10-30T20:03:02.479Z",
+  "scope": "Local security checkpoint; disposable Edge profiles. No fresh chain receipts, transactions, deployment, external wallet approval or user profile access.",
+  "node": {
+    "passed": 67,
+    "failed": 0,
+    "groups": [
+      {
+        "passed": 66,
+        "command": "node --test web/build-proof-worker.test.mjs web/proof-worker.test.mjs web/meteor-popup.test.mjs web/near-signer.test.mjs web/near-deposit.test.mjs web/rhea-protocol.test.mjs contracts/adapter-recovery.test.mjs research/security/check-dependencies.test.mjs research/security/composition-model.test.mjs"
+      },
+      {
+        "passed": 1,
+        "command": "node --test research/security/install-policy.test.mjs",
+        "permission": "Approved rerun after npm cache EPERM"
+      }
+    ]
+  },
+  "browsers": [
+    {
+      "file": "web/security-browser-results.json",
+      "passed": 3,
+      "checkedAt": "2026-10-30T19:40:16.633Z"
+    },
+    {
+      "file": "web/security-upgrade-results.json",
+      "passed": 4,
+      "checkedAt": "2026-10-30T19:46:46.011Z"
+    },
+    {
+      "file": "web/near-wallet-browser-results.json",
+      "passed": 8,
+      "checkedAt": "2026-10-30T19:57:21.836Z"
+    },
+    {
+      "file": "web/near-signer-browser-results.json",
+      "passed": 8,
+      "checkedAt": "2026-10-30T19:52:02.172Z"
+    },
+    {
+      "file": "web/security-proof-offline-results.json",
+      "passed": 25,
+      "checkedAt": "2026-10-30T19:50:12.746Z"
+    }
+  ],
+  "onlineProof": {
+    "file": "web/security-proof-results.json",
+    "passed": 23
+  },
+  "build": {
+    "command": "node build.mjs",
+    "cwd": "web",
+    "exitCode": 0
+  },
+  "static": {
+    "proofRoutes": 44,
+    "chatRoutes": 39
+  },
+  "dependencyLockfiles": 7,
+  "localLinksVerified": 33,
+  "unresolved": [
+    {
+      "file": "web/security-proof-offline-timeout.json",
+      "detail": "First offline run timed out after 90 seconds on second proof. Later diagnostic run passed in 39.949 seconds; original cause unknown."
+    },
+    "Public incident survey remains incomplete; web search failed and FBI detail returned HTTP 403.",
+    "Independent release/signing authority, missing-callback repair, safe recovery, privacy and live integration prerequisites remain open."
+  ],
+  "sha256": {
+    "web/security-policy.mjs": "0e4220b76e4a2be6b339356eb6ac1e68a605f30997bf70302c17f3a1b5ab3c65",
+    "web/server.mjs": "884118f4cedc3fa913845586ba3048620ae076e657e26e96d911f532a8eca457",
+    "web/build.mjs": "cc0cc6ac6256fabe5f15ee994ae3b7d448bc89e7e9b96195c43cd818baa4c595",
+    "web/build-proof-worker.mjs": "c5cb1a33614a291a385ff400af8d55f7c1a1be4cb592b8abcadb021d9db41f2c",
+    "web/build-proof-worker.test.mjs": "3d7affff36fc7e3b079775069c9a684c65ef46497f08c977468cb4f6584b2b54",
+    "web/verify-static.mjs": "ab657f3c4509770cb7fca1e10697aa78b1efdb6a859c248902fe1be55176c74e",
+    "web/public/sw.js": "8e0392f7443394af3fe733c1072338d6229ae43a8033f054530539bd111ba91e",
+    "web/public/chat-sw.js": "46caf696dac0000d0051ac303264d6073e66f1cff680868c77823448e4a09759",
+    "web/public/vendor/ffjavascript.js": "eac6ef8180ed3cf0500c68efa172164dcf663f46c432f891aa7d6331483d9652",
+    "web/public/vendor/ffjavascript-worker.js": "d62dee6cff2bf15bb9bce562d1d35bd96a045bcd30557010894d35c3334f699e",
+    "web/security-browser.test.cjs": "534a3a5a46915518eb6a1f00860dc99ffc79709c568c4fc49a0916350f5ca406",
+    "web/security-proof.test.cjs": "34434e468e5fe1ce405e82c584c6323ca89a69a385c7bb50826c5a8b47423c14",
+    "web/security-upgrade.test.cjs": "1bd1bf9339847f8e1a9cd5ae449aa563f67e923d1d56c9788cf86803d005339e",
+    "web/near-wallet-browser.test.cjs": "82911be4bf239d4dd6f0ff03788648a81e13b10c36bcba95006521bb2f531585",
+    "web/near-signer-browser.test.cjs": "90094a591e0fba24b173695d8ee50adc5c5d77456491c69be4a6e247ff2c1f2e",
+    "research/security/check-dependencies.mjs": "a00ad4bf3fcefa62580ef1bb95582db4902fe29e37032d8d4bbefc273c1a7997",
+    "research/security/install-policy.test.mjs": "f6a7bfcc62851b3d2c575d7c5609c20991ec746807ae2d36955dd79e4242fc88",
+    "research/security/composition-model.test.mjs": "d42f2698d3cae84732ec860376df2948ebe5239d599c6d782e9c98552dbc041c",
+    "research/security/README.md": "4aeef588398b9df1d6a9a7f5c5fae3b0f4012dc539d8b77bca5dfb539128803b",
+    "research/security/security-model.md": "96cd525637f4faabefa7212e12d8e3f96950a5ab1b75ff8431bc5f62885cb680",
+    "research/security/verification.md": "8f15496313e61996b3fbab71265b752595866781447d6384aa610d4489a2c2db",
+    "research/security/campaign-register.md": "aaa574ca3a01f100bc6f7d729869e9c2d8694cf28dcee6cfc85c97940dd1c081",
+    "research/security/binance-aave.md": "86a6e264e1b6fac16ae2c93af0c798cbe9deecfa84fa733a0ff01aded7300188"
+  }
+}

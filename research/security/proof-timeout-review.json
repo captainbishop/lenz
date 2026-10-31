@@ -1,0 +1,244 @@
+{
+  "reviewedAt": "2026-10-31T09:53:43.072Z",
+  "conclusion": "Original 90-second timeout not reproduced; cause remains unresolved. Diagnostics preserve an unfinished proof and a nonzero failure under an intentional 10-second limit.",
+  "originalFailure": {
+    "file": "../../web/security-proof-offline-timeout.json",
+    "sha256": "0d6c95d9da64d7636747dfdb3c2dee17a393fa6fce5a2ae6cbeca2d1620f3fef"
+  },
+  "runs": [
+    {
+      "file": "../../web/security-proof-offline-2026-10-30T23-11-07-926Z.json",
+      "sha256": "1928ac11aa81296acad1e3b6f2575b35ae6d7ea06bac6da6d88ed046b22afdd1",
+      "kind": "inherited-pass",
+      "failed": 0,
+      "passed": 25,
+      "timeoutMs": 90000,
+      "elapsedMs": 56911,
+      "proofTimesMs": [
+        27081,
+        29225
+      ],
+      "partialProofStates": [
+        "completed",
+        "completed"
+      ],
+      "cachedAssetResponses": [],
+      "sampleCount": 7,
+      "freeMemoryMBRange": [
+        5948,
+        6156
+      ],
+      "rendererCpuDeltaSeconds": 60.472181,
+      "workerCount": 10
+    },
+    {
+      "file": "../../web/security-proof-offline-2026-10-30T23-12-41-057Z.json",
+      "sha256": "fb4af86591261a60a4b373b88cf52ba4cd9c5587b78323cda85b38c6b8eadc2f",
+      "kind": "inherited-pass",
+      "failed": 0,
+      "passed": 25,
+      "timeoutMs": 90000,
+      "elapsedMs": 49866,
+      "proofTimesMs": [
+        24293,
+        24934
+      ],
+      "partialProofStates": [
+        "completed",
+        "completed"
+      ],
+      "cachedAssetResponses": [],
+      "sampleCount": 6,
+      "freeMemoryMBRange": [
+        5863,
+        6206
+      ],
+      "rendererCpuDeltaSeconds": 53.077556,
+      "workerCount": 10
+    },
+    {
+      "file": "../../web/security-proof-offline-2026-10-31T09-42-28-767Z.json",
+      "sha256": "c78fadf83fa1bc9e28ef7b4457cfae34b2ead0613907009d0a8e2dc8749cf534",
+      "kind": "inherited-pass",
+      "failed": 0,
+      "passed": 25,
+      "timeoutMs": 90000,
+      "elapsedMs": 41354,
+      "proofTimesMs": [
+        21837,
+        19055
+      ],
+      "partialProofStates": [
+        "completed",
+        "completed"
+      ],
+      "cachedAssetResponses": [
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.wasm",
+          "ms": 3198,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.zkey",
+          "ms": 3488,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.wasm",
+          "ms": 25354,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.zkey",
+          "ms": 25613,
+          "status": 200,
+          "fromServiceWorker": true
+        }
+      ],
+      "sampleCount": 6,
+      "freeMemoryMBRange": [
+        4843,
+        5375
+      ],
+      "rendererCpuDeltaSeconds": 43.281371,
+      "workerCount": 10
+    },
+    {
+      "file": "../../web/security-proof-offline-2026-10-31T09-51-28-665Z.json",
+      "sha256": "b748de0febd393e17f6d8ab27e6a522c07e6f7e68d84d845ad85d0129d893110",
+      "kind": "fresh-pass",
+      "failed": 0,
+      "passed": 25,
+      "timeoutMs": 90000,
+      "elapsedMs": 26241,
+      "proofTimesMs": [
+        13073,
+        12889
+      ],
+      "partialProofStates": [
+        "completed",
+        "completed"
+      ],
+      "cachedAssetResponses": [
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.wasm",
+          "ms": 1599,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.zkey",
+          "ms": 1722,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.wasm",
+          "ms": 14832,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.zkey",
+          "ms": 14946,
+          "status": 200,
+          "fromServiceWorker": true
+        }
+      ],
+      "sampleCount": 4,
+      "freeMemoryMBRange": [
+        5530,
+        5697
+      ],
+      "rendererCpuDeltaSeconds": 28.318934000000002,
+      "workerCount": 10
+    },
+    {
+      "file": "../../web/security-proof-offline-2026-10-31T09-52-16-320Z.json",
+      "sha256": "6ecb151d6f427b5c2fc0ed55818bef8fa66d1eb9b2a32549190361931207ec89",
+      "kind": "intentional-short-timeout",
+      "failed": 1,
+      "passed": null,
+      "timeoutMs": 10000,
+      "elapsedMs": null,
+      "proofTimesMs": null,
+      "partialProofStates": [
+        "running"
+      ],
+      "cachedAssetResponses": [
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.wasm",
+          "ms": 1576,
+          "status": 200,
+          "fromServiceWorker": true
+        },
+        {
+          "kind": "asset-response",
+          "url": "http://127.0.0.1:4173/assets/step.zkey",
+          "ms": 1695,
+          "status": 200,
+          "fromServiceWorker": true
+        }
+      ],
+      "sampleCount": 3,
+      "freeMemoryMBRange": [
+        5649,
+        5814
+      ],
+      "rendererCpuDeltaSeconds": 10.945955,
+      "workerCount": 1
+    }
+  ],
+  "freshChecks": {
+    "workerAndBuildTests": 9,
+    "failed": 0,
+    "detectedWorkerMutations": 2,
+    "staticCacheRoutes": 44,
+    "syntaxFiles": [
+      "web/security-proof.test.cjs",
+      "web/public/browser-tests.js"
+    ]
+  },
+  "sources": [
+    {
+      "file": "../../web/security-proof.test.cjs",
+      "sha256": "724954776d75425d83f128c9b25d6652b4cc384b4d0c3982213b8a3f40256f0d"
+    },
+    {
+      "file": "../../web/public/browser-tests.js",
+      "sha256": "da94eb48872c29eec6e7f234b39aebff576efdc8c80ed1c04578ff949c6871f0"
+    },
+    {
+      "file": "../../web/public/proof-worker.js",
+      "sha256": "dfe3fa893225fcbc26c83c4dc28fc7ddb6a3dee39ecfcc09ce4e6f7bc02ae017"
+    },
+    {
+      "file": "../../web/public/prover.js",
+      "sha256": "7c225aa17b21554330416afe8da569e2ede010036abacf45e0ccc15a9e101c2f"
+    },
+    {
+      "file": "../../web/public/protocol.js",
+      "sha256": "809c00fb8f232f20e06e9baac5350ebbb3af492037c0def48a832bfd6f3d1767"
+    }
+  ],
+  "limits": [
+    "Earlier runs are retained historical evidence.",
+    "Diagnostic instrumentation evolved; the first two inherited runs lack asset-response events.",
+    "Response events establish status and cache source, not body-completion timing. CPU is process-level and cannot isolate a cryptographic phase.",
+    "No instrumentation existed during the original failed run; passing runs cannot establish its cause.",
+    "The deliberate 10-second timeout checks failure reporting, not reproduction of the original failure.",
+    "Tests use disposable Windows Edge profiles and test-only proof parameters, with emulated offline networking."
+  ]
+}

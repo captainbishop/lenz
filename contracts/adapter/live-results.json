@@ -1,0 +1,1436 @@
+{
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "network": "testnet",
+  "cases": {
+    "success": {
+      "packet": {
+        "kind": "lenz-rhea-order-v1",
+        "config": {
+          "network": "testnet",
+          "adapter": "lenz-rhea-1792987934062.testnet",
+          "reserve": "tusd.lenz-dev-1792984696547.testnet",
+          "exchange": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenOut": "wrap.testnet"
+        },
+        "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+        "instruction": {
+          "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+          "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+          "amount": "1000000",
+          "min_output": "11765352390934593594061",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "d850c0182a1f66c606cf4d2994d55074",
+          "deadline_ms": "1792991719203",
+          "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+          "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+        },
+        "root": {
+          "id": "root:3f1e11758e2c061049d7f8ec73457bda5cdf84afc74a3f586e9d90f6ca0c09cc",
+          "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+          "amount": "3000000"
+        },
+        "path": [
+          {
+            "input": "root:3f1e11758e2c061049d7f8ec73457bda5cdf84afc74a3f586e9d90f6ca0c09cc",
+            "recipient": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+            "amount": "1000000",
+            "nonce": "d500e527fb02dfbcf93c6508991f0576",
+            "signature": "15e44113adc0a8eb998e12758f003822da79cb1c44992ae6d096f2c670fbc6138140c45cd24e0e1b4a94bbb602a936d2929a190b002fac8a21ee4ac6f786cd05"
+          }
+        ]
+      },
+      "funding": {
+        "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+        "amount": "3000000",
+        "nonce": "7084b0577f4d0bfc6fdcf68b19824e3f",
+        "signature": "5d2c9611542b7127c383b16f3b3e2fb03bc9b5e9495735f8d3d2b1afdae39f38c6c1125b5b5a067ec820c24905d7f05b2dcc6e50faaece23073371158a437061",
+        "id": "root:3f1e11758e2c061049d7f8ec73457bda5cdf84afc74a3f586e9d90f6ca0c09cc"
+      },
+      "quote": {
+        "provider": "rhea",
+        "state": "quote",
+        "network": "testnet",
+        "request": {
+          "network": "testnet",
+          "contract": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenIn": "tusd.lenz-dev-1792984696547.testnet",
+          "tokenOut": "wrap.testnet",
+          "amountIn": "1000000",
+          "slippageBps": 100
+        },
+        "amountOut": "11884194334277367266729",
+        "minAmountOut": "11765352390934593594061",
+        "blockHash": "DYDrueUFehsZtShRXUzVhD3MDFVb9YCDFqS3RGS7B3PR",
+        "blockHeight": 274799691,
+        "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+        "checkedAt": "2026-10-26T04:15:19.201Z",
+        "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed."
+      },
+      "transactions": [
+        {
+          "finality": "FINAL",
+          "txHash": "313b1y2mVX5M1dcE7goji6Pajgdyykf3ujYM4zPg9bMo",
+          "receiptIds": [
+            "35Q147VnMC5bS1XJxfrNUM2L8UdUQeK76Yon3eeZe6N4",
+            "HxkNJyGBg35pZySX2arb3QzEnyHfbrw9BK9vu2vVNfDh",
+            "GuHDDTMmm4XookLx2AJRCC6dREEqq5eR7tJTzmfXZgAt",
+            "8cWm9TbTWonfrvBiVeWAboDzRSTTtwSz9GzhgwZeF3NP"
+          ],
+          "gasBurnt": "4646666551906",
+          "value": {
+            "id": "root:3f1e11758e2c061049d7f8ec73457bda5cdf84afc74a3f586e9d90f6ca0c09cc",
+            "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+            "amount": "3000000"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "Ti1EzDZzbBkzPEiDt5HP3KXzzHvQgekR7zVbzydShQk",
+          "receiptIds": [
+            "6rT1hinE9hcJnK2F7ocjMkHfAsv4pwLkhzkVEhVSVzjS",
+            "8PquekVzjESatHLw1KJxPzN971XHUpxxzhNhYko8zHqq",
+            "9GWHSuEQA5VaTkVfS7XTJ7xxzkaULC4yWjKM5NEqazvb",
+            "5KaKTFhcCxSkq1n3Mr7Vmkxm7Wke1Lv7fhr4geRjKdk9"
+          ],
+          "gasBurnt": "4699583974034",
+          "value": [
+            {
+              "id": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4",
+              "input": "root:3f1e11758e2c061049d7f8ec73457bda5cdf84afc74a3f586e9d90f6ca0c09cc",
+              "outputs": [
+                {
+                  "id": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+                  "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+                  "amount": "1000000"
+                },
+                {
+                  "id": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:1",
+                  "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+                  "amount": "2000000"
+                }
+              ],
+              "block_height": 274799768
+            }
+          ]
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "FdYyGVk7R4obA3gHVVLmNAR1Cr7bkaxS5n6xhax7SDrY",
+          "receiptIds": [
+            "BVXvQWJ4Tu8CrFSXh7FMhxznSfRXhT3Y7zg2rdq9mfJv",
+            "Ftc1CNL9tLTuZy3a8Wsritz11pCpeiWLxntPcPGYdyjv",
+            "EBhreMvz9PcTvVDWQ3zVdQMWj5c64yJkLS8zT3ePg5Vg",
+            "6uGur6GfXRyin6thPsdBfaUySmij4BTJf6JLYmswFb1c"
+          ],
+          "gasBurnt": "4738104731536",
+          "value": "1000000"
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "BftMWJRmMTfgAxy8cZ1whuFoBQcLacTrB8T7rHd8bfHR",
+          "receiptIds": [
+            "9b7Cg619z5cjPx3mqj5viUa2XZrzuQWfXtYXiGKkr4e1",
+            "GzPidExNsW4mUmFJxaUPKJPZgyfQBXxFBf6LA1jtxUCb",
+            "DGYd263vcfvesMFmoD7U96Dn2D9VPs7hWAjgwWyWAzup",
+            "4vRLdL9vJbjCiktt7iAJrmxiSePLnoxQBKLrCUTyKRJ9",
+            "PfEmoSnFhJbp968h4W1Sdd1yASkqGQpdLzT1bXzhg2C",
+            "4w2s9YFwrNEkUasjD9u5ZQzVnLyZZyF43jizXbbgmxSs"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9461071803291",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "ready",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "9Uc1WABp7Grt6FsfQMQGPGFsGRYmGjej18hzokMbRGsr",
+          "receiptIds": [
+            "9rrsCafNUdNQNcruaagpimdVi4an3vfdUdfbK5U3hmpz",
+            "64nQ1QVgsCH4aZTiRG6LMKyKpVYYKmVW9B5CmaP8kGJk",
+            "4HyafkFxwtjHHv5Q48XsWTpJpuP9FAojffPyhJPJ5Crk",
+            "8TMhGVKjeDoh76wNWLuf8rborBQkxtbDB3rmjUHXtuXj",
+            "CXTpNq7J7VZugpJ4bixkAwfEBaBRFeQJhz1T7k7iBHj",
+            "6ruKaFxiDUoDPQLnwxCbfuRiG87sGQsvKaaEvq72wuHf"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "6746344107594",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "funded",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "EK35Y85ZVH2cGG982xRR41WAMrXWkgZ4RD2hddHd6KoC",
+          "receiptIds": [
+            "5S7j9oS2vuwXXRwuRGWYNRkzQL1B6s79re9fzGPw896m",
+            "GV1N5SUFVZUWjeRhPPKuzCeVd9beWvKE2akjZUBRLjUh",
+            "HWGpgq3qP1HmJCKhtWR1rX2NSfkNik4WHk2NryzkPioB",
+            "EdpNxY7V9vMwpDkMs45Yww4Jc49qgtsg3XCcY9bpXq9H",
+            "9fgWD5zVtm6PfZTa38MzyXbMtfDwXstZFgXgCkoX8xkj",
+            "HkcWiNRT5yKwWbHaTGQYcBFdXoE8enH9QPCEvHkfxuZi",
+            "J5kGTF78fUiSaxTf4ZCczz95xg9vy6YLxRHMrvF1ENiS",
+            "E549UUxjEtZBGCNGLQStWEahosNbagNdJ1JkFdNkHfBu",
+            "CWkzZTGtAbVbjYVJx8zTyvvrWXujNtyZ2CrYLHtNnSAg",
+            "856t7ZZx3MsFPJmozWFmA6HRgbcMy35npbmhHCVHAdxJ"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "12881574866217",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "deposited",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "C5ic9LNSczPiRsBKLRnVf79a5jZov8QpJt4gzgmesCPE",
+          "receiptIds": [
+            "9wMrRrpnhgCLiJhHktmp2d14QNRDQAtj8ZMyuo6nmXa4",
+            "CN3tYpo48srPHfSMmdHnjHbKNDMtoWotieSUYA3eBiYE",
+            "53D1Me7ozts3Hficxbn4a6YCRC7QBz9sunP3NfapjKfj",
+            "J7G7zV1W3KEdrF6rDNEyVrx8vZjHNQNuafipVcyFSDHT",
+            "FNryauERfNLRKuNarjxCdt1tdoPF8ZgvKKcMd9yzLovg",
+            "GVhM3MLNDAnzw1p65QtCMWUY6UtYUu6hvZF8QQNsS9BZ"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9820965473240",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "output_on_dex",
+            "output": "11884194334277367266729",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "GHaquXtTQcRgoLqVc8zdtyzJMwsf93e883ZPSYybbcCd",
+          "receiptIds": [
+            "457g6SiMhMucwVVGPyzftQBZ8BLf8dBJ573fHMJE58sj",
+            "tkV3Nhw7SEhBCHqxKpEfc99Hmk75hUqb3taBj7HsB8y",
+            "2v2nDeDcCKPK3EdKAePqx7Q8YxiNpB5DxnZxkBfLSsVq",
+            "Bk3GNVdLXPQxhtXfjC96hDoZJVjDbKFwbiX8epEgMuAS",
+            "FP2PTnM5D4QoU314cPQAEDSVV7Y7xqw4xRbXS8om5kfH",
+            "25Cub5cJ1yGc8iBny66Eshrb4x9PRHtHSUMDiPEudG1Q",
+            "Hga1UdvzputHRem2KSMDP9KqjhPNPhba9Fgv23vPmPs2",
+            "aA5qn1RFppMtTWhWsNsMPA9HtDh4BrKtDRnqa2dDL9P",
+            "4thmmBfhWXcdahWTaJQ8GtYxynAPyKcXUQG9LyiYtuRM",
+            "C4PDbxW2Yz5BspSrkzG4vZtXN6DqYNx1WgXxKCc7GB5i"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "13129846855663",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "output_available",
+            "output": "11884194334277367266729",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "39YyVZ6Gvi18b5g4tDgb4GZi1kH4XVYgSJtpNQUXmdPZ",
+          "receiptIds": [
+            "5vpVb51XdavWaSTqsL5vNHZe5QuNWcMRc2CU6wv91xKi",
+            "BLFbQWufSmK5nBoQ3A1ekwQ7mNLHRYvKKssJt4TNGg8r",
+            "6i6yZXFYvYT6Fvc7RuxYcUqX8hT8Wv1KsuUn5NDQjymu",
+            "BfQZea6Y4yH8MEGyup6Sz9fHJhjbnW8ukwC5txmUupzb",
+            "FyMaBsDkks7VqvyTJ3GjifG6H3iHnjPrxfED3nFEyMV2",
+            "7uQ741tGWBXqgTwnZJnkn2E5AV475wa3aKzmGe5ed6Qy"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "6828553330827",
+          "order": {
+            "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+            "instruction": {
+              "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+              "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+              "amount": "1000000",
+              "min_output": "11765352390934593594061",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "d850c0182a1f66c606cf4d2994d55074",
+              "deadline_ms": "1792991719203",
+              "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+              "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+            },
+            "stage": "complete",
+            "output": "11884194334277367266729",
+            "reason": ""
+          }
+        }
+      ],
+      "before": {
+        "tusd": "2000000",
+        "wrap": "16631929970821175489787"
+      },
+      "preRedeemed": true,
+      "order": {
+        "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+        "instruction": {
+          "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+          "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+          "amount": "1000000",
+          "min_output": "11765352390934593594061",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "d850c0182a1f66c606cf4d2994d55074",
+          "deadline_ms": "1792991719203",
+          "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+          "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+        },
+        "stage": "complete",
+        "output": "11884194334277367266729",
+        "reason": ""
+      },
+      "after": {
+        "tusd": "2000000",
+        "wrap": "28516124305098542756516"
+      }
+    },
+    "slippage": {
+      "packet": {
+        "kind": "lenz-rhea-order-v1",
+        "config": {
+          "network": "testnet",
+          "adapter": "lenz-rhea-1792987934062.testnet",
+          "reserve": "tusd.lenz-dev-1792984696547.testnet",
+          "exchange": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenOut": "wrap.testnet"
+        },
+        "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+        "instruction": {
+          "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+          "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+          "amount": "1000000",
+          "min_output": "1000000000000000000000000000000",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+          "deadline_ms": "1792991858531",
+          "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+          "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+        },
+        "root": {
+          "id": "root:e7307241eaf21e003a996642388ab0526511bb9b854e8e18d90e39d752572107",
+          "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+          "amount": "3000000"
+        },
+        "path": [
+          {
+            "input": "root:e7307241eaf21e003a996642388ab0526511bb9b854e8e18d90e39d752572107",
+            "recipient": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+            "amount": "1000000",
+            "nonce": "36e7d45bf88e9483dacbb76e156e580a",
+            "signature": "91986dc8a94a96119e9952bc0a786f35a289d4bb0e60d3effb0ca1b1fc8e31bdda2f8da82192d9d183aac1e7e3a497f0cc0ff93b8a3b486b6d282b2299f14cdf"
+          }
+        ]
+      },
+      "funding": {
+        "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+        "amount": "3000000",
+        "nonce": "a54e89fa6a43f9023f3a2647f24f1bf9",
+        "signature": "665b6575d947fef3ff4202f72b239ab7e56c792295db5d4b3ab0421c6f42e3ed6ae437db9b3658f4bd5930c1dca3bd2768eee0c430f78a27cd18ff4ec3a9a7f6",
+        "id": "root:e7307241eaf21e003a996642388ab0526511bb9b854e8e18d90e39d752572107"
+      },
+      "quote": {
+        "provider": "rhea",
+        "state": "quote",
+        "network": "testnet",
+        "request": {
+          "network": "testnet",
+          "contract": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenIn": "tusd.lenz-dev-1792984696547.testnet",
+          "tokenOut": "wrap.testnet",
+          "amountIn": "1000000",
+          "slippageBps": 100
+        },
+        "amountOut": "8915931979451604076320",
+        "minAmountOut": "8826772659657088035556",
+        "blockHash": "Go47dUoSEhiDNRdP7pFPK6ZAdpEgD2yLrXsjPUr9EbfZ",
+        "blockHeight": 274799931,
+        "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+        "checkedAt": "2026-10-26T04:17:38.531Z",
+        "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed."
+      },
+      "transactions": [
+        {
+          "finality": "FINAL",
+          "txHash": "ENz14ufAvbrUsH7khF1u7ztV8pVBy7ihhExbRpQQy2sm",
+          "receiptIds": [
+            "FBSptmWPNMvRvjTPgD3nYwAVT8DLcbj5UiTkrheptGQr",
+            "CJrKeGvXDGHHdqvYBArvp4wenFymVoVAqwPVc7tfZv3h",
+            "9WcwhwWKxhR7A9zLgTPAeyeqv5ojfP2oc9R5MitNFSzk",
+            "BnA8imofb32bwiUd2AyAhoWWrpQHW1PUZ9rQEE9H6upS"
+          ],
+          "gasBurnt": "4644418639390",
+          "value": {
+            "id": "root:e7307241eaf21e003a996642388ab0526511bb9b854e8e18d90e39d752572107",
+            "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+            "amount": "3000000"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "AXGzPP3cwpoB6WBFKSAhCn95ts1GBCVNVn8isu7yP2He",
+          "receiptIds": [
+            "2HXAYCB3BJMuG3qxrqzWr1dzpnrJXUPfFZr9xUiFkRM1",
+            "CmN8eUMZ84qpqFyKabmMjvvW6UowdAyEARF6NbTVaMFK",
+            "2cED2KNN4PEsGg6UsrYhGUFRg4n5b9dBP5jNhJWHwyzv",
+            "H3mQwBrCcnZxSx2h2MwF4D6Tkr2JFF5QX9JUqZPsHnwB"
+          ],
+          "gasBurnt": "4708829032946",
+          "value": [
+            {
+              "id": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb",
+              "input": "root:e7307241eaf21e003a996642388ab0526511bb9b854e8e18d90e39d752572107",
+              "outputs": [
+                {
+                  "id": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+                  "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+                  "amount": "1000000"
+                },
+                {
+                  "id": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:1",
+                  "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+                  "amount": "2000000"
+                }
+              ],
+              "block_height": 274800004
+            }
+          ]
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "BUWEviMhRkBtKHRKcqsCiEbZgzJwxH7JaTsM3ZknLuzc",
+          "receiptIds": [
+            "7APFyjTVttCjni6W69343JZTQzno2gpp7oJq61k7e25o",
+            "JALpLrt249rF1JoVTqDyumefhc1igFuoYCKKipUzfj92",
+            "C6yuXkeb8c7WcdNS7AdgXWRX3ZstppXVjdyfampCEgxX",
+            "EZc6rVBx9Jvn87G1xRnsav3erebJNdi3f1MgxcAvVJBe",
+            "6dE87E7nWpxFfgiNCBGsL4eSEuTLxDNeSX4eqf2Grygy",
+            "7LzHWAPBVJjCZi6uFasGjYmRYHJhdwMxdctPtTkRn42h"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9484562837435",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "ready",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "FNHPu33WwAoX1Po6Nr4GhcSJHdemVuSXQBqsT8S7GnGx",
+          "receiptIds": [
+            "HgYKMwNyYhFRoeuAgCWpQFNmBWMRW37obFmNgw5ZHmsu",
+            "9uYJQvKP1hAWm7Pw2RGCn8WqH1AAua43Zs8DiWCzfatY",
+            "C71Uf2MxHWpDNK9xchQMCp9qgKQi3MsXAvBCabSZAugK",
+            "5gDmsb1UV5tEAGMKdKghbSaD6T5EGnxENDeREoVF6BXQ",
+            "8RKj5XnZhP6ujbDbbrVft8yCx3sqewZFLcJaRBK2wNY3",
+            "78MZEeaG1WZEmKxqZbFS3f88izzskMyA4MgiecSS5499",
+            "7ybh6Qb4eBXJaERzWiRMJJFKBfpE8KGAbcS8ethi56Nt",
+            "Bk7f7NFT8TZmGKGkgn4y33Mf3owng8DbqezDK1bRJoBd"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9545329783671",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "funded",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "J2EP3kTcoWSnf7tBVzQo6HZEcqv2oWggTD37YyA14SUc",
+          "receiptIds": [
+            "7NXTG1uDFyhrJFQpWJYsWsHr3RcYEMccmGvFiW7ggjVD",
+            "HxZnqnjShCmVmp2bwfjGnZjFpHparV8e8HdNYgqLfLEX",
+            "813iaJrw76dSAnWFtxGFLRQdY7sq5hKTvsJA2aW93DnW",
+            "DjmVNBfaRNHu4sDcHrBLYa5n64sRypt5iWmafRGfCdmc",
+            "2FsjuTMSPPREss81WMXut9bVH87bpagDv8jW5R1zXADA",
+            "6NqigZDoPQSBUvx2puvoKVjFBpjKdHEw2wrmu5VRqgd1",
+            "6Fu3zrHEQWxhysNPe3D6XrqiRwVZ2FKLS1NmAdF2A33G",
+            "5xaqgVQY2D6N8WcJbY3ZUTQHqbk2qg4VfmqK5nH8hRuU",
+            "5e4WKErur7fPPyiPJxDbvYk7JFg1zVRjTL8awkoCXG3D",
+            "8CJ68sqm8FUfFKwzzxQcsVicC7vSh7Roe2dqu6QLbfvQ"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "12891210702921",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "deposited",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "2Svc2aXvwJkfgW5HvxLP9ZxJjLZERzB3GXNXx96EuGdW",
+          "receiptIds": [
+            "J4TjxeL5Mx12tJnwzBBJQzL5sexZ5wZXJgteW2XNdmAb",
+            "3DhWEvQbmMtaugsZEQBy5CiBaHy9UXdNwXLnRWcByFDh",
+            "QQDn6ZC4LPkAdrnyoKAK3yysoxiZJ3X7yBYvhqU3tDM",
+            "28tWdMh2j8fNhdTXWHZmz9VTPR7oNcftumBM4SDtMQXx",
+            "7FzWgfZ4VqgAPYPZUjv4MbRRueo3mWcyiGt94dH98b1v",
+            "4mmxXkguykFaPBN44ftNEJf2ehwVY4jzCTppc11cuubY",
+            "3pGHvJCp3KUfDjqvitbB2sEZzw6sZGtsFaCb2wrJD1Lj"
+          ],
+          "failedReceipts": [
+            {
+              "id": "3DhWEvQbmMtaugsZEQBy5CiBaHy9UXdNwXLnRWcByFDh",
+              "failure": {
+                "ActionError": {
+                  "index": 0,
+                  "kind": {
+                    "FunctionCallError": {
+                      "ExecutionError": "Smart contract panicked: panicked at 'E68: slippage error', ref-exchange/src/simple_pool.rs:313:9"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "gasBurnt": "8123045296871",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "refund_on_dex",
+            "output": "0",
+            "reason": "Exchange rejected the swap"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "Cjm7xzgxBx8LSg685ec5D4Z9CWB6PC4vejs8pPvnGFX3",
+          "receiptIds": [
+            "5sCMpyat9gV4qm6jUPYLRYqCogPEhtz9JDbG7xS1tdcH",
+            "3MCvTw8u6oAMURk7xRTujW5PL83XCTUXcEXJJPmSdF93",
+            "FLTmXpxX7xu5u7hN55nTe2LagtmJDYMrkEqXidHrV3Br",
+            "G8eLpicuU2dFpjmN7FAAcNhi7FShengsh1oVoRiRksS4",
+            "GA2BwWGx1sBFC9gwc25x2ZEXvZktNHpdbxE8ZjFF4WnS",
+            "Fq1j8ih5Usr8nZBWzhR1a2XKh297hvZUT2Vhha8hik7g",
+            "8tvVqLQxXjMXWo6V4tpkSCGo89Vd4KRdq2MYR9AUnKg5",
+            "DpwP2WqHYcmBkqyvEhChLDLHWSkSifc1Yw2z6sq2Dkic",
+            "AYotSWAUfV8zVas2SeVbLoQLfHPgh3H44AfgkfZzgW9U",
+            "AtAYf5AGSKCBrQrTZwjUxQ3xJvaYYHPQoBuByXaWkCgM"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "13332716575758",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "refund_available",
+            "output": "0",
+            "reason": "Exchange rejected the swap"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "2QYdR53KPs4bBZHf72cQnahPibUUC2i61CEAPSdRsh71",
+          "receiptIds": [
+            "CVjvtFiU2V4P4AdkAoSBqhyUFkYWgLjxJGYG1omTHzCj",
+            "Eq6XqYkgK8X9WDupVmRVi8UwfjuZn8a4o1yxSmGzKenu",
+            "GDqeBC2bMTME4VpzA1jPVFUmvRwzNsAY4dUgiYASqB7t",
+            "7kLaUNQE59fz5grk1z1JKVPDcgqmHQBDy1ri5mGBpqSq",
+            "BbrLfwrQPwruUFKpLcuL3fPF1iuUMU5MYcp8vcXLSb2u",
+            "CQNboVh4g4yGGXayHVTak28ZfPq2pwVe2njZzyceug3m"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "7030556134673",
+          "order": {
+            "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+            "instruction": {
+              "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+              "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+              "amount": "1000000",
+              "min_output": "1000000000000000000000000000000",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+              "deadline_ms": "1792991858531",
+              "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+              "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+            },
+            "stage": "refunded",
+            "output": "0",
+            "reason": "Exchange rejected the swap"
+          }
+        }
+      ],
+      "before": {
+        "tusd": "2000000",
+        "wrap": "28516124305098542756516"
+      },
+      "order": {
+        "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+        "instruction": {
+          "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+          "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+          "amount": "1000000",
+          "min_output": "1000000000000000000000000000000",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+          "deadline_ms": "1792991858531",
+          "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+          "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+        },
+        "stage": "refunded",
+        "output": "0",
+        "reason": "Exchange rejected the swap"
+      },
+      "after": {
+        "tusd": "3000000",
+        "wrap": "28516124305098542756516"
+      }
+    },
+    "expiry": {
+      "packet": {
+        "kind": "lenz-rhea-order-v1",
+        "config": {
+          "network": "testnet",
+          "adapter": "lenz-rhea-1792987934062.testnet",
+          "reserve": "tusd.lenz-dev-1792984696547.testnet",
+          "exchange": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenOut": "wrap.testnet"
+        },
+        "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+        "instruction": {
+          "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+          "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+          "amount": "1000000",
+          "min_output": "8826772659657088035556",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+          "deadline_ms": "1792988435822",
+          "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+          "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+        },
+        "root": {
+          "id": "root:c4a0a78b5167457bda6f64b4af91819fd1836afb9d78c9de9cb244af6a7ccbc0",
+          "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+          "amount": "3000000"
+        },
+        "path": [
+          {
+            "input": "root:c4a0a78b5167457bda6f64b4af91819fd1836afb9d78c9de9cb244af6a7ccbc0",
+            "recipient": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+            "amount": "1000000",
+            "nonce": "ff7c338c491a227eb11136bcb2da1e3a",
+            "signature": "acc12b36bc6ab7d7027375fe947db54b83a994be8c627528c8331c99416d5af08497c4ecc2b21f54075a6b9ac95043f6b735314c3cb56b9332bbadaf1e72d8bd"
+          }
+        ]
+      },
+      "funding": {
+        "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+        "amount": "3000000",
+        "nonce": "c6c2de5509664cdec1fb61b1f43e4551",
+        "signature": "d44c160e10a64cd19bfee211545f3dd23c74e8ce2f8003adeb44ccc6ac102faac6ea9d898e726468e6fff5c9943ca16a5106999a7a126fd8bd7bd519faa1a3b4",
+        "id": "root:c4a0a78b5167457bda6f64b4af91819fd1836afb9d78c9de9cb244af6a7ccbc0"
+      },
+      "quote": {
+        "provider": "rhea",
+        "state": "quote",
+        "network": "testnet",
+        "request": {
+          "network": "testnet",
+          "contract": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenIn": "tusd.lenz-dev-1792984696547.testnet",
+          "tokenOut": "wrap.testnet",
+          "amountIn": "1000000",
+          "slippageBps": 100
+        },
+        "amountOut": "8915931979451604076320",
+        "minAmountOut": "8826772659657088035556",
+        "blockHash": "FSbv94j5fogEFi4a4AkA9Agq8qs3P7GG2BNUhDr8M3zW",
+        "blockHeight": 274800267,
+        "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+        "checkedAt": "2026-10-26T04:20:34.822Z",
+        "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed."
+      },
+      "transactions": [
+        {
+          "finality": "FINAL",
+          "txHash": "EJZ7x5jLvETSHXUxLjK2yQ5VHdm88hZtnUAUDr3waAYn",
+          "receiptIds": [
+            "HfkjCkuSUbnw5Ye42RtmTfTKsma23H1stXfbJXbjchQv",
+            "72qBunZnYujvmdzx7tk59KuVKjdmuXGe9aDKTKNbLmBm",
+            "B71JbQczP4mvVxTvhqAbG1EgGqVi9ANazNx5HhUPJrqE",
+            "CjJ26XfeC8bXi63NBmbFc3gbeDvw6QvxZJHZMnFnyHEU"
+          ],
+          "gasBurnt": "4644324022450",
+          "value": {
+            "id": "root:c4a0a78b5167457bda6f64b4af91819fd1836afb9d78c9de9cb244af6a7ccbc0",
+            "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+            "amount": "3000000"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "Hka7UPJt51DikhDRqYeQLWU4ohJ86gGwerHMj5ceY2Si",
+          "receiptIds": [
+            "G5pqNfaf5Qo6CSAMuatyvw93iktubh5KXirLha8aG378",
+            "5sJXco7dVAoZwF64xskwknriTG7KFPToBiQJ5z4oq2fL",
+            "4QFNu5xg8MCVpXDGgM66x7NxGkjmZdvo9renyStEEwMo",
+            "9k8GT1eiDbTpw2WbgYV7pNrpSQJq5qCbaypSbzqDZzya"
+          ],
+          "gasBurnt": "4713262328522",
+          "value": [
+            {
+              "id": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d",
+              "input": "root:c4a0a78b5167457bda6f64b4af91819fd1836afb9d78c9de9cb244af6a7ccbc0",
+              "outputs": [
+                {
+                  "id": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+                  "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+                  "amount": "1000000"
+                },
+                {
+                  "id": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:1",
+                  "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+                  "amount": "2000000"
+                }
+              ],
+              "block_height": 274800285
+            }
+          ]
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "B7xUFHqNkHtT6gZMGXzgUw94W8VPuFQ4y9CWfXjUD62Q",
+          "receiptIds": [
+            "7GcZUQ9LrWYeHKHZ4qy38mCkda881pZMNtk6EEo99Gqy",
+            "67MfnLrr2qHnb5CNQ43o5z8tiZJU9Mqa2sUwa7mEqC7r",
+            "Door2bzjCCuASyxUSUi8BUGRn8A6VeDR2BbZKtBuAXJq",
+            "CWQvqyJWahjPmj5QMGxYwXySAkoSWceV8bs5kFWqJ2MS",
+            "6vCG2R4nex237MHbjo3pUNaBVuKXTQTJLEZ3FGJEgGQv",
+            "4t6AWPcAQpfknibbjqXDqzC2zr5sxUotopvoSqfi7nHm"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9492583194314",
+          "order": {
+            "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+            "instruction": {
+              "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+              "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+              "deadline_ms": "1792988435822",
+              "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+              "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+            },
+            "stage": "ready",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "GLhpKhpekcChH9fg1sLtVfeh9HcYSHWu5F3UfWhv7TDW",
+          "receiptIds": [
+            "7DDePzQH3pa6ZeYywGaGXH7fh6xsPRFxTBaQyyeQKU1p",
+            "HmmtkpHdwhaUzpK5SZ8umwp1jKuoZVd12y3wzBiZgz8p",
+            "7o9Z2mebCG1XL1ctkkKuwAoQ1cwu9VBuvZtn2zgiQiJs",
+            "2PMH6jwCLsgu8uG7w6JMvNTHMmFyAEzxCkZMQZ5HNohy",
+            "CBhXoHSoRZkWhKNt5ZYU9pRuLkLrptaTBA8UrjbmYF6y",
+            "88F8o2MgVG6oWpTekSTfTZ36V6EhcdgVmTSiW9UWpAt2",
+            "8nvKiiyA9Kf9ujWTDwXGrHPxJoR7hbwd5iqAjmewhpxU",
+            "CMw1J1Sh1SAEgBbLrZbJcY1DvjrkajTkvMCSV3SaUfUo"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9553845401766",
+          "order": {
+            "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+            "instruction": {
+              "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+              "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+              "deadline_ms": "1792988435822",
+              "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+              "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+            },
+            "stage": "funded",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "EXWvRT81TAH3dhudppGBfUN6rLLdgmboTHy48CoArmXR",
+          "receiptIds": [
+            "YhGfcxKUT7vMTx4hMK84r5yfhsDCnxS2mrfmpCTnibK",
+            "3DNbQwYpu81mMNipUivbGNiuLuHDjVbbmgc95XTfqokv"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "2005724689552",
+          "order": {
+            "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+            "instruction": {
+              "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+              "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+              "deadline_ms": "1792988435822",
+              "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+              "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+            },
+            "stage": "refund_available",
+            "output": "0",
+            "reason": "Submission deadline passed"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "9L9u6xsp7dsy5MtedyhaXYk9bqKFjLPWw5zpqQmiE17Y",
+          "receiptIds": [
+            "FuaJmb4rz2yxV4UyDmdBJLmMRGEZ6h2ecXpLJHbAgWTp",
+            "FA6fV8qfAyx2gvc15CU4LHFfzqaKjJnFgkg8JTym1dBp",
+            "84Hef9r5hFtiMPguDEhe3DPWZQvGKm9Aj5X5dmBZ6shF",
+            "DkSZ3DegG2jDANCXdFGMpNS9Mk3C8gWtFyRdB4gT7DHG",
+            "ELiqD9n1dtkUYZZwvQDRFJRg2ckhVHHhSPs3ZpJbApGd",
+            "H4HnMkRoFSWRGitWqqkTmcHmbWTCyPFAcE6Gq43NnjU1"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "7039095612692",
+          "order": {
+            "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+            "instruction": {
+              "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+              "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "lenz-dev-1792984696547.testnet",
+              "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+              "deadline_ms": "1792988435822",
+              "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+              "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+            },
+            "stage": "refunded",
+            "output": "0",
+            "reason": "Submission deadline passed"
+          }
+        }
+      ],
+      "before": {
+        "tusd": "3000000",
+        "wrap": "28516124305098542756516"
+      },
+      "order": {
+        "id": "cad5b1b79edd8ccdf9da2cce3690177e608083ffc75cf16106b46d6a62f739a9",
+        "instruction": {
+          "input": "0a2c47049ab28971a8f013797de5b7fc6b5d60f0d0bed9a674be7f608dbc6c4d:0",
+          "owner": "0221881052ab213fa1217693cc5f8134e7312e8ca67f66f70eebc7e4b46839bfe9",
+          "amount": "1000000",
+          "min_output": "8826772659657088035556",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "7c39c60b8cfd7050158324cca14bfd7c",
+          "deadline_ms": "1792988435822",
+          "signature": "2e57b4deab916d971d3ee9c9c382caefbe2352bef37f0fb5a9df3d9b51bca3cabd3d4aadddac490b61cb28a024fc884151ba8b71b1c064c7a6fdb42dfb7b632f",
+          "redemption_signature": "9b069830d41adf343519a191919f9e03ee0a59d358c3d68127f105fbf6029124dca17e986e4bb38009a1979f66fc26818e04f622ef0ec78c5daec057cc54c470"
+        },
+        "stage": "refunded",
+        "output": "0",
+        "reason": "Submission deadline passed"
+      },
+      "after": {
+        "tusd": "4000000",
+        "wrap": "28516124305098542756516"
+      }
+    },
+    "retry": {
+      "packet": {
+        "kind": "lenz-rhea-order-v1",
+        "config": {
+          "network": "testnet",
+          "adapter": "lenz-rhea-1792987934062.testnet",
+          "reserve": "tusd.lenz-dev-1792984696547.testnet",
+          "exchange": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenOut": "wrap.testnet"
+        },
+        "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+        "instruction": {
+          "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+          "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+          "amount": "1000000",
+          "min_output": "8826772659657088035556",
+          "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+          "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+          "deadline_ms": "1792992069436",
+          "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+          "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+        },
+        "root": {
+          "id": "root:d84c435ad0fc71540545fddd20745ba3b1616db7b50926afa80e36284d8c2463",
+          "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+          "amount": "3000000"
+        },
+        "path": [
+          {
+            "input": "root:d84c435ad0fc71540545fddd20745ba3b1616db7b50926afa80e36284d8c2463",
+            "recipient": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+            "amount": "1000000",
+            "nonce": "08e2a99465b79bb3e101e4bf677f985f",
+            "signature": "d49e4e43cd902ac7304f79af668e82db5f902e1d1616e893c1fd6a2e15202228b17706cf8db6a883f9fda034e1c19bef42ebf83a57061d7b35661be79f6eb9a8"
+          }
+        ]
+      },
+      "funding": {
+        "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+        "amount": "3000000",
+        "nonce": "6d80d4517d63b0fc4f8ae457eb977659",
+        "signature": "4d6155aa6709df2e0f1a52d63a261ab213eaada764c7ef15a74a6f5242f68e77981e05376361b5d75b0a15b8845604a78b3532c1052198ec4d7ca9bab7076396",
+        "id": "root:d84c435ad0fc71540545fddd20745ba3b1616db7b50926afa80e36284d8c2463"
+      },
+      "quote": {
+        "provider": "rhea",
+        "state": "quote",
+        "network": "testnet",
+        "request": {
+          "network": "testnet",
+          "contract": "ref-finance-101.testnet",
+          "poolId": 2870,
+          "tokenIn": "tusd.lenz-dev-1792984696547.testnet",
+          "tokenOut": "wrap.testnet",
+          "amountIn": "1000000",
+          "slippageBps": 100
+        },
+        "amountOut": "8915931979451604076320",
+        "minAmountOut": "8826772659657088035556",
+        "blockHash": "7f53ZxXc6epsid1hqWiqVaxKugGEdPvygjgtg5hjx5xw",
+        "blockHeight": 274800333,
+        "codeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX",
+        "checkedAt": "2026-10-26T04:21:09.436Z",
+        "scope": "Final-block RPC quote only; no reserve authorization, swap or refund executed."
+      },
+      "transactions": [
+        {
+          "finality": "FINAL",
+          "txHash": "GFSnDMY97EHC419p2oXngXTKvVuddZPYdvdhw8HZEbmG",
+          "receiptIds": [
+            "43xrmsSmBPnE6bC588djsu8prLRBJjXzG4Kyx6MCqeqW",
+            "2dDSmpYGQAJKURMNFPqfDucs7wA9sBJpjbqqreJdCU8F",
+            "CX29ZfUWm1PKvgszuMuq8gyeXpdBmVdyCaBnPM29hchy",
+            "CxghWSmhThAvd2rJ2p3MjESJveJvXLBqCs39KB3JWD4L"
+          ],
+          "gasBurnt": "4644390665686",
+          "value": {
+            "id": "root:d84c435ad0fc71540545fddd20745ba3b1616db7b50926afa80e36284d8c2463",
+            "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+            "amount": "3000000"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "E3hc3MwN3KFna3rQBUQ9D9dUYeV1RPXqWNqeGr1XiV8v",
+          "receiptIds": [
+            "3QdkQF8TrP7CTQLUJWh2oRqtDLT6nWZaUdUAKndJWZPn",
+            "CPVkdwfhXfqPk7AKd2eFAK1tpk1JMymS8Sosr7nBtBGX",
+            "BsXC6ydvxpkuJMuen5PdB4jw5UC87MkYwWjykWRFpcrE",
+            "52jxxfctbnjvZWK2bUxsTxQYxoCL2e5CnUx7FR42uAV6"
+          ],
+          "gasBurnt": "4720080936866",
+          "value": [
+            {
+              "id": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b",
+              "input": "root:d84c435ad0fc71540545fddd20745ba3b1616db7b50926afa80e36284d8c2463",
+              "outputs": [
+                {
+                  "id": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+                  "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+                  "amount": "1000000"
+                },
+                {
+                  "id": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:1",
+                  "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+                  "amount": "2000000"
+                }
+              ],
+              "block_height": 274800350
+            }
+          ]
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "GqSVLHUh8WGzks7MHiLJHYBXKMHzK9ZYP9utjX951ynY",
+          "receiptIds": [
+            "CiUyVsodLjApVxhYow9Mg2BCnzr7dt7jNjUF1DXNAFGC",
+            "7HmGwug8AJDQ7cVdCpWHRUDXgvothq6NgUv34w8c17Ug",
+            "2oBEUqnHXBtjy2aaxGk3GSyt3sq1HUSQbJ5CpfijJDVb",
+            "J3jeJMbPivFaF7HiFXh16B4WPEdo8UzszCy67Heu8D19",
+            "C3497M1y7Dm9mk76nuBbZ8wVTKVwrEj9JpNr4h63bTCE",
+            "14cdwbGQ6VQv2XEBZf6TkA4G1rFVh9aW1sygtTdEW7n7"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9495498552386",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "ready",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "4FtqgBc4yDbjpRKM7QihnQ3J2NtJSA2AVrLA5D4YSuwe",
+          "receiptIds": [
+            "GkB6TAhEF2f43vYNQwBoZ8cs8s9yNmSJMkztGqoFNp5u",
+            "A8yKVrbebFZnqtqPPRyRYrXYhZ1TABH49tNLhVVXWNSr",
+            "64EJ1VhgdJMpdPMAgtcrPSM58B6MekmkrncabZ44BBxv",
+            "7djqp1UnExtTuvSpcVkBwoTDZ8yUHbaz3HBFUuJTynYv",
+            "3k3tpYce2MasDvn3MLPgPWQ5cQaDLesEW3q9G8LjYrdN",
+            "BBRaJQD6Zt6Rtz3Rj1K7nVpiGtNeFXYCP6tApcJusZyh",
+            "EYNR1Nr8CuLXqYu4dmvYTw2gusePKZo2FXg9mLD7mpcG",
+            "Esa4BYEbm63XzApE58jo8tsDgQKi4GaSivFT8m2KntcX"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9554173593108",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "funded",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "AhvBhDphPUyWDGacwSVAEr8Dztb2rySJ9j9vKkJ82swJ",
+          "receiptIds": [
+            "HEJgJBTHE2kHS8Aehp1677yGrRJaAAyy9uPBpT3wTM8q",
+            "DNBDW5pvXzZVunQMHmvrjkmzv6fS6FBjwARwwpQxchHB",
+            "FXFA3xnBHnUbP2LQgE8wAJPWdFVnk6pnqrVKxW8WDvS5",
+            "2Yi22xjyusNfooFSSY8bZuX3aiDNPtrs7anyJRKKy2cE",
+            "8LwF8RgZwqmeGXmhCzwopqfQ3qANHn7uRXPPUcS5LH3c",
+            "6oqHWZGjQFopPvCDCNCX3hbVykvqe7t4JVJ4bGu82D7a",
+            "5hLuGpFgbGVKNgv9QSQKbo4GAE2zcWrGCQrVLL2NQDKN",
+            "6rJVKRCF1jVFj7cdpiPABTiUSup7LojUmQRAojJBXxL7",
+            "3KeFhYxyZhVXB41ErD3qpybvwxSW9TYucTUrpUF7HoCF",
+            "J8WXNJEnNkj7waR2RysXyeYuPjeC8ESYXV1nwqykUcGk"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "12897519457998",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "deposited",
+            "output": "0",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "7Lt4ZEtgXycDZSgjkSLMom38dpUBZ5gqayYumGdTGN2v",
+          "receiptIds": [
+            "5aEqHMxTvaswxmWsWPT5tyJHWDFzULisfFT4SJry9UQ9",
+            "7PvZ5sRHLT1xHdpbBotbk7xGTGK7skrdpTtpbG3HtswZ",
+            "E2C5LSNCXnDigMH3GQ8HhyqMct7ZUSFLzqUfnxXs71XQ",
+            "Dinnm7BgJcGi1PuSf5W2df9ikeubK83rubuhgNsd7Dg6",
+            "5DvrDYFEC4LjEBLa9mCxnJFVgz9UgSTLKdpnTF3iJLhN",
+            "BF3MVo378mXy8kYQSJ6akcvhqgieJ9aLFH5WAMMzxNWh"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "9834664962402",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "output_on_dex",
+            "output": "8915931979451604076320",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "8ST2mRM8eNo6jM1w4jLFkuEPnK5Jcj8VUKvZZgkUUh74",
+          "receiptIds": [
+            "9uiJFptbuokjeGgnL1XQXnqQLiJ39WnAyynAEfX7HHet",
+            "F2fcGt6aKBknAjMVfJgqx5SGToHbak6XBs4PMYSwD5T1",
+            "2wv3FDLqWDhA9BjotamdFefvaf8hq7msjeB9aNN5bc9U",
+            "Gw24fy8bNk4FmKL5DqNZSx66h9ckRyoAdUjMiPcaKZfo",
+            "FvKeB4x4vGvWr1KdV4agHsZXpkPXRJHaNfo2cRmAiGYW",
+            "664KpzLMEQ95gPD6NW5JA6a731xYwFg4gmfSb4sW6kcg",
+            "2pomPkL5EFXJimwfZiRoa16EuSChRtH39E4GNuJw2moP",
+            "7rs2mdYytL6qbKD4WPWQTY3GMM4EL8i6aAxa5LzoRZiv",
+            "51d48Xen5YrxPFf67QwwwSKkUapA9hzTMhN81TC2XZ8V",
+            "FrqkGXqD6jPmpVAGfHZEYVDYAb2TaZy64yfkR8tBtPWV"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "13144147960668",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "output_available",
+            "output": "8915931979451604076320",
+            "reason": ""
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "48Lbegpuqz4KunmZyKaeDoQULwwzPeZAr6s4DvbPnSxg",
+          "receiptIds": [
+            "D6BTDjmfxMvY1oJFUGSJcvo66RibLdk5LDwmt9c1Hy1K",
+            "hTqmoUBQ6kn8zp7KxW2FSBGxVGAwacLCaLNgVgZfNyN",
+            "9WYpEqb7QxCtPHHRpfSFFg8kCejmVaKm1voDhPrq7hxY",
+            "BMiS3FZQgsMXzYAU5tkndYYkCgUFSCCXs23CHTP4LNtZ",
+            "76QwAFYDNhZLQo5xAUhney7412oop53Xh2N8JoLetirc",
+            "5fYyCwcKLEBFKn6SJkJoTZL1pLbkV2QteBdRD6M8mxMF",
+            "DdhosRuyu78Wa3V4sEbKHJRfTQGY4qvZM5tJMn2mNNFQ"
+          ],
+          "failedReceipts": [
+            {
+              "id": "hTqmoUBQ6kn8zp7KxW2FSBGxVGAwacLCaLNgVgZfNyN",
+              "failure": {
+                "ActionError": {
+                  "index": 0,
+                  "kind": {
+                    "FunctionCallError": {
+                      "ExecutionError": "Smart contract panicked: The account retry.lenz-dev-1792984696547.testnet is not registered"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "gasBurnt": "6738050222875",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "output_available",
+            "output": "8915931979451604076320",
+            "reason": "Receiving account must accept this token; payout can be retried"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "973XqRJfcJ992M7ajF8skz7iG4LSv5sLpG6vkd4DUURy",
+          "receiptIds": [
+            "BV6WW9jKpwZEzAC86zrL19QmX83aGru5ybHak7AQbzXk",
+            "5NPLnJ6QZtnndHrNJ9nwKJRcsqYW3dnJF5is4SdcBu5c",
+            "7nDJ2cXpgQ2ZVdVeFwJzzA9SiHxcSuSZ4P5hXfSQxWqd",
+            "6agGrr4vaT3vF3iepr1SF84r6C1aimh8WCAiv8ggZH4P"
+          ],
+          "gasBurnt": "2514636747200",
+          "value": {
+            "total": "1250000000000000000000",
+            "available": "0"
+          }
+        },
+        {
+          "finality": "FINAL",
+          "txHash": "2SYB5Y8EMziLJVr257aoBhahXf9pWh8dUEcESY8aYKTS",
+          "receiptIds": [
+            "2Vjqubw83DPmtWRBVx5ZWkVn3b31dpVqi5f8Aq15xAHT",
+            "ACepgtLFf6NVUpZuVBSxQDHafXgc25R9DBbjErdJBwHw",
+            "2hh3QJq9aDu4QBdXREUYx4Tpe1b4scZFRL8738DRsrbv",
+            "AkhAbc1CfNZQHV2JB1GrMuX4pgDN9iRgZrf9UyBxjB4A",
+            "kn8SMncW85AWrd9a5KUqWXGzMszoY61w7P4A5TNMMKJ",
+            "F958nJ4j136mFVD9sdZK3LRAqEMWsXj75A1Mdqf5xxHy"
+          ],
+          "failedReceipts": [],
+          "gasBurnt": "6864794062599",
+          "order": {
+            "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+            "instruction": {
+              "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+              "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+              "amount": "1000000",
+              "min_output": "8826772659657088035556",
+              "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+              "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+              "deadline_ms": "1792992069436",
+              "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+              "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+            },
+            "stage": "complete",
+            "output": "8915931979451604076320",
+            "reason": "Receiving account must accept this token; payout can be retried"
+          }
+        }
+      ],
+      "before": {
+        "tusd": "0",
+        "wrap": "0"
+      },
+      "order": {
+        "id": "a575142826665b909bf944c71bb812b700bb288d96f0c57cb9d8189d8acef9ab",
+        "instruction": {
+          "input": "4e6090b3387937e7f0e267b8d46eec4021fdb75beabbeb18d3246e0c9a3b171b:0",
+          "owner": "02f39a61370d467d1cd040e87fb1e724e17799375c358a17c7ceb59dce329404f6",
+          "amount": "1000000",
+          "min_output": "8826772659657088035556",
+          "receiver_id": "retry.lenz-dev-1792984696547.testnet",
+          "nonce": "2f149d39afd7c3ce5f0af942001329f3",
+          "deadline_ms": "1792992069436",
+          "signature": "6438e1e1ba4b7d2ebf4564309173f4359cd7850b64c294a012048d23466d323b268e4a3d5143cee57fefbe67a5219fe4b3e596afdb7ef3774d8fbdd042ce3a6e",
+          "redemption_signature": "a42cfc48b4d02571ed245500cc0e2df1390fb245cef8eda564944c2c699a549ed74247e0294528fc902fce932c8cf56fb16f8ce51a5e49540fb5a33ff50949b9"
+        },
+        "stage": "complete",
+        "output": "8915931979451604076320",
+        "reason": "Receiving account must accept this token; payout can be retried"
+      },
+      "retryObserved": true,
+      "after": {
+        "tusd": "0",
+        "wrap": "8915931979451604076320"
+      }
+    }
+  },
+  "checks": [
+    "signed swap pays exact output after a carrier pre-redeems the same authorization",
+    "minimum-output rejection refunds exact input to signed account",
+    "expired submission redeems and refunds without swapping",
+    "unregistered output account fails payout then receives it once after registration",
+    "duplicate submit and advance never pay twice"
+  ],
+  "scope": "Disposable identities and NEAR testnet funds. Real reserve, Rhea and signed-recipient balances; no user wallet or privacy claim.",
+  "checkedAt": "2026-10-26T04:22:10.101Z",
+  "previousFailures": [
+    {
+      "message": "{\"jsonrpc\": \"2.0\", \"error\": {\"code\": -429, \"message\": \"WARNING! THIS ENDPOINT IS DEPRECATED! STOP USING IT NOW! Switch to https://fastnear.com or alternative RPC providers at https://docs.near.org/api/rpc/providers\"}, \"id\": \"1\"}"
+    }
+  ],
+  "rpc": "https://test.rpc.fastnear.com",
+  "duplicates": [
+    {
+      "finality": "FINAL",
+      "txHash": "4Wy5FvkqJGbCSFvUSt31VJx4hkgeEvhX3ZjckvKyxXdu",
+      "receiptIds": [
+        "9uzrbxKi94RsEhsQ6WeN1arMJBpTzUVzJW9WJkMnWfcY",
+        "EL9MGSMRJ7BgQsZtvFq7xX1XtaXvqpXrdkpb7NSwccAB"
+      ],
+      "failedReceipts": [],
+      "gasBurnt": "4745427557838",
+      "order": {
+        "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+        "instruction": {
+          "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+          "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+          "amount": "1000000",
+          "min_output": "11765352390934593594061",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "d850c0182a1f66c606cf4d2994d55074",
+          "deadline_ms": "1792991719203",
+          "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+          "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+        },
+        "stage": "complete",
+        "output": "11884194334277367266729",
+        "reason": ""
+      }
+    },
+    {
+      "finality": "FINAL",
+      "txHash": "CVmxn8dEWpSWuPxxcuo2gz7GbbMzmeh6cmi5mSw2UncZ",
+      "receiptIds": [
+        "8cc7MMCyKoohsdTPiKmwHsDidY1617JbeiGqyZBBS8NF",
+        "HoRUDMyhe5E6r6iFerdVxaKpq4XTTYpGdLxYzxJi7TfU"
+      ],
+      "failedReceipts": [],
+      "gasBurnt": "1810568175424",
+      "order": {
+        "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+        "instruction": {
+          "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+          "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+          "amount": "1000000",
+          "min_output": "11765352390934593594061",
+          "receiver_id": "lenz-dev-1792984696547.testnet",
+          "nonce": "d850c0182a1f66c606cf4d2994d55074",
+          "deadline_ms": "1792991719203",
+          "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+          "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+        },
+        "stage": "complete",
+        "output": "11884194334277367266729",
+        "reason": ""
+      }
+    }
+  ],
+  "ok": true
+}

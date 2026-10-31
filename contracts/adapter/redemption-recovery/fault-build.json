@@ -1,0 +1,6 @@
+{
+  "checkedAt": "2026-10-31T10:13:47.1700489Z",
+  "sourceSha256": "05fc8cde6472fb48122f3dd013f4e08c31a58942ab6346a07f7bb171ce90a19e",
+  "wasmSha256": "570c89dc8d49ca8a79df740f155c138b7c84f41e44395390cdd42ac44163247c",
+  "scope": "Deliberately broken callback fixture for isolated testnet accounts only."
+}

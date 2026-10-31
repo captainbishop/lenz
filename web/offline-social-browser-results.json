@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-31T18:16:32.010Z",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    "tUSD starts at zero; chat and wallet use the same profile and confirmed contacts",
+    "all three profiles cache and reload chat fully offline before exchanging messages or money",
+    "private chat remains usable offline without a financial action",
+    "failed chat payment commit exposes no packet, history entry or balance change",
+    "chat payment A → B → C works offline with shared wallet balances and no settlement call",
+    "duplicate and forged payment messages cannot add money or erase history",
+    "a swap saved offline stays reserved across chat, reload and reconnection without automatic execution",
+    "wallet-originated payment appears in chat and can be received through the same conversation",
+    "identity, encrypted history and reservations survive offline reload; cards fit narrow and landscape screens"
+  ],
+  "apiRequests": [],
+  "scope": "Three disposable Windows Edge profiles; fixture initial backing and config, actual signatures/encryption/storage and offline network emulation. No live funding, swap or settlement; no physical phone/BLE/Safari test."
+}

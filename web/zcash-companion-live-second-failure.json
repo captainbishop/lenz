@@ -1,0 +1,101 @@
+{
+  "startedAt": "2026-10-31T12:09:27.109Z",
+  "network": "testnet",
+  "refresh": true,
+  "checks": [
+    "Native wallet A local read",
+    "Native wallet A network update",
+    "Native wallet B local read"
+  ],
+  "responses": [
+    {
+      "wallet": "a",
+      "refresh": false,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "a",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T12:09:30.080Z",
+        "refreshed": false,
+        "serverHeight": null,
+        "walletHeight": 4563166,
+        "amounts": {
+          "total": "100000000",
+          "ironwood_spendable": "100000000",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "100000000",
+          "pending": "0"
+        },
+        "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    },
+    {
+      "wallet": "a",
+      "refresh": true,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "a",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T12:09:43.448Z",
+        "refreshed": true,
+        "serverHeight": 4563171,
+        "walletHeight": 4563171,
+        "amounts": {
+          "total": "100000000",
+          "ironwood_spendable": "100000000",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "100000000",
+          "pending": "0"
+        },
+        "address": "utest1tvuk0xh6lyral02g8nyqm5hvkk9ejl3ac4mmwdt3r45dc2nu9h0yq7jzpx23lc5e6nwrfm0fd8fedqhydjs3s5xaqc3cz7y0fc69twvc",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    },
+    {
+      "wallet": "b",
+      "refresh": false,
+      "status": 200,
+      "body": {
+        "network": "testnet",
+        "wallet": "b",
+        "mode": "native-test-companion",
+        "checkedAt": "2026-10-31T12:09:44.609Z",
+        "refreshed": false,
+        "serverHeight": null,
+        "walletHeight": 4542691,
+        "amounts": {
+          "total": "0",
+          "ironwood_spendable": "0",
+          "orchard_spendable": "0",
+          "sapling_spendable": "0",
+          "transparent_spendable": "0",
+          "spendable": "0",
+          "pending": "0"
+        },
+        "address": "utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx",
+        "receiver": "orchard",
+        "canSend": false
+      }
+    },
+    {
+      "wallet": "b",
+      "refresh": true,
+      "status": 503,
+      "body": {
+        "error": "The local Zcash test wallet is unavailable or could not finish. Any earlier balance may be out of date."
+      }
+    }
+  ],
+  "errors": [],
+  "ok": false,
+  "failure": "AssertionError [ERR_ASSERTION]: The local Zcash test wallet is unavailable or could not finish. Any earlier balance may be out of date.\n\n503 !== 200\n\n    at <workspace>\\web\\zcash-companion-live.test.cjs:20:113"
+}

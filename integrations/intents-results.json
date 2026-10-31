@@ -1,0 +1,7 @@
+{
+  "provider": "intents",
+  "ok": false,
+  "checkedAt": "2026-10-30T17:54:40.759Z",
+  "error": "NEAR Intents HTTP 401 at /v0/quote: authentication was rejected; confidential quotes need partner API access",
+  "scope": "Read-only integration check failed; no transaction attempted."
+}

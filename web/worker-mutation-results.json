@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-31T09:52:28.633Z",
+  "results": [
+    {
+      "name": "send input before readiness",
+      "killed": true
+    },
+    {
+      "name": "treat progress as a final result",
+      "killed": true
+    }
+  ]
+}

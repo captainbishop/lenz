@@ -1,0 +1,180 @@
+{
+  "network": "test",
+  "from": "a",
+  "to": "b",
+  "value": 10000000,
+  "maximumFee": 100000,
+  "confirmationsRequired": 10,
+  "steps": {
+    "prepare": {
+      "exitCode": 0,
+      "milliseconds": 149,
+      "stdout": "",
+      "stderr": ""
+    },
+    "review": {
+      "ok": true
+    },
+    "reproduce": {
+      "signing": {
+        "exitCode": 0,
+        "milliseconds": 40,
+        "stdout": "",
+        "stderr": ""
+      },
+      "extraction": {
+        "exitCode": 1,
+        "milliseconds": 389,
+        "stdout": "",
+        "stderr": "Error: Failed to extract transaction from PCZT: Ironwood(Extract(MissingSpendAuthSig))"
+      }
+    },
+    "prove": {
+      "exitCode": 0,
+      "milliseconds": 3770,
+      "stdout": "",
+      "stderr": ""
+    },
+    "sign": {
+      "exitCode": 0,
+      "milliseconds": 235,
+      "stdout": "",
+      "stderr": "Verified Ironwood recipient, owned change, values and commitments; fee 10000 zatoshis"
+    },
+    "send": {
+      "exitCode": 0,
+      "milliseconds": 4222,
+      "stdout": "Sending transaction...\n04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+      "stderr": ""
+    },
+    "confirm": {
+      "ok": true
+    }
+  },
+  "scope": "Disposable native Zcash test; no Lenz identity or production funds. Network settlement requires reconnection.",
+  "before": {
+    "a": {
+      "balance": {
+        "chain_tip_height": 4563283,
+        "ironwood_spendable": 100000000,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 100000000,
+        "transparent_spendable": 0
+      },
+      "transactions": [
+        {
+          "mined_height": 4542640,
+          "txid": "3b08a1472e873eb0c665e707cfec37416b230b652d582fd8dddd29ac858b749e"
+        }
+      ]
+    },
+    "b": {
+      "balance": {
+        "chain_tip_height": 4563183,
+        "ironwood_spendable": 0,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 0,
+        "transparent_spendable": 0
+      },
+      "transactions": []
+    }
+  },
+  "address": "utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx",
+  "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
+  "inspection": "2 Ironwood actions:\n- 0:\n  - Spend: Zero value (likely a dummy)\n  - Output: 89990000 zatoshis\n- 1:\n  - Spend: 100000000 zatoshis\n  - Output: 10000000 zatoshis to utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx\n\nTxID: 04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940\nVersion: V6",
+  "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+  "fee": 10000,
+  "failures": [
+    {
+      "action": "prepare",
+      "at": "2026-10-31T12:54:49.181Z",
+      "message": "The expression evaluated to a falsy value:\n\n  assert(report.inspection.includes('(change to ZIP 32 account index 0)'))\n"
+    },
+    {
+      "action": "confirm",
+      "at": "2026-10-31T13:09:03.829Z",
+      "message": "Waiting for confirmations in wallet a"
+    }
+  ],
+  "changeOwnership": "Verified from wallet A account 0 full viewing key, internal scope and output note commitment",
+  "unsignedSha256": "9942a16daa453f9174c88c86d76afa51719ecf03b73731856455f8002682e393",
+  "updatedAt": "2026-10-31T13:10:59.518Z",
+  "provedSha256": "fa0085fd14c2f7ac4e5e44b1b63862d98f5f549178cea61c861c3b39d3f65151",
+  "signingControls": {
+    "wrongAmount": {
+      "exitCode": 1,
+      "milliseconds": 1031,
+      "stdout": "",
+      "stderr": "Error: Bounded test review failed: Custom(Unexpected recipient amount)"
+    },
+    "excessFee": {
+      "exitCode": 1,
+      "milliseconds": 194,
+      "stdout": "",
+      "stderr": "Error: Bounded test review failed: Custom(Fee exceeds authorized bound)"
+    },
+    "wrongRecipient": {
+      "exitCode": 1,
+      "milliseconds": 163,
+      "stdout": "",
+      "stderr": "Error: Recipient must be external to wallet A"
+    }
+  },
+  "extraction": {
+    "exitCode": 0,
+    "milliseconds": 2438,
+    "stdout": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+    "stderr": ""
+  },
+  "signedSha256": "4d729ed6e4345e82081314bc0527ee366ca1ce528152544e930b823763fb6e65",
+  "candidateSha256": "1a0167b2fd9970d6dabaff08b683d024f5c1d890591365032a4c3097befa9a2c",
+  "submissionAttempt": {
+    "at": "2026-10-31T13:04:48.250Z",
+    "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940",
+    "signedSha256": "4d729ed6e4345e82081314bc0527ee366ca1ce528152544e930b823763fb6e65"
+  },
+  "after": {
+    "a": {
+      "balance": {
+        "chain_tip_height": 4563325,
+        "ironwood_spendable": 89990000,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 89990000,
+        "transparent_spendable": 0
+      },
+      "transactions": [
+        {
+          "mined_height": 4542640,
+          "txid": "3b08a1472e873eb0c665e707cfec37416b230b652d582fd8dddd29ac858b749e"
+        },
+        {
+          "mined_height": 4563312,
+          "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940"
+        }
+      ],
+      "minedHeight": 4563312,
+      "confirmations": 14
+    },
+    "b": {
+      "balance": {
+        "chain_tip_height": 4563325,
+        "ironwood_spendable": 10000000,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 10000000,
+        "transparent_spendable": 0
+      },
+      "transactions": [
+        {
+          "mined_height": 4563312,
+          "txid": "04631896603d942c08b3e49e888db627e245e531cfbdcf2916524e53dd077940"
+        }
+      ],
+      "minedHeight": 4563312,
+      "confirmations": 14
+    }
+  }
+}

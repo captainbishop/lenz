@@ -1,0 +1,14 @@
+{
+  "browser": "156.0.4314.42",
+  "checks": [
+    "simultaneous conflicting offers in two tabs expose only one authorization",
+    "offline reload and retry recover the exact saved authorization, even after its deadline",
+    "changing the local clock cannot release an existing reservation",
+    "only the authorizing owner’s input is reserved",
+    "wrong domains and fresh expired offers are rejected",
+    "storage failure exposes no signature; a later successful save recovers"
+  ],
+  "passed": 6,
+  "failed": 0,
+  "scope": "Synthetic browser-local authorization journal; not rollback-resistant storage or global uniqueness."
+}

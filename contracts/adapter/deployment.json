@@ -1,0 +1,79 @@
+{
+  "network": "testnet",
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "reserve": "tusd.lenz-dev-1792984696547.testnet",
+  "exchange": "ref-finance-101.testnet",
+  "poolId": 2870,
+  "tokenOut": "wrap.testnet",
+  "wasmSha256": "6a01b6fa4e1a1d07d3bfe495d6bbfb97c24182c274b332815e864580f58012e1",
+  "wasmBytes": 301539,
+  "steps": {
+    "deploy": {
+      "finality": "FINAL",
+      "txHash": "Fq6E9Axp3AkrFccAgJUM1EPgSpFQc2kK5rzg6yVEWLau",
+      "receiptIds": [
+        "6nPtg2BNbt2uqedaUGE33FiugPb1oBk3ENeBhHj6q9HB",
+        "MRVjydFX2j2BB46Qm5qD6cmZ9SxpSokUNqahcYodeA1"
+      ],
+      "gasBurnt": "21283333147485",
+      "value": ""
+    },
+    "register adapter on tUSD": {
+      "finality": "FINAL",
+      "txHash": "BZKCcNExkebEPahKVrmWMNxMNtXBLxfhSy71bGKxg4B9",
+      "receiptIds": [
+        "DNj2o8Z39eLCHUHDQBQJTeLoU43SSoBZrpm81F2K8CRv",
+        "33aFp2UtJmiGTjjZQ9mwze2PGE7Ehe5V43Kk5j6iyMd4",
+        "35oZhD3ndSHPQYf1MGDuxum2VK6FTG1NVJX1zjohykwg",
+        "BvYK5Y7jsoqrsof3co9i2uhkAziNVBa2Y8cJ2vEkLSqU"
+      ],
+      "gasBurnt": "2675221239750",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "register adapter on wrapped NEAR": {
+      "finality": "FINAL",
+      "txHash": "DyfUZQzCGCTFTGZEcF4ook3WipEJtmvBri3ozjqo65X7",
+      "receiptIds": [
+        "FNnNC78ui58zEzHSTJN15AmkbC4XHpjG5smtC5H5PfjC",
+        "AZJibyEXomH9Bn7YXC7upwhaJmKfBpVftsBFkXMCX3Hi",
+        "D9KZgtw8JEB132qaB3b6Jhuc1mVkPJYL6xRKCza6HGys",
+        "GVowNuj59eBxoN7rh71VbwjVUfW7CAsRuj1sBRWjUUre"
+      ],
+      "gasBurnt": "2511187979730",
+      "value": {
+        "total": "1250000000000000000000",
+        "available": "0"
+      }
+    },
+    "register adapter on Rhea": {
+      "finality": "FINAL",
+      "txHash": "Dn5EgukhN9r8hQir9nWKmDzFz1VmfP897nzqVuVTo6HJ",
+      "receiptIds": [
+        "DisEm7c4ZKgK57i1T8kwwoJLKo4sM9nVGNhqPd7GXmD2",
+        "GxAq2QctFYVGFz7TwsPg8ghZmuLt7zwVtntyCepVrnNg"
+      ],
+      "gasBurnt": "2774515410208",
+      "value": {
+        "total": "200000000000000000000000",
+        "available": "198980000000000000000000"
+      }
+    },
+    "register adapter token pair": {
+      "finality": "FINAL",
+      "txHash": "F5p7WsvxBa27DHqnDXWVigTSkZEBk654Y2eLpZrfcigk",
+      "receiptIds": [
+        "2whxhbjQSdANT91iaRhABLiam969QT3jnPzvK7bARiVw",
+        "J6nnm2NBJDigyirxZmqSks88ZjC2VjJEwtSAKCbXXrgA"
+      ],
+      "gasBurnt": "3743205482662",
+      "value": ""
+    }
+  },
+  "ready": true,
+  "checkedAt": "2026-10-26T04:13:50.413Z",
+  "codeHash": "88ojV8zrzjKJMZeu6uquvj1rVhRZro2AftDqMUCwzqrY",
+  "exchangeCodeHash": "AEAm8sQ5KYZRgnpq2CN2NhX6d8QV76iRtiDpy5Ai6zDX"
+}

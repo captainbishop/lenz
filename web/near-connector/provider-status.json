@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-26",
+  "provider": "MyNearWallet",
+  "url": "https://testnet.mynearwallet.com",
+  "observation": "Actual website banner says MyNearWallet is being sunset and is planned to be deprecated on 31 October 2026.",
+  "consequence": "MyNearWallet removed from the active connector runtime. Its upstream artifacts remain historical evidence. The replacement is still restricted to wallet-lab.html.",
+  "replacementCandidate": {
+    "provider": "Meteor",
+    "repository": "https://github.com/Meteor-Wallet/meteor_wallet_sdk",
+    "branch": "data-storage",
+    "revision": "e0a7d48a07d1a02e69921aa6624f0f7a1f3f3ddf",
+    "sdkProtocol": "@meteorwallet/sdk 3.24.0, npm integrity and excerpts in meteor-protocol-evidence.json; published git revision not established",
+    "implementation": "Lenz-owned testnet web popup transport with near-api-js 7.4.0 transaction encoding. No Meteor SDK runtime, mobile/extension bridge or delegated key.",
+    "status": "Eight isolated Edge fixture checks pass. Read-only real provider test returned HTTP 403 with its security-service block page. Actual wallet approval and final backing remain unverified.",
+    "liveEvidence": "meteor-page-results.json",
+    "enabledInNormalWallet": false
+  }
+}

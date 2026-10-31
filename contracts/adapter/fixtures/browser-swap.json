@@ -1,0 +1,41 @@
+{
+  "id": "ae3c287542ae696cc77b59c9397ed8b4ebc386834e770f5e2ff3857fde23ff17",
+  "now": 1793445436800,
+  "packet": {
+    "kind": "lenz-rhea-order-v1",
+    "config": {
+      "network": "testnet",
+      "adapter": "adapter.lenz.testnet",
+      "reserve": "reserve.lenz.testnet",
+      "exchange": "ref-finance-101.testnet",
+      "poolId": 2870,
+      "tokenOut": "wrap.testnet"
+    },
+    "id": "ae3c287542ae696cc77b59c9397ed8b4ebc386834e770f5e2ff3857fde23ff17",
+    "instruction": {
+      "input": "255c875fa5551ec1675b53756a01c39889dc0cd176da7a2dd27370cfd23d526d:0",
+      "owner": "0364282ca00b308bf041b89292991d88e22b81a311c6fcd09a8c06fed8b6bbfdf2",
+      "amount": "1000000",
+      "min_output": "100000000000000000000",
+      "receiver_id": "alice.testnet",
+      "nonce": "36264014ef142175da2820df47ecb881",
+      "deadline_ms": "1793449036118",
+      "signature": "0bca185875579bcbb73dfb00d498bbc08ff05c13254b180642cc23ce3dd28ece3d46d5adefa2bc722a22b9dfe163fdd40bd9ba4853a3c4ca67d986d54711585d",
+      "redemption_signature": "27e2d932e8130e254a478d04e07bc5d62b057e980c6450956d1f2d2184314a41b85e8c8aeab614cfd1edd305d3d6af66904a343fe64bd642739d4efbe8b8b1d2"
+    },
+    "root": {
+      "id": "root:fb4d158b84a168689d8b64cdc3e0829ffb4402511b24a81ed1e6e88d19c6aaea",
+      "owner": "0364282ca00b308bf041b89292991d88e22b81a311c6fcd09a8c06fed8b6bbfdf2",
+      "amount": "10000000"
+    },
+    "path": [
+      {
+        "input": "root:fb4d158b84a168689d8b64cdc3e0829ffb4402511b24a81ed1e6e88d19c6aaea",
+        "recipient": "0364282ca00b308bf041b89292991d88e22b81a311c6fcd09a8c06fed8b6bbfdf2",
+        "amount": "1000000",
+        "nonce": "561a635a8a7459e987621e048074aa8c",
+        "signature": "7e80e58cbdfc409824013e6a4acca374484b93fd9acce7c3b551dd986c3ebde13979a8bce80d5563d804c78723428cd4bd82a70ed1eceb6e1e325a42c87ef82a"
+      }
+    ]
+  }
+}

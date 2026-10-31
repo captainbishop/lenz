@@ -1,0 +1,125 @@
+{
+  "checkedAt": "2026-10-31T10:58:43.169Z",
+  "scope": "Configured testnet code-only rollout and bounded client. One deploy transaction; browser responses are fixtures. Saved candidate native/rehearsal evidence was reviewed, not rerun. No physical phone or real external signer.",
+  "node": {
+    "passed": 42,
+    "failed": 0,
+    "command": "node --test contracts/adapter-upgrade.test.mjs contracts/adapter-recovery.test.mjs web/rhea-relay.test.mjs contracts/refund-return.test.mjs web/rhea-protocol.test.mjs web/near-deposit.test.mjs"
+  },
+  "browser": {
+    "wallet": 11,
+    "refund": 3,
+    "failed": 0
+  },
+  "mutations": {
+    "receipt": 4,
+    "upgrade": 4
+  },
+  "staticRoutes": 39,
+  "live": {
+    "deploymentChecks": 5,
+    "httpChecks": 3,
+    "txHash": "3S7We8EdECFaeDJWKbh3bn6RLzVwETMk7xKEbE1qu2TZ",
+    "stateEntries": 13
+  },
+  "limits": [
+    "Other missing callbacks and attention states unsupported",
+    "Independent release/key separation outstanding",
+    "Original offline-proof timeout unexplained",
+    "Zcash funding/privacy, Intents partner access, Meteor availability and safe account recovery remain active"
+  ],
+  "files": [
+    {
+      "file": "contracts/adapter-client.mjs",
+      "sha256": "a1f3df6f642d46ad126695bebe0f963a8215ba7ef0a308bff277a5e202cc3312"
+    },
+    {
+      "file": "contracts/adapter-recovery.mjs",
+      "sha256": "8fef57df4042d0b52b81e2fe44b15c9dec89ac20c175ae4948c4c39815205a1f"
+    },
+    {
+      "file": "contracts/adapter-recovery.test.mjs",
+      "sha256": "2356d5b2df06a34756851d2ddd62cbfd76670673321dc230ffaa23b999145bee"
+    },
+    {
+      "file": "contracts/adapter-recovery-mutations.mjs",
+      "sha256": "29df11d84d8178a8ce29f13521db7f4e2988efd035312dc324da9244ef138c3f"
+    },
+    {
+      "file": "contracts/adapter-upgrade.mjs",
+      "sha256": "297dd6ce2b78dda6dd85c6cc99367eefbf94d91f70e0055646c188444384174b"
+    },
+    {
+      "file": "contracts/adapter-upgrade.test.mjs",
+      "sha256": "e10ed20bd8b7c969f7974430f552e1e1a00a00067e8296223dd64732bbec4e2c"
+    },
+    {
+      "file": "contracts/adapter-upgrade-mutations.mjs",
+      "sha256": "8a7ee55fd646bf3efe0dddf703b45347e5f0f7051c92ef0b5567062aa350513a"
+    },
+    {
+      "file": "contracts/upgrade-adapter-recovery.mjs",
+      "sha256": "85d5c5b732ba35817cdb98944f5dfe2cdc5c3a83488c28882c44187a9193df3a"
+    },
+    {
+      "file": "contracts/adapter-redemption-rollout-verify.mjs",
+      "sha256": "826cfa401096eccd09481456f7c9836cbdcb470445425b4f34dd41dd1f159ccd"
+    },
+    {
+      "file": "web/rhea-relay.mjs",
+      "sha256": "721a0632f14dcee0ffeb65444ad47681a613df117168cf20d848ec13ef4dbc02"
+    },
+    {
+      "file": "web/rhea-relay.test.mjs",
+      "sha256": "751ad6273706d36ad9f6f61e564842fd8765fefb1ad3d54d824bf80d8def3b03"
+    },
+    {
+      "file": "web/public/rhea-wallet.js",
+      "sha256": "58f2af3fe8944995e71993bc7a5eda451261fb0157beae3ff96b920e4f318495"
+    },
+    {
+      "file": "web/public/rhea-config.json",
+      "sha256": "1d008748b1f8fff1da828aab3498448b3014ebff291df77c8d1ed13ededf961d"
+    },
+    {
+      "file": "web/public/chat-sw.js",
+      "sha256": "a9e48d9fa396d2273e0f9146adee11cc2ad6d359933d6acb78c70f1289a33029"
+    },
+    {
+      "file": "web/rhea-wallet-browser.test.cjs",
+      "sha256": "3b56f5548ac2d4c1e042960733d63d8d37e60501aa0b77e6687b29e61d3b306d"
+    },
+    {
+      "file": "web/rhea-recovery-live-check.mjs",
+      "sha256": "b7235461d79787549506959572096843aa9ee1ea881535b8fe13ca2b42b2c5d8"
+    },
+    {
+      "file": "contracts/adapter/fixtures/browser-swap.json",
+      "sha256": "1f5ca184414f89a6902630c317cb2a549c882ae0d674c759805fe0643d3c0b8e"
+    },
+    {
+      "file": "contracts/adapter/src/lib.rs",
+      "sha256": "339d28408234647b9ced9b973175a44340c6d83608ed73325f9cf42e47b52041"
+    },
+    {
+      "file": "contracts/adapter/redemption-recovery/rollout-plan.json",
+      "sha256": "334a1b8fb469fb3f6adb9d6792518cb65c0bc7a74dfa30df64c2745d683f6694"
+    },
+    {
+      "file": "contracts/adapter/redemption-recovery/rollout.json",
+      "sha256": "e5ccd15057b8cfac1b4c5280abbe47a852af7045e438a52879d5d25172e9bc94"
+    },
+    {
+      "file": "contracts/adapter/redemption-recovery/rollout-verification.json",
+      "sha256": "709b01c4007b5e28a594a0d29cf8c74763ad08b47ca782c3ffa96c03d7b32080"
+    },
+    {
+      "file": "contracts/adapter/redemption-recovery/rollout-review.md",
+      "sha256": "1b8ac4dbd16e767aff848a209b579577e9aac2e9c01c74b02607c28e35f3d6b5"
+    },
+    {
+      "file": "web/security-proof-offline-timeout.json",
+      "sha256": "0d6c95d9da64d7636747dfdb3c2dee17a393fa6fce5a2ae6cbeca2d1620f3fef"
+    }
+  ]
+}

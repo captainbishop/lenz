@@ -1,0 +1,9 @@
+{
+  "network": "testnet",
+  "contract": "tusd.lenz-dev-1792984696547.testnet",
+  "ready": true,
+  "deployTx": "DB38oXN1CSTNZDM1zcWrYAo8ZpvzuXMRUNcwMayFrgUK",
+  "wasmSha256": "be94412f5384d3a291874696e568f943219f7b99cd88084544849e2fd4d97aa8",
+  "depositOffline": true,
+  "upgradeTx": "9waAoAbjcMwwCv6vMa2ynZJbze9TssjJ5Mai2SP9hiPr"
+}

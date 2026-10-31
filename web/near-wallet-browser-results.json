@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-31T18:16:53.702Z",
+  "passed": 8,
+  "failed": 0,
+  "checks": [
+    "new wallet starts at zero with no synthetic asset grant",
+    "funding waits for a matching final receipt from the RPC fixture",
+    "new wallet survives offline reload and does not need a conversation",
+    "encrypted A → B → C handover runs with all three browsers offline",
+    "duplicate and altered payment files cannot add tUSD",
+    "failed storage commit releases no payment and preserves the balance",
+    "testnet notes stay encrypted at rest and identity survives switching views",
+    "tUSD view fits desktop and mobile; the explanation expands by keyboard"
+  ],
+  "transactions": [],
+  "scope": "Isolated Edge contexts; mocked funding RPC, real browser cryptography and offline file handover. No chain settlement is claimed by this suite."
+}

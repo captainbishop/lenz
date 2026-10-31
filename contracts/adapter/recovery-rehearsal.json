@@ -1,0 +1,75 @@
+{
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+  "checks": [
+    "exact transaction reference persisted before broadcast",
+    "lost response recovered by final transaction hash",
+    "terminal order and all checked token balances unchanged"
+  ],
+  "scope": "One testnet advance on an already complete order. It spends test gas only. The RPC reply is deliberately lost after execution; recovery uses the hash saved before broadcast. No funding, redeployment, user wallet or real funds.",
+  "ok": true,
+  "before": {
+    "receiver": "35452664883721630117921",
+    "adapter": "0",
+    "tusd": "4000000"
+  },
+  "order": {
+    "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+    "instruction": {
+      "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+      "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+      "amount": "1000000",
+      "min_output": "11765352390934593594061",
+      "receiver_id": "lenz-dev-1792984696547.testnet",
+      "nonce": "d850c0182a1f66c606cf4d2994d55074",
+      "deadline_ms": "1792991719203",
+      "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+      "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+    },
+    "stage": "complete",
+    "output": "11884194334277367266729",
+    "reason": ""
+  },
+  "reference": {
+    "version": 1,
+    "network": "testnet",
+    "adapter": "lenz-rhea-1792987934062.testnet",
+    "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+    "sender": "lenz-dev-1792984696547.testnet",
+    "txHash": "CZQWSQNNzC63yKvecV9g9CpKSp9heY4EGvxHczDWQAzt",
+    "method": "advance"
+  },
+  "replyLost": true,
+  "after": {
+    "receiver": "35452664883721630117921",
+    "adapter": "0",
+    "tusd": "4000000"
+  },
+  "result": {
+    "finality": "FINAL",
+    "order": {
+      "id": "c97676e1a47a4053deaafe69b47b80bc54876702f116eedccf1e3b388ed2815d",
+      "instruction": {
+        "input": "5e6866643da48d532393334700c3506f8069a5a4dd89bd7d98cd751fa5227ca4:0",
+        "owner": "02dd6f671d1d4d8221d3dcb7e061b8aceb6e343c501b59cba2bf1386794e3b0fe9",
+        "amount": "1000000",
+        "min_output": "11765352390934593594061",
+        "receiver_id": "lenz-dev-1792984696547.testnet",
+        "nonce": "d850c0182a1f66c606cf4d2994d55074",
+        "deadline_ms": "1792991719203",
+        "signature": "a38a26c81c2d6e53b4b743bbb8cb5dba9aaeb3e449a12df81a757ed2ce7606fb124699016e796f839652cf71eaa7a10d0f66d6c4e5f5a19793bb6091921bca2c",
+        "redemption_signature": "7ecdd16bc316a06019dd2f019f13ca14ad8c482d6d631886a7ae507c13fe8df8c050bf29d912974338284e26ee9f170dd4694000717968f80a0f8b52d30f4ec3"
+      },
+      "stage": "complete",
+      "output": "11884194334277367266729",
+      "reason": ""
+    },
+    "reconciliation": {
+      "state": "confirmed",
+      "finality": "FINAL",
+      "txHash": "CZQWSQNNzC63yKvecV9g9CpKSp9heY4EGvxHczDWQAzt",
+      "failedReceipts": []
+    }
+  },
+  "checkedAt": "2026-10-27T05:19:34.378Z"
+}

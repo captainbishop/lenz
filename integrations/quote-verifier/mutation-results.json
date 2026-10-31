@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-30T17:53:16.731Z",
+  "detected": 2,
+  "results": [
+    {
+      "guard": "signature",
+      "detected": true
+    },
+    {
+      "guard": "freshness",
+      "detected": true
+    }
+  ],
+  "scope": "Independent source copies. Original tests pass; each removed guard causes a missing-rejection assertion."
+}

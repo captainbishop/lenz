@@ -1,0 +1,290 @@
+{
+  "startedAt": "2026-10-31T16:52:50.575Z",
+  "reserve": "tusd.lenz-dev-1792984696547.testnet",
+  "captures": {
+    "private-send": {
+      "light": {
+        "file": "web/evidence/preview-replay/private-send-light.png",
+        "sha256": "4bab6ca127db3cfc5807a286f88559b8809d6118c0c34d476d627ea40e511e2c"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/private-send-dark.png",
+        "sha256": "2e9ad5c4809ba783d02245b66b7af10383e32e9c92787d7ba6b81d29ef414898"
+      }
+    },
+    "private-read": {
+      "light": {
+        "file": "web/evidence/preview-replay/private-read-light.png",
+        "sha256": "718dc9b83f8ab579faaa2af544583c445cc05d93f5ae7678a30fffa78a34ece2"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/private-read-dark.png",
+        "sha256": "b7eaa48a517241ace8e7d19dd9d1539f33ffb0bdf7cb665a72faa94b940d774e"
+      }
+    },
+    "payment-received": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-received-light.png",
+        "sha256": "956648ed16dfc4d34acaec0c88356b993591f87af676d417fae420357b48eb3f"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-received-dark.png",
+        "sha256": "9b1d21fef677639c15b4eaa9411fc9617ddb06a1ae5e48dc983663eca06c7c9f"
+      }
+    },
+    "payment-onward": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-onward-light.png",
+        "sha256": "aa2c749c10635d6ce22dbdcacb66bd6faf076597441b6ebf1cbfb43165a2f7fb"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-onward-dark.png",
+        "sha256": "e522fd231aeab5dfb871e0c439ccd851351ec27e56e48201020d00a1a15d4b1e"
+      }
+    },
+    "payment-confirmed": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-confirmed-light.png",
+        "sha256": "f81ea5c8a962b4f8f0c2bba4884e20f3d3d0991f55c82779b9914ddb78011dfe"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-confirmed-dark.png",
+        "sha256": "60cc426553f3327b3ffac1919fc21def3f23d32a7b00146da36ab4f0c2f97b30"
+      }
+    }
+  },
+  "checks": [
+    "three existing isolated profiles matched; original inputs checked against final NEAR state",
+    "all three cached browsers reloaded offline; uncached fetch failed",
+    "message packet contains no plaintext; intended recipient decrypted it; wrong recipient rejected it",
+    "one backed tUSD received offline and its exact output passed onward offline",
+    "zero API calls while offline",
+    "both new transfers match final NEAR receipts; onward confirmation captured after reconnection"
+  ],
+  "api": [
+    "/api/testnet/settle"
+  ],
+  "receipts": [
+    {
+      "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b",
+      "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+      "outputs": [
+        {
+          "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:0",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "1000000"
+        },
+        {
+          "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "3000000"
+        }
+      ],
+      "block_height": 275626846
+    },
+    {
+      "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227",
+      "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:0",
+      "outputs": [
+        {
+          "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "1000000"
+        }
+      ],
+      "block_height": 275626846
+    }
+  ],
+  "finalTransaction": {
+    "finality": "FINAL",
+    "txHash": "7oLrVJHQWXbPp1zwvinfH68N1UyV648pHDsSNfvdAdmd",
+    "receiptIds": [
+      "7c7fxGF7jJHCu2gUC79nXsudmLJoDHyuHinq6MfV1HZC",
+      "92QobRF6w7HWvFsMRAZjE5erZVb5uYwT4srJMskZqZ4A",
+      "9x9CguinjkfZdzZ7n4q9WPp32c9DUMs54uGMkifAL6TW",
+      "2CFfPtmbyhxQ8i1h4BQVzgEtCtEVFhEdTgGv2CCxqDej"
+    ],
+    "gasBurnt": "7059258191058",
+    "value": [
+      {
+        "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da",
+        "input": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+        "outputs": [
+          {
+            "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:0",
+            "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+            "amount": "6000000"
+          },
+          {
+            "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+            "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+            "amount": "4000000"
+          }
+        ],
+        "block_height": 275593664
+      },
+      {
+        "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b",
+        "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+        "outputs": [
+          {
+            "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:0",
+            "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+            "amount": "1000000"
+          },
+          {
+            "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+            "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+            "amount": "3000000"
+          }
+        ],
+        "block_height": 275626846
+      },
+      {
+        "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227",
+        "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:0",
+        "outputs": [
+          {
+            "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227:0",
+            "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+            "amount": "1000000"
+          }
+        ],
+        "block_height": 275626846
+      }
+    ]
+  },
+  "sourceFiles": {
+    "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
+    "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/chat-layout.css": "82a47e83421f5910e561c1dcbecbc236c700dc68b524ba5ca310677d16a97817",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/chat.css": "5e708f9150fcec8f2e52458783d502b91e742e3f037a7d3bdf94837028278a2f",
+    "web/public/chat.html": "311a86a53e9d2c05cd74f795949e2432bf8daa1623bf083e2b49468b6f890b8c",
+    "web/public/chat.js": "a9e9fbb6262bac1c276ca6296546398b181876437d4c9a428a4d8d4235bde2d9",
+    "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
+    "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
+    "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
+    "web/public/near-chat.js": "ec3cc7dc0562a8964940f71fff5881ca5802a7234b96d6500c4e3411e93aecd2",
+    "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
+    "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
+    "web/public/near-payment-status.js": "57de431aa6d8ec5d81c92e4c6ebe34bba381428db73dd3aee77ec8ca6adab94c",
+    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
+    "web/public/peer-scenario.js": "0fd34bae514ddfe361c83b59d346c27605d62b392e4d3cd5e47f0c6458b87934",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/profile-panels.js": "37dd1e8ff26e41d80d4485c7647fc54f0661b93419c55da50ad5e75d535f74f6",
+    "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
+    "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
+    "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
+    "web/public/receive-packet.js": "092343ae3549287f891b476aa9965a458e9df2fad18226bdba039502cca1c039",
+    "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
+    "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
+    "web/public/trade-service.js": "cf621d1fea52aaed0785e0290e16df496e78f97e894750bdee7575113e173f5a",
+    "web/public/trade-ui.js": "d24c97cec1d750ff2811dc0a814299f6002a78d4acfdc1bbd0d70aea79d13435",
+    "web/public/wallet-feedback.js": "55cf85c4c634f6a800cbc6e3d7a324aa1b425fe9489d2077e4df1709b65ff3de",
+    "web/reframe-preview-flow.cjs": "ee6070bb3e2778a7417730a9b1cead72c8920951bd5f66f32131df8f0632811a"
+  },
+  "complete": true,
+  "completedAt": "2026-10-31T16:55:35.393Z",
+  "scope": "Existing testnet tUSD, one new A→B→C onward payment. No funding, deployment, swap or user profile access. Cropped actual UI states captured in both themes; animation/timing added separately. Private chat is distinct from public NEAR settlement. Windows Edge offline emulation only.",
+  "originalCaptures": {
+    "private-send": {
+      "light": {
+        "file": "web/evidence/preview-capture/private-send-light.png",
+        "sha256": "8b884726025e3dbe1ac165384326d3bf486bc6ba744da476e59d5c5242049222"
+      },
+      "dark": {
+        "file": "web/evidence/preview-capture/private-send-dark.png",
+        "sha256": "8b884726025e3dbe1ac165384326d3bf486bc6ba744da476e59d5c5242049222"
+      }
+    },
+    "private-read": {
+      "light": {
+        "file": "web/evidence/preview-capture/private-read-light.png",
+        "sha256": "2159365a830db90d7100d1b09c453d7e13066cdfd2c125650f4e6126a3cedcce"
+      },
+      "dark": {
+        "file": "web/evidence/preview-capture/private-read-dark.png",
+        "sha256": "9795eeeaae78958ec8d1eee1657c0aed31a713dc429f3bb773fd8fe16b54bf45"
+      }
+    },
+    "payment-received": {
+      "light": {
+        "file": "web/evidence/preview-capture/payment-received-light.png",
+        "sha256": "67565651ba40bd8c431266d33e1d195f9677a20b6d243b98a45ed6a96b0ca62e"
+      },
+      "dark": {
+        "file": "web/evidence/preview-capture/payment-received-dark.png",
+        "sha256": "235516b50e69f29b9b2c4c063a2579eb85c8b8aca8b7b3575f597227cf986d92"
+      }
+    },
+    "payment-onward": {
+      "light": {
+        "file": "web/evidence/preview-capture/payment-onward-light.png",
+        "sha256": "463bf4e8206a830475c6f99492162554c633fc765a5346cc3936a10a559959ef"
+      },
+      "dark": {
+        "file": "web/evidence/preview-capture/payment-onward-dark.png",
+        "sha256": "208deffea3ac34e0b84889090510c9ed940354619c5e691ef4c7b7d12803c2d0"
+      }
+    },
+    "payment-confirmed": {
+      "light": {
+        "file": "web/evidence/preview-capture/payment-confirmed-light.png",
+        "sha256": "4e3742297bd65d3ae6924da0995e7062ea6f5523fd3f98f91cdfd2a33dfe7c4b"
+      },
+      "dark": {
+        "file": "web/evidence/preview-capture/payment-confirmed-dark.png",
+        "sha256": "497e2e2c7762d20df63239660ab0f61a82175057b9e023229b97bfebe08a726c"
+      }
+    }
+  },
+  "originalSourceFiles": {
+    "web/capture-preview-flow.cjs": "e77964365bafd57eb085e0f9c037b6fb79ec35f6b1dffc88abc4424ec5ee92af",
+    "web/public/app-theme.css": "991fc82227c9cf359274061fc8fee846bb3744a5a089221dfa7d5f2bc443033d",
+    "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/chat-layout.css": "d3d8caf459815c7549b466ebc3985e511c9ff09fcad08a2ee54abc1b5175b58e",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/chat.css": "5e708f9150fcec8f2e52458783d502b91e742e3f037a7d3bdf94837028278a2f",
+    "web/public/chat.html": "311a86a53e9d2c05cd74f795949e2432bf8daa1623bf083e2b49468b6f890b8c",
+    "web/public/chat.js": "a9e9fbb6262bac1c276ca6296546398b181876437d4c9a428a4d8d4235bde2d9",
+    "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
+    "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
+    "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
+    "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
+    "web/public/money.html": "bbb4505b1f099051bd8a2ddf441639a9a686661554d626abfecfde4f9c8b7150",
+    "web/public/money.js": "0eaf4e94101cceb1f9e55711d749984f1193630075077da378816e4c1548f88d",
+    "web/public/near-chat.js": "51a8ca5f1f7522b8cff8b786d50d045b5d1a331fc75a6a5808284b44bd71781f",
+    "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
+    "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
+    "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
+    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/near-signer.js": "23e4cfedbd15b5c5bb512ca53c5d41a4bb7fd5ba82d257feb395914c76168388",
+    "web/public/near-wallet.css": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9",
+    "web/public/near-wallet.js": "891db1ea5ded771affa4fe9be0bdc4a3a9725ec713b142d74edf8b7372b714d6",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
+    "web/public/peer-scenario.js": "0fd34bae514ddfe361c83b59d346c27605d62b392e4d3cd5e47f0c6458b87934",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/profile-panels.js": "37dd1e8ff26e41d80d4485c7647fc54f0661b93419c55da50ad5e75d535f74f6",
+    "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
+    "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
+    "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
+    "web/public/receive-packet.js": "092343ae3549287f891b476aa9965a458e9df2fad18226bdba039502cca1c039",
+    "web/public/rhea-config.json": "1d008748b1f8fff1da828aab3498448b3014ebff291df77c8d1ed13ededf961d",
+    "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
+    "web/public/rhea-wallet.js": "40adeff7bc95c5949db603976f8dd154bd2b5405a83ffc2f9e8ca4f2e84a1c3c",
+    "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
+    "web/public/swap-tools.html": "1b60b4dc3dcca356f1c26064e3508d1ee10d65e31becc91254f1093af5b906bc",
+    "web/public/swap-tools.js": "57eee1946e4cf381eef8d8fae185f31da8e64889d052feeb0130a758462a6ffa",
+    "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
+    "web/public/trade-service.js": "cf621d1fea52aaed0785e0290e16df496e78f97e894750bdee7575113e173f5a",
+    "web/public/trade-ui.js": "d24c97cec1d750ff2811dc0a814299f6002a78d4acfdc1bbd0d70aea79d13435",
+    "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
+    "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
+  },
+  "reframedAt": "2026-10-31T18:19:58.236Z",
+  "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
+}

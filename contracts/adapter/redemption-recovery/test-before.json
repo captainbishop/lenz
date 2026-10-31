@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-10-26T04:26:41.5759684Z",
+  "action": "test",
+  "exitCode": 0,
+  "sourceSha256": "aee804f7ea358c8c0e4765de7e98642ca38389cbe9e6f4fc41e0607657f1b92a",
+  "cargoLockSha256": "65022838191ee88aa4ab8f6e9f8fbdf40253b0dfaab01d1507c64801d133d82e",
+  "log": "test-output.txt",
+  "scope": "Local Rust result only; no deployment or network transaction."
+}

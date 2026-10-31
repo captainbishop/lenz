@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-31T10:56:26.760Z",
+  "ok": true,
+  "checks": [
+    "server serves verified recovery capability",
+    "Check status reads existing final order",
+    "recovery on terminal order returns unchanged state without a new transaction"
+  ],
+  "order": {
+    "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+    "stage": "refunded"
+  },
+  "status": {
+    "finality": "FINAL",
+    "order": {
+      "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+      "instruction": {
+        "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+        "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+        "amount": "1000000",
+        "min_output": "1000000000000000000000000000000",
+        "receiver_id": "lenz-dev-1792984696547.testnet",
+        "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+        "deadline_ms": "1792991858531",
+        "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+        "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+      },
+      "stage": "refunded",
+      "output": "0",
+      "reason": "Exchange rejected the swap"
+    },
+    "reconciliation": {
+      "state": "no_reference"
+    }
+  },
+  "recovery": {
+    "finality": "FINAL",
+    "order": {
+      "id": "1dfd7510cb999fab444b7c7ec3966449449cf62e21e77abe39172aca11095ba3",
+      "instruction": {
+        "input": "4eaeba9d3249549088a655aced5777ed0fb3c68abc69522bd021dc4748b1b7eb:0",
+        "owner": "033539efa8955d7acb3b17a6fe7c363f73546f49889db0dbf258128cc0ea935c52",
+        "amount": "1000000",
+        "min_output": "1000000000000000000000000000000",
+        "receiver_id": "lenz-dev-1792984696547.testnet",
+        "nonce": "f2ad8b827ec13b9805f8067f240971d1",
+        "deadline_ms": "1792991858531",
+        "signature": "f80896217527984adf6663cddfff2c0b9f0d248f115cab316f6f1fae7f188e720c58de561d5c31413280e3543f46ea548906ce3f5b9ecfa66860d749cd3ba56a",
+        "redemption_signature": "ce61e3a956b9079faf0aaa95384695c7ab19973a4b185facba87d260a77d39a4ad6fac6ccaba7ce17e41315b5b8b381b62888c362f3414baa4b4507357c1e813"
+      },
+      "stage": "refunded",
+      "output": "0",
+      "reason": "Exchange rejected the swap"
+    },
+    "reconciliation": {
+      "state": "no_reference"
+    }
+  },
+  "scope": "Actual local HTTP route and configured testnet RPC; one existing terminal order. No missing-callback injection, recovery transaction, funding or user browser access."
+}

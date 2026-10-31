@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-31T16:16:02.705Z",
+  "node": "v24.21.0",
+  "aurora": {
+    "installed": {
+      "@nomicfoundation/hardhat-ethers": "4.2.1",
+      "ethers": "6.17.0",
+      "hardhat": "3.21.0",
+      "solc": "0.8.38"
+    },
+    "lockSha256": "c5f622e98994cc383d02fcb4f574aa90f051263fe517bd53475080651ce8e31c"
+  },
+  "intents": {
+    "installed": {
+      "@defuse-protocol/intents-sdk": "0.93.0"
+    },
+    "lockSha256": "08c301c3d1f49fa09d175f1494bda71105b63108253d991414e33d01679e4bf2"
+  },
+  "oneclick": {
+    "installed": {
+      "@defuse-protocol/one-click-sdk-typescript": "0.1.26"
+    },
+    "lockSha256": "d6c832a2365da5d351a99cbcdf30fa2ac0e90234dd01137e3ad42da9db8bffcc"
+  },
+  "checks": [
+    "Installed versions match manifests and lockfiles",
+    "NEAR Intents SDK loads and builds an unsigned empty fixture payload",
+    "1Click verifier loads and rejects an empty response"
+  ],
+  "partnerKeyPresentInThisProcess": false,
+  "scope": "Local package checks only; no network, account creation, signing or transaction. Aurora execution and Intents routes need separate integration evidence."
+}

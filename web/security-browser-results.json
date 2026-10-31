@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-31T16:16:41.510Z",
+  "browser": "156.0.4314.50",
+  "baseline": false,
+  "passed": 3,
+  "checks": [
+    "foreign-origin framing cannot display or activate the wallet",
+    "browser enforces inline-script and unapproved connection restrictions",
+    "offline cached wallet keeps identity and enforces its saved script policy"
+  ]
+}

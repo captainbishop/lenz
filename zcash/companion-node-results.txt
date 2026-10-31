@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: local API forwards quote requests to the actual adapter boundary
+ok 1 - local API forwards quote requests to the actual adapter boundary
+  ---
+  duration_ms: 29.8172
+  type: 'test'
+  ...
+# Subtest: foreign pages, rebinding hosts and wrong methods cannot invoke providers
+ok 2 - foreign pages, rebinding hosts and wrong methods cannot invoke providers
+  ---
+  duration_ms: 1.0585
+  type: 'test'
+  ...
+# Subtest: oversized payloads and unknown routes cannot invoke a provider
+ok 3 - oversized payloads and unknown routes cannot invoke a provider
+  ---
+  duration_ms: 4.7548
+  type: 'test'
+  ...
+# Subtest: provider failure stays an error instead of a successful quote
+ok 4 - provider failure stays an error instead of a successful quote
+  ---
+  duration_ms: 1.8161
+  type: 'test'
+  ...
+# Subtest: only explicit status/refresh requests invoke the companion; response never cached
+ok 5 - only explicit status/refresh requests invoke the companion; response never cached
+  ---
+  duration_ms: 11.8713
+  type: 'test'
+  ...
+# Subtest: foreign origins/hosts, missing origins, non-JSON and wrong methods cannot read the native wallet
+ok 6 - foreign origins/hosts, missing origins, non-JSON and wrong methods cannot read the native wallet
+  ---
+  duration_ms: 1.182
+  type: 'test'
+  ...
+# Subtest: path traversal, extra arguments, oversized input and send/seed routes are rejected
+ok 7 - path traversal, extra arguments, oversized input and send/seed routes are rejected
+  ---
+  duration_ms: 9.2236
+  type: 'test'
+  ...
+# Subtest: native errors return unavailable without leaking paths, secrets or a fake zero
+ok 8 - native errors return unavailable without leaking paths, secrets or a fake zero
+  ---
+  duration_ms: 1.8471
+  type: 'test'
+  ...
+# Subtest: native failure diagnostics expose only an allowed operation and timeout code
+ok 9 - native failure diagnostics expose only an allowed operation and timeout code
+  ---
+  duration_ms: 1.929
+  type: 'test'
+  ...
+# Subtest: concurrent requests do not overlap native wallet access; lock releases on failure
+ok 10 - concurrent requests do not overlap native wallet access; lock releases on failure
+  ---
+  duration_ms: 3.3252
+  type: 'test'
+  ...
+# Subtest: local snapshot reads native balance/address without sync; exact integer amounts and no private metadata
+ok 11 - local snapshot reads native balance/address without sync; exact integer amounts and no private metadata
+  ---
+  duration_ms: 7.7145
+  type: 'test'
+  ...
+# Subtest: network update checks test chain before sync and reads the wallet afterward
+ok 12 - network update checks test chain before sync and reads the wallet afterward
+  ---
+  duration_ms: 0.6916
+  type: 'test'
+  ...
+# Subtest: wrong network stops before synchronization, and failed sync cannot return a fresh balance
+ok 13 - wrong network stops before synchronization, and failed sync cannot return a fresh balance
+  ---
+  duration_ms: 2.6128
+  type: 'test'
+  ...
+# Subtest: unknown actions/wallet paths cannot launch a native process
+ok 14 - unknown actions/wallet paths cannot launch a native process
+  ---
+  duration_ms: 1.9569
+  type: 'test'
+  ...
+# Subtest: malformed, unsafe and inconsistent amounts or address reject the complete snapshot
+ok 15 - malformed, unsafe and inconsistent amounts or address reject the complete snapshot
+  ---
+  duration_ms: 2.7745
+  type: 'test'
+  ...
+# Subtest: zero balances are returned only after successful native reads
+ok 16 - zero balances are returned only after successful native reads
+  ---
+  duration_ms: 2.3532
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 975.7513

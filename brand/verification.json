@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "six icon exports have their stated dimensions, including 16 and 32 pixels",
+    "primary and reverse SVG/transparent PNG wordmarks carry Lenz",
+    "chat, original payment demo and brand page use Lenz without old branding",
+    "brand page images load and layouts fit desktop and 375-pixel width",
+    "brand-shell worker update preserves existing cache entries and serves Lenz offline"
+  ],
+  "passed": 5,
+  "failed": 0
+}

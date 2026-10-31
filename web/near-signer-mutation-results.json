@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-26T14:57:35.982Z",
+  "detected": 3,
+  "results": [
+    {
+      "guard": "network and reserve",
+      "detected": true
+    },
+    {
+      "guard": "refund recipient and amount",
+      "detected": true
+    },
+    {
+      "guard": "NEAR signer",
+      "detected": true
+    }
+  ],
+  "scope": "Independent copies; removed guards must cause a missing-rejection assertion. Product sources are never mutated."
+}

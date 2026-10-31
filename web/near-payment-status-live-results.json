@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-31T18:18:42.882Z",
+  "reserve": "tusd.lenz-dev-1792984696547.testnet",
+  "checkedNotes": 6,
+  "receiptIds": [
+    "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da",
+    "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b",
+    "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227"
+  ],
+  "stateUnchanged": true,
+  "requests": [
+    "/api/testnet/check"
+  ],
+  "errors": [],
+  "scope": "Read-only live final NEAR state for the existing preview receipt chain, validated against the saved signed path. No wallet writes, funding, signing, deployment or settlement. Conflicts/interrupted submissions remain fixture coverage."
+}

@@ -1,0 +1,14 @@
+import {mkdir,writeFile} from 'node:fs/promises';
+import {createIdentity,digest} from '../web/public/peer-crypto.js';
+import {fundingRequest,emptyNearVault,makeNearPayment,acceptNearPayment,transferTerms} from '../web/public/near-protocol.js';
+const contract='reserve.lenz.testnet';
+const[a,b,c]=await Promise.all(['Amina','Bola','Chidi'].map(createIdentity));
+const funding=await fundingRequest(a,contract),root={id:funding.id,owner:funding.owner,amount:funding.amount};
+const va=emptyNearVault(contract);va.roots.push(root);
+const ab=await makeNearPayment(va,a,b.profile,'20');
+const vb=(await acceptNearPayment(emptyNearVault(contract),b,a.profile,ab.payload)).vault;
+const bc=await makeNearPayment(vb,b,c.profile,'8');
+const ids=await Promise.all(bc.payload.path.map(s=>digest(transferTerms(contract,s))));
+await mkdir(new URL('./fixtures/',import.meta.url),{recursive:true});
+await writeFile(new URL('./fixtures/browser-transfer.json',import.meta.url),JSON.stringify({contract,funding,root,path:bc.payload.path,ids},null,2)+'\n');
+console.log('Public browser-signature fixture written; private keys were not exported.');

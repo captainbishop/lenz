@@ -1,0 +1,27 @@
+{
+  "target": "tusd.lenz-dev-1792984696547.testnet",
+  "network": "testnet",
+  "oldSha256": "68f68edc97595afa42ea38e610dbf3ad299597efe215f593956fbd881e69faea",
+  "newSha256": "be94412f5384d3a291874696e568f943219f7b99cd88084544849e2fd4d97aa8",
+  "sourceSha256": "49c7462621c487d60452a03bdac6001f6aad467d62d2f0331133c71e38a7c9fb",
+  "wasmBytes": 367798,
+  "action": "Deploy code only; do not run new or change storage layout",
+  "rehearsal": "rehearsal.json",
+  "plannedAt": "2026-10-26T04:58:13.272Z",
+  "receipt": {
+    "finality": "FINAL",
+    "txHash": "9waAoAbjcMwwCv6vMa2ynZJbze9TssjJ5Mai2SP9hiPr",
+    "receiptIds": [
+      "7PsMYibVC3dgxBUgLvq2j3XoGFiiUA5xoK4eD1Ym9MrD",
+      "BDFNDoVu59B8ixSY1VrZsDP8Hoeu8nVgFXb2RzhEGyVb"
+    ],
+    "gasBurnt": "24265807469812",
+    "value": ""
+  },
+  "appliedAt": "2026-10-26T05:00:00.007Z",
+  "stateVerified": {
+    "entries": 74,
+    "sha256": "769a1915064bd7c20df34562ed6348d0c6f839d58748a5dfdd2b9b501d574014"
+  },
+  "ok": true
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "targeted-handover-guard-checks",
+  "sourceSha256": "a9264ae81c4b9b40a6f4bbf5dbf4317c0c32dc913dd86905b4e8da1fc7bf57fb",
+  "outcomes": [
+    {
+      "name": "context",
+      "originalRejects": true,
+      "mutantAccepts": true
+    },
+    {
+      "name": "key-size",
+      "originalRejects": true,
+      "mutantAccepts": true
+    },
+    {
+      "name": "payload-limit",
+      "originalRejects": true,
+      "mutantAccepts": true
+    }
+  ]
+}

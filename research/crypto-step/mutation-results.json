@@ -1,0 +1,55 @@
+{
+  "kind": "targeted-R1CS-guard-experiments",
+  "cases": [
+    {
+      "name": "ownership",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "conservation",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "nullifier",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "output-binding",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "transcript",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "output-range",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "input-range",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "nonzero-secret",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "nonzero-input",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    },
+    {
+      "name": "distinct-outputs",
+      "originalRejects": true,
+      "removedGuardAccepts": true
+    }
+  ]
+}

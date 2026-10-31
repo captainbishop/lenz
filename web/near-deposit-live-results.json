@@ -1,0 +1,108 @@
+{
+  "checkedAt": "2026-10-26T05:03:11.780Z",
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    "actual failed Rhea swap refunds one tUSD to its signed receiving account",
+    "lost return response recovers one backed root without a second token debit",
+    "returned note is transferred A to B to C while the browser is offline",
+    "NEAR settles returned-note ancestry and later deposit checks do not revive its input"
+  ],
+  "transactions": [
+    {
+      "action": "fund",
+      "txHash": "BCqpTMoTwb3EAv8FTcBeU6GwZnPF2L6HqoysYEXZbxfZ"
+    },
+    {
+      "action": "submit",
+      "txHash": "GW17Nj3pHW5KjF3YDJes1ao7HTykRnghW9C1WWixKiuh",
+      "stage": "ready"
+    },
+    {
+      "action": "advance",
+      "txHash": "8zfug5g5zq6DmvKUYECTB8UUb4zhvGCLJ3Cremouzq5p",
+      "stage": "funded"
+    },
+    {
+      "action": "advance",
+      "txHash": "E4FC3aYUpSmnTaSu293yyxeBfhCJyskhC5cbvNEtV5NX",
+      "stage": "deposited"
+    },
+    {
+      "action": "advance",
+      "txHash": "Ai4kcuqG1uJHsoFcRaqBq4HhwLdYuCLbytwtfxDW9f2F",
+      "stage": "refund_on_dex"
+    },
+    {
+      "action": "advance",
+      "txHash": "CzMStjoytrqCQkgteg69gcAbaSLMMB2EvhzPZGkQQvoK",
+      "stage": "refund_available"
+    },
+    {
+      "action": "advance",
+      "txHash": "GEPGhH6VsRMzv4VqsoJsbCE7XuMcy7v5ooZL4U8EVBD6",
+      "stage": "refunded"
+    },
+    {
+      "action": "return-response-dropped",
+      "txHash": "D63i4JCs8Sp4Gihyk3KZM2o6fWxbeJ5ySP27o9p3AvSm",
+      "root": "root:ed071d0c7245d80f06245af1de173c9f56632612af047009929ad664ae160681"
+    },
+    {
+      "action": "settle",
+      "txHash": "GWWUmmCYBKYGVPFQ8SXHMfcwzCPrGrXErtseJpirvoQG"
+    }
+  ],
+  "adapter": "lenz-rhea-1792987934062.testnet",
+  "contract": "tusd.lenz-dev-1792984696547.testnet",
+  "swapId": "b4552cbc32412d67edf2e908f7e9f7c5bb7a7263fb4bcf14a6d8e1f578346e42",
+  "depositRequest": {
+    "contract": "tusd.lenz-dev-1792984696547.testnet",
+    "payer": "lenz-dev-1792984696547.testnet",
+    "amount": "1000000",
+    "source": "280db6f7a2556124d4e6340e945cfa5aa30a8801e5f7d9fbd679d8910ee0b362",
+    "owner": "03480a4d5c0548ad8168043ac9d48aa0b834df8a6258d47ec1c10000ef7c8483cb",
+    "signature": "383b18e5113ded6e80d1b7c858aab43430e89304bde0cca9f7c0763cad89ded686ffe4c1a85a206a5c3e927c1114d6e9d6da5cd8265e913c4f1865d1395e076c",
+    "id": "root:ed071d0c7245d80f06245af1de173c9f56632612af047009929ad664ae160681"
+  },
+  "before": {
+    "payer": "5000000",
+    "reserve": "309000000",
+    "supply": "323000000"
+  },
+  "after": {
+    "payer": "4000000",
+    "reserve": "310000000",
+    "supply": "323000000"
+  },
+  "onward": {
+    "payload": {
+      "kind": "lenz-near-payment-v1",
+      "contract": "tusd.lenz-dev-1792984696547.testnet",
+      "root": {
+        "id": "root:ed071d0c7245d80f06245af1de173c9f56632612af047009929ad664ae160681",
+        "owner": "03480a4d5c0548ad8168043ac9d48aa0b834df8a6258d47ec1c10000ef7c8483cb",
+        "amount": "1000000"
+      },
+      "path": [
+        {
+          "input": "root:ed071d0c7245d80f06245af1de173c9f56632612af047009929ad664ae160681",
+          "recipient": "029283d9432ab0a9dd8a80fa578b3939c6df202bdefed505f36e8dd57d39cbede0",
+          "amount": "600000",
+          "nonce": "a4397b53fa005d82274bcbf72b77b5ca",
+          "signature": "88d84c4befe4b4e554eecc7c76f586dc7c42634d92f9024d7571634505b478ae93e590c27fa3166f3c30316a52155c758a4a37ccde86b1ddfe35ee5a2b21089b"
+        },
+        {
+          "input": "35a4ccd8ec681f78e60075b653c082854d543c58eeea862ae06681f37b431c68:0",
+          "recipient": "03139fff11dc1db1520f426cf0804185b8190f19a4e0c2c077a105ddbdac581cd1",
+          "amount": "200000",
+          "nonce": "f4f2fdd18a50c9ebb2043d8a014d9346",
+          "signature": "49e58cdafa7cb8f35c7d7e3a1bf3f0e44222ed7284d7c2de1cbbcb91f349fed89ad7f539f01935f275704d5a1858a56c82dd4571549071a30027c562f9648744"
+        }
+      ]
+    },
+    "recipient": "03139fff11dc1db1520f426cf0804185b8190f19a4e0c2c077a105ddbdac581cd1",
+    "amount": "200000"
+  },
+  "scope": "Disposable Edge identity, actual Rhea refund and NEAR deposit/settlement; dropped-response recovery and real browser offline onward signatures. No user browser data or real funds. B/C keys are disposable browser fixtures, not physical phones."
+}

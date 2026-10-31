@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-31T11:14:15.394Z",
+  "passed": 0,
+  "checks": [],
+  "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at status (<workspace>\\web\\offline-social-browser.test.cjs:16:39)\n    at wallet (<workspace>\\web\\offline-social-browser.test.cjs:17:65)\n    at async create (<workspace>\\web\\offline-social-browser.test.cjs:19:31)\n    at async <workspace>\\web\\offline-social-browser.test.cjs:30:14",
+  "errors": [
+    "connection is not a function"
+  ],
+  "apiRequests": []
+}
