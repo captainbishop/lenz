@@ -9,9 +9,10 @@ sharing before the sending screen refreshes its delivery label.
 
 The send action persists first and then requests delivery. A saved-for-delivery
 status is not a custody receipt, recipient receipt or blockchain confirmation.
-Backing in these checks is a fixture; no chain API was called. Public Nostr
-transport, independent hosted operators and onboarding delivery setup are not
-implemented. The existing opt-in setting remains in Delivery.
+Backing in these checks is a fixture; no chain API was called. The separate
+[public Nostr transport](../docs/internet-delivery.md) now has its own consent,
+protocol and evidence. Independently hosted Lenz carriers and native device
+delivery remain unverified. Both settings are in Delivery.
 
 
 November 1, 2026. Six Node tests pass for signed retention/content, authenticated

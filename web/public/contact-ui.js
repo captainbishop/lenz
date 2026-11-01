@@ -1,5 +1,5 @@
 import { readState, updateState } from './chat-store.js';
-import { decodeContact, drawContact, readContactFile, scanPixels } from './contact-card.js';
+import { decodeContact, encodeLenzId, drawContact, readContactFile, scanPixels } from './contact-card.js';
 import { paintAvatar } from './profile-display.js';
 
 const $ = selector => document.querySelector(selector);
@@ -19,6 +19,7 @@ export async function renderProfile(profile) {
   paintAvatar($('#my-avatar'), profile); paintAvatar($('#share-avatar'), profile);
   $('#photo-sharing-note').hidden = !profile.photo;
   $('#my-card').value = JSON.stringify(profile);
+  $('#my-lenz-id').value = await encodeLenzId(profile);
   $('#my-code').textContent = safetyCode(profile);
   if (profileKey === JSON.stringify(profile)) return;
   const qr = $('#contact-qr'); await drawContact(qr, profile);
@@ -29,8 +30,8 @@ export async function renderProfile(profile) {
   for (let size = 26; ctx.measureText(profile.name).width > card.width - 40 && size > 12; size--) ctx.font = `bold ${size}px Segoe UI, sans-serif`;
   ctx.fillText(profile.name, card.width / 2, 44, card.width - 40);
   ctx.drawImage(qr, (card.width - qr.width) / 2, 60);
-  ctx.font = '16px Segoe UI, sans-serif'; ctx.fillText('Scan to add my contact', card.width / 2, card.height - 32);
-  cardFile = new File([await png(card)], 'contact-card.png', { type: 'image/png' });
+  ctx.font = '16px Segoe UI, sans-serif'; ctx.fillText('Scan my Lenz ID', card.width / 2, card.height - 32);
+  cardFile = new File([await png(card)], 'lenz-id.png', { type: 'image/png' });
   profileKey = JSON.stringify(profile);
 }
 
@@ -47,29 +48,30 @@ export function setupContacts({ action, status, select }) {
   async function review(profile) {
     const state = await readState();
     if (!state.identity) throw new Error('Choose your name first.');
-    if (profile.id === state.identity.profile.id) throw new Error('This is your own contact card.');
+    if (profile.id === state.identity.profile.id) throw new Error('This is your own Lenz ID.');
     const existing = state.contacts.find(p => p.id === profile.id);
     if (existing && existing.name === profile.name && (existing.avatar ?? 'moon') === (profile.avatar ?? 'moon') && existing.photo === profile.photo) throw new Error('This person is already in your contacts.');
-    reviewed = profile; $('#contact-name').textContent = profile.name;
+    reviewed = profile; $('#contact-name').textContent = profile.name; $('#contact-label').value = profile.name;
     paintAvatar($('#contact-avatar'), profile); $('#contact-code').textContent = safetyCode(profile);
     $('#confirm-contact').textContent = existing ? 'Update contact' : 'Add contact';
     $('#contact-review').hidden = false;
-    feedback(existing ? `Updated card for ${existing.name}. Confirm the new name or picture with them.` : state.contacts.some(p => p.name === profile.name)
-      ? 'You already have someone with this name. Confirm who shared this new card.'
-      : 'Card read. Confirm who shared it before adding them.');
+    feedback(existing ? `Updated profile for ${existing.name}. Confirm the new name or picture with them.` : state.contacts.some(p => p.name === profile.name)
+      ? 'You already have someone with this name. Confirm who shared this new ID.'
+      : 'Confirm this ID with the person before adding them.');
     $('#verified').focus();
   }
   $('#show-card').onclick = () => { $('#share-feedback').textContent = ''; $('#share-contact').showModal(); $('#share-contact').scrollTop = 0; };
   $('#save-qr').onclick = () => { if (cardFile) download(cardFile, cardFile.name); };
+  async function copyId() {
+    try { await navigator.clipboard.writeText($('#my-lenz-id').value); $('#share-feedback').textContent = 'Lenz ID copied.'; }
+    catch { $('#my-lenz-id').focus(); $('#my-lenz-id').select(); $('#share-feedback').textContent = 'Select and copy your Lenz ID.'; }
+  }
+  $('#copy-lenz-id').onclick = copyId;
   $('#share-card').onclick = async () => {
-    if (!cardFile) return;
-    // The prepared File keeps native sharing within the user's click gesture.
     try {
-      if (navigator.canShare?.({ files: [cardFile] })) {
-        await navigator.share({ files: [cardFile], title: 'My contact card' });
-        $('#share-feedback').textContent = 'Card shared.';
-      } else { download(cardFile, cardFile.name); $('#share-feedback').textContent = 'Card saved as an image. Share it using your usual local sharing app.'; }
-    } catch (error) { $('#share-feedback').textContent = error.name === 'AbortError' ? 'Sharing cancelled.' : 'Sharing is unavailable here. Use Save image.'; }
+      if (navigator.share) { await navigator.share({title:'My Lenz ID',text:$('#my-lenz-id').value}); $('#share-feedback').textContent = 'Lenz ID shared.'; }
+      else await copyId();
+    } catch (error) { $('#share-feedback').textContent = error.name === 'AbortError' ? 'Sharing cancelled.' : 'Use Copy ID to share your address.'; }
   };
   $('#save-card').onclick = () => action(async () => {
     const state = await readState(); download(new Blob([JSON.stringify(state.identity.profile)], { type: 'application/json' }), 'proof-u-contact.json');
@@ -90,8 +92,8 @@ export function setupContacts({ action, status, select }) {
   $('#contact-card').oninput = resetReview;
   $('#verified').onchange = () => { $('#confirm-contact').disabled = !reviewed || !$('#verified').checked; };
   $('#confirm-contact').onclick = () => action(async () => {
-    if (!reviewed || !$('#verified').checked) throw new Error('Confirm who shared this card first.');
-    const profile = structuredClone(reviewed);
+    if (!reviewed || !$('#verified').checked) throw new Error('Confirm who shared this ID first.');
+    const profile = {...structuredClone(reviewed),name:$('#contact-label').value.trim() || reviewed.name};
     await updateState(state => {
       const index = state.contacts.findIndex(p => p.id === profile.id);
       if (index === -1) state.contacts.push(profile); else state.contacts[index] = profile;
@@ -101,7 +103,7 @@ export function setupContacts({ action, status, select }) {
   $('#scan-contact').onclick = async () => {
     stopCamera(); resetReview(); const session = cameraSession;
     $('#scan-contact').disabled = true; $('#camera-panel').hidden = false;
-    feedback('Allow the camera, then point it at their contact card.');
+    feedback('Allow the camera, then point it at their QR.');
     try {
       if (!navigator.mediaDevices?.getUserMedia) throw new Error('Camera unavailable');
       const opened = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
@@ -118,7 +120,7 @@ export function setupContacts({ action, status, select }) {
       }; scan();
     } catch {
       if (session !== cameraSession) return;
-      stopCamera(); feedback('Camera unavailable or permission declined. Choose an image or contact file.', true);
+      stopCamera(); feedback('Camera unavailable or permission declined. Paste a Lenz ID or open a QR image.', true);
     }
   };
   $('#stop-camera').onclick = () => { stopCamera(); feedback('Camera stopped. You can choose a card image instead.'); };

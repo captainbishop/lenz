@@ -1,0 +1,74 @@
+{
+  "chat": [
+    {
+      "id": "write",
+      "start": 0,
+      "duration": 8,
+      "title": "Write it, even offline."
+    },
+    {
+      "id": "seal",
+      "start": 8,
+      "duration": 4.5,
+      "title": "Only Bola can open it."
+    },
+    {
+      "id": "carry",
+      "start": 12.5,
+      "duration": 4.5,
+      "title": "Share over a local connection."
+    },
+    {
+      "id": "open",
+      "start": 17,
+      "duration": 4.5,
+      "title": "Bola reads it. Still offline."
+    }
+  ],
+  "wallet": [
+    {
+      "id": "pay",
+      "start": 0,
+      "duration": 4.5,
+      "title": "Amina pays Bola."
+    },
+    {
+      "id": "onward",
+      "start": 4.5,
+      "duration": 4.5,
+      "title": "Bola passes it to Chidi."
+    },
+    {
+      "id": "pending",
+      "start": 9,
+      "duration": 4.5,
+      "title": "Reconnect when you can."
+    },
+    {
+      "id": "settled",
+      "start": 13.5,
+      "duration": 4.5,
+      "title": "Now it’s confirmed."
+    }
+  ],
+  "profile": [
+    {
+      "id": "share",
+      "start": 0,
+      "duration": 4.5,
+      "title": "Start with your Lenz ID."
+    },
+    {
+      "id": "add",
+      "start": 4.5,
+      "duration": 4.5,
+      "title": "Paste it. Check it together."
+    },
+    {
+      "id": "connected",
+      "start": 9,
+      "duration": 4.5,
+      "title": "You’re ready to talk."
+    }
+  ]
+}

@@ -10,7 +10,7 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
   const ev=JSON.parse(await fs.readFile(path.join(__dirname,'preview-flow-results.json')));
   assert(capture.complete && ev.complete && ev.finalTransaction.finality==='FINAL');
   const profiles=JSON.parse(await fs.readFile(path.join(__dirname,'offline-social-live-results.json'))).profiles;
-  const sources=new Set(['web/reframe-preview-flow.cjs']), snapshots={};
+  const sources=new Set(['web/reframe-preview-flow.cjs']), snapshots={}, fragments={};
   for(const [role, names] of [['a',['private-send']],['b',['private-read','payment-received']],['c',['payment-onward','payment-confirmed']]]) {
     const ctx=await chromium.launchPersistentContext(path.join(privateRoot,role),{channel:'msedge',headless:true,viewport:{width:900,height:760},reducedMotion:'reduce',serviceWorkers:'block'});
     try {
@@ -53,6 +53,7 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
           await p.evaluate(()=>{const messages=document.querySelector('#messages');for(const bubble of [...messages.children])if(!bubble.textContent.includes('Meet by the bookshop'))bubble.remove();});
           assert.equal(await p.locator('#messages>*').count(),1);
         }
+        fragments[name]=await p.locator('.conversation').innerHTML();
         snapshots[name]={};
         for(const theme of ['light','dark']) {
           await p.evaluate(async t=>{localStorage.setItem('lenz-home-theme',t);document.documentElement.dataset.theme=t;await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);},theme);
@@ -66,6 +67,8 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
       assert.equal(await snapshot(),before,'Reframing changed account data');
     } finally { await ctx.close(); }
   }
+  await fs.mkdir(path.join(__dirname,'.recordings'),{recursive:true});
+  await fs.writeFile(path.join(__dirname,'.recordings/preview-dom.json'),JSON.stringify(fragments,null,2)+'\n');
   ev.originalCaptures??=ev.captures;ev.originalSourceFiles??=ev.sourceFiles;ev.captures=snapshots;ev.sourceFiles={};
   for(const file of [...sources].sort())ev.sourceFiles[file]=sha(await fs.readFile(path.join(root,file)));
   ev.reframedAt=new Date().toISOString();

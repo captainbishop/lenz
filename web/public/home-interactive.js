@@ -23,17 +23,17 @@ for(const target of document.querySelectorAll('[data-tilt]')){
  target.addEventListener('pointerleave',reset); target.addEventListener('pointercancel',reset);
 }
 const views={
- wallet:{alt:'Recorded testnet flow: Amina pays Bola, Bola pays Chidi offline, Chidi reconnects and confirms',label:'Receive it. Pass it onward.',text:'Amina sends 1 tUSD to Bola. Bola passes that same value to Chidi while all three are offline. Chidi reconnects to confirm on NEAR.',link:'/money.html',action:'Open wallet'},
- chat:{alt:'Recorded offline message: encrypted by Amina, shared by file, opened by Bola',label:'A private message can travel offline.',text:'Amina saves an encrypted message and shares its file. Bola opens it offline. The message stays encrypted in storage; routing identities and timing remain visible.',link:'/chat.html',action:'Open conversations'},
- profile:{alt:'Lenz profile editor with private name and symbol options',label:'A profile can be as simple as a name.',text:'Start with a generated name and symbol, or choose your own photo. No phone number or real name is required.',link:'/money.html',action:'Choose your profile'}
+ wallet:{alt:'Illustrated testnet flow: Amina pays Bola, Bola pays Chidi offline, Chidi reconnects and confirms',label:'Receive it. Pass it onward.',text:'Amina sends 1 tUSD to Bola. Bola passes that same value to Chidi while all three are offline. Chidi reconnects to confirm on NEAR.',link:'/money.html',action:'Open wallet'},
+ chat:{alt:'Illustrated offline message: encrypted by Amina, shared by file, opened by Bola',label:'A private message can travel offline.',text:'Amina saves an encrypted message and shares its file. Bola opens it offline. The message stays encrypted in storage; routing identities and timing remain visible.',link:'/chat.html',action:'Open conversations'},
+ profile:{alt:'Lenz ID walkthrough: copy your address, verify a contact and start a private conversation',label:'One ID for your conversations.',text:'Share your Lenz ID. Add someone you know and start a private conversation.',link:'/money.html',action:'Share your Lenz ID'}
 };
 const tabs=[...document.querySelectorAll('#product-tabs [role=tab]')];
 function activate(tab){
  for(const item of tabs){item.setAttribute('aria-selected',String(item===tab));item.tabIndex=item===tab?0:-1;}
  const view=views[tab.dataset.view];setPreviewView(tab.dataset.view,view.alt);
- $('.product-screen .preview-top span:last-child').textContent=tab.dataset.view==='wallet'?'THE OFFLINE FLOW':tab.dataset.view==='chat'?'PRIVATE CONVERSATIONS':'YOUR PROFILE';
- $('#product-preview-caption').textContent=tab.dataset.view==='wallet'?'Recorded testnet flow':tab.dataset.view==='chat'?'Private message · recorded flow':'Profile preview';
- $('#product-preview-scope').textContent=tab.dataset.view==='wallet'?'Offline payments await confirmation.':tab.dataset.view==='chat'?'Opened by its recipient while offline.':'Disposable account · zero tUSD';
+ $('.product-screen .preview-top span:last-child').textContent=tab.dataset.view==='wallet'?'THE OFFLINE FLOW':tab.dataset.view==='chat'?'PRIVATE CONVERSATIONS':'YOUR LENZ ID';
+ $('#product-preview-caption').textContent=tab.dataset.view==='wallet'?'Testnet payment replay':tab.dataset.view==='chat'?'Private message replay':'Lenz ID walkthrough';
+ $('#product-preview-scope').textContent=tab.dataset.view==='wallet'?'Offline payments await confirmation.':tab.dataset.view==='chat'?'Opened by its recipient while offline.':'Public address · not an account backup';
  $('#product-title').textContent=view.label;$('#product-copy').textContent=view.text;$('#product-link').href=view.link;$('#product-link').textContent=`${view.action} ↗`;$('#product-panel').setAttribute('aria-labelledby',tab.id);
  if(!paused)$('#product-panel').animate([{opacity:.4,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:300,easing:'ease-out'});
 }

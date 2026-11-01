@@ -1,0 +1,4 @@
+{
+  "version": 1,
+  "relays": ["wss://nos.lol", "wss://relay.primal.net"]
+}

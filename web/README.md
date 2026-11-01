@@ -6,7 +6,7 @@ October 31: ordinary chat **Pay** now sends tUSD using the same encrypted vault/
 
 The wallet now uses plain actions and payment states. Raw signed-swap import and deposit-action export are on `/swap-tools.html`, outside normal navigation. `/wallet-lab.html` contains the external-signer experiment; MyNearWallet announced retirement on October 31, 2026, so it is not enabled as a product default. Read [connector status and verification](near-connector/README.md) before continuing signer work. These developer pages share the existing browser identity and encrypted vault.
 
-The homepage uses real application previews, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. Existing identities, messages and encrypted demo vaults remain preserved. The conversation background is a local SVG that also works offline in both themes.
+The homepage uses illustrated replays of tested application flows, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. Existing identities, messages and encrypted demo vaults remain preserved. The conversation background is a local SVG that also works offline in both themes.
 
 ## Name lookup
 
@@ -19,7 +19,7 @@ It does not link contacts, sign or send payments, or enable account recovery.
 
 ## Profiles and the standalone wallet
 
-Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, exchange contact cards, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. With automatic delivery enabled, Send saves the encrypted packet and wakes the carrier client. Offline packets survive reload and resume when connected. With delivery off, the app opens the file-sharing dialog. Neither mode implies blockchain confirmation. See [carrier setup and privacy](../carrier/README.md).
+Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, share Lenz IDs, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. With automatic delivery enabled, Send saves the encrypted packet and wakes the enabled delivery clients. Offline packets survive reload and resume when connected. With delivery off, the app opens the file-sharing dialog. Neither mode implies blockchain confirmation. See [internet delivery](../docs/internet-delivery.md) for existing public relays or [carrier setup and privacy](../carrier/README.md) for separately operated Lenz carriers.
 
 Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Pick a name for me in the wallet, or Continue privately in chat, generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.
 
@@ -193,3 +193,8 @@ The [identity page](public/brand/index.html) and [brand documentation](../brand/
 
 The recorded [layout checks](evidence/layout-results.txt) cover the branded pages.
 Current integration boundaries are listed in [development status](../docs/status.md).
+
+Lenz IDs contain both public keys and a checksum. They remain stable when the
+display name changes; an ID is not a recovery key. Copy/paste and older QR/profile
+imports use the same contact validation. See [browser evidence](lenz-id-browser-results.json)
+and [preview rendering](preview-rendering.md).

@@ -19,6 +19,9 @@ export async function encodeContact(profile) {
 }
 export async function decodeContact(text) {
   if (typeof text !== 'string' || new TextEncoder().encode(text).length > (text.trimStart().startsWith('{') ? 32000 : 2000)) throw new Error('This contact card is too large.');
+  text = text.trim();
+  if (text.startsWith('lenz1_')) return decodeLenzId(text);
+  if (/^[0-9a-f]{64}$/.test(text)) throw Error('This is a fingerprint. Ask them to share their full Lenz ID.');
   if (!text.startsWith(PREFIX)) return validateProfile(JSON.parse(text));
   const parts = JSON.parse(text.slice(PREFIX.length));
   if (!Array.isArray(parts) || ![3, 4].includes(parts.length)) throw new Error('This is not a supported contact card.');
@@ -61,4 +64,23 @@ export async function readContactFile(file) {
   }
   if (file.size > 32000) throw new Error('This contact file is too large.');
   return decodeContact(await file.text());
+}
+
+const LENZ_ID_PREFIX = 'lenz1_';
+// A portable address contains both public keys; a fingerprint alone cannot locate them.
+export async function encodeLenzId(profile) {
+  const p = await validateProfile(profile);
+  const raw = unhex(p.signingPublic+p.boxPublic);
+  const address = btoa(String.fromCharCode(...raw)).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
+  return LENZ_ID_PREFIX+address+'.'+p.id.slice(0,12);
+}
+export async function decodeLenzId(value) {
+  if (typeof value !== 'string' || !/^lenz1_[A-Za-z0-9_-]{174}\.[0-9a-f]{12}$/.test(value)) throw Error('This Lenz ID is incomplete or invalid.');
+  const [address, checksum] = value.slice(LENZ_ID_PREFIX.length).split('.');
+  const raw = Uint8Array.from(atob(address.replaceAll('-','+').replaceAll('_','/')+'=='),c=>c.charCodeAt(0));
+  const signingPublic=hex(raw.slice(0,65)),boxPublic=hex(raw.slice(65));
+  const id=await digest([CHAT_DOMAIN,signingPublic,boxPublic]);
+  const profile=await validateProfile({type:CHAT_DOMAIN,id,name:'Lenz '+id.slice(0,6),signingPublic,boxPublic});
+  if(id.slice(0,12)!==checksum || await encodeLenzId(profile)!==value)throw Error('This Lenz ID has a typo or changed characters.');
+  return profile;
 }

@@ -1,24 +1,23 @@
 {
-  "recordedAt": "2026-11-01T15:07:51.895Z",
-  "browser": "156.0.4314.58",
-  "encoder": "imageio-ffmpeg 0.6.0 / FFmpeg 7.1",
+  "recordedAt": "2026-11-01T18:00:53.839Z",
+  "renderer": "Hyperframes 0.8.226 / FFmpeg 9.0.2",
   "sourceFiles": {
     "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
     "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
     "web/public/brand/chat-pattern.svg": "f9fe47bf66ca966de4e76eb1c3cb8f53d1fb13c1722738691dc817626468b9d7",
     "web/public/brand/mark.svg": "d5afb1e7caa61dbd488543ca07c2d63f35b6699855027bb4c4a4f217bea2fc41",
-    "web/public/carrier-client.js": "5264823507603b98eda15f77cdc9f9ba26f47fd27166fe15fdc9e000173ac098",
+    "web/public/carrier-client.js": "8167b3dcc225a968629e9b53371c55a323ce9468de52477eae36f43d2e504dac",
     "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
-    "web/public/carrier-ui.js": "15c895bffb31ba0b31e771fb5b9866a11c6521d2faec0ac0712a53ebece5411c",
+    "web/public/carrier-ui.js": "38947ba4ce139d2700773d398994709caf73ecee193ed5888b156bda328d4e19",
     "web/public/chat-layout.css": "06049f7f1d0db78b76bb15c3c3daf3a9f00b5f2a77080b386f72f5fb7f53ff16",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/chat.css": "405cae0fc830c45d7ce2370446554f7c62667bced497e950ef6ac45ba11a71f6",
+    "web/public/chat.css": "23eda0aaeb8e7ce14832b7a12fbac6a14b59d5c3c4df053bc84219b751daa1a0",
     "web/public/chat.html": "d3dd401b63dceff8ff222e62e5684565a527ce72eb8a2b810a5ed47002f8c788",
     "web/public/chat.js": "ebb3f18c7e7bb9ce09f39cb963a7223b613dd445c4f84a3d821dbdf35d75559f",
-    "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
-    "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
-    "web/public/delivery-mode.js": "56ac3918925651cd90b2c83691b7f0b2f3fa8ff2af3a3116a3b048eb94dceca4",
+    "web/public/contact-card.js": "03a27e5df37f2ca57e47e8c433eadac6fee4de6bcf0b669838e43157940eda32",
+    "web/public/contact-ui.js": "210e310dfad908ba784afbe95df61561e075c07d54798c65051983ed8be2e82c",
+    "web/public/delivery-mode.js": "934fc4a6b4f80aae0da77412c669234b084d4024581c8dfce7c043bee8f1d42e",
     "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
     "web/public/near-chat.js": "ff6f06a9cd7f79e92740574b2f3a6df3c96f504f9483f8eee0cd95ae936ecc77",
@@ -26,10 +25,15 @@
     "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
     "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
     "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
+    "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
+    "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
+    "web/public/nostr-socket.js": "f11fb505e1b87d70a9d83a185383d34703ce99ba4c196871866512ff3a9e6225",
+    "web/public/nostr-vendor/nostr.js": "19d16a5d3c86c851c895e8e9f9e19656423a46f70b79bac4dfef4ccca76b63df",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "5438e2d33f33a7f2dc277f4b9f4d87af787b898dc587601be7f057a41ebbe3dc",
+    "web/public/profile-panels.js": "222235fbf60950d8834504c574179746153fad88a5f68a3eb9ab2b8f00fc65bb",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
@@ -37,113 +41,275 @@
     "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
     "web/public/wallet-feedback.js": "55cf85c4c634f6a800cbc6e3d7a324aa1b425fe9489d2077e4df1709b65ff3de",
-    "web/reframe-preview-flow.cjs": "d6a5c76e44ea5338f14531fd2780b359f7040a5bf1a040151fc8e2f2edf902b5",
-    "web/record-preview-videos.cjs": "38d6086d840086cb69c28b6123384edc90e618989fe8bc8d4b5da878d219ca5e",
-    "web/render-preview-stories.cjs": "3b70fdf49918fdb7609dfe7abf27532882535a5f9f258ec1d69f0d648af23bf6",
-    "web/preview-scene.html": "2a9d8106841566cd24f3ae659e713028f6bcbb2e4c3cfe570a50e779e60d4d29",
-    "web/preview-flow-results.json": "49a16ef9716a0362cf9e0124b8b1c6364606f7f87b6bc05b6dfbb93b0f0232cc",
-    "web/evidence/preview-replay/private-send-light.png": "8676a0c0cb549cb7adb581cd8b91cd2419e1d37ab2738fae49307f7183ffa354",
-    "web/evidence/preview-replay/private-read-light.png": "56b1b4b3aa649530875d819ff1fb71056b476940cccc536d1f8cb2e781aeb17c",
-    "web/evidence/preview-replay/payment-received-light.png": "7a338614bead583a28e91846806cbc908f3ab271a7e8ecc3a52d4c4ab4c21ef6",
-    "web/evidence/preview-replay/payment-onward-light.png": "b8b90bf5ebf5e67582fcd0aa7d74d96c57d97e3003cb30999c8a0b0bbaf5b2d0",
-    "web/evidence/preview-replay/payment-confirmed-light.png": "9a328b1f84a33286b2c0079f515b60654dd37d840e35f626ab34be3ba4f20243",
-    "web/public/money.html": "5a099c4db22efba9b2b97b195d2e2d9476616bd80e36b74d29293d7c2f53338e",
-    "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
-    "web/public/near-wallet.css": "4bc5e2fa6ba4cdca02371d872ae840c06762d25334a6755125f8f25eb895cf6e",
-    "web/public/money.js": "182aca40da9f36d5289cfa9ff5d3eaeff1affc42d9d6430ff79cd5858e9e2b76",
-    "web/public/near-wallet.js": "a15cc371e2d603ec89c9333a59bec5c8140abc6e965edff8ed3f5f050e73b4a4",
-    "web/public/rhea-wallet.js": "225504091816037e67a90002403156c07eb9c85aac444e9bade24b6c0f22098f",
-    "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
-    "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
-    "web/public/near-signer.js": "23e4cfedbd15b5c5bb512ca53c5d41a4bb7fd5ba82d257feb395914c76168388",
-    "web/public/rhea-config.json": "1d008748b1f8fff1da828aab3498448b3014ebff291df77c8d1ed13ededf961d",
-    "web/evidence/preview-replay/private-send-dark.png": "b846de1e78debc374bcb704f829435bc5b136239342c51e5a3666901834c4032",
-    "web/evidence/preview-replay/private-read-dark.png": "2849930602e8004cc0322d9981cf98cf58fd85cb81c615f02f1cb646a3963b8f",
-    "web/evidence/preview-replay/payment-received-dark.png": "2e78bc94ac9eccbe162780ec39ae8b153320240a5f339ad908d094115a0e1698",
-    "web/evidence/preview-replay/payment-onward-dark.png": "7e415954cf6761c11624a0ae58ddf2604c790d126e30447d90c08840ee28c04c",
-    "web/evidence/preview-replay/payment-confirmed-dark.png": "7de0cfab47a9d689c38852447e373a488996be53518c2ca8d57fc8fba2e3d5a3"
+    "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221",
+    "web/render-preview-stories.cjs": "070baf5e7474d81dc2d99e560c7f2b75bf1121378b5767a5b7a1bb53c88059be",
+    "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
+    "web/preview-story.css": "fef3eb18cc0e06bc772d4c7770d9007a763c5649c6fafd7b2eca1ebf09d4f005",
+    "web/preview-flow-results.json": "e5c24fba85d4e92fe3c14d0898ba49f8f8b90b0a2251b980a89506a66d56a59b",
+    "web/lenz-id-browser-results.json": "5b7a10635388605fb39e19193486b1996fe75f7f7951a17ed58d8de987de089a",
+    "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
+    "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
+    "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23"
   },
   "videos": [
     {
       "view": "chat",
       "theme": "light",
-      "seconds": 18,
+      "seconds": 21.5,
       "fps": 30,
-      "changingFrames": 540,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 302,
+      "states": [
+        {
+          "id": "write",
+          "start": 0,
+          "duration": 8,
+          "title": "Write it, even offline."
+        },
+        {
+          "id": "seal",
+          "start": 8,
+          "duration": 4.5,
+          "title": "Only Bola can open it."
+        },
+        {
+          "id": "carry",
+          "start": 12.5,
+          "duration": 4.5,
+          "title": "Share over a local connection."
+        },
+        {
+          "id": "open",
+          "start": 17,
+          "duration": 4.5,
+          "title": "Bola reads it. Still offline."
+        }
+      ],
+      "sceneHashes": [
+        "a54c70894917e8191210b2ae903c086fab43888a03e1260751fb35c4c74bdd0b",
+        "1a1908808e7149558e27d86f50f9168c20c20beb54cd2dbbe9730f8e50791f33",
+        "c9d63379afe97fbb139caf64c751994f79ef32834a5c19ccd7f4cf7bf7030e1d",
+        "1e96eb0cd77b3bc0674203f5eed53e91b7dc9cd434fbff33bcd6e64dc71185a4"
+      ],
       "file": "web/public/previews/chat-light.mp4",
-      "sha256": "085db29e46a6e33f215f756924d6f0a23f7804d0ad51af466f7cd95757b062c7",
+      "sha256": "92acd8a34e584d3f1a05d43513aebcbeaf1d017c391d14d472ef1365ca4095b7",
       "poster": "web/public/previews/chat-light.webp",
-      "posterSha256": "da052609f0ac51a32d8ce95883f4d336bcc3edaadcbb520a2a96219ca8b5674c"
+      "posterSha256": "b85ea07e8cd127fb030474a4dd5a3e855b33e21bc954275f1b434af45cce8dde"
     },
     {
       "view": "wallet",
       "theme": "light",
-      "seconds": 21,
+      "seconds": 18,
       "fps": 30,
-      "changingFrames": 630,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 181,
+      "states": [
+        {
+          "id": "pay",
+          "start": 0,
+          "duration": 4.5,
+          "title": "Amina pays Bola."
+        },
+        {
+          "id": "onward",
+          "start": 4.5,
+          "duration": 4.5,
+          "title": "Bola passes it to Chidi."
+        },
+        {
+          "id": "pending",
+          "start": 9,
+          "duration": 4.5,
+          "title": "Reconnect when you can."
+        },
+        {
+          "id": "settled",
+          "start": 13.5,
+          "duration": 4.5,
+          "title": "Now it’s confirmed."
+        }
+      ],
+      "sceneHashes": [
+        "8ead5d2d5605f8e936398143dfb3e56e91e32bd148d57abf949c4b1666cb6ee8",
+        "aecce48b5d886cb150fa6f4053e315488066a5a4d27cb6e84483713c5d3c1d10",
+        "4fe903855ca31b24f08fce9c4a4af865474c5d56047a6aea2f7f05f284df7ce9",
+        "9b7a85efcb2877ee68caa6bc750f32d17dce219d031e910ca6c0345da573666d"
+      ],
       "file": "web/public/previews/wallet-light.mp4",
-      "sha256": "889f0143a6f46e6ccbf0615e2bd586c30ab1d6e79ac7cab52baea07d238f85c1",
+      "sha256": "e7adedc7d51fce7aa2ad2f0ec904b5e700cc3844facd87b31351b355ff28aced",
       "poster": "web/public/previews/wallet-light.webp",
-      "posterSha256": "27872bbc038bc3e168f3016162015b93fead48fe7a88a8a26923446446a9349f"
+      "posterSha256": "60771652cd82847a06d8921186c0ad16d9bdf6b1761f6542a7ec73a59ec1f466"
     },
     {
       "view": "profile",
       "theme": "light",
-      "seconds": 14,
+      "seconds": 13.5,
       "fps": 30,
-      "changingFrames": 420,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 201,
+      "states": [
+        {
+          "id": "share",
+          "start": 0,
+          "duration": 4.5,
+          "title": "Start with your Lenz ID."
+        },
+        {
+          "id": "add",
+          "start": 4.5,
+          "duration": 4.5,
+          "title": "Paste it. Check it together."
+        },
+        {
+          "id": "connected",
+          "start": 9,
+          "duration": 4.5,
+          "title": "You’re ready to talk."
+        }
+      ],
+      "sceneHashes": [
+        "4645c4b062c271f77c5e4bcd6e720ed690444657c84edc8c43f15fe4f3d439b1",
+        "01924a93c81676600db2af2717a701075f1741461f6d4773cea8244c3eea627a",
+        "9d53d42e8b398411aa7a10bdf9c59278ae0647dbf30c55e86b7de465d82ea489"
+      ],
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "9da69929074f0994c53eae1a2f25997b88dd44a70c1a260172b88d7cf434d154",
+      "sha256": "ab844e10e5ab20b333acf5027b1283eee78dc7debd5420fba9955304fcf3def0",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "3854b653220c4122e4d4c1321cade4d402e998fccd84af7345384dbde8d681a3"
+      "posterSha256": "fa6dd4632e3e1057291655ce39dc87de0e5967aa75c3234988ebad97bee351ce"
     },
     {
       "view": "chat",
       "theme": "dark",
-      "seconds": 18,
+      "seconds": 21.5,
       "fps": 30,
-      "changingFrames": 540,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 309,
+      "states": [
+        {
+          "id": "write",
+          "start": 0,
+          "duration": 8,
+          "title": "Write it, even offline."
+        },
+        {
+          "id": "seal",
+          "start": 8,
+          "duration": 4.5,
+          "title": "Only Bola can open it."
+        },
+        {
+          "id": "carry",
+          "start": 12.5,
+          "duration": 4.5,
+          "title": "Share over a local connection."
+        },
+        {
+          "id": "open",
+          "start": 17,
+          "duration": 4.5,
+          "title": "Bola reads it. Still offline."
+        }
+      ],
+      "sceneHashes": [
+        "a2426f1e173c6ea984dceba6edbb33b09999aa1c0cb341b4fe0c5cf4f0ad4273",
+        "af66618f1b340dd863c430dcde0b23c1cf86ec56ed671c6b91d7b74144189b3d",
+        "75053fd369ce19bb11b4907e2c2542685384abd2256a08e7f1dbf999c6fbf747",
+        "885e5bd32bc2f8f711108242d267cd7a3b3e701ee7cf6558cbd2687a5d10c3ad"
+      ],
       "file": "web/public/previews/chat-dark.mp4",
-      "sha256": "bea9f7bc1e8488a9c69e49fcbec27bf3b882aa52715df53a3c513779febfd602",
+      "sha256": "67c63c29cd3d409775347db57dd963aa8f9771f32246bf85ecf73e9a43c6bc3c",
       "poster": "web/public/previews/chat-dark.webp",
-      "posterSha256": "4d6d5583d18201c7690128ae625788de424868f709593a993d7d43e0df5373f2"
+      "posterSha256": "fb0aa6b25ad01529395ea6c3e44681669565e56dade1189818baa30c50f8df14"
     },
     {
       "view": "wallet",
       "theme": "dark",
-      "seconds": 21,
+      "seconds": 18,
       "fps": 30,
-      "changingFrames": 630,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 185,
+      "states": [
+        {
+          "id": "pay",
+          "start": 0,
+          "duration": 4.5,
+          "title": "Amina pays Bola."
+        },
+        {
+          "id": "onward",
+          "start": 4.5,
+          "duration": 4.5,
+          "title": "Bola passes it to Chidi."
+        },
+        {
+          "id": "pending",
+          "start": 9,
+          "duration": 4.5,
+          "title": "Reconnect when you can."
+        },
+        {
+          "id": "settled",
+          "start": 13.5,
+          "duration": 4.5,
+          "title": "Now it’s confirmed."
+        }
+      ],
+      "sceneHashes": [
+        "9de90ec684f4a60aa0772d649a4a139bfa4bc4fc4bc100e8383d532e61afb669",
+        "2ddf44387628f61853dc98c850f8a69533f80a788bb6939bcdea67eb4b1949b0",
+        "3be17aa0c395b5fa338ec02211beccfe71947a51d3587d4eefbca9288a39a3c6",
+        "475cab26d288533c918d6c04818695328768018b074c0f96529c3f2f5abfcadc"
+      ],
       "file": "web/public/previews/wallet-dark.mp4",
-      "sha256": "c4d272c30eff40d4167c55199e57c8c81275e88b0eec5cf8f967081b53a9b2c4",
+      "sha256": "72a50c11a921e239edf9f43d51484eb834b6ea27c1c8b40d15e08924191cd3e5",
       "poster": "web/public/previews/wallet-dark.webp",
-      "posterSha256": "5a03d30b826280f3b752ee1b11b4816733c8e40892321439f3391aef0281c0b2"
+      "posterSha256": "4a1be3c49c2f46df309cd027cf06f586af8876101cf7728a49357ded528cee10"
     },
     {
       "view": "profile",
       "theme": "dark",
-      "seconds": 14,
+      "seconds": 13.5,
       "fps": 30,
-      "changingFrames": 420,
-      "width": 600,
-      "height": 660,
+      "width": 1200,
+      "height": 1320,
+      "changingFrames": 204,
+      "states": [
+        {
+          "id": "share",
+          "start": 0,
+          "duration": 4.5,
+          "title": "Start with your Lenz ID."
+        },
+        {
+          "id": "add",
+          "start": 4.5,
+          "duration": 4.5,
+          "title": "Paste it. Check it together."
+        },
+        {
+          "id": "connected",
+          "start": 9,
+          "duration": 4.5,
+          "title": "You’re ready to talk."
+        }
+      ],
+      "sceneHashes": [
+        "eef0c2c6a16a48a27ff203b10d567aeea79111024fc8c46845e45bd832055ae4",
+        "60e4aa4c0062502d8eb1e00494cc3a698e744d60d8db38c6eff1efbd39a69f4b",
+        "7869226c50fb708f31399ea1a4bdba38e6b64d3d3c9e499843390cb12a64a0a9"
+      ],
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "a343fd901113d8d3630c37c8d5172ddafd0ff631ee4630683e2168591c30698e",
+      "sha256": "96d1983e80324f8b3d1873a762d632063fcfa0770a506628dd033a898ff34f06",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "3156dbe7db001eaecc4fa32dda3f145f1af7c0dc645e5d78928a7d537238578c"
+      "posterSha256": "e23848c23e8eeea14e74ca440da57cc67530c8d3f8ccb16eb8162d83afbfc104"
     }
   ],
   "apiRequests": 0,
   "errors": [],
-  "scope": "Edited motion sequences from actual isolated Edge UI captures. The chat/payment source run used existing backed testnet tUSD and final NEAR receipts; see preview-flow-results.json. Rendering repeats no financial action. Profile changes use a fresh zero-balance identity. Crops, explanatory graphics and timing are presentation edits, not live transactions or automatic mesh transport."
+  "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport."
 }

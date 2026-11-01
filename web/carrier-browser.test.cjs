@@ -35,7 +35,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     });},{contract,to:profiles[1].id});
     await check('opt-in leaves old history, identity and wallet ciphertext intact',async()=>{
       const before=await Promise.all(pages.map(async p=>{const s=await read(p);return{profile:s.identity.profile,vault:s.nearBox,messages:s.messages};}));
-      for(const p of pages){await p.reload();await idle(p);await p.locator('#carrier-open').click();await p.locator('#carrier-enabled').check();await p.waitForFunction(()=>document.querySelector('#carrier-status').textContent.includes('Automatic delivery is on'));await p.locator('#carrier-close').click();}
+      for(const p of pages){await p.reload();await idle(p);await p.locator('#carrier-open').click();await p.locator('#carrier-options summary').click();await p.locator('#carrier-enabled').check();await p.waitForFunction(()=>document.querySelector('#carrier-status').textContent.includes('Automatic delivery is on'));await p.locator('#carrier-close').click();}
       for(const [i,p]of pages.entries()){const s=await read(p);assert.deepEqual({profile:s.identity.profile,vault:s.nearBox,messages:s.messages},before[i]);}
       assert.equal((await read(a)).carrier.excluded.length,1);assert.equal((await read(b)).messages.length,0);
       for(const node of nodes)assert.equal(node.store.all().length,0);
@@ -75,7 +75,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     });
     await check('failed browser persistence prevents any carrier request',async()=>{
       // Pause the automatic worker, then exercise its production client with a failing commit.
-      await c.locator('#carrier-open').click();await c.locator('#carrier-enabled').uncheck();await c.locator('#carrier-close').click();
+      await c.locator('#carrier-open').click();await c.locator('#carrier-options').evaluate(n=>n.open=true);await c.locator('#carrier-enabled').uncheck();await c.locator('#carrier-close').click();
       const count=await c.evaluate(async({origin,contract})=>{
         const {createCarrierClient,setCarrierEnabled}=await import('/carrier-client.js');await setCarrierEnabled(true);let count=0;
         const client=createCarrierClient({config:{version:1,carriers:[origin]},contract,post:async()=>{count++;throw Error('unexpected network');}});

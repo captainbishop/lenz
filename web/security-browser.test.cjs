@@ -13,17 +13,22 @@ const checks=[];
     page.on('pageerror',e=>errors.push(e.message));
     await page.goto(`http://127.0.0.1:${attacker.address().port}`);
     if(baseline){
-      await page.frameLocator('iframe').getByRole('button',{name:'Continue privately',exact:true}).click();
+      await page.frameLocator('iframe').locator('#wallet-private').click();
       await page.frameLocator('iframe').locator('#wallet-content').waitFor();
       checks.push('baseline: foreign-origin frame can display wallet and activate disposable profile creation');
     }else{
       // Completion of the iframe load is awaited by goto; a rejected document has no app DOM.
       assert.equal(await page.frameLocator('iframe').locator('#wallet-name').count(),0);
-      assert.equal(await page.frameLocator('iframe').getByRole('button',{name:'Continue privately',exact:true}).count(),0);
+      assert.equal(await page.frameLocator('iframe').locator('#wallet-private').count(),0);
       checks.push('foreign-origin framing cannot display or activate the wallet');
     }
     await page.goto(base+'/money.html');
-    if(await page.getByRole('button',{name:'Continue privately',exact:true}).count())await page.getByRole('button',{name:'Continue privately',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));
+    if(!baseline){const policy=(await page.request.get(base+'/money.html')).headers()['content-security-policy'];
+      assert(policy.includes('wss://nos.lol')&&policy.includes('wss://relay.primal.net'));
+      const homePolicy=(await page.request.get(base+'/')).headers()['content-security-policy'];assert(!homePolicy.includes('wss://'));}
+
+    if(await page.locator('#wallet-private').count())await page.locator('#wallet-private').click();
     await page.locator('#wallet-content').waitFor();
     const injection=await page.evaluate(async()=>{
       const violations=[];document.addEventListener('securitypolicyviolation',e=>violations.push(e.violatedDirective));

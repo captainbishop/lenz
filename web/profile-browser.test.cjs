@@ -72,7 +72,7 @@ async function snapshot(page) {
     });
     await check('contact file carries the photo and an existing contact update requires confirmation', async () => {
       await a.locator('#show-card').click(); assert(await a.locator('#photo-sharing-note').isVisible());
-      const pending = a.waitForEvent('download'); await a.locator('#save-card').click();
+      await a.locator('#share-contact details').evaluate(n=>n.open=true); const pending = a.waitForEvent('download'); await a.locator('#save-card').click();
       assert.deepEqual(JSON.parse(await readFile(await (await pending).path(), 'utf8')), photoProfile);
       const qr = await a.evaluate(async p => (await import('/contact-card.js')).decodeContact(await (await import('/contact-card.js')).encodeContact(p)), photoProfile);
       assert.equal(qr.id, original.id); assert.equal(qr.avatar, 'wave'); assert(!qr.photo);

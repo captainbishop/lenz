@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-01T15:48:57.646Z",
+  "scope": "Fresh disposable Edge context, generated test identities and encrypted test messages only. Public relay write acceptance and same-session readback; not retention, delayed cross-device delivery or financial settlement.",
+  "results": [
+    {
+      "origin": "wss://relay.damus.io",
+      "accepted": false,
+      "retrieved": false,
+      "validated": false,
+      "error": "Relay connection failed."
+    },
+    {
+      "origin": "wss://nos.lol",
+      "accepted": true,
+      "retrieved": true,
+      "validated": true
+    },
+    {
+      "origin": "wss://relay.primal.net",
+      "accepted": true,
+      "retrieved": true,
+      "validated": true
+    },
+    {
+      "origin": "wss://offchain.pub",
+      "accepted": false,
+      "retrieved": false,
+      "validated": false,
+      "error": "Relay refused the encrypted file."
+    }
+  ]
+}

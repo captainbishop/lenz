@@ -6,8 +6,8 @@ import { DELIVERY_RECEIPT, prepareDeliveryReceipt } from './delivery-receipts.js
 import { isNearPayment } from './near-payment-service.js';
 import { readNearVault, nearLedger, transferTerms } from './near-protocol.js';
 
-const savedPackets = state => state.messages.flatMap(r=>[r.packet,r.receiptToShare].filter(p=>p?.from===state.identity?.profile.id));
-async function sendable(state,packet,contract){
+export const savedPackets = state => state.messages.flatMap(r=>[r.packet,r.receiptToShare].filter(p=>p?.from===state.identity?.profile.id));
+export async function sendable(state,packet,contract){
   const contact=state.contacts.find(p=>p.id===packet.to);if(!contact)return false;
   const payload=await openMessage(state.identity,contact,packet);
   if(isNearPayment(payload)){

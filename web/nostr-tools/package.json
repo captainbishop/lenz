@@ -1,0 +1,16 @@
+{
+  "name": "lenz-nostr-transport",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "nostr-tools": "2.25.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "ws": "8.22.1"
+  }
+}

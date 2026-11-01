@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-01T17:28:47.409Z",
+  "checks": [
+    "Lenz ID is the primary share action and copies as an address",
+    "pasting and verifying a Lenz ID enables encrypted messages with the existing keys",
+    "Lenz ID sharing fits both themes without changing keys or wallet storage"
+  ],
+  "errors": [],
+  "scope": "Two disposable Edge profiles; clipboard, typed address, existing WebCrypto keys and actual encrypted message round trip. No financial API or account recovery."
+}

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-01T17:12:56.877Z",
+  "checks": [
+    "public delivery requires separate consent and excludes existing history",
+    "offline wallet send persists exact ciphertext, survives reload, and relay OK does not mean delivery",
+    "recipient catches up later, accepts a payment once and sends an authenticated receipt",
+    "received value can pass onward offline through the wallet send button",
+    "chat Send delivers a fragmented encrypted message after reconnect",
+    "authenticated fragments from different relays complete one message",
+    "failed IndexedDB commit opens zero relay connections",
+    "cross-tab opt-out restores file handover and never queues the new message",
+    "a recovered relay clears its unavailable status",
+    "delivery settings fit light, dark and mobile layouts; identities and chain state are unchanged"
+  ],
+  "errors": [],
+  "apiRequests": [],
+  "scope": "Three disposable Edge profiles, actual WebCrypto and IndexedDB, offline service-worker reloads and two real loopback WebSocket relays, one refusing writes. Payment backing is a fixture. No chain call, funding, deployment, physical devices or native Bluetooth."
+}

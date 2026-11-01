@@ -236,12 +236,60 @@ The automated gate detects content drift, including less-visible components. It 
 
 ## Video previews
 
-`node web/record-preview-videos.cjs` renders six silent 600 × 660, 30-fps H.264 clips. Chat and payments use the [verified source flow and read-only presentation replay](preview-motion.md); profile editing uses fresh zero-balance accounts. Rendering sends no financial request. Original captures, edited frames and receipts are distinct in the evidence. The installed encoder, private checkpoints and intermediate media remain ignored. Use `--frames` to review the compositions before encoding.
+`node web/record-preview-videos.cjs` exports six checked 1200 × 1320, 30-fps H.264 compositions. Chat and payments use the [verified source flow and read-only presentation replay](preview-motion.md); Lenz ID scenes use a fresh zero-balance account. [Rendering setup](../web/preview-rendering.md). Rendering sends no financial request. Original captures, edited frames and receipts are distinct in the evidence. The installed encoder, private checkpoints and intermediate media remain ignored. Use `--frames` to review the compositions before encoding.
 
-The homepage loops the matching video for its theme and selected panel. It has one small pause/play button per video, pauses videos when off-screen or hidden, and respects reduced motion. A viewer's account is never opened by playback. There is no embedded wallet or broadened framing permission.
+The homepage loops the matching video for its theme and selected panel. Click or tap a preview to pause/resume. Contextual controls and arrow keys move between scenes. Videos pause when off-screen or hidden and respect reduced motion. A viewer's account is never opened by playback. There is no embedded wallet or broadened framing permission.
 
 `node web/verify-preview-videos.mjs` checks video/poster hashes against the recorded source snapshot and checks the homepage's cache revision. After recording or changing homepage code, `--update-cache` updates the worker marker only after these media/source checks pass. The staged freshness gate checks the same source and media provenance. It cannot replace visual review: watch the clips and inspect both themes before publishing. The freshness gate now includes source PNGs, so an altered capture also requires review.
 
 `node web/video-previews.test.cjs` checks actual decoding/playback, theme/tab switching, pause behavior, narrow layouts, offline playback and unchanged existing account data. [Recording evidence](../web/preview-recording.json) and [browser checks](../web/video-preview-results.json). Windows Edge coverage is not evidence of Safari/iPhone or Android behavior.
 
 The October 31 preview correction restores pointer tilt on a stable parent region and keeps controls outside the transformed surface. It fixes the actual app’s dark payment-state contrast and advances the app worker cache version. New browser coverage checks six viewport sizes in both themes, stationary controls and reduced motion. Read `preview-motion.md` for the source run, replay boundary and retained capture failures. No contract, Intents, Aurora, Zcash, proof or recovery code changed in this pass; their gates above remain open.
+
+## November 1 internet delivery
+
+[Public relay delivery](../docs/internet-delivery.md) adds a separate privacy choice,
+standard NIP-59 wrappers around authenticated Lenz fragments, durable exact-event
+retries and existing payment/receipt validation. Fifteen protocol/socket checks,
+including a guard-removal control, pass. Disposable Edge evidence is separate from
+the public relay acceptance/readback check. nos.lol and Primal accepted test
+ciphertext; Damus failed to connect and offchain.pub refused it. The two working
+services are the defaults. The fresh dependency audit reports zero advisories
+after a transient registry DNS failure.
+
+The app worker is `proof-u-chat-v37-lenz-id` with 63 routes. Failed and
+successful upgrades preserve identity, encrypted vault and an expired reservation.
+The existing three-carrier suite still passes eleven checks. No financial API,
+funding, deployment or existing account migration is part of this transport work.
+NEAR, Rhea, Aurora, Intents, Zcash, private settlement and recovery requirements
+retain their existing scope. Public transport does not make asset settlement private.
+
+## Lenz ID and product preview verification — November 1, 2026
+
+Sharing now starts with a stable public Lenz ID. Four codec checks and three
+browser checks verify both public keys, canonical encoding, typo rejection,
+clipboard/paste, contact confirmation and an encrypted message round trip.
+Nine existing profile checks and two cache-upgrade checks preserve identities,
+encrypted history, vaults and reservations. No account-recovery claim is added.
+
+Six Hyperframes compositions passed runtime, layout and contrast checks. Each
+video has three or four distinct product scenes, rendered at 1200 × 1320. The
+exporter checks UTF-8 text, decoded motion, scene regions, dimensions and duration.
+All 22 decoded scene frames were reviewed in light/dark phone sheets. The six
+files total 3.00 MB. Six browser checks cover playback, exact offline seeking, scene controls, themes,
+visibility and unchanged account storage. The saved flow was replayed without
+financial requests or changes to its three test accounts.
+
+Public delivery also passed fifteen Node and ten browser checks with the final
+contact UI, plus three browser security checks. Relay acceptance remains distinct
+from recipient delivery and financial settlement. The current videos are labelled
+as illustrated replays. Private settlement, recovery, native mesh, Aurora execution
+and NEAR Intents execution retain their separate open requirements.
+
+Video seeking uses single-byte-range responses from both the local server and
+offline cache. The range parser checks open-ended and suffix ranges, rejects
+unsatisfiable requests, and returns exact partial bytes. Browser checks assert
+the requested time and scene boundary; a seek event alone is insufficient.
+Offline scenes use a crossed-out Wi-Fi symbol, and the complete message is typed
+before it appears in the sent bubble. The QR panel keeps dark text on white in
+both themes.

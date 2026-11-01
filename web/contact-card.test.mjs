@@ -29,3 +29,21 @@ test('legacy files retain their key binding; corrupt and oversized cards fail', 
   parts[1] = btoa(String.fromCharCode(...new Uint8Array(65).fill(4)));
   await assert.rejects(decodeContact('proof-u:contact:v1:' + JSON.stringify(parts)));
 });
+
+test('Lenz ID round trip preserves both keys and stays stable across profile edits',async()=>{
+  const {encodeLenzId,decodeLenzId}=await import('./public/contact-card.js');
+  const {profile}=await createIdentity('Amina');
+  const id=await encodeLenzId(profile),decoded=await decodeLenzId(id);
+  assert.equal(decoded.id,profile.id);assert.equal(decoded.signingPublic,profile.signingPublic);assert.equal(decoded.boxPublic,profile.boxPublic);
+  assert.equal(await encodeLenzId({...profile,name:'Bola',avatar:'moon'}),id);
+  assert.equal((await decodeContact('  '+id+'  ')).id,profile.id);
+  assert.equal(id.length,193);
+});
+test('Lenz IDs reject typos, missing keys, wrong checksums and bare fingerprints',async()=>{
+  const {encodeLenzId,decodeLenzId}=await import('./public/contact-card.js');
+  const {profile}=await createIdentity('Amina'),id=await encodeLenzId(profile);
+  await assert.rejects(decodeLenzId(id.slice(0,-1)));
+  await assert.rejects(decodeLenzId(id.slice(0,-12)+'0'.repeat(12)));
+  await assert.rejects(decodeLenzId(id.slice(0,9)+(id[9]==='a'?'b':'a')+id.slice(10)));
+  await assert.rejects(decodeContact(profile.id),/full Lenz ID/);
+});

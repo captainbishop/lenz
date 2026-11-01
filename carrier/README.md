@@ -29,7 +29,7 @@ cd web
 node server.mjs
 ```
 
-In chat or wallet, open **Delivery** and enable automatic delivery. Both people
+In chat or wallet, open **Delivery**, expand **Additional carriers** and enable delivery. Both people
 must first verify each other's contact cards. Only new files are queued; enabling
 does not upload existing history. With delivery enabled, **Send** saves the message
 or payment and starts delivery without a file-sharing dialog. Offline sends stay
@@ -68,7 +68,8 @@ resolve the base manifest even when layers are cached.
 
 For operator independence, use separate hosts and administrators. A three-process
 local exercise establishes transport behavior, not independent remote operation.
-No hosted carriers or public bootstrap registry are provided.
+No hosted Lenz HTTP carriers or public bootstrap registry are provided.
+For delivery through existing public Nostr services, use [internet delivery](../docs/internet-delivery.md).
 
 1. Each operator obtains a server and HTTPS domain, selects up to four peer
    carrier origins, and agrees which Lenz web origins may access its mailbox API.
@@ -147,7 +148,9 @@ MessageDeduplicationService, NostrTransport and BLE fragment handling. Its disti
 between stored, carried and recipient-acknowledged mail informs the delivery model.
 No Bitchat implementation was copied. This Lenz HTTP protocol does not interoperate
 with Bitchat's BLE/Noise or proprietary Nostr private envelopes. Native BLE discovery,
-physical couriers, fragment handling and actual Android/iPhone tests remain open.
+physical couriers and actual Android/iPhone tests remain open. The separate
+[Nostr transport](../docs/internet-delivery.md) uses standard NIP-59 wrapping and bounded
+Lenz fragments; it does not use Bitchat's proprietary private-message format.
 
 ## Verification
 

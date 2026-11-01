@@ -1,10 +1,10 @@
 import { readState } from './chat-store.js';
 
-let configured = false, enabled = false;
+let configured = false, publicConfigured = false, enabled = false;
 export const automaticDelivery = () => enabled;
-export function updateDeliveryMode(available, state) {
-  configured = available;
-  const next = !!(configured && state.identity && state.carrier?.enabled);
+export function updateDeliveryMode(available, state, publicAvailable = false) {
+  configured = available; publicConfigured = publicAvailable;
+  const next = !!(state.identity && ((configured && state.carrier?.enabled) || (publicConfigured && state.nostr?.enabled)));
   if (next === enabled) return;
   enabled = next;
   dispatchEvent(new Event('lenz-delivery-mode'));
@@ -12,7 +12,9 @@ export function updateDeliveryMode(available, state) {
 // Check persisted consent again: another tab may have disabled delivery.
 export async function requestAutomaticDelivery(packet) {
   const state = await readState();
-  if (!configured || !state.carrier?.enabled || state.carrier.excluded.includes(packet.id)) return false;
+  const local = configured && state.carrier?.enabled && !state.carrier.excluded.includes(packet.id);
+  const internet = publicConfigured && state.nostr?.enabled && !state.nostr.excluded.includes(packet.id);
+  if (packet.from !== state.identity?.profile.id || (!local && !internet)) return false;
   dispatchEvent(new Event('lenz-delivery-ready'));
   return true;
 }

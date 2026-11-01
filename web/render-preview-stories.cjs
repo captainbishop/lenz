@@ -1,78 +1,84 @@
-// Edited motion from actual UI evidence. This renderer makes no transactions.
-const { chromium } = require('playwright'), sharp = require('sharp');
-const { spawn } = require('node:child_process');
-const fs = require('node:fs/promises'), path = require('node:path');
-const { createHash } = require('node:crypto'), assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..'), base = 'http://127.0.0.1:4173', output = path.join(__dirname, 'public/previews');
-const encoder = process.env.LENZ_FFMPEG || path.join(root, 'tooling/.preview-runtime/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe');
-const sha = b => createHash('sha256').update(b).digest('hex');
-async function encode(page, file) {
-  await page.bringToFront();
-  const seconds = await page.evaluate(() => duration), frames = seconds * 30, unique = new Set();
-  const child = spawn(encoder, ['-y','-loglevel','error','-f','image2pipe','-framerate','30','-i','pipe:0','-an','-vf','sidedata=mode=delete:type=ICC_PROFILE,scale=in_range=pc:out_range=tv:out_color_matrix=bt709','-c:v','libx264','-preset','medium','-crf','20','-pix_fmt','yuv420p','-color_range','tv','-colorspace','bt709','-color_primaries','bt709','-color_trc','bt709','-map_metadata','-1','-movflags','+faststart',file], { windowsHide: true, stdio: ['pipe','ignore','pipe'] });
-  let error = ''; child.stderr.on('data', b => error += b); child.stdin.on('error', e => error += e.message);
-  const done = new Promise((resolve,reject) => { child.on('error',reject); child.on('close',code => code === 0 ? resolve() : reject(Error(error))); });
-  try {
-    for(let frame=0;frame<frames;frame++) {
-      await page.evaluate(t=>window.render(t),frame/30);
-      const data=await page.screenshot({type:'jpeg',quality:96}); unique.add(sha(data));
-      if(!child.stdin.write(data))await new Promise(resolve=>child.stdin.once('drain',resolve));
-    }
-  } finally { child.stdin.end(); await done; }
-  assert(unique.size > 90, `Insufficient distinct motion frames: ${unique.size}`);
-  return { seconds, fps: 30, changingFrames: unique.size };
-}
-(async () => {
-  const flow = JSON.parse(await fs.readFile(path.join(__dirname, 'preview-flow-results.json')));
-  assert(flow.complete && flow.checks.length === 6 && flow.receipts.length === 2);
-  assert.equal(flow.receipts[1].input, flow.receipts[0].id + ':0');
-  const sourceFiles = { ...flow.sourceFiles }, errors = [], api = [], videos = [];
-  for (const [file, expected] of Object.entries(sourceFiles)) assert.equal(sha(await fs.readFile(path.join(root,file))), expected, 'Captured source changed: '+file);
-  for (const file of ['web/record-preview-videos.cjs','web/render-preview-stories.cjs','web/preview-scene.html','web/preview-flow-results.json']) sourceFiles[file] = sha(await fs.readFile(path.join(root,file)));
-  const browser = await chromium.launch({ headless: true, channel: 'msedge' });
-  try {
-    for (const theme of ['light','dark']) {
-      const context = await browser.newContext({ viewport: { width: 600, height: 660 }, reducedMotion: 'reduce', colorScheme: theme });
-      await context.addInitScript(t => localStorage.setItem('lenz-home-theme',t),theme);
-      const p = await context.newPage(); p.on('pageerror',e=>errors.push(e.message));
-      context.on('request',r=>{ const u=new URL(r.url()); if(u.origin!==base)return; if(u.pathname.startsWith('/api/'))api.push(u.pathname); if(/\.(js|css|html|json|svg)$/.test(u.pathname))sourceFiles['web/public'+u.pathname]??=null; });
-      const images = {};
-      for (const [name, captures] of Object.entries(flow.captures)) {
-        const shot = captures[theme], data=await fs.readFile(path.join(root,shot.file)); assert.equal(sha(data),shot.sha256); sourceFiles[shot.file]=shot.sha256;
-        images[name]='data:image/png;base64,'+data.toString('base64');
-      }
-      // Profile edits use a new unfunded account, never an existing test wallet.
-      await p.goto(base+'/money.html'); await p.locator('#wallet-private').click(); await p.locator('#wallet-content').waitFor();
-      const identity=()=>p.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();return {id:s.identity.profile.id,key:s.identity.profile.signingPublic};});
-      const before=await identity(); await p.locator('#show-profile').click();
-      await p.addStyleTag({content:`#edit-profile{width:520px!important;padding:24px!important;border-radius:0!important;max-height:none!important} #edit-profile .quiet,.profile-storage,.profile-privacy,.name-tools,#edit-profile .file-label,#remove-photo{display:none!important} #edit-profile .dialog-top h2{font-size:20px} .profile-photo-row{margin:8px 0!important} .profile-photo-row .avatar{width:48px;height:48px} .avatar-picker{margin:0 0 8px!important} .avatar-option{width:42px;height:42px} .avatar-option img{width:30px;height:30px} #profile-name{padding:6px} #save-profile{padding:8px;margin-top:12px} #edit-profile .dialog-top{margin:0} #edit-profile label{margin-top:8px}`});
-      async function profileShot(name) {
-        const data=await p.locator('#edit-profile').screenshot();
-        images[name]='data:image/png;base64,'+(await sharp(data).resize(520,350,{fit:'contain',background:theme==='dark'?'#20382b':'#fff'}).png().toBuffer()).toString('base64');
-      }
-      await profileShot('profile-start'); await p.locator('#avatar-options button').nth(1).click(); await profileShot('profile-symbol');
-      await p.locator('#profile-name').fill('Amina'); await p.locator('#save-profile').click(); await p.locator('#edit-profile').waitFor({state:'hidden'});
-      await p.locator('#show-profile').click(); await profileShot('profile-name'); assert.deepEqual(await identity(),before); assert.equal(await p.locator('#near-total').textContent(),'0');
-      const scene=await context.newPage(); scene.on('pageerror',e=>errors.push(e.message));
-      await scene.setContent(await fs.readFile(path.join(__dirname,'preview-scene.html'),'utf8'));
-      for (const view of ['chat','wallet','profile']) {
-        await scene.evaluate(options=>window.setup(options),{view,theme,images});
-        const name=`${view}-${theme}`;
-        await scene.evaluate(()=>window.render(1.5));
-        await sharp(await scene.screenshot()).webp({quality:90}).toFile(path.join(output,name+'.webp'));
-        await fs.mkdir(path.join(__dirname,'.recordings/review'),{recursive:true});
-        for(const t of view==='wallet'?[2,7,12,17]:view==='chat'?[2,6,10,15]:[2,6,10]){await scene.evaluate(t=>window.render(t),t);await scene.screenshot({path:path.join(__dirname,`.recordings/review/${name}-${t}.png`)});}
-        if(process.argv.includes('--frames'))continue;
-        await scene.evaluate(()=>window.render(0));
-        const timing=await encode(scene,path.join(output,name+'.mp4'));
-        videos.push({view,theme,...timing,width:600,height:660,file:'web/public/previews/'+name+'.mp4',sha256:sha(await fs.readFile(path.join(output,name+'.mp4'))),poster:'web/public/previews/'+name+'.webp',posterSha256:sha(await fs.readFile(path.join(output,name+'.webp')))});
-        console.log(`Rendered ${name}: ${timing.seconds.toFixed(1)}s, ${timing.changingFrames} changing frames`);
-      }
-      await context.close();
-    }
-    assert.deepEqual(errors,[]);assert.deepEqual(api,[]);
-    if(process.argv.includes('--frames')){console.log('Review frames generated; videos and recording manifest unchanged.');return;}
-    for(const file of Object.keys(sourceFiles))sourceFiles[file]=sha(await fs.readFile(path.join(root,file)));
-    await fs.writeFile(path.join(__dirname,'preview-recording.json'),JSON.stringify({recordedAt:new Date().toISOString(),browser:await browser.version(),encoder:'imageio-ffmpeg 0.6.0 / FFmpeg 7.1',sourceFiles,videos,apiRequests:0,errors,scope:'Edited motion sequences from actual isolated Edge UI captures. The chat/payment source run used existing backed testnet tUSD and final NEAR receipts; see preview-flow-results.json. Rendering repeats no financial action. Profile changes use a fresh zero-balance identity. Crops, explanatory graphics and timing are presentation edits, not live transactions or automatic mesh transport.'},null,2)+'\n');
-  } finally { await browser.close(); }
+// Seekable product close-ups. Rendering replays verified examples; it never sends money.
+const fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
+const {createHash}=require('node:crypto'),{chromium}=require('playwright');
+const root=path.resolve(__dirname,'..'),sha=b=>createHash('sha256').update(b).digest('hex');
+const media=process.env.LENZ_MEDIA_WORKSPACE;
+assert(media&&path.isAbsolute(media),'Set LENZ_MEDIA_WORKSPACE to an external rendering directory.');
+assert(!path.resolve(media).toLowerCase().startsWith(root.toLowerCase()+path.sep),'Keep rendering tools outside the application repository.');
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icons={wifiOff:'<path d="m3 3 18 18M3 8a15 15 0 0 1 3-1.6M10 5a15 15 0 0 1 11 3M6 12a10 10 0 0 1 4-1.7M15 11a10 10 0 0 1 3 1m-9 4a5 5 0 0 1 6 0M12 20h.01"/>',lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/>',check:'<path d="m5 12 4 4L19 6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',send:'<path d="m3 10 18-7-7 18-3-8-8-3Zm8 3 10-10"/>',file:'<path d="M5 3h9l5 5v13H5V3Zm9 0v5h5M8 13h8M8 17h5"/>',wifi:'<path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0m-9 4a5 5 0 0 1 6 0M12 20h.01"/>',copy:'<rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/>'};
+const icon=(name,cls='small-icon')=>`<svg class="${cls}" data-icon="${name}" viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg>`;
+let avatarSources,message,idShort;
+const avatar=name=>`<span class="avatar"><img src="${avatarSources[name]}" alt=""/></span>`;
+const top=(name,sub)=>`<div class="surface-top">${avatar(name)}<div><strong>${name}</strong><small>${sub}</small></div>${icon('lock','small-icon right-icon')}</div>`;
+const surface=body=>`<div class="surface">${body}</div>`;
+const bubble=(incoming=false)=>`<div class="bubble ${incoming?'incoming':''}" id="message-bubble">${escape(message)}<small>${icon(incoming?'check':'clock','small-icon')}${incoming?'Opened · signature checked':'Saved · not delivered yet'}</small></div>`;
+const chain=()=>`<div class="chain">${['Amina','Bola','Chidi'].map((n,i)=>`${i?`<div class="chain-link"><i id="link-${i}"></i></div>`:''}<div class="chain-person">${avatar(n)}${n}</div>`).join('')}</div>`;
+function stories(){return{
+ chat:[
+  {id:'write',seconds:8,title:'Write it, even offline.',status:'Offline',body:surface(top('Bola','Private conversation')+`<div class="chat-area">${bubble()}<div class="composer typing"><span id="typed" class="typed">${message.split(' ').map(word=>`<span class="typed-word">${[...word].map(c=>`<span class="typed-character">${escape(c)}</span>`).join('')}</span>`).join(' ')}</span><span class="send-button">${icon('send')}</span></div></div>`),note:'Amina prepares a message on her device.',motion:`tl.fromTo('#typed .typed-character',{opacity:0},{opacity:1,duration:.04,stagger:.055,ease:'none'},.25);tl.fromTo('#message-bubble',{y:26,opacity:0},{y:0,opacity:1,duration:.5},4.3);tl.to('#typed',{opacity:0,duration:.15},4.3);`},
+  {id:'seal',seconds:4.5,title:'Only Bola can open it.',status:'Offline',body:`<div class="surface privacy-surface"><div class="privacy-label">${icon('lock')}ENCRYPTED ON AMINA’S DEVICE</div><div class="letter" id="letter">${escape(message)}</div><div class="envelope" id="envelope"><svg class="fold" viewBox="0 0 374 215"><path d="m0 0 187 125L374 0M0 215l137-119m237 119L237 96"/></svg>${icon('lock','lock')}</div><div class="key-owner">${avatar('Bola')}<div>Bola’s keys<small>Needed to read the message</small></div></div></div>`,note:'The message content is encrypted before sharing.',motion:`tl.fromTo('#letter',{opacity:1,scale:1},{opacity:0,scale:.9,duration:.65},.7);tl.fromTo('#envelope',{opacity:0,scale:.82,y:22},{opacity:1,scale:1,y:0,duration:.7,ease:'power3.out'},1.1);`},
+  {id:'carry',seconds:4.5,title:'Share over a local connection.',status:'Offline',body:surface(top('Amina','Message ready to share')+`<div class="file-panel">${icon('file','file-icon')}<div><strong>Encrypted message</strong><small>For Bola · ready to save</small></div></div><div class="action" id="save">${icon('file')}Save message</div><div class="people-route"><div class="route-person">${avatar('Amina')}Amina</div><div class="route-track" data-layout-allow-overflow><div class="route-token" id="packet">${icon('lock')}</div></div><div class="route-person">${avatar('Bola')}Bola</div></div>`),note:'Save the file, then share it through a nearby link.',motion:`tl.fromTo('#save',{scale:1},{scale:.96,duration:.15,repeat:1,yoyo:true},.8);tl.fromTo('#packet',{x:0,opacity:0},{opacity:1,duration:.2},1.2);tl.to('#packet',{x:97,duration:1.4,ease:'power2.inOut'},1.4);`},
+  {id:'open',seconds:4.5,title:'Bola reads it. Still offline.',status:'Offline',body:surface(top('Amina','On Bola’s device')+`<div class="chat-area">${bubble(true)}<div class="composer"><span class="muted">Write a reply…</span><span class="send-button">${icon('send')}</span></div></div>`),note:'Message content stays private. Metadata can remain visible.',motion:`tl.fromTo('#message-bubble',{opacity:0,y:20},{opacity:1,y:0,duration:.7,ease:'power3.out'},.35);`}
+ ],
+ wallet:[
+  {id:'pay',seconds:4.5,title:'Amina pays Bola.',status:'Offline',body:surface(`<div class="money-person">${avatar('Bola')}<div><span class="muted">Sending to</span>Bola</div></div><div class="amount-wrap"><div class="amount" id="amount">1<span>tUSD</span></div></div><div class="money-rule"></div><div class="money-row"><span class="muted">From Amina’s wallet</span><span>4 tUSD</span></div><div class="action" id="payment">${icon('lock')}Save payment to share</div><div class="money-row"><span class="muted">After sending</span><span>3 tUSD</span></div>`),note:'Signed on the device. Shared as an encrypted file.',motion:`tl.fromTo('#amount',{y:14,opacity:0},{y:0,opacity:1,duration:.5},.35);tl.fromTo('#payment',{scale:1},{scale:.97,duration:.2,repeat:1,yoyo:true},2.1);`},
+  {id:'onward',seconds:4.5,title:'Bola passes it to Chidi.',status:'Offline',body:surface(`<div class="surface-top"><div><strong>Use what you receive</strong><small>Same value. Next person.</small></div></div>${chain()}<p class="chain-amount">1 <span>tUSD</span></p><div class="status-card"><div class="pending">${icon('clock')}Both payments await confirmation</div></div>`),note:'Bola can pass the received value onward while offline.',motion:`tl.fromTo('#link-1',{scaleX:0},{scaleX:1,duration:.7},.5);tl.fromTo('#link-2',{scaleX:0},{scaleX:1,duration:.8},1.6);`},
+  {id:'pending',seconds:4.5,title:'Reconnect when you can.',status:'Online',body:surface(`<div class="money-person">${avatar('Chidi')}<div><span class="muted">Chidi’s wallet</span>Payment received</div></div><div class="amount-wrap"><div class="amount">1<span>tUSD</span></div></div><div class="status-card"><div class="pending">${icon('clock')}Awaiting online confirmation</div><div class="action" id="confirm" style="margin:20px 0 0">Confirm payment</div></div>`),note:'Reconnecting allows Chidi to submit the signed history.',motion:`tl.fromTo('#confirm',{scale:1},{scale:.96,duration:.18,repeat:1,yoyo:true},2);`},
+  {id:'settled',seconds:4.5,title:'Now it’s confirmed.',status:'Online',body:surface(`<div class="receipt-icon" id="confirmed">${icon('check','')}</div><h2 class="receipt-heading">Payment confirmed on NEAR</h2><p class="receipt-amount">1 <span>tUSD</span></p><div class="money-rule"></div><div class="money-row"><span class="muted">Recipient</span><span>Chidi</span></div><div class="money-row"><span class="muted">Status</span><span>Final</span></div><div class="money-row"><span class="muted">Network</span><span>NEAR testnet</span></div>`),note:'Testnet replay. Settlement amounts and accounts are public.',motion:`tl.fromTo('#confirmed',{scale:.7,opacity:0},{scale:1,opacity:1,duration:.65,ease:'back.out(1.2)'},.3);`}
+ ],
+ profile:[
+  {id:'share',seconds:4.5,title:'Start with your Lenz ID.',status:'On your device',body:surface(`<div class="identity-body"><div class="identity-person">${avatar('Amina')}<div><strong>Amina</strong><small>Your Lenz ID</small></div></div><label class="field-label">Lenz ID</label><div class="id-field">${idShort}</div><div class="id-actions"><div class="action">Share Lenz ID</div><div class="action secondary" id="copy">${icon('copy')}Copy ID</div></div></div><div class="id-copy" id="copied">${icon('check')}Lenz ID copied</div>`),note:'An address to share. No phone number needed.',motion:`tl.fromTo('#copy',{scale:1},{scale:.95,duration:.18,repeat:1,yoyo:true},.8);tl.fromTo('#copied',{opacity:0,y:8},{opacity:1,y:0,duration:.4},1.4);`},
+  {id:'add',seconds:4.5,title:'Paste it. Check it together.',status:'On Bola’s device',body:surface(`<div class="identity-body"><h2>Add a person</h2><label class="field-label">Lenz ID</label><div class="id-field"><span id="pasted">${idShort}</span></div><label class="field-label">Name in your contacts</label><div class="name-field">Amina</div><div class="confirmation" id="verified">${icon('check')}I confirmed this ID with this person.</div><div class="action" id="add-person" style="margin:20px 0 0">Add contact</div></div>`),note:'Check the ID with its owner before adding it.',motion:`tl.fromTo('#pasted',{opacity:0},{opacity:1,duration:.25},.5);tl.fromTo('#verified',{opacity:0},{opacity:1,duration:.4},1.3);tl.fromTo('#add-person',{scale:1},{scale:.97,duration:.18,repeat:1,yoyo:true},2.5);`},
+  {id:'connected',seconds:4.5,title:'You’re ready to talk.',status:'On Bola’s device',body:surface(top('Amina','Added with a Lenz ID')+`<div class="chat-area"><div class="bubble incoming" id="hello">Shared by Lenz ID<small>${icon('lock')}Encrypted for this conversation</small></div><div class="composer"><span class="muted">Write a message…</span><span class="send-button">${icon('send')}</span></div></div>`),note:'Your ID shares public keys. It is not an account backup.',motion:`tl.fromTo('#hello',{opacity:0,y:25},{opacity:1,y:0,duration:.7},.6);`}
+ ]};}
+const palettes={light:{bg:'#f5f5ef',ink:'#173f35',muted:'#53685d',line:'#c7d1c2',card:'#ffffff',accent:'#dcebb2',forest:'#173f35',wallpaper:'#edf0e6',bubble:'#e8f1d3',pending:'#e6ecd5',shadow:'#173f3540'},dark:{bg:'#14281f',ink:'#e3ebdf',muted:'#abc0af',line:'#3f5749',card:'#20382b',accent:'#dcebb2',forest:'#173f35',wallpaper:'#192e23',bubble:'#304c36',pending:'#2b4432',shadow:'#00000080'}};
+(async()=>{
+ const flow=JSON.parse(await fs.readFile(path.join(__dirname,'preview-flow-results.json'))),fragments=JSON.parse(await fs.readFile(path.join(__dirname,'.recordings/preview-dom.json')));
+ assert(flow.complete&&flow.finalTransaction.finality==='FINAL');assert.equal(flow.receipts[1].input,flow.receipts[0].id+':0');assert.equal(flow.receipts[0].outputs[0].amount,'1000000');assert.equal(flow.receipts[0].outputs[1].amount,'3000000');
+ for(const [file,expected]of Object.entries(flow.sourceFiles))assert.equal(sha(await fs.readFile(path.join(root,file))),expected,'Stale replay '+file);
+ const browser=await chromium.launch({channel:'msedge',headless:true}),api=[],errors=[];
+ try{
+  const context=await browser.newContext({serviceWorkers:'block'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));context.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))api.push(r.url());});
+  await p.goto('http://127.0.0.1:4173/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));await p.locator('#wallet-private').click();await p.locator('#wallet-content').waitFor();
+  const product=await p.evaluate(async fragments=>{
+   const box=document.createElement('div');box.innerHTML=fragments['private-read'];const bubble=box.querySelector('.bubble').cloneNode(true);bubble.querySelectorAll('small,button').forEach(n=>n.remove());
+   for(const key of ['payment-received','payment-onward']){box.innerHTML=fragments[key];if(!box.textContent.includes('awaiting online confirmation'))throw Error('Missing pending evidence');}
+   box.innerHTML=fragments['payment-confirmed'];if(!box.textContent.includes('Payment confirmed on NEAR'))throw Error('Missing final evidence');
+   const s=await(await import('/chat-store.js')).readState(),id=await(await import('/contact-card.js')).encodeLenzId(s.identity.profile),display=await import('/profile-display.js');
+   return{message:bubble.textContent.trim(),id,avatars:Object.fromEntries(['Amina','Bola','Chidi'].map((n,i)=>[n,display.avatarSource({avatar:display.AVATARS[i]})]))};
+  },fragments);
+  message=product.message;assert.equal(message,'Meet by the bookshop. I can pay you offline.');idShort=escape(product.id.slice(0,23)+'…'+product.id.slice(-8));avatarSources=product.avatars;
+  assert.deepEqual(api,[]);assert.deepEqual(errors,[]);
+ }finally{await browser.close();}
+ const css=await fs.readFile(path.join(__dirname,'preview-story.css'),'utf8'),template=await fs.readFile(path.join(__dirname,'preview-scene.html'),'utf8');
+ const vendor=process.env.LENZ_GSAP_FILE;assert(vendor,'Set LENZ_GSAP_FILE to the installed GSAP build.');
+ const fonts=process.env.LENZ_PREVIEW_FONT;assert(fonts,'Set LENZ_PREVIEW_FONT to a locally installed font.');
+ const sourceFiles={...flow.sourceFiles};for(const f of ['web/render-preview-stories.cjs','web/preview-scene.html','web/preview-story.css','web/preview-flow-results.json','web/lenz-id-browser-results.json','web/public/contact-card.js','web/public/profile-panels.js','web/public/contact-ui.js','web/public/profile-display.js'])sourceFiles[f]=sha(await fs.readFile(path.join(root,f)));
+ const projects=[];
+ for(const [theme,colors]of Object.entries(palettes))for(const [view,scenes]of Object.entries(stories())){
+  const directory=path.join(media,`${view}-${theme}`);await fs.mkdir(path.join(directory,'compositions'),{recursive:true});await fs.mkdir(path.join(directory,'assets/fonts'),{recursive:true});
+  await fs.copyFile(vendor,path.join(directory,'assets/gsap.min.js'));await fs.copyFile(fonts,path.join(directory,'assets/fonts/ui.ttf'));
+  const wallpaperFiles=(await fs.readdir(path.join(__dirname,'public/brand'))).filter(f=>f.includes('wallpaper'));
+  if(wallpaperFiles[0])await fs.copyFile(path.join(__dirname,'public/brand',wallpaperFiles[0]),path.join(directory,'assets/wallpaper.svg'));
+  else await fs.writeFile(path.join(directory,'assets/wallpaper.svg'),'<svg xmlns="http://www.w3.org/2000/svg" width="170" height="170"><g fill="none" stroke="#173f35"><path d="M30 25v20h20M135 145v-20h-20M85 70v25h25"/></g></svg>');
+  let start=0,hosts='';const states=[];
+  for(const [i,scene]of scenes.entries()){
+   const prefix=`${view}-${scene.id}`,variables=Object.entries(colors).map(([k,v])=>`--${k}:${v}`).join(';');
+   let markup=`<div class="stage" style="${variables}"><div class="heading"><div class="kicker"><span>${view==='chat'?'PRIVATE MESSAGES':view==='wallet'?'OFFLINE PAYMENTS':'YOUR LENZ ID'}</span><span class="connection">${scene.status==='Offline'?icon('wifiOff'):scene.status==='Online'?icon('wifi'):''}${scene.status}</span></div><h1>${scene.title}</h1></div>${scene.body}<p class="note">${scene.note}</p><div class="segments">${scenes.map((_,j)=>`<i class="${j<=i?'done':''}"></i>`).join('')}</div></div>`;
+   // Namespace every animated target so each mounted scene remains independently seekable.
+   if(scene.status==='Offline')assert(markup.includes('data-icon="wifiOff"'));
+   if(view==='chat'&&scene.id==='write')assert(markup.replace(/<[^>]*>/g,'').includes(escape(message)));
+   const ids=[...markup.matchAll(/id="([^"]+)"/g)].map(m=>m[1]);let motion=scene.motion;
+   for(const id of ids){markup=markup.replaceAll(`id="${id}"`,`id="${prefix}-${id}"`);motion=motion.replaceAll(`#${id}`,`#${prefix}-${id}`);}
+   const html=`<template><style>${css}</style><div id="root" data-composition-id="${prefix}" data-width="1200" data-height="1320"><div id="${prefix}-frame" class="clip" data-start="0" data-duration="${scene.seconds}" data-track-index="1">${markup}</div></div><script>const tl=gsap.timeline({paused:true});${motion}window.__timelines['${prefix}']=tl;</script></template>`;
+   await fs.writeFile(path.join(directory,`compositions/${prefix}.html`),html);
+   hosts+=`<div id="${prefix}" class="clip" data-composition-id="${prefix}" data-composition-src="compositions/${prefix}.html" data-start="${start}" data-duration="${scene.seconds}" data-track-index="1" data-track-kind="graphics" data-width="1200" data-height="1320"></div>`;
+   states.push({id:scene.id,start,duration:scene.seconds,title:scene.title});start+=scene.seconds;
+  }
+  await fs.writeFile(path.join(directory,'index.html'),template.replaceAll('__BACKGROUND__',colors.bg).replaceAll('__DURATION__',start).replace('__SCENES__',hosts));
+  projects.push({view,theme,directory,seconds:start,width:1200,height:1320,fps:30,states});
+ }
+ await fs.writeFile(path.join(media,'build.json'),JSON.stringify({sourceFiles,projects,apiRequests:api.length,errors,scope:'Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.'},null,2)+'\n');
+ console.log('Built six vector UI compositions with '+projects.reduce((n,p)=>n+p.states.length,0)+' distinct scenes. No financial calls.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

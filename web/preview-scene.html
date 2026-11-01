@@ -1,57 +1,11 @@
 <!doctype html>
-<html lang="en"><meta charset="utf-8"><title>Lenz preview composition</title>
+<html lang="en"><head><meta charset="utf-8"><title>Lenz product preview</title>
+<script src="assets/gsap.min.js"></script>
 <style>
-:root{--bg:#f5f5ef;--ink:#173f35;--muted:#53685d;--line:#c7d1c2;--card:#fff;--accent:#dcebb2;--shadow:#173f3520}
-[data-theme=dark]{--bg:#14281f;--ink:#e3ebdf;--muted:#abc0af;--line:#3f5749;--card:#20382b;--accent:#dcebb2;--shadow:#0005}
-*{box-sizing:border-box}html,body{margin:0;width:600px;height:660px;overflow:hidden}body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',Arial,sans-serif}
-.frame{position:absolute;inset:0;padding:32px 40px}.eyebrow{margin:0;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:1.5px}.network{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.6px}.network svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5}
-h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-1.3px;font-size:37px;line-height:1.12;margin:20px 0 0;max-width:510px}.screen{position:absolute;left:40px;top:157px;width:520px;height:350px;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:0 16px 36px -20px var(--shadow)}.screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.stamp{position:absolute;right:12px;bottom:12px;background:var(--bg);border:1px solid var(--line);padding:6px 9px;border-radius:20px;font-size:10px;letter-spacing:.3px;z-index:3}
-.seal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--card);opacity:0}.seal svg{width:52px;height:52px;stroke:var(--ink);fill:none;stroke-width:1.4;margin-bottom:22px}.seal strong{font-size:24px;font-weight:500;letter-spacing:-.5px}.seal p{font-size:14px;color:var(--muted);margin:10px 0}.sealed-lines{display:flex;gap:5px;margin:18px 0 2px}.sealed-lines i{display:block;background:var(--line);height:7px;width:22px;border-radius:4px}
-.journey{position:absolute;left:64px;right:64px;top:541px;height:68px}.rail{position:absolute;top:19px;left:18px;right:18px;height:1px;background:var(--line)}.rail-fill{height:2px;background:var(--ink);transform-origin:left;transform:scaleX(0)}.person{position:absolute;top:0;width:64px;text-align:center;transform:translateX(-50%)}.person i{display:grid;place-items:center;margin:auto;width:38px;height:38px;border-radius:50%;font-style:normal;font-size:15px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}.person.active i{background:var(--ink);color:var(--bg);border-color:var(--ink)}.person span{font-size:11px;display:block;margin-top:6px}.traveller{position:absolute;top:5px;transform:translateX(-50%);background:var(--accent);color:#173f35;border:1px solid #a5b48b;border-radius:14px;padding:4px 9px;white-space:nowrap;font-size:12px;font-weight:600;box-shadow:0 3px 10px var(--shadow)}
-.footnote{position:absolute;left:36px;right:36px;bottom:21px;text-align:center;font-size:12px;line-height:1.5;color:var(--muted);margin:0}.progress{position:absolute;left:40px;right:40px;bottom:0;display:flex;gap:5px;height:3px}.progress span{flex:1;background:var(--line)}.progress i{display:block;height:100%;background:var(--ink);transform-origin:left;transform:scaleX(0)}
-.profile-note{position:absolute;top:544px;left:40px;right:40px;text-align:center;font-size:18px;letter-spacing:-.3px}.profile-note small{display:block;font-size:13px;color:var(--muted);margin-top:8px}
-</style>
-<div class="frame"><p class="eyebrow"><span id="chapter"></span><span class="network"><svg viewBox="0 0 20 20"><path d="M2 7q8-6 16 0M5 10q5-4 10 0M8 13q2-2 4 0M10 16h.01M2 2l16 16"/></svg><span id="network"></span></span></p><h1 id="title"></h1></div>
-<div class="screen"><img id="previous" alt=""><img id="current" alt=""><div class="seal"><svg viewBox="0 0 60 60"><rect x="12" y="25" width="36" height="27" rx="6"/><path d="M20 25v-9a10 10 0 0 1 20 0v9M30 36v7"/></svg><strong>Encrypted message</strong><div class="sealed-lines"><i></i><i></i><i></i><i></i><i></i><i></i></div><p>Shared as a file. Opened with Bola’s keys.</p></div><span class="stamp">CAPTURED IN LENZ</span></div>
-<div class="journey"><div class="rail"><div class="rail-fill"></div></div><div class="person" style="left:0%"><i>A</i><span>Amina</span></div><div class="person" style="left:50%"><i>B</i><span>Bola</span></div><div class="person" style="left:100%"><i>C</i><span>Chidi</span></div><div class="traveller"></div></div>
-<div class="profile-note" hidden>Choose how people see you.<small>Your identity keys stay the same.</small></div>
-<p class="footnote"></p><div class="progress"></div>
-<script>
-const $ = s => document.querySelector(s), clamp = x => Math.min(1,Math.max(0,x)), ease = x => 1-Math.pow(1-clamp(x),3);
-let scenes, duration, view, images;
-window.setup = async options => {
-  document.documentElement.dataset.theme=options.theme;view=options.view;images=options.images;
-  scenes = view==='wallet' ? [
-    [0,'Amina pays Bola.','payment-received'],[5,'Bola passes it onward.','payment-onward'],[10,'Still offline. Still pending.','payment-onward'],[15,'Reconnect. Then confirm.','payment-confirmed']
-  ] : view==='chat' ? [
-    [0,'Write it here.','private-send'],[4,'Encrypted before it travels.','private-send'],[8,'Bola opens it offline.','private-read'],[13,'The conversation carries on.','private-read']
-  ] : [[0,'Start with an alias.','profile-start'],[4,'Choose a symbol.','profile-symbol'],[8,'Same profile. New name.','profile-name']];
-  duration=view==='wallet'?21:view==='chat'?18:14;
-  $('#chapter').textContent=view==='wallet'?'01 / OFFLINE PAYMENTS':view==='chat'?'02 / PRIVATE CHAT':'03 / YOUR IDENTITY';
-  $('.progress').innerHTML=scenes.map(()=>'<span><i></i></span>').join('');
-  $('.journey').hidden=view==='profile';$('.profile-note').hidden=view!=='profile';
-  $('.person:nth-of-type(4)').style.display='';$('.person:nth-of-type(3)').style.left='50%';
-  if(view==='chat'){$('.person:nth-of-type(4)').style.display='none';$('.person:nth-of-type(3)').style.left='100%';}
-  await Promise.all(Object.values(images).map(src=>new Promise((resolve,reject)=>{const i=new Image();i.onload=resolve;i.onerror=reject;i.src=src;})));
-  window.render(0);
-};
-window.render = t => {
-  t=Math.min(t,duration-.01); let index=scenes.findLastIndex(s=>t>=s[0]), scene=scenes[index], age=t-scene[0], enter=ease(age/.7);
-  $('#title').textContent=scene[1];$('#title').style.transform=`translateY(${(1-enter)*8}px)`;$('#title').style.opacity=.2+.8*enter;
-  const oldImage=images[scenes[Math.max(0,index-1)][2]], newImage=images[scene[2]];
-  if($('#previous').getAttribute('src')!==oldImage)$('#previous').src=oldImage;
-  if($('#current').getAttribute('src')!==newImage)$('#current').src=newImage;
-  $('#current').style.opacity=enter;$('#current').style.transform=`translateY(${(1-enter)*18}px) scale(${1.018-.018*enter})`;
-  $('.seal').style.opacity=view==='chat'&&index===1?enter:0;
-  $('.stamp').textContent=view==='chat'&&index===1?'ENCRYPTION ILLUSTRATION':view==='profile'?'LENZ PROFILE':'RECORDED FLOW · REPLAY';
-  const online=view==='wallet'&&index===3;
-  $('#network').textContent=online?'ONLINE · CONFIRMED':view==='profile'?'ON YOUR DEVICE':'OFFLINE';$('.network svg').style.opacity=online||view==='profile'?0:1;
-  $('.footnote').textContent=view==='wallet'?'Testnet tUSD · settlement amounts and accounts are public.':view==='chat'?'Message content is encrypted. Routing and timing remain visible.':'No phone number required. Account recovery is not available yet.';
-  let travel=view==='wallet'?(index===0?.5*ease((age-1)/2):index===1?.5+.5*ease((age-1)/2):1):ease((t-4)/4);
-  $('.rail-fill').style.transform=`scaleX(${travel})`;$('.traveller').style.left=`${travel*100}%`;$('.traveller').textContent=view==='wallet'?'1 tUSD':'Encrypted file';
-  $('.traveller').style.opacity=view==='wallet'&&(index===0||index===1)&&age>1&&age<3?1:view==='chat'&&index===1&&age>.4&&age<3.7?1:0;
-  const people=[...document.querySelectorAll('.person')];people.forEach((p,i)=>p.classList.toggle('active',view==='chat'?(i===0||travel>=1&&i===1):(i/2<=travel)));
-  document.querySelectorAll('.progress i').forEach((p,i)=>p.style.transform=`scaleX(${clamp((t-scenes[i][0])/((scenes[i+1]?.[0]??duration)-scenes[i][0]))})`);
-};
-window.start = () => { const begin=performance.now(); const tick=now=>{window.render((now-begin)/1000);if(now-begin<duration*1000)requestAnimationFrame(tick);};requestAnimationFrame(tick);return duration; };
-</script></html>
+@font-face{font-family:LenzUI;src:url('assets/fonts/ui.ttf')}
+*{box-sizing:border-box}html,body{margin:0;width:1200px;height:1320px;overflow:hidden;background:__BACKGROUND__}body{font-family:LenzUI,sans-serif}
+#root{position:absolute;inset:0}
+</style></head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="__DURATION__" data-width="1200" data-height="1320">__SCENES__</div>
+<script>window.__timelines=window.__timelines||{};window.__timelines.main=gsap.timeline({paused:true});</script>
+</body></html>
