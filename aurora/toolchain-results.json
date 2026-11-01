@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-11-01T06:58:16.765Z",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "regressionTests": 14,
+  "failedTests": 0,
+  "detectedControls": [
+    "static write rejection",
+    "read state rollback",
+    "transaction balance validation"
+  ],
+  "compiledContracts": [
+    "ToolchainProbe",
+    "PlonkVerifier"
+  ],
+  "proofComparison": {
+    "engineBaseline": "local Hardhat",
+    "matchingFields": [
+      "compiler",
+      "evmTarget",
+      "verifierSha256",
+      "circuitHash",
+      "validProofAccepted",
+      "alteredPublicInputsRejected",
+      "alteredProofRejected",
+      "gasUsed",
+      "calldataBytes",
+      "deployedBytecodeBytes"
+    ]
+  },
+  "audit": {
+    "report": "aurora/dependency-audit.json",
+    "knownVulnerabilities": 0,
+    "dependencies": 44
+  },
+  "files": {
+    "aurora/package.json": "b324b8d271681f58554e90ac08464dfd30d5d10fe255dae315454d3a26abdadf",
+    "aurora/package-lock.json": "933097564fbf2f5e12d9c07808d54b3c4060f5087864d3983367fa2e311712a6",
+    "aurora/.npmrc": "b6cd21f5dbc7be423e7b31e3014be09c8e2fe578a817a0eb2d03952706a2c8c6",
+    "aurora/compiler.mjs": "c31bcb35f3c9892e6aaa7ddefea0b2bd6d886c600e4c6d66f6e542676c937cba",
+    "aurora/local-evm.mjs": "d99ea4acf6bff577f8809df63640626432e860038a7ba9a4a2c0dcfb48cbc04b",
+    "aurora/dependencies.test.mjs": "1497c1a17134f720dbaf132885bf8fdae16a43a8608e1fc4d6324999f19dbe01",
+    "aurora/local-evm.test.mjs": "5ec1d06ebd91fb33748742903c83da6ab1816c23309f92cf0aa073bcaf53aee3",
+    "aurora/local-evm-mutations.mjs": "609e04ab1927483b2c66f658de242ce40e2aa5d16fe1e0db1144b88505b924e0",
+    "aurora/rpc.mjs": "e0f6b10ed393c35451806386010d8d26b36c12dc2b1250e1b87519f87864510e",
+    "aurora/rpc.test.mjs": "ebab188f3c0b5b5445803474b56eb4f8a6bf79c2e45e601451677aac694e7479",
+    "aurora/scripts/compile.js": "44067b738789c991645acfb1d42199f91ab02aac1831fa6cde756982f1074dcc",
+    "aurora/scripts/check-local.js": "1a31407462113457d141f7c4d9c46d3362e66e65b6cd36da19db06782478e961",
+    "aurora/scripts/check-proof.js": "bb8689236f3850bbfba719b8b0b51008e50cf4154a39c33271158b4ea8765e6d",
+    "aurora/contracts/ToolchainProbe.sol": "05abef663bd533fe90f2193c9dab3ea2e9efbf6b0e4f7ef959dbef0aa3926d46",
+    "aurora/contracts/PaymentStepVerifier.sol": "bff30d5997ef62bd0938d0d8c06470dc6f3e067e2ba14cd99692c68c9de39801",
+    "aurora/local-results.json": "203c5abc17634b77c1e4a56e6e48a7da2e7be42cf61373e3d260177baed6564d",
+    "aurora/proof-results.json": "e686dad11c56ae4fde242996b0b3890a49495c36a2a48bc5f4aa0e157d0cd718",
+    "aurora/dependency-audit.json": "01a9a105635c674475afc5de123366e1fe7698134428b7dbc8152a8bbe5e654c"
+  },
+  "scope": "Local compiler, in-memory EVM and npm dependency verification. No Aurora deployment, funding, live transaction, browser or physical-device test."
+}

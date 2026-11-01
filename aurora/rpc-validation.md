@@ -30,6 +30,6 @@ npm run check:testnet
 ```
 
 These checks validate a bounded reader, not RPC honesty or chain finality. They do
-not authenticate an Aurora asset route, connect the wallet, patch the outstanding
-Zod advisory, or establish private NEAR settlement. The Hardhat dependency finding
-and the remaining [integration work](../docs/status.md) stay open.
+not authenticate an Aurora asset route, connect the wallet or establish private
+NEAR settlement. The separate [toolchain migration](dependency-resolution.md)
+removes the affected Zod dependency. The [integration work](../docs/status.md) stays open.

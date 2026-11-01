@@ -1,50 +1,49 @@
 # Aurora development setup
 
-Installed versions and the local compile/deploy/write/read/event check were reverified on Windows on 2026-10-30 with Node 24.21.0. This folder supplies local EVM development tools and a read-only Aurora testnet check. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
+This folder supplies local EVM development tools and a read-only Aurora testnet check. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
 
 ## Installed tools
 
 | Package | Version |
 | --- | --- |
-| Hardhat | 3.21.0 |
-| Hardhat ethers plugin | 4.2.1 |
+| EthereumJS VM, common, tx and util | 10.1.3 |
 | ethers | 6.17.0 |
 | solc | 0.8.38 |
 
-`package-lock.json` pins transitive dependencies. A scoped override uses `tmp` 0.2.7 for solc to address [GHSA-7c78-jf6q-g5cm](https://github.com/advisories/GHSA-7c78-jf6q-g5cm). The compiler loads the installed `solc/soljson.js` through Hardhat's [custom compiler option](https://hardhat.org/docs/cookbook/custom-solidity-compiler), avoiding an additional compiler download. The EVM target is `paris`; this is a conservative fixture setting, not proof of compatibility with every Aurora opcode or precompile.
+`package-lock.json` pins transitive dependencies. A scoped override uses `tmp` 0.2.7 for solc to address [GHSA-7c78-jf6q-g5cm](https://github.com/advisories/GHSA-7c78-jf6q-g5cm). Compilation uses the installed solc JavaScript API, with no compiler download. Both compiler and local VM use Paris rules, optimizer enabled with 200 runs. This is a fixture setting, not proof of compatibility with every Aurora opcode or precompile.
 
 ## Reproduce
 
 From this directory in PowerShell:
 
 ```powershell
-npm ci --cache .npm-cache --no-fund
-npm run compile -- --force
+npm ci --ignore-scripts --cache .npm-cache --no-fund
+npm audit
+npm test
+npm run compile
 npm run check:local
+npm run check:proof
+node local-evm-mutations.mjs
 npm run check:testnet
 ```
 
-`check:local` explicitly creates an in-process Hardhat network. It deploys `ToolchainProbe`, writes 42, checks storage and its receipt event, then writes [local-results.json](local-results.json) with the lockfile hash. It has no user wallet. The forced compile passed for one Solidity file; the four local assertions passed.
+`compile` builds both Solidity files into ignored `artifacts/`. It always compiles from source. `check:local` independently compiles `ToolchainProbe`, deploys it in memory, checks exact runtime bytecode, writes 42 and checks storage and the receipt event. [local-results.json](local-results.json) records four checks and the lockfile hash. The VM has chain ID 31337 and a fresh in-memory fixture account; no RPC transport or user wallet is attached. Static reads roll back temporary state, and transaction balance, gas and failure checks remain enabled.
 
 `check:testnet` reads `eth_chainId` and `eth_blockNumber` from the [documented Aurora endpoint](https://doc.aurora.dev/dev-reference/network-endpoints/), checks chain ID 1313161555 and writes [testnet-rpc-results.json](testnet-rpc-results.json). Replies are limited to 16 KiB and a 20-second deadline, including body streaming; redirects, mismatched response IDs and malformed quantities are rejected. It cannot sign or send transactions. Configured HTTP accounts are empty. [Reader tests and limits](rpc-validation.md).
 
-On the recorded Windows host, sandboxed Hardhat startup failed in tsx's `os.userInfo()` call (`uv_os_get_passwd`, ENOMEM). The same command passed outside the sandbox without code changes. Sandboxed external RPC requests returned EACCES; authorized read-only reruns passed. These are host execution restrictions, not failed Solidity assertions. Do not patch dependencies to bypass host restrictions.
+The current local compiler, VM and proof checks pass inside the Windows sandbox. Earlier Hardhat CLI startup failed in tsx's `os.userInfo()` call (`uv_os_get_passwd`, ENOMEM) and passed outside the sandbox without code changes. Sandboxed external RPC requests returned EACCES; authorized read-only reruns passed. Those recorded host restrictions are separate from contract assertions.
 
 ## Dependency status
 
-The initial install reported six high package-level findings. Patching `tmp` reduced this to four, all traced to [Zod GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). See [dependency-audit.json](dependency-audit.json). `npm audit` still exits 1.
+The November 1 [npm audit](dependency-audit.json) reports **zero known vulnerabilities** across 44 dependencies and exits zero. Hardhat, its ethers plugin and Zod are absent from the lockfile and clean installation. The [dependency resolution](dependency-resolution.md) records the migration and its checks. This closes the Aurora tooling's Zod finding; it does not certify the blockchain or every Lenz dependency.
 
-Hardhat and its ethers plugin depend on Zod 3; the advisory lists 4.6.6 as patched. Forcing Zod 4 or downgrading Hardhat changes the supported dependency interface, so that requires its own compatibility work. These dependencies are development tooling in this directory and are not imported by the current web wallet. Keep this dependency finding open; passing fixture checks are not a security audit.
-
-On November 1, a fresh npm audit still reported four high package-level findings. The latest registry Hardhat release, [3.21.2](https://registry.npmjs.org/hardhat/3.21.2), still declared `zod: ^3.23.8`, so a Hardhat patch upgrade alone does not resolve the advisory. The installed versions and lockfile remain unchanged. The bounded testnet reader uses Node's native HTTP client and JSON parser independently of Hardhat/Zod; its input limits do not patch the affected dependency or certify other consumers.
-
-npm also reported an unapproved esbuild postinstall hook. No global installation or hook approval was added; compilation and this JavaScript fixture passed with the installed packages.
+Lifecycle scripts remain disabled in `.npmrc`. The current lockfile contains no installation hooks. Tests check pinning, registry integrity metadata, installed versions and absence of nested Zod packages. Dependency packages stay outside the repository and are not imported by the web wallet.
 
 The next Aurora step in [development status](../docs/status.md) is to specify and test a bounded execution adapter, account authorization and NEAR↔Aurora asset/receipt behavior before connecting it to the product.
 
 ## Payment-proof verifier experiment
 
-`npm run check:proof` compiles the generated `PaymentStepVerifier.sol` with the pinned solc library and deploys it to Hardhat's local EVM through its runtime API. This local API path works inside the sandbox without the CLI's tsx user-info lookup. It uses existing local packages and makes no external request.
+`npm run check:proof` compiles the generated `PaymentStepVerifier.sol` with the pinned solc library and deploys it to the in-memory EthereumJS VM. It uses local packages and makes no external request. The existing test proof is reused; no new proving parameters are created.
 
 The existing test PLONK proof passed, all seven individually changed public inputs failed, and an altered proof failed. A local transaction used **302,476 EVM gas**, with **996 bytes** of calldata and **7,118 bytes** of deployed verifier bytecode. [proof-results.json](proof-results.json) records source/circuit hashes and scope. This is not NEAR gas or an Aurora testnet result.
 

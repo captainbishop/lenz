@@ -1,8 +1,9 @@
 {
-  "checkedAt": "2026-10-26T03:05:41.847Z",
+  "checkedAt": "2026-11-01T06:58:16.540Z",
   "compiler": "0.8.38+commit.1835d247.Emscripten.clang",
-  "evm": "local Hardhat",
+  "evm": "in-memory EthereumJS 10.1.3",
   "evmTarget": "paris",
+  "lockSha256": "933097564fbf2f5e12d9c07808d54b3c4060f5087864d3983367fa2e311712a6",
   "verifierSha256": "bff30d5997ef62bd0938d0d8c06470dc6f3e067e2ba14cd99692c68c9de39801",
   "circuitHash": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
   "validProofAccepted": true,

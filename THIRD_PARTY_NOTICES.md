@@ -6,6 +6,9 @@ generated upstream code or downloaded research material.
 
 - NEAR/Rust and JavaScript dependencies are pinned in their Cargo and npm lockfiles.
   Each dependency retains its upstream license.
+- The Aurora local test tools use [EthereumJS](https://github.com/ethereumjs/ethereumjs-monorepo).
+  Its packages retain their MPL-2.0 or MIT licenses as recorded in the npm lockfile.
+  Installed package source is excluded from this repository.
 - The checked-in NEAR vendor bundle retains the
   notices in [web/public/near-vendor/NOTICE.txt](web/public/near-vendor/NOTICE.txt)
   and their source headers. Current connector scope is documented in

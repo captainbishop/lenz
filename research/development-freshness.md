@@ -1,5 +1,16 @@
 # Development freshness review
 
+November 1 Aurora dependency review: pinned EthereumJS replaces the local Hardhat
+runner and removes Zod from the clean installation and lockfile. The fresh npm
+audit has zero findings. Fourteen Node tests, three VM guard-removal controls,
+both contract compilations, the local state/event probe and the existing proof
+checks pass. Proof gas, calldata length, runtime size, verifier and circuit hashes
+match the recorded measurement. [Verification](../aurora/dependency-resolution.md).
+No Solidity, browser, cache or preview source changed, and no deployment, funding
+or network transaction ran. The remaining Aurora adapter/asset-route work and all
+other integration, privacy, recovery and device requirements remain open. The
+older audit observations below describe the dependency tree at those checkpoints.
+
 November 1 Aurora network-reader review: the two read-only network queries now
 enforce a streamed 16-KiB reply limit, a deadline through the response body,
 matching JSON-RPC IDs and canonical integer results. Seven tests and three removed
@@ -108,7 +119,7 @@ Reviewed October 31, 2026. NEAR, Rhea, NEAR Intents, Aurora, Zcash, private sett
 | NEAR reserve | [Deposit upgrade](../contracts/upgrade/README.md) preserved 74 existing state entries. Current reserve/config and saved social evidence agree on the testnet contract. | Public settlement still exposes amounts and ancestry. External wallet signing remains unverified after Meteor's recorded 403. |
 | Rhea | [Configured recovery rollout](../contracts/adapter/redemption-recovery/rollout-review.md) matches the configured adapter/code hash. Signed swaps, refunds and backed return have testnet evidence. | Other callback stages, external refund signing, aggregate liabilities and independent release approval. |
 | NEAR Intents | Installed SDK, authenticated empty payload and fixture quote-signature checks are separate from the [failed confidential quote](../integrations/README.md). | Partner key, supported funded route, live provider signature, signed confidentiality binding and execution/refunds. Testnet tUSD is not a mainnet route. |
-| Aurora | [Local EVM and verifier evidence](../aurora/README.md), configured chain ID and package locks exist. | No Lenz Aurora deployment, asset/execution adapter or separate Aurora Intents connection. Dependency findings remain unresolved. |
+| Aurora | [Local EVM and verifier evidence](../aurora/README.md), configured chain ID and package locks exist. The EthereumJS toolchain removes Zod and passes a zero-finding npm audit. | No Lenz Aurora deployment, asset/execution adapter or separate Aurora Intents connection. |
 | Zcash | [Native shielded transfer](../zcash/pczt.md) is confirmed. [Unsigned browser review and expiry check](../zcash/payment-freshness.md) are separate; the checked saved payment was expired. | Browser signing approval, current witnesses, safe recovery, ambiguous submission and the shielded ZEC/DeFi route. |
 | Private settlement and recovery | [Behavior and safety boundaries](../docs/behavior.md) and existing local proof evidence retain their limited scope. | Full graph-hiding settlement, recipient-controlled authority, durable recovery/reconciliation and actual device measurements. |
 
