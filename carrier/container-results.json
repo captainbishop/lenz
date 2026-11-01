@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-01T09:57:44.904Z",
+  "engine": "29.9.2",
+  "image": "sha256:f1230eb44e32cc501a46c5aec0c01140502c26dfb74ec163832c62ec4993e62c",
+  "sourceHashes": {
+    "LICENSE": "983b398a158c672579890550f933cdd13c5875058037a9844c4e5452b4c8d3c4",
+    "carrier/server.mjs": "14f7b155a02cc0115ec39265336d911cabb1df46ba3874885b60de5939e5a7ec",
+    "carrier/store.mjs": "3f39a9113affb7b75175483816d563da6a41f131e9f90088a09283d8eeab0e3d",
+    "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f"
+  },
+  "checks": [
+    "container-health",
+    "container-restrictions-configured",
+    "only-runtime-files-and-license",
+    "runtime-files-match-source",
+    "signed-encrypted-custody",
+    "persistent-volume-after-restart",
+    "duplicate-delivery-is-idempotent",
+    "unsigned-inbox-rejected"
+  ],
+  "passed": true,
+  "scope": "Disposable local Docker container and generated encrypted message. No user identity, wallet or financial transaction."
+}

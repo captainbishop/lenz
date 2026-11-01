@@ -40,6 +40,26 @@ renewed. The user can still share the original encrypted file manually. Expiry
 never releases a money reservation or changes a balance. Turning delivery off
 stops new requests; in-flight requests and previously stored files can remain.
 
+## Verify the container
+
+With Docker Engine running, build and verify from the repository root:
+
+```sh
+docker build -f carrier/Dockerfile -t lenz-carrier:local .
+node carrier/check-container.mjs
+```
+
+The check uses a disposable container, fresh volume and generated identities. It
+checks the configured restrictions, exact runtime source hashes, signed delivery,
+restart persistence, duplicate handling and rejection of an invalid mailbox
+signature. It removes its own container and volume afterwards. Set
+`LENZ_CARRIER_IMAGE` to verify a different locally available image.
+[Recorded result](container-results.json).
+
+The build context includes the five runtime files and the MIT license. The Node
+base image is pinned by version and digest. Docker may need registry access to
+resolve the base manifest even when layers are cached.
+
 ## Deploy on separate hosts
 
 For operator independence, use separate hosts and administrators. A three-process
@@ -61,9 +81,9 @@ No hosted carriers or public bootstrap registry are provided.
 
    The service runs as an unprivileged user with a read-only application filesystem,
    a persistent data volume and a loopback-only published port. Use one service per
-   volume. The image version is pinned; review and pin its verified platform digest
-   when deploying. Container resource limits and HTTPS deployment have not been
-   exercised by the Windows loopback tests.
+   volume. Pin the verified carrier image digest when deploying. Local container
+   checks verify the configured restrictions and volume behavior; they do not
+   establish resource-limit behavior under load or a working HTTPS deployment.
 4. Put HTTPS in front of the service. `carrier/Caddyfile.example` provides a host
    Caddy template; replace the domain and preserve the original Host header. Restrict
    the raw service port to the proxy. Apply request-rate limits at the ingress,

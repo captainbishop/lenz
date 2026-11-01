@@ -1,4 +1,5 @@
 **
+!LICENSE
 !carrier/
 !carrier/Dockerfile
 !carrier/Dockerfile.dockerignore

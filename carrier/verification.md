@@ -30,6 +30,22 @@ all three health endpoints and the web app's configured carrier list returned th
 expected results. The browser test uses independent server instances in one Node
 process. Neither exercise establishes independent remote operators or phone support.
 
+## Container verification
+
+The November 1 Docker Engine 29.9.2 run passed eight checks in a Linux container
+on Windows. [Recorded result](container-results.json) includes the image identifier
+and exact hashes of its five runtime files and MIT license. The test verified
+health, non-root execution, configured filesystem/capability/resource restrictions,
+signed encrypted custody, persistence after restart, duplicate handling and
+rejection of an invalid mailbox signature. No user wallet or financial transaction
+was involved. Docker Compose 5.6.1 accepted the deployment configuration.
+
+The Node 24.21.0 base image is pinned to the verified manifest digest. The initial
+build could not find the credential helper until Docker's installed binary
+directory was added to the existing terminal's PATH. A subsequent rebuild failed
+during Docker Hub DNS resolution; the digest-pinned build and container checks
+then passed. HTTPS, separate remote operators and load testing remain unverified.
+
 ## Failures retained
 
 - The first browser harness used CommonJS `require` on the server module's

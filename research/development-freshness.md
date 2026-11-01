@@ -1,5 +1,13 @@
 # Development freshness review
 
+November 1 container review: the carrier image includes the MIT license and pins
+the verified Node base-image digest. Eight actual container checks verify its
+contents, configured restrictions, encrypted custody, persistence and inbox
+authentication. Compose configuration validation passes. [Container evidence](../carrier/container-results.json)
+records the exact runtime source hashes. Application, wallet, contract and preview
+sources are unchanged. Remote HTTPS, independent operators and load tests remain
+open; the build failures are retained in [verification](../carrier/verification.md).
+
 November 1 Aurora Engine review: call/view encodings, token mapping encodings and
 bounded version-7 result decoding pass 23 tests with the existing Aurora suite.
 Four removed codec guards are detected. The live read-only check reports the
