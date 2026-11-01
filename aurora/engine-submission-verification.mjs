@@ -12,6 +12,14 @@ function run(args){
   assert.equal(result.error,undefined);assert.equal(result.status,0,result.stdout+result.stderr);
   return result.stdout;
 }
+const files=['engine-access.mjs','engine-access.test.mjs','engine-access-source.json','engine-signed.mjs','engine-journal.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs',
+  'engine-journal.test.mjs','engine-submit-rpc.test.mjs','engine-submission-cli.test.mjs','engine-submission-sdk.test.mjs',
+  'engine-submission-fixtures.mjs','scripts/engine-submission.js','engine-submission-mutations.mjs',
+  'engine-submission-mutations.json','engine-receipt-mutations.mjs','engine-receipt-mutations.json',
+  'engine-submission-verification.mjs','engine-submission-source.json','package.json','package-lock.json','../contracts/package-lock.json'];
+const shaFile=async file=>createHash('sha256').update(await readFile(new URL(file,import.meta.url))).digest('hex');
+const before={};
+for(const file of files)if(!file.endsWith('-mutations.json'))before[file]=await shaFile(file);
 const results=[];
 for(const [name,files] of [['aurora',pkg.scripts.test.slice('node --test '.length).split(' ')],['near-sdk',['engine-submission-sdk.test.mjs']]]){
   const output=run(['--test','--test-reporter=tap',...files]);
@@ -20,13 +28,11 @@ for(const [name,files] of [['aurora',pkg.scripts.test.slice('node --test '.lengt
   results.push({name,passed:count,failed:0});console.log(name+': '+count+' passed');
 }
 for(const file of ['engine-submission-mutations.mjs','engine-receipt-mutations.mjs'])console.log(run([file]).trim());
-const files=['engine-signed.mjs','engine-journal.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs',
-  'engine-journal.test.mjs','engine-submit-rpc.test.mjs','engine-submission-cli.test.mjs','engine-submission-sdk.test.mjs',
-  'engine-submission-fixtures.mjs','scripts/engine-submission.js','engine-submission-mutations.mjs',
-  'engine-submission-mutations.json','engine-receipt-mutations.mjs','engine-receipt-mutations.json',
-  'engine-submission-verification.mjs','engine-submission-source.json','package.json','package-lock.json','../contracts/package-lock.json'];
 const sourceFiles={};
-for(const file of files)sourceFiles[file]=createHash('sha256').update(await readFile(new URL(file,import.meta.url))).digest('hex');
+for(const file of files){
+  sourceFiles[file]=await shaFile(file);
+  if(Object.hasOwn(before,file))assert.equal(sourceFiles[file],before[file],'Verification input changed while tests ran: '+file);
+}
 const sdk=JSON.parse(await readFile(new URL('../contracts/node_modules/near-api-js/package.json',import.meta.url)));
 assert.equal(sdk.version,'7.4.0');
 await writeFile(new URL('./engine-submission-results.json',import.meta.url),JSON.stringify({

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T22:53:39.846Z",
+  "checkedAt": "2026-11-01T23:18:52.750Z",
   "scope": "Synthetic NEAR/Engine receipt fixtures and loopback HTTP transport; no live Aurora transaction.",
   "sourceSha256": "34f28a26586c11a96cb0d2c3ac70fd0ee37a21475f17018b0ef92ad7640289c1",
   "testSha256": "43a300288412ba18e43c9177b6fb8584aacea2de8caae7412e0c5dab28466b75",

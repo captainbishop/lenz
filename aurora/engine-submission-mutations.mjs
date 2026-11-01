@@ -5,9 +5,17 @@ import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 
-const files=['engine-journal.mjs','engine-journal.test.mjs','engine-signed.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs','engine-submission-fixtures.mjs'];
+const files=['engine-access.test.mjs','engine-access.mjs','engine-journal.mjs','engine-journal.test.mjs','engine-signed.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs','engine-submission-fixtures.mjs'];
 const contents=Object.fromEntries(await Promise.all(files.map(async file=>[file,await readFile(new URL(file,import.meta.url),'utf8')])));
 const variants=[
+  ['access-preflight','engine-journal.mjs',"preflight.state!=='permitted'",'false'],
+  ['final-before-preflight','engine-journal.mjs','terminal.has(current.outcome.state)?current:{...current,preflight}','({...current,preflight})'],
+  ['access-receiver','engine-access.mjs',"if(fc.receiver_id!==artifact.reference.engine)return blocked('receiver_not_permitted');",''],
+  ['access-method','engine-access.mjs',"if(fc.method_names.length>0&&!fc.method_names.includes('call'))return blocked('method_not_permitted');",''],
+  ['access-nonce','engine-access.mjs',"if(nonce<=BigInt(key.nonce))return blocked('nonce_used');",''],
+  ['access-nonce-ceiling','engine-access.mjs',"if(nonce>=(ceiling>max?max:ceiling))return blocked('nonce_too_large');",''],
+  ['access-allowance','engine-access.mjs',"if(fc.allowance==='0')return blocked('allowance_exhausted');",''],
+
   ['signature','engine-signed.mjs',"assert(verify(null,hash,key,signature),'Invalid signed transaction signature');",''],
   ['exact-arguments','engine-signed.mjs',"assert(args.equals(encodeCall({contract:ref.contract,value:BigInt(ref.value),input:Buffer.from(ref.input.slice(2),'hex')})),'Signed Engine arguments differ from the reviewed call');",''],
   ['default-status-only','engine-journal.mjs','!retry||!retryable(checked.outcome)','!retryable(checked.outcome)'],
@@ -18,7 +26,7 @@ const variants=[
   ['preserve-final','engine-journal.mjs','if(terminal.has(current.observation?.state)){','if(false){'],
   ['operation-immutability','engine-journal.mjs',"if(old)assert(old.reference===ref&&old.signed===a.signedTxBase64,'This operation already has a different signed transaction');",'if(old){}'],
 ];
-const run=directory=>spawnSync(process.execPath,['--test','--test-reporter=tap','engine-journal.test.mjs'],{cwd:directory,windowsHide:true,encoding:'utf8',timeout:30000});
+const run=directory=>spawnSync(process.execPath,['--test','--test-reporter=tap','engine-journal.test.mjs','engine-access.test.mjs'],{cwd:directory,windowsHide:true,encoding:'utf8',timeout:30000});
 const baseline=run(fileURLToPath(new URL('.',import.meta.url)));
 assert.equal(baseline.error,undefined);assert.equal(baseline.status,0,baseline.stdout+baseline.stderr);assert.match(baseline.stdout,/# fail 0/);
 const results=[];await mkdir(new URL('./.testnet/',import.meta.url),{recursive:true});

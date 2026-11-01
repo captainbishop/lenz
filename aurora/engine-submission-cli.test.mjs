@@ -36,3 +36,19 @@ test('CLI rejects malformed, oversized and unexpected inputs without printing th
   assert.equal(run('record',request,'--extra','value').status,1);
   assert.equal(run('--help').status,0);
 });
+
+test('CLI reports denied and unavailable preflights without recording a dispatch',t=>{
+  const directory=mkdtempSync(join(tmpdir(),'lenz-engine-cli-'));
+  t.after(()=>rmSync(directory,{recursive:true,force:true}));
+  const f=fixture(),request=join(directory,'request.json'),store=join(directory,'journal');
+  writeFileSync(request,JSON.stringify({operationId:operation,reference:f.reference,signedTxBase64:f.signedTxBase64}));
+  assert.equal(run('record',request,'--journal',store).status,0);
+  for(const [state,exitCode] of [['blocked',1],['unavailable',2]]){
+    const key=state==='blocked'?{result:{nonce:0,permission:{FunctionCall:{receiver_id:'aurora',method_names:['view'],allowance:null}},block_hash:'1'.repeat(31)+'2',block_height:1000}}:{error:{code:-32000,message:'UNKNOWN_ACCESS_KEY'}};
+    const setup="globalThis.fetch=async(_url,init)=>{const request=JSON.parse(init.body);if(request.method==='send_tx')throw Error('Unexpected broadcast');return new Response(JSON.stringify({jsonrpc:'2.0',id:1,...(request.method==='status'?{result:{chain_id:'testnet'}}:"+JSON.stringify(key)+")}));};";
+    const result=spawnSync(process.execPath,['--import','data:text/javascript,'+encodeURIComponent(setup),cli,'send',operation,'--journal',store],{windowsHide:true,encoding:'utf8',timeout:10000});
+    assert.equal(result.status,exitCode,result.stderr);assert.equal(JSON.parse(result.stdout).preflight.state,state);
+    const saved=JSON.parse(run('inspect',operation,'--journal',store).stdout);
+    assert.equal(saved.attempts,0);assert.equal(saved.outcome.state,'prepared');assert.equal(saved.txHash,f.reference.txHash);
+  }
+});

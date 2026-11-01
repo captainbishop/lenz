@@ -22,7 +22,7 @@ else{
     const result=command==='record'?journal.record(request.operationId,request.reference,request.signedTxBase64):
       command==='inspect'?journal.inspect(input):command==='check'?await journal.check(input):await journal.send(input,{retry:command==='retry'});
     console.log(JSON.stringify(result,null,2));
-    process.exitCode=['record','inspect'].includes(command)||result.outcome.state==='evm_succeeded'?0:['pending','unavailable'].includes(result.outcome.state)?2:1;
+    process.exitCode=result.preflight?(result.preflight.state==='unavailable'?2:1):['record','inspect'].includes(command)||result.outcome.state==='evm_succeeded'?0:['pending','unavailable'].includes(result.outcome.state)?2:1;
   }catch{console.error('Cannot complete this journal action. Check the local request, journal and testnet connection. No replacement transaction is signed.');process.exitCode=1;}
   finally{journal?.close();}
 }

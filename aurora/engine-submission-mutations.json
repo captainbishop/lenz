@@ -1,16 +1,46 @@
 {
-  "checkedAt": "2026-11-01T22:53:31.262Z",
+  "checkedAt": "2026-11-01T23:18:44.453Z",
   "scope": "Local synthetic signed calls and SQLite failure/restart tests. No live chain submission.",
   "sourceFiles": {
-    "engine-journal.mjs": "f166afaa2a70d602400ecf65c733557c34e03781b3f3d9966bd2c4f43bbee5a4",
-    "engine-journal.test.mjs": "83048481d95a29d59eaaff2271c9a7fd84b0223030a0f3d840691f4b4f03a9d6",
+    "engine-access.test.mjs": "4f7b723b3f9f83e0655fb1ea75679ecee914a99331fa102d26926b0a0bd73ea0",
+    "engine-access.mjs": "0fb33349f0a46274ebd0c0ec91b452a605b7765734c949909f286c7ca4f99b24",
+    "engine-journal.mjs": "49c4939a4bea67692517e36df1b37231f9244c67af5501d93a1d8e6f2badb5ee",
+    "engine-journal.test.mjs": "cdcbefe00cea9b154355b96022a3fed47da4680754dd2a6701baa09e070d2ea5",
     "engine-signed.mjs": "935e04c6bf7cbe54e127a1004bcefc9bf4bd9a9bfeb81df0aa66677895a59859",
-    "engine-submit-rpc.mjs": "ee275ae32af0f7c7197a6d446d943ed9c2cd6584c6325a723acd8904eb983a36",
+    "engine-submit-rpc.mjs": "e974833b1469300519f4a471048ca42d384c5b569b3f824ea032adfe331f9ac0",
     "engine-receipt.mjs": "34f28a26586c11a96cb0d2c3ac70fd0ee37a21475f17018b0ef92ad7640289c1",
     "engine-codec.mjs": "86062d116e759dc7bc29affff122b6a2636346c92dae4c2eb0e0f95099dfc854",
-    "engine-submission-fixtures.mjs": "8e5109a79fd64108af486f74b64a3a90411540bbccbe968d135e0e8d70a3c71a"
+    "engine-submission-fixtures.mjs": "e4ff14a7966616e78eb41ffca15158b2683bbab3e0febfcb829d6227771ec749"
   },
   "results": [
+    {
+      "name": "access-preflight",
+      "detected": true
+    },
+    {
+      "name": "final-before-preflight",
+      "detected": true
+    },
+    {
+      "name": "access-receiver",
+      "detected": true
+    },
+    {
+      "name": "access-method",
+      "detected": true
+    },
+    {
+      "name": "access-nonce",
+      "detected": true
+    },
+    {
+      "name": "access-nonce-ceiling",
+      "detected": true
+    },
+    {
+      "name": "access-allowance",
+      "detected": true
+    },
     {
       "name": "signature",
       "detected": true

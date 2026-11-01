@@ -1,5 +1,23 @@
 # Development freshness review
 
+## Aurora access-key preflight — November 2, 2026
+
+The submission journal now checks the exact signed account/key at finality before
+broadcast. Restricted receiver/method, nonce bounds, exhausted allowance and
+invalid or unavailable evidence stop dispatch without replacing the saved call.
+Receipt recovery remains available after revocation. A reproduced reporting race
+now gives a concurrent final receipt priority over a failed key check.
+
+The full Aurora suite passes 91 tests plus one independent SDK check. Sixteen
+submission and eight receipt guard removals are detected. [Access-key evidence](../aurora/engine-access.md)
+records the local and loopback HTTP scope, fixture corrections and remaining
+permission/approval boundaries. Verification rejects input changes during a run.
+No live transaction, key change, funding or wallet operation ran. Web, preview,
+contract, carrier and dependency lockfile sources remain unchanged; their existing
+preview provenance remains applicable. User approval binding and funded Aurora
+execution remain open.
+
+
 ## Aurora submission recovery — November 1, 2026
 
 The developer journal validates a signed Engine call and commits it before

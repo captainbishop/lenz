@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T22:53:39.893Z",
+  "checkedAt": "2026-11-01T23:18:52.791Z",
   "node": "v24.21.0",
   "platform": "win32",
   "arch": "x64",
@@ -8,7 +8,7 @@
   "results": [
     {
       "name": "aurora",
-      "passed": 79,
+      "passed": 91,
       "failed": 0
     },
     {
@@ -18,24 +18,27 @@
     }
   ],
   "sourceFiles": {
+    "engine-access.mjs": "0fb33349f0a46274ebd0c0ec91b452a605b7765734c949909f286c7ca4f99b24",
+    "engine-access.test.mjs": "4f7b723b3f9f83e0655fb1ea75679ecee914a99331fa102d26926b0a0bd73ea0",
+    "engine-access-source.json": "26bb4bec967f098f7603f59df48f2b31dca7f24595f58ada9f31b31304a34c7e",
     "engine-signed.mjs": "935e04c6bf7cbe54e127a1004bcefc9bf4bd9a9bfeb81df0aa66677895a59859",
-    "engine-journal.mjs": "f166afaa2a70d602400ecf65c733557c34e03781b3f3d9966bd2c4f43bbee5a4",
-    "engine-submit-rpc.mjs": "ee275ae32af0f7c7197a6d446d943ed9c2cd6584c6325a723acd8904eb983a36",
+    "engine-journal.mjs": "49c4939a4bea67692517e36df1b37231f9244c67af5501d93a1d8e6f2badb5ee",
+    "engine-submit-rpc.mjs": "e974833b1469300519f4a471048ca42d384c5b569b3f824ea032adfe331f9ac0",
     "engine-receipt.mjs": "34f28a26586c11a96cb0d2c3ac70fd0ee37a21475f17018b0ef92ad7640289c1",
     "engine-codec.mjs": "86062d116e759dc7bc29affff122b6a2636346c92dae4c2eb0e0f95099dfc854",
-    "engine-journal.test.mjs": "83048481d95a29d59eaaff2271c9a7fd84b0223030a0f3d840691f4b4f03a9d6",
-    "engine-submit-rpc.test.mjs": "45fd2392e1f1265a0749f0c2433000f6f2ba31f63b1d25ae8145a233854a7160",
-    "engine-submission-cli.test.mjs": "23faed5277d292f088f937329ad57db2dfe5dfb5b9fd7cd56a457da802d54897",
+    "engine-journal.test.mjs": "cdcbefe00cea9b154355b96022a3fed47da4680754dd2a6701baa09e070d2ea5",
+    "engine-submit-rpc.test.mjs": "cf003d6c473b2f7ddc85476c5001b44e8c5ac22ccf65b0f6709c7b7bf43d5abc",
+    "engine-submission-cli.test.mjs": "da9a52c39d5552fc39e7e25fed1e00cb425d138d0ff869e43b1433444bc1ee45",
     "engine-submission-sdk.test.mjs": "ba2c7c89191d4e1c247893b2923f2cf687daf8ce3a749dbf287adbf7f0847123",
-    "engine-submission-fixtures.mjs": "8e5109a79fd64108af486f74b64a3a90411540bbccbe968d135e0e8d70a3c71a",
-    "scripts/engine-submission.js": "e30af55b606468958f3d380b1da2f623fc035bd550fdda1668087f4d61f31184",
-    "engine-submission-mutations.mjs": "b32dc4bc61df09c36dffe2903bc6127d46e94255080efd8180a4738d34d2a0e3",
-    "engine-submission-mutations.json": "aa39097e0b17afc38150da71aeb5c41ad096d7191b503e0db8dcff05fc356ea4",
+    "engine-submission-fixtures.mjs": "e4ff14a7966616e78eb41ffca15158b2683bbab3e0febfcb829d6227771ec749",
+    "scripts/engine-submission.js": "c6d1816c012b53f5d57f97d808bf97972681e394027fd2138a78343992d2ac72",
+    "engine-submission-mutations.mjs": "e53e993c134d98a4a090da2990dc2e62dc8474376dc61491841e1aa13d55eee7",
+    "engine-submission-mutations.json": "055ab96eb8a12181b0d21dd0a8384ccff5c84e90123e177d51c1f62585f390a7",
     "engine-receipt-mutations.mjs": "23675cbb5b1b0e725f1542e7eff1edb02d7c768c81ffbddc5e4277ee7c6a3f52",
-    "engine-receipt-mutations.json": "a7003700a63e8b9763dbb097874c6aa2ba8bf5a5f772bbe72ef462c14b50bbd2",
-    "engine-submission-verification.mjs": "bd33e30f8e1b615e7118ccdfda6d6850d9f07c1f97210d58ecf74898663a0885",
+    "engine-receipt-mutations.json": "892c448826794af163b1b73fa6c10856c60e39dc5b61661b9e8cb47080a261ae",
+    "engine-submission-verification.mjs": "67f9d55ddfd006a6bec4ca11eaaba3311d5c5910713d7e8a8eee9abc506d1a85",
     "engine-submission-source.json": "ef642f5bfd5baea9b5e8aadbd7d09cc78803609a276e093fac3db835e6b5b51b",
-    "package.json": "d96a44942ae03e0015d0835826d245d986734c2c07ad7ab050f602e9a9fbc41d",
+    "package.json": "57a78c9e01884069b0e554e29f42671ddc3433d19eb7e5cac38dbff9947cca8b",
     "package-lock.json": "933097564fbf2f5e12d9c07808d54b3c4060f5087864d3983367fa2e311712a6",
     "../contracts/package-lock.json": "fc1802115ecae8e4da51bb7442a25810354165ad1a4e517ed1da0622596d0b44"
   }

@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/near/nearcore",
+  "commit": "7041cae893f59baa9363cec0c4e746a29e58cd95",
+  "files": [
+    {
+      "path": "runtime/runtime/src/verifier.rs",
+      "url": "https://raw.githubusercontent.com/near/nearcore/7041cae893f59baa9363cec0c4e746a29e58cd95/runtime/runtime/src/verifier.rs",
+      "sha256": "817c0936c18eb9420d3a22e45c1fcf13a1953714397b84aa6ef312a23d909059"
+    },
+    {
+      "path": "core/primitives-core/src/account.rs",
+      "url": "https://raw.githubusercontent.com/near/nearcore/7041cae893f59baa9363cec0c4e746a29e58cd95/core/primitives-core/src/account.rs",
+      "sha256": "7350c7e755ac956193d8e969fad0ab915ca428ec7e17f0fb2161b5310587f5f0"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {validateSignedEngineCall} from './engine-signed.mjs';
 import {checkEngineTransaction,inspectEngineTransaction} from './engine-receipt.mjs';
 import {rpcOptions,submissionRpc} from './engine-submit-rpc.mjs';
+import {checkEngineAccessKey} from './engine-access.mjs';
 
 const terminal=new Set(['evm_succeeded','evm_failed','near_failed','needs_review']);
 const states=new Set([...terminal,'pending','unavailable','unverified']);
@@ -86,6 +87,11 @@ export class EngineJournal {
     const network=await submissionRpc('status',[],opts);
     assert(network?.chain_id==='testnet','Submission endpoint is not NEAR testnet');
     assert(row.attempts<100,'Submission attempt limit reached');
+    const preflight=await checkEngineAccessKey(row.reference,row.signedTxBase64,opts);
+    if(preflight.state!=='permitted'){
+      const current=this.inspect(id);
+      return terminal.has(current.outcome.state)?current:{...current,preflight};
+    }
     // Atomic claim commits before fetch. Concurrent initial sends cannot both win.
     const claim=this.#db.prepare('UPDATE submissions SET attempts=attempts+1, revision=revision+1, observation=NULL WHERE id=? AND revision=?').run(id,row.revision);
     if(claim.changes!==1)return this.inspect(id);

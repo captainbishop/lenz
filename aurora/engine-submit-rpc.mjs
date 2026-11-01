@@ -5,9 +5,10 @@ export function rpcOptions({fetchImpl=globalThis.fetch,timeoutMs=20000}={}){
   assert(typeof fetchImpl==='function'&&Number.isSafeInteger(timeoutMs)&&timeoutMs>0&&timeoutMs<=60000,'Invalid RPC options');
   return {fetchImpl,timeoutMs};
 }
-// Only the fixed testnet endpoint is used; the caller selects these two operations.
+// Only the fixed testnet endpoint is used; the caller selects submission, network status or a read-only access-key query.
 export async function submissionRpc(method,params,options){
-  assert(method==='status'||method==='send_tx','Unsupported submission operation');
+  assert(method==='status'||method==='send_tx'||method==='query','Unsupported submission operation');
+  if(method==='query')assert(params?.request_type==='view_access_key'&&params.finality==='final','Unsupported access-key query');
   const {fetchImpl,timeoutMs}=rpcOptions(options),controller=new AbortController();
   let timer,reader;
   const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('Submission RPC deadline'));},timeoutMs);});

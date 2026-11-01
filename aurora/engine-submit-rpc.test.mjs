@@ -6,7 +6,7 @@ import {mkdtempSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {EngineJournal} from './engine-journal.mjs';
-import {fixture,operation} from './engine-submission-fixtures.mjs';
+import {fixture,operation,accessKey} from './engine-submission-fixtures.mjs';
 test('actual HTTP redirect, streamed overflow and interrupted bodies cannot confirm or replace a submission',async()=>{
   let mode='redirect',followed=0,sends=0;
   const server=createServer(async(req,res)=>{
@@ -14,6 +14,7 @@ test('actual HTTP redirect, streamed overflow and interrupted bodies cannot conf
     let raw='';for await(const chunk of req)raw+=chunk;
     const body=JSON.parse(raw);
     if(body.method==='status'){res.end(JSON.stringify({jsonrpc:'2.0',id:1,result:{chain_id:'testnet'}}));return;}
+    if(body.method==='query'){res.end(JSON.stringify({jsonrpc:'2.0',id:1,result:accessKey()}));return;}
     assert.equal(body.method,'send_tx');sends++;
     if(mode==='redirect'){res.writeHead(302,{location:'/destination'});res.end();return;}
     if(mode==='overflow'){res.writeHead(200);res.end(' '.repeat(256*1024+1));return;}

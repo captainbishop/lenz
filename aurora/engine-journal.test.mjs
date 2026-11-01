@@ -7,7 +7,7 @@ import {spawnSync} from 'node:child_process';
 import {DatabaseSync} from 'node:sqlite';
 import {EngineJournal} from './engine-journal.mjs';
 import {validateSignedEngineCall,MAX_SIGNED_BYTES} from './engine-signed.mjs';
-import {fixture,operation,finalTransaction,rpcFixture,response} from './engine-submission-fixtures.mjs';
+import {fixture,operation,finalTransaction,rpcFixture,response,accessKey} from './engine-submission-fixtures.mjs';
 
 function setup(t){
   const directory=mkdtempSync(join(tmpdir(),'lenz-engine-test-')),journal=new EngineJournal(directory);
@@ -70,7 +70,7 @@ test('a lost submission response survives reopening; normal send only checks sta
 test('explicit retry checks first and transmits exactly the original signed bytes',async t=>{
   const {journal}=setup(t),f=prepare(journal),rpc=rpcFixture();
   await journal.send(operation,rpc);const result=await journal.send(operation,{...rpc,retry:true});
-  assert.equal(result.attempts,2);assert.deepEqual(rpc.requests.map(x=>x.method),['status','send_tx','tx','status','send_tx']);
+  assert.equal(result.attempts,2);assert.deepEqual(rpc.requests.map(x=>x.method),['status','query','send_tx','tx','status','query','send_tx']);
   assert.deepEqual(writes(rpc).map(x=>x.params.signed_tx_base64),[f.signedTxBase64,f.signedTxBase64]);
 });
 test('included, unverified and final outcomes prevent an explicit retry',async t=>{
@@ -101,7 +101,7 @@ test('concurrent initial sends from separate journal connections claim one durab
 test('process termination after dispatch retains the hash and forbids automatic retransmission',async t=>{
   const {journal,directory}=setup(t),f=prepare(journal);journal.close();
   const module=new URL('./engine-journal.mjs',import.meta.url).href;
-  const code=`import {EngineJournal} from ${JSON.stringify(module)}; const j=new EngineJournal(process.argv[1]);await j.send(process.argv[2],{fetchImpl:async(url,init)=>{const r=JSON.parse(init.body);if(r.method==='send_tx')process.exit(78);return new Response(JSON.stringify({jsonrpc:'2.0',id:1,result:{chain_id:'testnet'}}));}});`;
+  const code=`import {EngineJournal} from ${JSON.stringify(module)}; const j=new EngineJournal(process.argv[1]);await j.send(process.argv[2],{fetchImpl:async(url,init)=>{const r=JSON.parse(init.body);if(r.method==='send_tx')process.exit(78);return new Response(JSON.stringify({jsonrpc:'2.0',id:1,result:r.method==='query'?{nonce:0,permission:'FullAccess',block_hash:'1'.repeat(31)+'2',block_height:1000}:{chain_id:'testnet'}}));}});`;
   const child=spawnSync(process.execPath,['--input-type=module','-e',code,directory,operation],{windowsHide:true,encoding:'utf8'});
   assert.equal(child.status,78,child.stderr);
   const reopened=new EngineJournal(directory),rpc=rpcFixture({read:finalTransaction(f.reference)});
@@ -127,6 +127,7 @@ test('a stalled response remains uncertain without a replacement transaction',as
   let sends=0;
   const fetchImpl=async(_url,init)=>{
     if(JSON.parse(init.body).method==='status')return response({chain_id:'testnet'});
+    if(JSON.parse(init.body).method==='query')return response(accessKey());
     sends++;return new Response(new ReadableStream({start(controller){controller.enqueue(new TextEncoder().encode(' '));}}));
   };
   const result=await journal.send(operation,{fetchImpl,timeoutMs:20});assert.equal(result.outcome.state,'unavailable');assert.equal(result.attempts,1);assert.equal(sends,1);
@@ -138,7 +139,7 @@ test('repeating send with no final receipt never rebroadcasts implicitly',async 
   await journal.send(operation,rpc);
   const result=await journal.send(operation,rpc);
   assert.equal(result.outcome.state,'pending');assert.equal(result.attempts,1);
-  assert.deepEqual(rpc.requests.map(r=>r.method),['status','send_tx','tx']);
+  assert.deepEqual(rpc.requests.map(r=>r.method),['status','query','send_tx','tx']);
 });
 test('failed receipt persistence leaves the original attempt available for read-only recovery',async t=>{
   const {journal,directory}=setup(t),f=prepare(journal),db=new DatabaseSync(join(directory,'submissions.sqlite'));

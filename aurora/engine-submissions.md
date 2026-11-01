@@ -32,7 +32,8 @@ node scripts/engine-submission.js retry <operation-id>
 
 `record` validates and saves without network access. `inspect` reads the saved
 summary. `send` can broadcast a transaction to NEAR testnet: it first checks the
-endpoint network and commits an attempt to SQLite, then calls `send_tx` with
+endpoint network and [current access-key permissions](engine-access.md),
+commits an attempt to SQLite, then calls `send_tx` with
 `wait_until: NONE`. A successful dispatch response alone does not prove validation,
 inclusion or execution.
 
@@ -40,7 +41,8 @@ After an earlier attempt or saved observation, ordinary `send` only checks statu
 `check` always uses the saved hash and sender without broadcasting. Explicit
 `retry` checks first and may resend only the saved bytes when status is
 `unavailable` or `pending` at `NONE`. Included, unverified and final results prevent
-that retry. Newer observations are rechecked before the atomic attempt claim.
+that retry. A permitted access-key preflight is also required before dispatch.
+Newer observations are rechecked before the atomic attempt claim.
 Concurrent initial sends from two journal connections can claim only one attempt.
 
 The four final states are `evm_succeeded`, `evm_failed`, `near_failed` and
@@ -52,7 +54,9 @@ make no transfer or start another asynchronous operation.
 Exit 0 means a successful record/inspect action, or verified EVM success for a
 network action. Exit 2 means pending or unavailable; exit 1 covers failures,
 review and invalid input/evidence. Stdout contains the operation ID, hash, attempt
-count and outcome, without signed transaction bytes.
+count and outcome, without signed transaction bytes. A denied or unavailable
+[preflight](engine-access.md#results-and-recovery) is reported separately and does
+not record a dispatch attempt.
 
 ## Storage and limits
 
@@ -78,8 +82,9 @@ The decoder accepts only NEAR V0 with an Ed25519 key/signature and exactly one
 FunctionCall to `aurora.call`. It verifies the signature over the unsigned
 transaction hash, sender, receiver, nonce, exact Engine arguments, gas and zero
 attached NEAR. EVM value is denominated in wei and requires an existing Engine
-balance. The decoder does not check current access-key permissions, nonce
-availability or recent-block validity on-chain.
+balance. The separate access-key preflight checks reported permissions and nonce
+bounds at a final block. It does not reserve a nonce, prove sufficient funds or
+establish recent-block validity.
 
 ## Verification
 
@@ -89,9 +94,9 @@ After installing both the Aurora and `../contracts/` pinned dependencies, run:
 node engine-submission-verification.mjs
 ```
 
-The [recorded run](engine-submission-results.json) passed 79 Aurora tests and one
+The [recorded run](engine-submission-results.json) passed 91 Aurora tests and one
 independent near-api-js 7.4.0 check of encoding, transaction hash and signature.
-[Nine submission guard removals](engine-submission-mutations.json) and
+[Sixteen submission guard removals](engine-submission-mutations.json) and
 [eight receipt guard removals](engine-receipt-mutations.json) were detected.
 Reports bind the checked implementation and tests by SHA-256.
 
@@ -114,7 +119,7 @@ and the existing [Aurora Engine source](engine-source.json). NEAR documents
 [`send_tx` and `tx`](https://docs.near.org/api/rpc/transactions) separately from
 [transaction signing and validation](https://docs.near.org/protocol/transactions).
 
-This step has no live submission evidence. Account authorization, binding Lenz
+This step has no live submission evidence. Full account authorization, binding Lenz
 approval to the call, deployed contracts, a funded NEAR/Aurora asset route,
 payment effects and liability handling remain required. The journal trusts the
 configured RPC and local database; it verifies neither consensus proofs nor

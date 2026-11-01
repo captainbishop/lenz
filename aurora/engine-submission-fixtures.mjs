@@ -26,13 +26,15 @@ export function finalTransaction(ref,{tag=0,output=Buffer.alloc(0),sideFailure=f
     receipts_outcome:[{id:id('2'),outcome:{executor_id:'aurora',receipt_ids:[id('3')],status}},
       {id:id('3'),outcome:{executor_id:ref.sender,receipt_ids:[],status:sideFailure?{Failure:{ActionError:{kind:'refund failed'}}}:{SuccessValue:''}}}],status};
 }
+export const accessKey=()=>({nonce:0,permission:'FullAccess',block_hash:'1'.repeat(31)+'2',block_height:1000});
 export const response=result=>new Response(JSON.stringify({jsonrpc:'2.0',id:1,result}),{status:200});
-export function rpcFixture({read={final_execution_status:'NONE'},send={final_execution_status:'NONE'},chain='testnet'}={}){
+export function rpcFixture({read={final_execution_status:'NONE'},send={final_execution_status:'NONE'},chain='testnet',access=accessKey()}={}){
   const requests=[];
   const fetchImpl=async(url,init)=>{
     if(url!=='https://test.rpc.fastnear.com'||init.redirect!=='error')throw Error('Unexpected RPC destination');
     const body=JSON.parse(init.body);requests.push(body);
     if(body.method==='status')return response({chain_id:chain});
+    if(body.method==='query'){if(access instanceof Error)throw access;return response(typeof access==='function'?access(body):access);}
     if(body.method==='tx')return response(typeof read==='function'?read(body):read);
     if(body.method==='send_tx'){if(send instanceof Error)throw send;return response(typeof send==='function'?send(body):send);}
     throw Error('Unexpected RPC method');
