@@ -69,7 +69,9 @@ The [transaction checker](engine-transactions.md) now binds an expected call to
 final NEAR receipts and its returned Engine result. Its fixture tests distinguish
 EVM reverts, NEAR failures, failed side receipts and unavailable responses.
 This is preparation for payment-outcome verification and recovery; no live Aurora
-execution or wallet submission is established by those tests.
+execution or wallet submission is established by those tests. A separate
+[submission journal](engine-submissions.md) persists signed calls and recovers
+interrupted sends; it remains a developer component.
 
 ## Remaining integration work
 

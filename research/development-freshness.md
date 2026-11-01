@@ -1,5 +1,24 @@
 # Development freshness review
 
+## Aurora submission recovery — November 1, 2026
+
+The developer journal validates a signed Engine call and commits it before
+broadcast. Restart recovery checks the original hash; explicit retry can resend
+only the original bytes after checking status. Two reproduced resend regressions
+now pass. The complete Aurora suite passes 79 tests, with one additional pinned
+NEAR SDK interoperability test. Nine submission and eight receipt guard removals
+are detected. [Reproduction and limits](../aurora/engine-submissions.md) and
+[source-bound results](../aurora/engine-submission-results.json) describe SQLite
+write failures, child-process termination, concurrent access, CLI checks and real
+loopback HTTP alongside synthetic receipts.
+
+Aurora status and setup documentation reflect this developer-only capability.
+Account authorization, deployment, a funded route and payment-effect verification
+remain open. There was no live chain submission, funding or wallet-state change.
+Web, contract, dependency lockfile, carrier and preview sources are unchanged;
+existing preview provenance remains applicable. This step adds no UI controls.
+
+
 ## Recipient-specific delivery status — November 1, 2026
 
 Chat and wallet show nearby delivery only for the paired recipient. Changing

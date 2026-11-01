@@ -3,7 +3,9 @@
 `engine-receipt.mjs` checks whether a specific NEAR-to-Aurora call has finished
 and whether the EVM execution succeeded. It is a developer module for the pending
 execution adapter. It is not connected to the Lenz wallet and cannot sign,
-broadcast, retry a transaction or release an offline payment reservation.
+broadcast, retry a transaction or release an offline payment reservation. The separate
+[submission journal](engine-submissions.md) adds persistence and explicit retry
+for already signed calls.
 
 ## Check a call
 
@@ -106,6 +108,7 @@ receipts. An incomplete final graph is rejected rather than treated as success.
 Even a successful EVM call may return false, do nothing or only begin an
 asynchronous asset transfer. The execution adapter must still verify the intended
 asset, recipient and amount, final bridge/callback outcomes and conservation of
-liabilities. Account authorization, a funded NEAR/Aurora route, durable submission
-records and safe retry/recovery remain integration requirements. The configured
-tUSD mapping was absent in the separate [read-only preflight](engine-preflight-results.json).
+liabilities. The [developer journal](engine-submissions.md) now saves signed calls
+before dispatch and checks interrupted submissions by hash. Account authorization,
+a funded NEAR/Aurora route and integration with payment liabilities remain required.
+The configured tUSD mapping was absent in the separate [read-only preflight](engine-preflight-results.json).

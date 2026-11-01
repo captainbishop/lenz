@@ -75,6 +75,8 @@ function inspect({ref,args},tx){
   return {...result,state,engineReceiptId:returned.id,evm};
 }
 
+export function validateEngineReference(reference){return validate(reference).ref;}
+
 // RPC execution evidence only; this never settles a payment or releases a reservation.
 export function inspectEngineTransaction(reference,transaction){return inspect(validate(reference),transaction);}
 export async function checkEngineTransaction(reference,{fetchImpl=globalThis.fetch,timeoutMs=20000}={}){
