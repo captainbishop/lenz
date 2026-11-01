@@ -1,0 +1,217 @@
+{
+  "checkedAt": "2026-11-01T05:03:04.289Z",
+  "ok": true,
+  "checks": [
+    "opening the page makes no wallet, payment or network request",
+    "explicit preparation shows actual amount, fee and fixed recipient with no signing action",
+    "reload and reconnect do not prepare, sign or send; explicit status restores the same review",
+    "forged fee and send-enabled responses do not replace the earlier review",
+    "local output verification is explicit, bound to this review and keeps signing unavailable",
+    "forged ownership, changed terms or request IDs invalidate the output result",
+    "expiry checks require an explicit online action for the displayed request",
+    "network lag is visible and forged success or failed checks invalidate the previous message",
+    "review fits narrow, landscape and enlarged text and creates no Lenz identity",
+    "explicit discard clears only the unsigned review and never sends"
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review",
+      "body": {
+        "wallet": "a",
+        "amount": "0.01"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-effects",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-check",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-status",
+      "body": {
+        "wallet": "a"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:57173/api/zcash/review-discard",
+      "body": {
+        "wallet": "a",
+        "id": "12345678-1234-1234-1234-123456789abc"
+      }
+    }
+  ],
+  "networkChecks": [
+    {
+      "status": "expired",
+      "checkedAt": "2026-11-01T05:03:03.480Z",
+      "serverHeight": 200,
+      "walletHeight": 100,
+      "expiryHeight": 150,
+      "targetHeight": 201,
+      "branchMatches": true,
+      "blocksRemaining": 0
+    }
+  ],
+  "effectChecks": [
+    {
+      "status": "verified",
+      "version": 6,
+      "pool": "ironwood",
+      "amount": "1000000",
+      "fee": "10000",
+      "change": "88980000",
+      "inputValue": "89990000",
+      "recipient": "utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx",
+      "changeOwned": true,
+      "commitmentsVerified": true,
+      "canSign": false,
+      "canSend": false,
+      "checkedAt": "2026-11-01T05:03:02.153Z"
+    }
+  ],
+  "details": "Transaction aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. Recipient utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx. Proposed change 0.8898 test ZEC. Wallet's known block 4563325.",
+  "errors": [],
+  "scope": "Fixture native responses with actual browser interaction; no chain or native wallet activity."
+}

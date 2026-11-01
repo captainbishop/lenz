@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-01T05:05:59.675Z",
+  "checks": [
+    "Native and browser outputs match exact reviewed values; ownership does not override expired status",
+    "Only one unsigned preparation, output check, expiry read and discard were requested; no signing or broadcast route",
+    "Both native account balances and history hashes match the earlier pre-feature evidence"
+  ],
+  "rejectedAlterations": [
+    "false change ownership",
+    "different request",
+    "unexpected send",
+    "changed history"
+  ],
+  "actualBrowser": 7,
+  "fixtureBrowser": 10,
+  "sourceHashes": {
+    "zcash/payment-effects.mjs": "2fd1756a003ae002cea57a96c8ac2988ef448e865b177e013bef03060a95b5de",
+    "zcash/check-payment-effects-native.mjs": "f1a02ba3be1a808cb18c8bf54a5a51a99dddcbe6b24889a630c3fa8a58e47d35",
+    "zcash/review-inspector/src/main.rs": "f7d633e9e1ed14d085f8c1d66a81e2bf1b1e3caebab64c002d966018e9cb8bba",
+    "zcash/review-inspector/src/effects.rs": "d1dbcfc5fef3971e2ee983353d73ea60b36d470c141f597fa3efba6e1a1fb83e",
+    "zcash/review-inspector/Cargo.lock": "b4c63769b30d936b82b692611a5712f4592a7afaf06c6305cef09dbe00c7ebf8",
+    "zcash/review-inspector/Cargo.toml": "e3948b44c1ab1061a2a5e6cf505498e0fe984e8b446f902259a909752c20607e",
+    "zcash/verify-payment-effects.mjs": "89285aa4b6cb6f3025f05eee26595453a8cbc8cc0b614437be08c7033b6fc01a",
+    "zcash/payment-effects-native-results.json": "e12915c34e1d665243ab654647f6952be5cefa7299786a913792215178fef2f6",
+    "web/zcash-effects-live-results.json": "aeee08a8c2ae9f68c5e635ce456d5677cf7232bf34072ea6eccb7bf2097dc22a",
+    "web/zcash-effects-browser-results.json": "9b5a1db4a601fcf5d13ae007f9f94a87cf9689e9056c0150bcac582b1111893f",
+    "zcash/payment-review.mjs": "813ac709d7ede5793f1417090826e9d85d894287503dac9ca418023809756c62",
+    "web/zcash-relay.mjs": "456f60478c15f58a2656e233fa37bc69f1341a899a575a5a032c1e6cbbc90bed",
+    "web/public/zcash-lab.html": "fcd642427b8f3050ff21d8705a142b3302f24301de0151dfcc681509bab497a1",
+    "web/public/zcash-lab.js": "35bdf139a9cbd9f380834d17422729f3dee521715d72ab0a2bf1d2d29ca9e8e8",
+    "web/public/zcash-lab.css": "0d61ecb8b661ff68f6324171390c5b9a2a5ac67a83fc95745a74abc2a3729394"
+  },
+  "scope": "Saved-evidence and source verification; no native command or financial action. Cryptographic output verification is separate from expiry, input availability, witnesses, signing and recovery."
+}

@@ -1,6 +1,6 @@
 # Browser review of an unsigned Zcash payment
 
-[Expiry and network checks](payment-freshness.md) are implemented. Signing approval, full anchor/witness validation and submission recovery remain open. The original review evidence below is preserved.
+[Expiry and network checks](payment-freshness.md) and [cryptographic output/change verification](payment-effects.md) are implemented as separate explicit actions. Signing approval, full anchor/witness validation and submission recovery remain open. The original October 31 review evidence below is preserved.
 
 October 31, 2026. `/zcash-lab.html` can now prepare a real native testnet PCZT,
 show the recipient, amount, fee and total debit, reopen the saved request and
@@ -40,7 +40,7 @@ Discard requires the matching account and request ID. This is safe only because
 this service never produces signatures; it is not a rule for releasing signed
 swap reservations.
 
-The displayed change is proposed, not independently verified ownership. The prior
+At this October 31 checkpoint, displayed change was proposed without independent ownership verification. The November 1 output check now verifies owned change explicitly. The prior
 bounded signer verifies commitments and owned change when signing. A future
 product signer must also check expiry, current anchor/chain readiness and exact
 reviewed terms, with a separate approval and submission-recovery model. A PCZT

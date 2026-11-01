@@ -1,5 +1,27 @@
 # Development freshness review
 
+November 1 unsigned Zcash output review: the developer page now verifies recipient,
+amount, fee, commitments and owned change through the pinned read-only native
+inspector. Seven actual Edge checkpoints and final native controls inspected one
+unsigned test request; output verification passed and the separate network result
+was expired. The request was discarded. Both native balances and transaction
+histories match pre-feature evidence. [Output verification](../zcash/payment-effects.md)
+records the dummy-signature, fixture-value, report-format and dependency failures.
+
+Forty Node tests, three Rust tests, ten fixture browser checks, six removed output
+guards and four expiry guards passed. Light/dark result cards were visually reviewed;
+layout checks cover narrow and desktop widths. Dark button borders remain visible. Two cache
+upgrade checks preserve identity, vault and reservations with
+`proof-u-chat-v29-zcash-output-review`. All 47 static routes resolve, and the six
+homepage preview source/video/poster hashes still match: this developer page is
+outside those recordings. No preview recapture or financial replay was needed.
+
+NEAR, Rhea, Intents, Aurora and proof code are unchanged. The current component
+status retains partner access, external signing, private settlement, recovery and
+device gates. Zcash input availability, current witnesses, complete note-encryption
+validation, signing approval and submission recovery remain open. Older dated
+reviews below retain their original observations.
+
 November 1 live payment-failure review: seven live checkpoints verified actual
 NEAR response-loss recovery and a deliberately conflicting offline branch passed
 onward. The wallet now identifies its conflicted outgoing file and removes its

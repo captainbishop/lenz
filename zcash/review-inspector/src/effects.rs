@@ -1,0 +1,96 @@
+use pczt::{Pczt, roles::verifier::{Verifier, OrchardError}};
+use zcash_keys::{address::Address, keys::UnifiedFullViewingKey};
+use zcash_protocol::consensus::TEST_NETWORK;
+
+// Viewing keys arrive on stdin and are never returned or written to disk.
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Terms {
+    ufvk: String,
+    recipient: String,
+    amount: u64,
+    fee: u64,
+}
+
+pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static str> {
+    if terms.amount == 0 || terms.amount > 10_000_000 || terms.fee == 0 || terms.fee > 10_000 {
+        return Err("Review amount or fee exceeds test bounds");
+    }
+    let transaction = Pczt::parse(bytes).map_err(|_| "Invalid transaction file")?;
+    if *transaction.global().tx_version() != 6 || transaction.ironwood().actions().len() != 2
+        || !transaction.orchard().actions().is_empty()
+        || transaction.orchard().value_sum().0 != 0 || *transaction.sapling().value_sum() != 0
+        || !transaction.sapling().spends().is_empty() || !transaction.sapling().outputs().is_empty()
+        || !transaction.transparent().inputs().is_empty() || !transaction.transparent().outputs().is_empty()
+    { return Err("Expected an unsigned two-action Ironwood test payment"); }
+    let ufvk = UnifiedFullViewingKey::decode(&TEST_NETWORK, &terms.ufvk).map_err(|_| "Invalid testnet viewing key")?;
+    let fvk = ufvk.orchard().ok_or("Missing wallet viewing component")?;
+    let recipient = match Address::decode(&TEST_NETWORK, &terms.recipient) {
+        Some(Address::Unified(ua)) => ua.orchard().copied(),
+        _ => None,
+    }.ok_or("Expected a testnet shielded recipient")?;
+    if fvk.scope_for_address(&recipient).is_some() { return Err("Recipient must be the other test wallet"); }
+    let mut verified = None;
+    Verifier::new(transaction).with_ironwood::<&'static str, _>(|bundle| {
+        let check = || -> Result<(u64, u64), &'static str> {
+            if !bundle.flags().spends_enabled() || !bundle.flags().outputs_enabled() { return Err("Payment inputs or outputs are disabled"); }
+            bundle.verify_cross_address_restriction().map_err(|_| "Invalid cross-address binding")?;
+            let (mut spent, mut paid, mut change, mut inputs, mut recipients, mut changes) = (0u64, 0u64, 0u64, 0, 0, 0);
+            for action in bundle.actions() {
+                action.verify_cv_net().map_err(|_| "Invalid value commitment")?;
+                action.spend().verify_nullifier(Some(fvk)).map_err(|_| "Input does not match wallet viewing key")?;
+                action.spend().verify_rk(Some(fvk)).map_err(|_| "Invalid spend key binding")?;
+                action.output().verify_note_commitment(action.spend()).map_err(|_| "Invalid output commitment")?;
+                let value = action.spend().value().ok_or("Missing input value")?.inner();
+                // The I/O finalizer signs zero-value dummy spends during creation.
+                // A real spend signature would cross this unsigned-review boundary.
+                if !unsigned_real_spend(value, action.spend().spend_auth_sig().is_some()) { return Err("Real input is already signed"); }
+                if value > 0 { inputs += 1; }
+                spent = spent.checked_add(value).ok_or("Input overflow")?;
+                let output = action.output();
+                let value = output.value().ok_or("Missing output value")?.inner();
+                let address = output.recipient().as_ref().ok_or("Missing output recipient")?;
+                if address == &recipient {
+                    recipients += 1; paid = paid.checked_add(value).ok_or("Output overflow")?;
+                } else {
+                    if fvk.scope_for_address(address) != Some(zip32::Scope::Internal) { return Err("Change is not owned by the sending wallet"); }
+                    changes += 1; change = change.checked_add(value).ok_or("Change overflow")?;
+                }
+            }
+            if inputs != 1 || recipients != 1 || changes != 1 || change == 0 { return Err("Expected one real input, recipient and owned change"); }
+            if paid != terms.amount { return Err("Recipient amount differs from review"); }
+            let fee = spent.checked_sub(paid).and_then(|n| n.checked_sub(change)).ok_or("Value does not conserve")?;
+            if fee != terms.fee { return Err("Fee differs from review"); }
+            if i64::try_from(*bundle.value_sum()).ok() != Some(fee as i64) { return Err("Bundle balance differs from fee"); }
+            Ok((spent, change))
+        };
+        verified = Some(check().map_err(OrchardError::Custom)?); Ok(())
+    }).map_err(|e| match e { OrchardError::Custom(reason) => reason, _ => "Invalid Ironwood bundle" })?;
+    let (spent, change) = verified.ok_or("Missing review result")?;
+    Ok(serde_json::json!({"status":"verified", "version":6, "pool":"ironwood",
+        "amount":terms.amount.to_string(), "fee":terms.fee.to_string(), "change":change.to_string(),
+        "inputValue":spent.to_string(), "recipient":terms.recipient,
+        "changeOwned":true, "commitmentsVerified":true, "canSign":false, "canSend":false}))
+}
+
+fn unsigned_real_spend(value: u64, has_signature: bool) -> bool {
+    value == 0 || !has_signature
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn malformed_and_out_of_bounds_terms_fail_closed() {
+        for (amount, fee) in [(0, 10_000), (10_000_001, 10_000), (1, 0), (1, 10_001), (1, 1)] {
+            assert!(verify(b"invalid", Terms { ufvk: String::new(), recipient: String::new(), amount, fee }).is_err());
+        }
+        assert!(serde_json::from_str::<Terms>(r#"{"ufvk":"x","recipient":"x","amount":1,"fee":1,"sign":true}"#).is_err());
+    }
+    #[test]
+    fn dummy_signatures_do_not_authorize_real_value() {
+        assert!(unsigned_real_spend(0, true));
+        assert!(unsigned_real_spend(1, false));
+        assert!(!unsigned_real_spend(1, true));
+    }
+}

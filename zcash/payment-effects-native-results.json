@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-11-01T05:04:50.407Z",
+  "requestId": "fb750852-5cbb-4995-bc9b-23cd7ee715dd",
+  "pcztSha256": "2b655d756e6222ed755fd773bb3bf6bd402c01dc1ea51c69001331a629a90efe",
+  "verified": {
+    "status": "verified",
+    "version": 6,
+    "pool": "ironwood",
+    "amount": "1000000",
+    "fee": "10000",
+    "change": "88980000",
+    "inputValue": "89990000",
+    "recipient": "utest1uy3yg9meytgfcg7l2j6dmgu0xgqttu9cr0r9g0tzfszl7gtcx4hv2849dmgam2r8tc4cwnwh62eczuyp5tgeh9jnur7n2fcspyjju4xx",
+    "changeOwned": true,
+    "commitmentsVerified": true,
+    "canSign": false,
+    "canSend": false
+  },
+  "rejected": [
+    "wrong amount",
+    "wrong fee",
+    "wrong recipient",
+    "other wallet viewing key"
+  ],
+  "walletsUnchanged": true,
+  "journalUnchanged": true,
+  "walletEvidence": {
+    "a": {
+      "balance": {
+        "chain_tip_height": 4563325,
+        "ironwood_spendable": 89990000,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 89990000,
+        "transparent_spendable": 0
+      },
+      "beforeSha256": "b3d9e25c5ac196fae4b28088eba5785f749d4704aff0feaba6a869a5d2f3c0a5",
+      "afterSha256": "b3d9e25c5ac196fae4b28088eba5785f749d4704aff0feaba6a869a5d2f3c0a5"
+    },
+    "b": {
+      "balance": {
+        "chain_tip_height": 4563325,
+        "ironwood_spendable": 10000000,
+        "orchard_spendable": 0,
+        "sapling_spendable": 0,
+        "total": 10000000,
+        "transparent_spendable": 0
+      },
+      "beforeSha256": "45b486d121d236a04e97b34103600acbc49f8efc8519d7d07126f34b52984564",
+      "afterSha256": "45b486d121d236a04e97b34103600acbc49f8efc8519d7d07126f34b52984564"
+    }
+  },
+  "sourceHashes": {
+    "zcash/payment-effects.mjs": "2fd1756a003ae002cea57a96c8ac2988ef448e865b177e013bef03060a95b5de",
+    "zcash/check-payment-effects-native.mjs": "f1a02ba3be1a808cb18c8bf54a5a51a99dddcbe6b24889a630c3fa8a58e47d35",
+    "zcash/review-inspector/src/main.rs": "f7d633e9e1ed14d085f8c1d66a81e2bf1b1e3caebab64c002d966018e9cb8bba",
+    "zcash/review-inspector/src/effects.rs": "d1dbcfc5fef3971e2ee983353d73ea60b36d470c141f597fa3efba6e1a1fb83e",
+    "zcash/review-inspector/Cargo.lock": "b4c63769b30d936b82b692611a5712f4592a7afaf06c6305cef09dbe00c7ebf8",
+    "zcash/review-inspector/Cargo.toml": "e3948b44c1ab1061a2a5e6cf505498e0fe984e8b446f902259a909752c20607e"
+  },
+  "scope": "Read-only cryptographic inspection of an existing unsigned PCZT with pinned native tools. Four rejected term/account controls; no seed access, signing, proving, synchronization, funding or broadcast. Local viewing keys and PCZT contents are not included."
+}

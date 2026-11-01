@@ -5,7 +5,7 @@ const amount = value => {
   const n = BigInt(value), fraction = (n % 100000000n).toString().padStart(8, '0').replace(/0+$/, '');
   return `${n / 100000000n}${fraction ? '.' + fraction : ''}`;
 };
-function controls() { $('#zc-read').disabled = busy; $('#zc-refresh').disabled = busy || !navigator.onLine; $('#zc-wallet').disabled = busy; $('#zc-copy').disabled = busy || !snapshot; for (const id of ['prepare','check','discard']) $('#zc-review-' + id).disabled = busy; $('#zc-review-network').disabled = busy || !navigator.onLine || review?.state !== 'ready'; $('#zc-review-amount').disabled = busy; $('#main').setAttribute('aria-busy', String(busy)); }
+function controls() { $('#zc-read').disabled = busy; $('#zc-refresh').disabled = busy || !navigator.onLine; $('#zc-wallet').disabled = busy; $('#zc-copy').disabled = busy || !snapshot; for (const id of ['prepare','check','discard']) $('#zc-review-' + id).disabled = busy; $('#zc-review-effects').disabled = busy || review?.state !== 'ready'; $('#zc-review-network').disabled = busy || !navigator.onLine || review?.state !== 'ready'; $('#zc-review-amount').disabled = busy; $('#main').setAttribute('aria-busy', String(busy)); }
 function status(text, error = false) { $('#zc-status').textContent = text; $('#zc-status').dataset.error = String(error); }
 function validate(data, wallet) {
   if (data?.network !== 'testnet' || data.wallet !== wallet || data.mode !== 'native-test-companion' || data.canSend !== false || typeof data.refreshed !== 'boolean') throw Error('Unexpected test wallet response.');
@@ -51,7 +51,7 @@ async function paymentReview(action) {
   if (busy) return;
   const wallet = $('#zc-wallet').value, input = { wallet };
   if (action === 'review') input.amount = $('#zc-review-amount').value.trim();
-  if (['review-discard','review-check'].includes(action)) { if (!review) return; input.id = review.id; }
+  if (['review-discard','review-check','review-effects'].includes(action)) { if (!review) return; input.id = review.id; }
   if (action === 'review-check' && !navigator.onLine) return;
   busy = true; controls(); $('#zc-review-status').textContent = 'Checking the unsigned payment on this computer…';
   try {
@@ -60,14 +60,16 @@ async function paymentReview(action) {
     const next = data.review;
     if (next !== null) {
       if (!next || next.wallet !== wallet || !/^[0-9a-f-]{36}$/.test(next.id) || !['ready','preparing','failed'].includes(next.state) || next.canSign !== false || next.canSend !== false) throw Error('Unexpected payment review.');
+      if (input.id && next.id !== input.id) throw Error('A different payment review was returned.');
       amount(next.amount);
       validateFreshness(next.freshness);
+      validateEffects(next.effects, next);
       if (next.state === 'ready') {
         for (const field of ['fee','change','totalDebit']) amount(next[field]);
         if (BigInt(next.amount) < 1n || BigInt(next.amount) > 10000000n || BigInt(next.fee) < 1n || BigInt(next.fee) > 10000n || BigInt(next.totalDebit) !== BigInt(next.amount) + BigInt(next.fee) || next.recipient !== (wallet === 'a' ? 'b' : 'a') || !/^[0-9a-f]{64}$/.test(next.txid) || !/^utest1[023456789acdefghjklmnpqrstuvwxyz]{50,295}$/.test(next.address)) throw Error('Payment review terms disagree.');
       }
     }
-    review = next; $('#zc-review-result').hidden = !next; $('#zc-review-terms').replaceChildren(); $('#zc-review-details').textContent = ''; $('#zc-review-freshness').textContent = freshnessText(next?.freshness);
+    review = next; $('#zc-review-result').hidden = !next; $('#zc-review-terms').replaceChildren(); $('#zc-review-details').textContent = ''; $('#zc-review-freshness').textContent = freshnessText(next?.freshness); $('#zc-review-ownership').textContent = effectsText(next?.effects);
     if (!next) $('#zc-review-status').textContent = action === 'review-discard' ? 'Unsigned review discarded. No funds were sent.' : 'No saved unsigned review for this account.';
     else if (next.state !== 'ready') { $('#zc-review-heading').textContent = 'Preparation did not finish'; $('#zc-review-status').textContent = 'This request was not signed or sent. Discard it before preparing another payment.'; }
     else {
@@ -78,13 +80,28 @@ async function paymentReview(action) {
       $('#zc-review-details').textContent = `Transaction ${next.txid}. Recipient ${next.address}. Proposed change ${amount(next.change)} test ZEC. Wallet's known block ${next.walletHeight}.`;
       $('#zc-review-status').textContent = 'Review saved on this computer. Reloading or reconnecting will not sign or send it.';
     }
-  } catch (error) { $('#zc-review-status').textContent = `${error.message} Open saved review to check whether preparation finished. Any earlier review shown may be out of date.`; $('#zc-review-freshness').textContent = 'The latest check did not complete. Any earlier network observation is out of date.'; }
+  } catch (error) { $('#zc-review-status').textContent = `${error.message} Open saved review to check whether preparation finished. Any earlier review shown may be out of date.`; $('#zc-review-freshness').textContent = 'The latest check did not complete. Any earlier network observation is out of date.'; $('#zc-review-ownership').textContent = 'The latest request did not complete. Open the saved review and check its outputs again.'; }
   finally { busy = false; controls(); }
 }
 $('#zc-review-prepare').onclick=()=>paymentReview('review');
 $('#zc-review-check').onclick=()=>paymentReview('review-status');
 $('#zc-review-discard').onclick=()=>paymentReview('review-discard');
 $('#zc-review-network').onclick=()=>paymentReview('review-check');
+$('#zc-review-effects').onclick=()=>paymentReview('review-effects');
+function validateEffects(value, next) {
+  if (value == null) return;
+  if (!Number.isFinite(Date.parse(value.checkedAt))) throw Error('Invalid output check.');
+  if (['checking','unavailable'].includes(value.status)) return;
+  for (const field of ['amount','fee','change','inputValue']) amount(value[field]);
+  if (value.status !== 'verified' || value.version !== 6 || value.pool !== 'ironwood' || value.changeOwned !== true || value.commitmentsVerified !== true || value.canSign !== false || value.canSend !== false ||
+    value.recipient !== next.address || value.amount !== next.amount || value.fee !== next.fee || value.change !== next.change || BigInt(value.inputValue) !== BigInt(next.amount) + BigInt(next.fee) + BigInt(next.change)) throw Error('Output check differs from this review.');
+}
+function effectsText(value) {
+  if (!value) return 'Outputs and change ownership have not been checked.';
+  if (value.status === 'checking') return 'An output check started but has no saved result. Check again.';
+  if (value.status === 'unavailable') return 'The last output check failed. Do not rely on an earlier successful check.';
+  return `Recipient, amount, fee and commitments verified. Change belongs to the sending wallet. Checked ${new Date(value.checkedAt).toLocaleString()}. Input availability, current witnesses and expiry are separate checks; signing and sending remain unavailable.`;
+}
 function validateFreshness(value) {
   if (value == null) return;
   if (!Number.isFinite(Date.parse(value.checkedAt))) throw Error('Invalid network check.');

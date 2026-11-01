@@ -27,6 +27,15 @@ test('expiry check accepts only a matching wallet/id payload and sanitizes provi
   const out=res();await route(req('/api/zcash/review-check',{wallet:'a',id}),out);
   assert.equal(out.status,503);assert.deepEqual(calls,[['check',{wallet:'a',id}]]);assert(!JSON.stringify(out.body).includes('private'));
 });
+test('output review accepts only wallet and request ID, never a viewing key or file path',async()=>{
+  const id='12345678-1234-1234-1234-123456789abc',calls=[];
+  const route=createZcashRoute(()=>assert.fail('no sync'),async(...args)=>{calls.push(args);return{review:null};});
+  for(const input of [{wallet:'a'},{wallet:'a',id,ufvk:'private'},{wallet:'a',id,path:'transaction.pczt'},{wallet:'a',id,amount:'0.01'}]){
+    const out=res();await route(req('/api/zcash/review-effects',input),out);assert.equal(out.status,400);
+  }
+  const out=res();await route(req('/api/zcash/review-effects',{wallet:'a',id}),out);assert.equal(out.status,200);
+  assert.deepEqual(calls,[['effects',{wallet:'a',id}]]);
+});
 test('only explicit status/refresh requests invoke the companion; response never cached',async()=>{
   const calls=[],route=createZcashRoute(async(...args)=>{calls.push(args);return {balance:'native'};});
   for(const action of ['status','refresh']){const out=res();await route(req('/api/zcash/'+action,{wallet:'b'}),out);assert.equal(out.status,200);assert.equal(out.headers['Cache-Control'],'no-store');}

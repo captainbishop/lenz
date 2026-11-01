@@ -7,7 +7,7 @@ export function createZcashRoute(snapshot = companionSnapshot, review = paymentR
     if (!req.url.startsWith('/api/zcash/')) return false;
     if (req.headers.host !== '127.0.0.1:4173' || req.headers.origin !== 'http://127.0.0.1:4173') { send(res, 403, { error: 'Open this tool from the local Lenz app.' }); return true; }
     if (req.method !== 'POST') { send(res, 405, { error: 'Use POST.' }); return true; }
-    const reviewAction = ({'/api/zcash/review':'prepare','/api/zcash/review-status':'status','/api/zcash/review-discard':'discard','/api/zcash/review-check':'check'})[req.url];
+    const reviewAction = ({'/api/zcash/review':'prepare','/api/zcash/review-status':'status','/api/zcash/review-discard':'discard','/api/zcash/review-check':'check','/api/zcash/review-effects':'effects'})[req.url];
     if (!reviewAction && !['/api/zcash/status', '/api/zcash/refresh'].includes(req.url)) { send(res, 404, { error: 'Unknown Zcash action.' }); return true; }
     let input;
     try {
@@ -15,10 +15,10 @@ export function createZcashRoute(snapshot = companionSnapshot, review = paymentR
       const chunks = []; let size = 0;
       for await (const chunk of req) { size += chunk.length; if (size > 256) throw Error(); chunks.push(Buffer.from(chunk)); }
       input = JSON.parse(Buffer.concat(chunks));
-      const keys = reviewAction === 'prepare' ? 'amount,wallet' : ['discard','check'].includes(reviewAction) ? 'id,wallet' : 'wallet';
+      const keys = reviewAction === 'prepare' ? 'amount,wallet' : ['discard','check','effects'].includes(reviewAction) ? 'id,wallet' : 'wallet';
       if (!input || Array.isArray(input) || Object.keys(input).sort().join(',') !== keys || !['a', 'b'].includes(input.wallet)) throw Error();
       if (reviewAction === 'prepare' && (typeof input.amount !== 'string' || input.amount.length > 10)) throw Error();
-      if (['discard','check'].includes(reviewAction) && (typeof input.id !== 'string' || !/^[0-9a-f-]{36}$/.test(input.id))) throw Error();
+      if (['discard','check','effects'].includes(reviewAction) && (typeof input.id !== 'string' || !/^[0-9a-f-]{36}$/.test(input.id))) throw Error();
     } catch { send(res, 400, { error: 'Choose test wallet A or B.' }); return true; }
     if (busy) { send(res, 409, { error: 'A Zcash wallet check is already running. Wait for it to finish.' }); return true; }
     busy = true;

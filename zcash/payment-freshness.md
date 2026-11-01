@@ -1,5 +1,7 @@
 # Saved payment expiry and network check
 
+The separate [November 1 output check](payment-effects.md) verifies commitments and owned change. Its actual browser test also exercised the expiry check with the updated inspector; the saved payment was expired. The original expiry evidence below retains its recorded heights and scope.
+
 October 31, 2026. The developer page can now check a saved unsigned payment's expiry against the next reported Zcash testnet block. It reads the PCZT with a pinned native inspector, checks the consensus branch at that height and compares the local wallet height with the server's tip. It neither synchronizes nor signs the wallet.
 
 The check requires the matching saved request and unchanged PCZT hash. It saves `checking` before I/O, verifies the file again afterward and replaces an earlier successful result with `unavailable` if a new check fails. Reload and reconnect never start a check or recreate a payment automatically.

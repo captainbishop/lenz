@@ -15,9 +15,9 @@ for(const [name,file,from,to] of changes){
   const directory=await mkdtemp(join(tmpdir(),'lenz-expiry-mutation-'));
   assert.equal(dirname(resolve(directory)),resolve(tmpdir()));
   try{
-    for(const source of ['payment-freshness.mjs','payment-review.mjs','companion.mjs','payment-freshness.test.mjs']){
+    for(const source of ['payment-freshness.mjs','payment-effects.mjs','payment-review.mjs','companion.mjs','payment-freshness.test.mjs']){
       let text=await readFile(new URL(source,import.meta.url),'utf8');
-      if(source===file){assert(text.includes(from));text=text.replace(from,to);}
+      if(source===file){assert(text.includes(from));text=text.replaceAll(from,to);}
       await writeFile(join(directory,source),text);
     }
     const r=spawnSync(process.execPath,['--test','payment-freshness.test.mjs'],{cwd:directory,encoding:'utf8',windowsHide:true});

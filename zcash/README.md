@@ -1,6 +1,6 @@
 # Zcash integration in progress
 
-The developer browser supports local wallet reads, synchronization, [unsigned payment review](payment-review.md), and [expiry/network checks](payment-freshness.md). It prepares a native test transaction, displays its recipient, amount and fee, and preserves the unsigned request across reloads. Signing, broadcast and recovery from this page remain incomplete. The recorded expiry check correctly marked its saved review as expired.
+The developer browser supports local wallet reads, synchronization, [unsigned payment review](payment-review.md), [output and change verification](payment-effects.md), and [expiry/network checks](payment-freshness.md). It prepares a native test transaction, verifies its recipient, amount, fee and owned change locally, and preserves the unsigned request across reloads. Signing, broadcast and recovery from this page remain incomplete. The recorded payment passed output verification but was expired.
 
 A native shielded testnet payment is confirmed in the [October 31 PCZT evidence](pczt.md): wallet A paid B 0.1 test ZEC in a version-6 Ironwood transaction with a 0.0001-test-ZEC fee. At the recorded tip, both wallets reported fourteen confirmations and spendable balances of A 0.8999 / B 0.1 test ZEC. Five actual browser checks displayed those balances. The original tool omitted Ironwood signing; a separately hashed bounded signer uses the pinned library support. Browser routes never sign or send.
 

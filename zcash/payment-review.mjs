@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { readNativeWallet } from './companion.mjs';
 import { checkNativeFreshness, evaluateFreshness } from './payment-freshness.mjs';
+import { inspectNativeEffects, validateEffects } from './payment-effects.mjs';
 const execute = promisify(execFile), hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const root = fileURLToPath(new URL('./', import.meta.url));
 const executable = fileURLToPath(new URL('../tooling/zcash-devtool/target/release/zcash-devtool.exe', import.meta.url));
@@ -51,7 +52,7 @@ async function prepareNative(wallet, value, output) {
   const { stdout } = await execute(executable, [...args, 'inspect', output], { windowsHide: true, timeout: 60000, maxBuffer: 1024 * 1024 });
   return { ...inspectReview(stdout.trim(), value, address), recipient, address, walletHeight: source.balance.chain_tip_height };
 }
-export function createPaymentReviewService({ directory = join(root, '.testnet', 'payment-review'), prepare = prepareNative, check = checkNativeFreshness } = {}) {
+export function createPaymentReviewService({ directory = join(root, '.testnet', 'payment-review'), prepare = prepareNative, check = checkNativeFreshness, effects = inspectNativeEffects } = {}) {
   const recordPath = join(directory, 'current.json');
   let busy = false;
   const read = async () => {
@@ -59,15 +60,29 @@ export function createPaymentReviewService({ directory = join(root, '.testnet', 
   };
   const save = async record => { const temporary = recordPath + '.tmp'; await writeFile(temporary, JSON.stringify(record)); await rename(temporary, recordPath); };
   const publicRecord = record => ({ id: record.id, wallet: record.wallet, state: record.state,
-    createdAt: record.createdAt, amount: String(record.value), ...record.summary, freshness: record.freshness ?? null, canSign: false, canSend: false });
+    createdAt: record.createdAt, amount: String(record.value), ...record.summary, freshness: record.freshness ?? null, effects: record.effects ?? null, canSign: false, canSend: false });
   return async (action, input) => {
-    if (!['prepare', 'status', 'discard', 'check'].includes(action) || !['a', 'b'].includes(input?.wallet)) throw fail('Choose test wallet A or B.');
+    if (!['prepare', 'status', 'discard', 'check', 'effects'].includes(action) || !['a', 'b'].includes(input?.wallet)) throw fail('Choose test wallet A or B.');
     if (busy) throw fail('A payment review is already running.', 409);
     busy = true;
     try {
       await mkdir(directory, { recursive: true });
       const record = await read();
       if (record) assert(/^[0-9a-f-]{36}$/.test(record.id));
+      if (action === 'effects') {
+        if (!record || record.wallet !== input.wallet || record.id !== input.id || record.state !== 'ready') throw fail('Open the matching completed review before checking it.', 409);
+        const file = join(directory, record.id + '.pczt');
+        record.effects = { status: 'checking', checkedAt: new Date().toISOString() }; await save(record);
+        try {
+          assert.equal(hash(await readFile(file)), record.sha256, 'Saved transaction changed');
+          const verified = validateEffects(await effects(record.wallet, file, record), record);
+          assert.equal(hash(await readFile(file)), record.sha256, 'Saved transaction changed during check');
+          record.effects = { ...verified, checkedAt: new Date().toISOString() }; await save(record);
+          return { review: publicRecord(record) };
+        } catch (error) {
+          record.effects = { status: 'unavailable', checkedAt: new Date().toISOString() }; await save(record); throw error;
+        }
+      }
       if (action === 'check') {
         if (!record || record.wallet !== input.wallet || record.id !== input.id || record.state !== 'ready') throw fail('Open the matching completed review before checking it.', 409);
         const file = join(directory, record.id + '.pczt');

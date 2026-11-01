@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-01T05:03:02.080Z",
+  "results": [
+    {
+      "guard": "change ownership",
+      "rejected": true
+    },
+    {
+      "guard": "exact change value",
+      "rejected": true
+    },
+    {
+      "guard": "request binding",
+      "rejected": true
+    },
+    {
+      "guard": "pre-check integrity",
+      "rejected": true
+    },
+    {
+      "guard": "post-check integrity",
+      "rejected": true
+    },
+    {
+      "guard": "persist before native I/O",
+      "rejected": true
+    }
+  ]
+}

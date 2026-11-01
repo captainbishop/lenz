@@ -25,7 +25,7 @@ export async function checkNativeFreshness(wallet, file, run = readNativeWallet)
   const build = JSON.parse(await readFile(new URL('./review-inspector/build.json', import.meta.url)));
   const executable = new URL('./review-inspector/target/release/lenz-zcash-review-inspector.exe', import.meta.url);
   assert.equal(sha256(await readFile(executable)), build.executableSha256, 'Inspector executable changed');
-  for (const [path, field] of [['src/main.rs','sourceSha256'],['Cargo.lock','lockSha256'],['Cargo.toml','manifestSha256']]) {
+  for (const [path, field] of [['src/main.rs','sourceSha256'],['src/effects.rs','effectsSourceSha256'],['Cargo.lock','lockSha256'],['Cargo.toml','manifestSha256']]) {
     assert.equal(sha256(await readFile(new URL('./review-inspector/' + path, import.meta.url))), build[field], 'Inspector source/dependencies changed');
   }
   const info = await run('info', wallet);
