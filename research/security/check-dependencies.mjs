@@ -1,5 +1,6 @@
 // Static metadata inspection only; never imports or runs the packages being checked.
-import {readFile,writeFile,readdir} from 'node:fs/promises';
+import {readFile,writeFile} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
 import {resolve,join,relative} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 export function inspectLock(lock) {
@@ -18,13 +19,11 @@ export function inspectLock(lock) {
   }
   return {entries:Object.keys(lock.packages).length-1,findings,watched,installScripts};
 }
-async function lockfiles(dir){
-  const found=[];
-  for(const entry of await readdir(dir,{withFileTypes:true})){
-    if(['node_modules','.git','.testnet','target','sources','vendor','.codex','.agents'].includes(entry.name))continue;
-    if(entry.isDirectory())found.push(...await lockfiles(join(dir,entry.name)));
-    else if(entry.name==='package-lock.json')found.push(join(dir,entry.name));
-  }return found;
+async function lockfiles(root){
+  // Include tracked files even if ignored; respect local exclusions for untracked files.
+  const result=spawnSync('git',['ls-files','-z','--cached','--others','--exclude-standard','--','package-lock.json','**/package-lock.json'],{cwd:root,windowsHide:true,encoding:'utf8',maxBuffer:8*1024*1024});
+  if(result.status!==0)throw Error('Cannot enumerate project lockfiles with Git');
+  return [...new Set(result.stdout.split('\0').filter(Boolean))].sort().map(file=>join(root,file));
 }
 export async function checkDependencies(root){
   const results=[];

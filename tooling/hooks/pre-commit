@@ -1,4 +1,0 @@
-#!/bin/sh
-set -eu
-node tooling/check-freshness.mjs --staged
-exec node tooling/check-git-content.mjs --staged

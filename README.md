@@ -104,7 +104,7 @@ Run the local regression checks from the repository root:
 ```sh
 node --test zcash/companion.test.mjs web/zcash-relay.test.mjs web/defi-relay.test.mjs
 node web/verify-chat-static.mjs
-node tooling/check-git-content.mjs
+node tooling/check-freshness.mjs
 ```
 
 The [funded social flow](research/offline-social-live.md) records actual tUSD funding, offline A → B → C handover and online settlement/Rhea execution. The [Zcash flow](zcash/pczt.md) records a separate native shielded payment. Fixture tests, saved-evidence checks and live chain observations are identified separately in each report.

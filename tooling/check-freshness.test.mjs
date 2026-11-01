@@ -30,7 +30,7 @@ test('freshness catches hidden component drift, new files, staged differences an
     await put('integrations/route.mjs', 'fixture route');
     await put('aurora/new.sol', 'new fixture'); assert.notEqual(gate().status, 0, 'new component file is detected');
     await rm(join(directory, 'aurora/new.sol'));
-    for(const file of ['carrier/Dockerfile','carrier/Dockerfile.dockerignore','carrier/compose.yaml','carrier/Caddyfile.example','carrier/.env.example']){
+    for(const file of ['carrier/Dockerfile','carrier/Dockerfile.dockerignore','carrier/compose.yaml','carrier/Caddyfile.example','carrier/.env.example','.gitignore']){
       await put(file,'deployment fixture');assert.notEqual(gate().status,0,'deployment changes require freshness review: '+file);await rm(join(directory,file));
     }
     await put('web/evidence/frame.png', 'altered frame');

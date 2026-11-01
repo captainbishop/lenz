@@ -66,6 +66,7 @@
     "Public incident survey remains incomplete; web search failed and FBI detail returned HTTP 403.",
     "Independent release/signing authority, missing-callback repair, safe recovery, privacy and live integration prerequisites remain open."
   ],
+  "sha256Scope": "Product source, documentation and generated build artifacts at the recorded checkpoint.",
   "sha256": {
     "web/security-policy.mjs": "0e4220b76e4a2be6b339356eb6ac1e68a605f30997bf70302c17f3a1b5ab3c65",
     "web/server.mjs": "884118f4cedc3fa913845586ba3048620ae076e657e26e96d911f532a8eca457",
@@ -86,9 +87,6 @@
     "research/security/install-policy.test.mjs": "f6a7bfcc62851b3d2c575d7c5609c20991ec746807ae2d36955dd79e4242fc88",
     "research/security/composition-model.test.mjs": "d42f2698d3cae84732ec860376df2948ebe5239d599c6d782e9c98552dbc041c",
     "research/security/README.md": "4aeef588398b9df1d6a9a7f5c5fae3b0f4012dc539d8b77bca5dfb539128803b",
-    "research/security/security-model.md": "96cd525637f4faabefa7212e12d8e3f96950a5ab1b75ff8431bc5f62885cb680",
-    "research/security/verification.md": "8f15496313e61996b3fbab71265b752595866781447d6384aa610d4489a2c2db",
-    "research/security/campaign-register.md": "aaa574ca3a01f100bc6f7d729869e9c2d8694cf28dcee6cfc85c97940dd1c081",
-    "research/security/binance-aave.md": "86a6e264e1b6fac16ae2c93af0c798cbe9deecfa84fa733a0ff01aded7300188"
+    "research/security/verification.md": "8f15496313e61996b3fbab71265b752595866781447d6384aa610d4489a2c2db"
   }
 }

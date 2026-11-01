@@ -1,5 +1,12 @@
 # Development freshness review
 
+November 1 repository configuration review: shared exclusions cover build output,
+generated browser assets and private runtime data. Dependency discovery follows
+Git's file inventory and local exclusions while still checking tracked files.
+The dependency-discovery and freshness regressions pass; all seven project npm
+lockfiles pass metadata checks. Freshness now covers `.gitignore`. Application,
+contract, cache and preview sources are unchanged in this configuration update.
+
 November 1 carrier network review: opt-in delivery now sends new encrypted messages,
 payment files and recipient receipts through configured independent carrier servers.
 Six protocol/network tests, seven Edge carrier checks and three detected guard
@@ -18,9 +25,8 @@ run completed. This presentation replay did not execute automatic carrier delive
 
 New deployment files have a restricted Docker build context and are included in the
 freshness gate. The gate also detects drift in Dockerfile, ignore, Compose, proxy and
-example-environment files. Publication/freshness regressions pass. Carrier queues,
-operator settings, downloaded sources, installation records and local helpers stay
-outside publication. Remote hosting, ingress controls and device checks are still
+example-environment files. Publication/freshness regressions pass. Carrier queues
+and operator settings remain private. Remote hosting, ingress controls and device checks are still
 required. NEAR, Rhea, Intents, Aurora, Zcash, private settlement and recovery code is
 unchanged; no funding, deployment or financial transaction ran in this feature.
 
@@ -155,9 +161,9 @@ This review corrected obsolete funding/integration claims in the homepage, chat 
 2. Update current UI copy, component documentation, development status where behavior or a blocker changed. Keep historical results dated and linked. List unverified paths explicitly.
 3. Refresh affected recordings after UI/module changes. Run the relevant behavioral checks, cache checks and video playback/theme checks. Change the appropriate service worker when cached content changes; verify an existing cache can update without altering identity or reservations.
 4. Run `node tooling/check-freshness.mjs`. It detects changes across the tracked component sources, configs, tests, JSON evidence and documentation since this review. Inspect the changed areas and update this review before using `--record` to acknowledge them. Recording hashes does not run tests or establish correctness.
-5. Before committing, review the exact staged paths/diff. The pre-commit hook checks the staged freshness record and preview provenance in addition to the existing publication/secret scan. Commit real product work and supporting evidence under the author's configured identity. Keep installed dependencies, private accounts, assistant tooling and local administration out of Git.
+5. Before committing, review the exact staged paths/diff and run `node tooling/check-freshness.mjs --staged` to check the staged freshness record and preview provenance. Commit product work and supporting evidence under the author's configured identity. Review all outgoing commits for private information before pushing.
 
-The automated gate detects content drift, including less-visible components. The publication check also scans saved prompt fields, embedded binary strings and partially redacted machine paths; its regression tests cover staged bytes, committed history and reporting without exposing matched credentials. These checks cannot decide whether a statement is true, detect new upstream vulnerabilities or certify a changing provider/deployment. Those still need targeted inspection and dated evidence. Never refresh evidence by repeating funding, deployment or a completed financial flow without a new scoped reason.
+The automated gate detects content drift, including less-visible components. It cannot decide whether a statement is true, detect new upstream vulnerabilities or certify a changing provider/deployment. Those still need targeted inspection and dated evidence. Never refresh evidence by repeating funding, deployment or a completed financial flow without a new scoped reason.
 
 ## Video previews
 

@@ -14,20 +14,19 @@ Read [development status](docs/status.md) and the relevant component README befo
 3. Run the relevant local tests. Clearly distinguish mocked responses, saved evidence
    and actual network transactions.
 4. Review every candidate path and its purpose, then the diff. Stage explicit paths
-   and run `node tooling/check-git-content.mjs --staged` to scan the exact index.
+   and run `git diff --cached --check` and `node tooling/check-freshness.mjs --staged`.
 5. For future changes, use focused commits with factual titles and recorded validation.
    Keep test outcomes and commit dates accurate.
 
 Never commit wallet keys, seeds, identity decryption files, private PCZTs, account
-databases, API tokens or browser profile directories. The scan is a useful check,
-not a guarantee that every secret format will be detected. Assistant skills, plugin
-packages, local agent instructions, installation records, exploratory analyses and working notes stay local. Review documents for conversation excerpts and personal context; inspect media and binary metadata as well as filenames. Downloaded reference caches stay local. Passing application tests does not establish that a file belongs
-in the repository. Before pushing, scan the committed tree with
-`node tooling/check-git-content.mjs --tree HEAD` and review the outgoing file list.
+databases, API tokens or browser profile directories. Review file contents, links
+and media metadata for private information. Passing application tests does not
+establish that a file belongs in the repository. Before pushing, review every
+outgoing commit, including files removed by a later commit.
 
-Enable the repository's commit and push checks with
-`git config core.hooksPath tooling/hooks`. The commit hook scans the index; the push
-hook scans every outgoing commit, including files removed by a later commit.
+Keep shared build and runtime exclusions in `.gitignore`. Put machine-specific
+exclusions in `.git/info/exclude` and configure personal checks locally. Neither
+ignore mechanism protects a file that is already tracked or added with force.
 
 Keep the web app usable without technical protocol knowledge. Preserve existing
 storage identities and pending authorizations. Payments must remain available outside
