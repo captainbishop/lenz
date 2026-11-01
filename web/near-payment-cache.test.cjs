@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{execFileSync}=require('node:child_process');
 const {securityHeaders}=require('./security-policy.mjs');
-const previous='a33f339ba512bff3fc4979d7eaea21e47c167d0a';
+const previous='d0ea4ee8b81c71747141050f88ad5f99b6a35294';
 const old=new Map(['carrier-client.js','delivery-mode.js','carrier-ui.js','chat.html','money.html','money.js','chat-sw.js','chat.js','receive-packet.js','near-payment-status.js','near-chat.js','near-wallet.js','wallet-feedback.js','chat-layout.css'].map(f=>['/'+f,execFileSync('git',['show',previous+':web/public/'+f],{windowsHide:true})]));
 let modern=false,fail=false,api=0;
 const server=http.createServer(async(req,res)=>{try{
@@ -42,7 +42,7 @@ const server=http.createServer(async(req,res)=>{try{
     assert.equal(await snapshot(),before);console.log('PASS failed nearby cache update preserves old offline chat, identity and reservation');
     await context.setOffline(false);fail=false;assert.equal(await update(),'activated');
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v38-nearby');return !!key&&!!(await(await caches.open(key)).match('/nearby-connection.js'));});
+    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v39-delivery-status');return !!key&&!!(await(await caches.open(key)).match('/nearby-connection.js'));});
     assert(cached);assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
     console.log('PASS successful cache update loads nearby dependencies offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');

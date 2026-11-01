@@ -4,7 +4,7 @@ import { updateState } from './chat-store.js';
 import { mountRheaWallet, loadRheaConfig, renderRheaWallet } from './rhea-wallet.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
-import { automaticDelivery, requestAutomaticDelivery } from './delivery-mode.js';
+import { deliveryMode, requestAutomaticDelivery } from './delivery-mode.js';
 import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, deliveryAcknowledged, prepareDeliveryReceipt } from './delivery-receipts.js';
 import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits, transferTerms } from './near-protocol.js';
@@ -45,6 +45,7 @@ export function mountNearWallet({ action, status }) {
   panels.querySelectorAll('[data-close]').forEach(button=>button.onclick=()=>$('#'+button.dataset.close).close());
   $('#near-explain').onclick=()=> { const b=$('#near-explain'), open=b.getAttribute('aria-expanded')==='true'; b.setAttribute('aria-expanded',String(!open));$('#near-explanation').hidden=open; };
   $('#near-send').onclick=()=>openNearSend();
+  $('#near-recipient').onchange=walletDelivery;
   $('#near-fund').onclick=()=>$('#near-fund-dialog').showModal();
   $('#near-receive').onclick=()=> {selectedFile=null;$('#near-payment-file').value='';$('#near-import').disabled=true;$('#near-receive-dialog').showModal();};
   $('#near-share-card').onclick=()=> {$('#near-receive-dialog').close();$('#show-card').click();};
@@ -81,21 +82,23 @@ export function mountNearWallet({ action, status }) {
   addEventListener('online',connection);addEventListener('offline',connection);
 }
 function walletDelivery() {
-  const automatic=automaticDelivery();
-  $('#near-connection').textContent=config.contract&&config.ready?(automatic?(navigator.onLine?'Automatic delivery · keep Lenz open':'Offline · sends when connected. File sharing is still available.'):(navigator.onLine?'Ready for offline payments.':'Offline · share payments by file.')):'Test money is not available right now.';
-  $('#near-send-delivery').textContent=automatic?'Saved payments will deliver when connected. You can also share a file from your payment history.':'Save and share the encrypted file.';
-  $('#near-send-form button[type=submit]').textContent=automatic?'Send payment':'Prepare payment';
+  const mode=deliveryMode($('#near-recipient').value);
+  $('#near-connection').textContent=config.contract&&config.ready?(mode==='nearby'?'Nearby · connected to '+$('#near-recipient').selectedOptions[0].textContent+' · keep Lenz open':mode==='automatic'?(navigator.onLine?'Automatic delivery · keep Lenz open':'Offline · sends when connected. File sharing is still available.'):(navigator.onLine?'Ready for offline payments.':'Offline · share payments by file.')):'Test money is not available right now.';
+  $('#near-send-delivery').textContent=mode==='nearby'?'Sends directly nearby. Payment confirmation happens separately.':mode==='automatic'?'Saved payments will deliver when connected. You can also share a file from your payment history.':'Save and share the encrypted file.';
+  $('#near-send-form button[type=submit]').textContent=mode!=='file'?'Send payment':'Prepare payment';
 }
-export function openNearSend(id='') { if(!config.contract){notice('The NEAR contract is not connected yet.');return;}$('#near-send-form').reset();$('#near-recipient').value=id;$('#near-send-dialog').showModal(); }
+export function openNearSend(id='') { if(!config.contract){notice('The NEAR contract is not connected yet.');return;}$('#near-send-form').reset();$('#near-recipient').value=id;$('#near-send-dialog').showModal();walletDelivery(); }
 export async function loadNearConfig() {
   const response=await fetch('/near-config.json'); if(!response.ok)throw new Error('Testnet configuration is unavailable.');config=await response.json();
   await loadRheaConfig();
 }
 export async function renderNearWallet(state) {
   const enabled=!!config.contract && config.ready;
-  walletDelivery();
+  const recipient=$('#near-recipient').value;
   $('#near-fund').disabled=!enabled;$('#near-send').disabled=!enabled;$('#near-refresh').disabled=!enabled||!navigator.onLine;
   $('#near-recipient').replaceChildren(new Option('Choose a person',''));for(const c of state.contacts)$('#near-recipient').append(new Option(c.name,c.id));
+  if(state.contacts.some(c=>c.id===recipient))$('#near-recipient').value=recipient;
+  walletDelivery();
   if(!state.identity || !enabled)return;
   const vault=await readNearVault(state,config.contract), ledger=await nearLedger(vault), owner=compressed(state.identity.profile.signingPublic);
   await renderRheaWallet(vault,state.identity);

@@ -55,6 +55,45 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       const stats=await a.evaluate(async()=>{const pc=testPeers.at(-1),all=[...await pc.getStats()].map(([,s])=>s);const transport=all.find(s=>s.type==='transport'),pair=all.find(s=>s.id===transport.selectedCandidatePairId);return {iceServers:pc.getConfiguration().iceServers,local:all.find(s=>s.id===pair.localCandidateId).candidateType,remote:all.find(s=>s.id===pair.remoteCandidateId).candidateType};});
       assert.deepEqual(stats,{iceServers:[],local:'host',remote:'host'});assert.equal((await read(b)).messages.length,0);assert(requests.every(r=>r.endsWith('/chat-sw.js')),'Only blocked service-worker update checks may reach HTTP');
     });
+    await check('delivery indicators follow the selected recipient and clear after disconnect',async()=>{
+      for(const p of [a,b])await p.locator('#nearby-close').click();
+      await a.locator('#contact-list button').filter({hasText:'Chidi'}).click();await idle(a);
+      assert.equal(await a.locator('#prepare-message').textContent(),'Save to share ↗','An unpaired contact must retain file sharing');
+      await a.locator('#pay-tusd').click();
+      assert.equal(await a.locator('#chat-pay-submit').textContent(),'Save payment to share');
+      await a.locator('#chat-pay-close').click();
+      await a.locator('#contact-list button').filter({hasText:'Bola'}).click();await idle(a);
+      assert.equal(await a.locator('#prepare-message').textContent(),'Send');
+      assert.match(await a.locator('#chat-connection').textContent(),/Nearby.*Bola/);
+      await a.locator('#pay-tusd').click();assert.match(await a.locator('#chat-pay-delivery').textContent(),/nearby/i);await a.locator('#chat-pay-close').click();
+      await b.locator('#near-send').click();
+      await b.locator('#near-recipient').selectOption(profiles[2].id);
+      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Prepare payment');
+      assert.doesNotMatch(await b.locator('#near-send-delivery').textContent(),/nearby/i);
+      await b.locator('#near-recipient').selectOption(profiles[0].id);
+      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Send payment');
+      assert.match(await b.locator('#near-send-delivery').textContent(),/nearby/i);
+      await b.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();await(await import('/near-wallet.js')).renderNearWallet(s);});
+      assert.equal(await b.locator('#near-recipient').inputValue(),profiles[0].id,'A wallet refresh must preserve the chosen recipient');
+      assert.match(await b.locator('#near-send-delivery').textContent(),/nearby/i);
+      // Exercise the browser's offline indication without disabling its local network interface.
+      for(const p of [a,b])await p.evaluate(()=>{Object.defineProperty(navigator,'onLine',{configurable:true,get:()=>false});dispatchEvent(new Event('offline'));});
+      assert.match(await a.locator('#chat-connection').textContent(),/Nearby.*Bola/);
+      assert.match(await b.locator('#near-send-delivery').textContent(),/nearby/i);
+      await a.locator('#nearby-open').click();await a.locator('#nearby-disconnect').click();
+      await b.waitForFunction(()=>document.querySelector('#nearby-status').textContent.startsWith('Disconnected'));
+      assert.equal(await a.locator('#prepare-message').textContent(),'Save to share ↗');
+      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Prepare payment');
+      assert.doesNotMatch(await a.locator('#chat-connection').textContent(),/Nearby/);
+      // Configured internet delivery remains available for an unpaired recipient.
+      await a.evaluate(async()=>{const d=await import('/delivery-mode.js'),s=await(await import('/chat-store.js')).readState();d.updateDeliveryMode(false,{...s,nostr:{enabled:true}},true);});
+      assert.equal(await a.locator('#prepare-message').textContent(),'Send');
+      assert.match(await a.locator('#chat-connection').textContent(),/sends when connected/);
+      await a.evaluate(async()=>{(await import('/delivery-mode.js')).updateDeliveryMode(false,{},false);});
+      for(const p of [a,b])await p.evaluate(()=>{delete navigator.onLine;dispatchEvent(new Event('online'));});
+      await b.locator('[data-close="near-send-dialog"]').click();
+      await pair(a,b,profiles[0],profiles[1]);
+    });
     await check('new fragmented chat messages arrive with signed receipts; old history stays local',async()=>{
       await a.locator('#nearby-close').click();await b.locator('#nearby-close').click();
       await a.locator('#message').fill('Meet me by the bookshop. '.repeat(100));await a.locator('#prepare-message').click();await idle(a);

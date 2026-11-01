@@ -1,8 +1,9 @@
 {
-  "checkedAt": "2026-11-01T19:22:02.665Z",
+  "checkedAt": "2026-11-01T19:58:24.893Z",
   "browser": "156.0.4314.58",
   "checks": [
     "signed QR pairing establishes a real local data channel with no web or relay access",
+    "delivery indicators follow the selected recipient and clear after disconnect",
     "new fragmented chat messages arrive with signed receipts; old history stays local",
     "offline payment follows the same channel and keeps settlement separate",
     "saved history needs an explicit action and duplicate resend cannot credit twice",

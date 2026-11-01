@@ -11,6 +11,11 @@ pairing alone never sends existing history. Closing the dialog keeps the connect
 open. **Disconnect**, closing the page or losing the connection ends the session.
 Create fresh codes to reconnect; saved items retain their original signatures.
 
+Chat and payment actions follow the selected recipient. A paired contact shows
+**Nearby** even when the browser reports no internet; another contact retains
+file sharing unless internet delivery is enabled. Disconnecting clears the nearby
+indicator. Wallet refreshes preserve the person selected in an open payment form.
+
 ## Network requirements
 
 The app must first be saved from a secure HTTPS origin, or run on localhost. A
@@ -80,12 +85,15 @@ node web/near-payment-cache.test.cjs
 
 Eight Node checks cover identity/session binding, expiry, fingerprint tampering,
 QR decoding bounds, fragments and an explicit removed-signature-guard control.
-[Seven browser checks](../web/nearby-browser-results.json) exercise actual QR
+[Eight browser checks](../web/nearby-browser-results.json) exercise actual QR
 encoding/decoding, real WebRTC host channels, new-message delivery, signed receipts,
 explicit saved-history sharing, payments and offline onward transfer. A forced
 receipt-save failure closes the connection; resending the exact payment after
 pairing again leaves the recipient’s encrypted vault unchanged. A foreign-recipient
-code is rejected and both themes fit the narrow test viewport.
+code is rejected and both themes fit the narrow test viewport. The recipient-status
+regression first failed when an unpaired contact displayed Send. It now checks
+contact changes in chat and wallet, wallet refresh, disconnect, internet-delivery
+fallback and an offline browser indicator while the local interface stays enabled.
 
 The browser test blocks HTTP after app-cache preparation. The only recorded HTTP
 attempts are denied service-worker update checks. Test backing is a fixture;

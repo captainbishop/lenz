@@ -3,13 +3,13 @@ import { compressed, displayUnits, nearLedger, readNearVault, transferTerms } fr
 import { digest } from './peer-crypto.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
-import { automaticDelivery } from './delivery-mode.js';
+import { deliveryMode } from './delivery-mode.js';
 import { walletError } from './wallet-feedback.js';
 import { deliveryAcknowledged } from './delivery-receipts.js';
 const $ = s => document.querySelector(s);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
 let config = null;
-let paymentAction;
+let paymentAction, updateChatDelivery = () => {};
 const paymentFeedback = new Map();
 function paymentConnection() {
   document.querySelectorAll('[data-near-online]').forEach(button => { button.disabled = !navigator.onLine || button.dataset.nearBusy === 'true'; });
@@ -25,12 +25,13 @@ export function mountChatMoney({ action, status, selected, expose }) {
   paymentAction = action;
   let recipient = null;
   const connection = () => {
-    const automatic = automaticDelivery();
-    $('#prepare-message').textContent = automatic ? 'Send' : 'Save to share ↗';
-    if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = automatic ? 'Send payment' : 'Save payment to share';
-    $('#chat-pay-delivery').textContent = automatic ? 'Saved payments will deliver when connected. Your contact can pass them onward offline.' : 'Share the encrypted payment file. Your contact can pass it onward offline.';
-    $('#chat-connection').textContent = automatic ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · sends when connected. File sharing is still available.' : navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.';
+    const mode = deliveryMode(selected()), payMode = deliveryMode($('#chat-pay-dialog').open ? recipient : selected());
+    $('#prepare-message').textContent = mode !== 'file' ? 'Send' : 'Save to share ↗';
+    if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = payMode !== 'file' ? 'Send payment' : 'Save payment to share';
+    $('#chat-pay-delivery').textContent = payMode === 'nearby' ? 'Sends directly nearby. Payment confirmation happens separately.' : payMode === 'automatic' ? 'Saved payments will deliver when connected. Your contact can pass them onward offline.' : 'Share the encrypted payment file. Your contact can pass it onward offline.';
+    $('#chat-connection').textContent = mode === 'nearby' ? 'Nearby · connected to ' + $('#conversation-name').textContent + ' · keep Lenz open' : mode === 'automatic' ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · sends when connected. File sharing is still available.' : navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.';
   };
+  updateChatDelivery = connection;
   const updateConnection = () => { connection(); paymentConnection(); };
   addEventListener('lenz-delivery-mode', updateConnection);
   addEventListener('online', updateConnection); addEventListener('offline', updateConnection); updateConnection();
@@ -39,7 +40,7 @@ export function mountChatMoney({ action, status, selected, expose }) {
     if (!contact || !chatNearContract()) return;
     recipient = contact.id;
     $('#chat-pay-form').reset(); $('#chat-pay-title').textContent = `Pay ${contact.name}`;
-    $('#chat-pay-feedback').textContent = ''; $('#chat-pay-dialog').showModal();
+    $('#chat-pay-feedback').textContent = ''; $('#chat-pay-dialog').showModal(); connection();
   });
   $('#chat-pay-close').onclick = () => $('#chat-pay-dialog').close();
   $('#chat-pay-form').onsubmit = event => { event.preventDefault(); action(async () => {
@@ -53,6 +54,7 @@ export function mountChatMoney({ action, status, selected, expose }) {
   }); };
 }
 export async function renderChatMoney(state, contact) {
+  updateChatDelivery();
   $('#chat-wallet').hidden = !state.identity;
   $('#pay-tusd').disabled = !state.identity || !contact || !chatNearContract();
   if (!state.identity || !chatNearContract()) { $('#chat-balance').textContent = 'Open wallet'; return null; }

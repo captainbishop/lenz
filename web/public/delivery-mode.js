@@ -2,7 +2,7 @@ import { readState } from './chat-store.js';
 
 let configured = false, publicConfigured = false, enabled = false, nearbyRecipient = null;
 export function setNearbyRecipient(id) { nearbyRecipient = id; dispatchEvent(new Event('lenz-delivery-mode')); }
-export const automaticDelivery = () => enabled || !!nearbyRecipient;
+export const deliveryMode = recipient => recipient && recipient === nearbyRecipient ? 'nearby' : enabled ? 'automatic' : 'file';
 export function updateDeliveryMode(available, state, publicAvailable = false) {
   configured = available; publicConfigured = publicAvailable;
   const next = !!(state.identity && ((configured && state.carrier?.enabled) || (publicConfigured && state.nostr?.enabled)));

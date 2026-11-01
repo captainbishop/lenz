@@ -1,5 +1,32 @@
 # Development freshness review
 
+## Recipient-specific delivery status — November 1, 2026
+
+Chat and wallet show nearby delivery only for the paired recipient. Changing
+contacts, refreshing the wallet or disconnecting updates the controls. An active
+nearby route stays visible when the browser reports no internet. Carrier and
+public-relay consent and send-time checks are unchanged; payment confirmation
+remains separate.
+
+The new regression failed on the previous implementation: selecting an unpaired
+contact displayed Send. After the fix, eight nearby browser checks and eight
+protocol tests pass. Eleven carrier and ten public-relay browser checks pass.
+Both cache-upgrade checks preserve identity, encrypted vault and a pending
+reservation; the first run exposed a stale expected cache version in the test,
+which was corrected before the passing run. The app worker is
+`proof-u-chat-v39-delivery-status`, with 68 cached routes and all static module
+dependencies present. The optional Meteor adapter loads only for internet-gated
+wallet actions.
+
+Six checked preview compositions were exported and visually reviewed in both
+themes. Their 3.02 MB of videos match 53 recorded source files. Seven video and
+five homepage checks pass, including offline seeking, direct gestures, theme
+changes, reduced motion and narrow layouts. The saved payment replay preserves
+all three stored accounts and makes no financial request.
+
+These checks use disposable Windows Edge profiles and fixture-backed payments.
+No physical-phone test, new live settlement, funding or deployment ran.
+
 November 1 conversation delivery review: chat Send, chat Pay and wallet Send
 request automatic delivery after saving their encrypted packet when the existing
 carrier preference is enabled. They retain manual file sharing when it is off.
