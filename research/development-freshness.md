@@ -257,7 +257,7 @@ ciphertext; Damus failed to connect and offchain.pub refused it. The two working
 services are the defaults. The fresh dependency audit reports zero advisories
 after a transient registry DNS failure.
 
-The app worker is `proof-u-chat-v37-lenz-id` with 63 routes. Failed and
+The app worker is `proof-u-chat-v38-nearby` with 68 routes. Failed and
 successful upgrades preserve identity, encrypted vault and an expired reservation.
 The existing three-carrier suite still passes eleven checks. No financial API,
 funding, deployment or existing account migration is part of this transport work.
@@ -276,7 +276,7 @@ Six Hyperframes compositions passed runtime, layout and contrast checks. Each
 video has three or four distinct product scenes, rendered at 1200 × 1320. The
 exporter checks UTF-8 text, decoded motion, scene regions, dimensions and duration.
 All 22 decoded scene frames were reviewed in light/dark phone sheets. The six
-files total 3.00 MB. Seven browser checks cover playback, exact offline seeking,
+files total 3.01 MB. Seven browser checks cover playback, exact offline seeking,
 left/right taps, hold-to-pause, themes, visibility and unchanged account storage.
 Edge touch emulation also checks cancellation and vertical scrolling without
 accidental scene changes. Five homepage checks and three responsive-layout groups
@@ -296,3 +296,19 @@ the requested time and scene boundary; a seek event alone is insufficient.
 Offline scenes use a crossed-out Wi-Fi symbol, and the complete message is typed
 before it appears in the sent bubble. The QR panel keeps dark text on white in
 both themes.
+
+## Nearby delivery verification — November 1, 2026
+
+[Nearby transfer](../docs/nearby-delivery.md) adds signed, expiring QR pairing and
+direct WebRTC host channels to chat and wallet. Eight Node checks and seven Edge
+browser checks cover identity/fingerprint binding, QR decoding, bounded fragments,
+private messages, signed receipts, explicit old-history consent and onward payments.
+A forced receipt-save failure recovers by resending the exact saved payment after
+re-pairing; the recipient is not credited twice. Backing is a fixture, HTTP is
+blocked, and there are no financial API calls. Physical devices remain untested.
+
+The cache-upgrade checks preserve identity, encrypted vault and expired reservation
+when the nearby module is unavailable, then load the complete module set offline
+after a successful upgrade. Three browser security checks pass. Eleven carrier checks and ten public-relay checks also pass. Their consent
+remains separate from the temporary direct session.
+The preview replay and source provenance are refreshed after the app changes.

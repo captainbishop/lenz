@@ -166,11 +166,11 @@
     "web/public/chat-layout.css": "06049f7f1d0db78b76bb15c3c3daf3a9f00b5f2a77080b386f72f5fb7f53ff16",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
     "web/public/chat.css": "23eda0aaeb8e7ce14832b7a12fbac6a14b59d5c3c4df053bc84219b751daa1a0",
-    "web/public/chat.html": "d3dd401b63dceff8ff222e62e5684565a527ce72eb8a2b810a5ed47002f8c788",
+    "web/public/chat.html": "c415db22c139ca3b5222953d5915e9637a2d9936fafc4455f01096fd3b359391",
     "web/public/chat.js": "ebb3f18c7e7bb9ce09f39cb963a7223b613dd445c4f84a3d821dbdf35d75559f",
     "web/public/contact-card.js": "03a27e5df37f2ca57e47e8c433eadac6fee4de6bcf0b669838e43157940eda32",
     "web/public/contact-ui.js": "210e310dfad908ba784afbe95df61561e075c07d54798c65051983ed8be2e82c",
-    "web/public/delivery-mode.js": "934fc4a6b4f80aae0da77412c669234b084d4024581c8dfce7c043bee8f1d42e",
+    "web/public/delivery-mode.js": "94c35b28bcab1482fa137d0e3562ccb545f5e65e9ca448e35249322edf9e7721",
     "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
     "web/public/near-chat.js": "ff6f06a9cd7f79e92740574b2f3a6df3c96f504f9483f8eee0cd95ae936ecc77",
@@ -178,6 +178,11 @@
     "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
     "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
     "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/nearby-client.js": "bf7530883914088dc09041a721a9806637a1c4d534dd30a4d93de709c24b4102",
+    "web/public/nearby-connection.js": "ec5f6a7a73c3fc536328002b2581becb486a7d516d1e816581a5bdc67bc71e7d",
+    "web/public/nearby-protocol.js": "6108d976cc1522f97a9831335c4e17b815b40ba524aebf778cd22386a02c408f",
+    "web/public/nearby-ui.js": "e173df0d952ff8aba6f370de06edb733757bd6f2a741f12283fcc1c342422030",
+    "web/public/nearby.css": "393cee6d2f4b60f274a376a4ce2a0802ae93b5f7fb5c144d1ebde94e286f9a38",
     "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
     "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
     "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
@@ -295,6 +300,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-01T17:42:44.561Z",
+  "reframedAt": "2026-11-01T19:28:27.761Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

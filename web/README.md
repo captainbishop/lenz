@@ -198,3 +198,9 @@ Lenz IDs contain both public keys and a checksum. They remain stable when the
 display name changes; an ID is not a recovery key. Copy/paste and older QR/profile
 imports use the same contact validation. See [browser evidence](lenz-id-browser-results.json)
 and [preview rendering](preview-rendering.md).
+
+## Nearby transfer
+
+Open **Nearby** in chat or wallet to pair with a verified contact on the same
+Wi-Fi or hotspot. New sends then travel directly; older saved items require an
+explicit action. [Setup, security boundaries and browser evidence](../docs/nearby-delivery.md).

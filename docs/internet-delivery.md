@@ -15,7 +15,7 @@ The defaults are `wss://nos.lol` and `wss://relay.primal.net`.
 same-session readback of fresh test ciphertext on both. Damus failed to connect
 and offchain.pub refused the test file in that run. Availability and relay policies
 can change. File sharing and separately configured [Lenz carriers](../carrier/README.md)
-remain available.
+remain available. For peers on the same local network, [nearby transfer](nearby-delivery.md) uses signed QR pairing and a direct data channel.
 
 ## Privacy and retention
 

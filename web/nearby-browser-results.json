@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-01T19:22:02.665Z",
+  "browser": "156.0.4314.58",
+  "checks": [
+    "signed QR pairing establishes a real local data channel with no web or relay access",
+    "new fragmented chat messages arrive with signed receipts; old history stays local",
+    "offline payment follows the same channel and keeps settlement separate",
+    "saved history needs an explicit action and duplicate resend cannot credit twice",
+    "recipient can pass received value onward while the server is unreachable",
+    "a pairing code for another recipient is rejected before connection",
+    "pairing fits both themes on a narrow screen and retains account keys"
+  ],
+  "errors": [],
+  "blockedRequests": [
+    "/chat-sw.js",
+    "/chat-sw.js",
+    "/chat-sw.js"
+  ],
+  "scope": "Three disposable Edge profiles, real WebCrypto/IndexedDB and WebRTC host data channels. HTTP is blocked after cache preparation. Payment backing is a fixture. No chain call, funding, deployment, physical phone or Bluetooth test."
+}
