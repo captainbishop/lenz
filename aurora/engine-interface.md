@@ -63,6 +63,14 @@ top-level errors, with a 128-KiB streamed-response limit and a 20-second deadlin
 The observed Engine code hash is recorded, but it is not proof that the deployed
 code was compiled from the pinned source revision.
 
+## Transaction receipts
+
+The [transaction checker](engine-transactions.md) now binds an expected call to
+final NEAR receipts and its returned Engine result. Its fixture tests distinguish
+EVM reverts, NEAR failures, failed side receipts and unavailable responses.
+This is preparation for payment-outcome verification and recovery; no live Aurora
+execution or wallet submission is established by those tests.
+
 ## Remaining integration work
 
 Lenz still needs a deployed execution adapter, account authorization, a funded

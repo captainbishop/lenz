@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-01T12:40:00.996Z",
+  "scope": "Synthetic NEAR/Engine receipt fixtures and loopback HTTP transport; no live Aurora transaction.",
+  "sourceSha256": "6fff0e9b276af5a44e4111d683cf2e87f460cbbf4395ce46ae2d73b4d2231eaa",
+  "testSha256": "43a300288412ba18e43c9177b6fb8584aacea2de8caae7412e0c5dab28466b75",
+  "codecSha256": "86062d116e759dc7bc29affff122b6a2636346c92dae4c2eb0e0f95099dfc854",
+  "results": [
+    {
+      "name": "finality",
+      "detected": true
+    },
+    {
+      "name": "exact-call",
+      "detected": true
+    },
+    {
+      "name": "direct-return-child",
+      "detected": true
+    },
+    {
+      "name": "summary-match",
+      "detected": true
+    },
+    {
+      "name": "failed-side-receipt",
+      "detected": true
+    },
+    {
+      "name": "evm-revert",
+      "detected": true
+    },
+    {
+      "name": "reference-snapshot",
+      "detected": true
+    },
+    {
+      "name": "receipt-completeness",
+      "detected": true
+    }
+  ]
+}

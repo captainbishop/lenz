@@ -1,6 +1,6 @@
 # Aurora development setup
 
-This folder supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and read-only Aurora testnet checks. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
+This folder supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and [transaction confirmation checks](engine-transactions.md) for Aurora testnet. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
 
 ## Installed tools
 
@@ -40,7 +40,7 @@ The November 1 [npm audit](dependency-audit.json) reports **zero known vulnerabi
 
 Lifecycle scripts remain disabled in `.npmrc`. The current lockfile contains no installation hooks. Tests check pinning, registry integrity metadata, installed versions and absence of nested Zod packages. Dependency packages stay outside the repository and are not imported by the web wallet.
 
-The [Engine interface](engine-interface.md) now has bounded call/result serialization and a live read-only mapping check. The configured tUSD token has no Aurora mapping at the checked block. A deployed execution adapter, account authorization and NEAR↔Aurora asset/receipt behavior remain required before connecting it to the product.
+The [Engine interface](engine-interface.md) now has bounded call/result serialization and a live read-only mapping check. The configured tUSD token has no Aurora mapping at the checked block. A deployed execution adapter, account authorization and NEAR↔Aurora asset routing and payment-outcome verification remain required before connecting it to the product.
 
 ## Payment-proof verifier experiment
 

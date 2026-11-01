@@ -1,5 +1,16 @@
 # Development freshness review
 
+November 1 Aurora receipt review: the read-only transaction checker matches the
+expected call against a complete final receipt graph and decodes the returned
+Engine result. Forty-three Aurora tests and twelve existing adapter-recovery
+regressions pass. Eight deliberate guard removals are detected; the controls bind
+the receipt source, tests and codec by hash. Actual loopback HTTP checks cover
+redirect rejection and a stalled body. [Transaction evidence](../aurora/engine-transactions.md)
+keeps fixture results separate from live execution and payment settlement.
+The malformed-Engine-error classification failure and its regression are recorded.
+No wallet, contract, dependency lockfile, cache, preview or carrier runtime changed.
+Authorization, funded asset routing and durable payment recovery remain open.
+
 November 1 container review: the carrier image includes the MIT license and pins
 the verified Node base-image digest. Eight actual container checks verify its
 contents, configured restrictions, encrypted custody, persistence and inbox
