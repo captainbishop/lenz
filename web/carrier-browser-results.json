@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-01T08:06:34.111Z",
+  "checks": [
+    "opt-in leaves old history, identity and wallet ciphertext intact",
+    "offline payment survives reload and delivers automatically across three carriers",
+    "received money can be passed onward offline without carrier approval or settlement",
+    "invalid carrier mail cannot change money and valid duplicated mail credits once",
+    "failed browser persistence prevents any carrier request",
+    "hostile inbox contents are isolated and forged custody cannot acknowledge a recipient",
+    "delivery controls fit both themes and mobile widths; keys and finality stay unchanged"
+  ],
+  "errors": [],
+  "apiRequests": [],
+  "scope": "Three disposable Windows Edge profiles with real WebCrypto, IndexedDB, service-worker offline reloads and three real loopback HTTP/SQLite carriers. tUSD backing is a fixture. No chain request, funding, deployment, physical device, BLE or independent remote operator was used."
+}

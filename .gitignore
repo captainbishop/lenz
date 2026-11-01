@@ -53,6 +53,7 @@ keys.toml
 *.sqlite-*
 *.db
 *.db-*
+carrier/.data/
 tooling/.github/
 
 # Live server logs are local; preserve the documented restart failure separately.

@@ -1,0 +1,21 @@
+services:
+  carrier:
+    build:
+      context: ..
+      dockerfile: carrier/Dockerfile
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 1.0
+    ports: ["127.0.0.1:4311:4311"]
+    environment:
+      CARRIER_ORIGIN: ${CARRIER_ORIGIN:?Set the HTTPS origin of this carrier}
+      CARRIER_PEERS: ${CARRIER_PEERS:-[]}
+      CARRIER_APP_ORIGINS: ${CARRIER_APP_ORIGINS:?Set the allowed Lenz app origins}
+    volumes: ["carrier-data:/data"]
+volumes:
+  carrier-data:

@@ -1,0 +1,11 @@
+**
+!carrier/
+!carrier/Dockerfile
+!carrier/Dockerfile.dockerignore
+!carrier/server.mjs
+!carrier/store.mjs
+!web/
+!web/public/
+!web/public/carrier-protocol.js
+!web/public/peer-crypto.js
+!web/public/profile-display.js

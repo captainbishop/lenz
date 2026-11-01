@@ -1,0 +1,7 @@
+# Replace with this operator's real domain. Run Caddy on the host.
+carrier-a.example.com {
+    request_body {
+        max_size 205KB
+    }
+    reverse_proxy 127.0.0.1:4311
+}

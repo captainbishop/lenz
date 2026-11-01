@@ -1,5 +1,29 @@
 # Development freshness review
 
+November 1 carrier network review: opt-in delivery now sends new encrypted messages,
+payment files and recipient receipts through configured independent carrier servers.
+Six protocol/network tests, seven Edge carrier checks and three detected guard
+removals pass. A three-hop route recovers after its middle carrier restarts; offline
+onward payments remain available. The 33 affected Node regressions, nine social and
+eight wallet browser checks, and two cache-upgrade checks pass. Identities, encrypted
+vaults and expired reservations are preserved. [Verification](../carrier/verification.md).
+
+The app worker is `proof-u-chat-v31-carrier-network`, with 52 cached routes. Both
+themes and narrow/landscape delivery controls were visually reviewed. The existing
+recorded flow was replayed through current renderers without changing any of its
+three stored accounts. All six videos were rendered; 22 sampled frames were reviewed.
+Five playback, three screen-response and five homepage checks pass. Source, poster
+and video hashes match. The sandbox denied the existing encoder; the authorized
+run completed. This presentation replay did not execute automatic carrier delivery.
+
+New deployment files have a restricted Docker build context and are included in the
+freshness gate. The gate also detects drift in Dockerfile, ignore, Compose, proxy and
+example-environment files. Publication/freshness regressions pass. Carrier queues,
+operator settings, downloaded sources, installation records and local helpers stay
+outside publication. Remote hosting, ingress controls and device checks are still
+required. NEAR, Rhea, Intents, Aurora, Zcash, private settlement and recovery code is
+unchanged; no funding, deployment or financial transaction ran in this feature.
+
 November 1 Aurora dependency review: pinned EthereumJS replaces the local Hardhat
 runner and removes Zod from the clean installation and lockfile. The fresh npm
 audit has zero findings. Fourteen Node tests, three VM guard-removal controls,

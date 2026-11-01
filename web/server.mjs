@@ -6,14 +6,17 @@ import { defiRoute } from './defi-relay.mjs';
 import { rheaRoute } from './rhea-relay.mjs';
 import { zcashRoute } from './zcash-relay.mjs';
 import { securityHeaders } from './security-policy.mjs';
+import { carrierConfig } from './public/carrier-protocol.js';
+const carriers = carrierConfig({version:1,carriers:JSON.parse(process.env.LENZ_CARRIERS ?? '[]')});
 const root = resolve('public');
 const types = { '.mp4': 'video/mp4', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.wasm': 'application/wasm', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.zkey': 'application/octet-stream' };
 http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    for (const [name, value] of Object.entries(securityHeaders(pathname))) res.setHeader(name, value);
+    for (const [name, value] of Object.entries(securityHeaders(pathname, carriers))) res.setHeader(name, value);
     // Keep the local sponsor and browser identity on the documented loopback origin.
     if (req.headers.host !== '127.0.0.1:4173') { res.writeHead(403); res.end('Use http://127.0.0.1:4173'); return; }
+    if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
     if (await zcashRoute(req, res)) return;
     if (await rheaRoute(req, res)) return;
     if (await defiRoute(req, res)) return;

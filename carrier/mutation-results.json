@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-01T08:17:46.006Z",
+  "results": [
+    {
+      "name": "packet-signature",
+      "detected": true
+    },
+    {
+      "name": "mailbox-authentication",
+      "detected": true
+    },
+    {
+      "name": "storage-capacity",
+      "detected": true
+    }
+  ]
+}

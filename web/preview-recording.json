@@ -1,14 +1,18 @@
 {
-  "recordedAt": "2026-11-01T05:39:52.615Z",
-  "browser": "156.0.4314.50",
+  "recordedAt": "2026-11-01T08:06:58.657Z",
+  "browser": "156.0.4314.58",
   "encoder": "imageio-ffmpeg 0.6.0 / FFmpeg 7.1",
   "sourceFiles": {
     "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
     "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/carrier-client.js": "5264823507603b98eda15f77cdc9f9ba26f47fd27166fe15fdc9e000173ac098",
+    "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
+    "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
+    "web/public/carrier-ui.js": "e2897001637e5000b60836e285e3eba7236006ed9b23d0b4ebe8b00f3ff52ace",
     "web/public/chat-layout.css": "82a47e83421f5910e561c1dcbecbc236c700dc68b524ba5ca310677d16a97817",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
     "web/public/chat.css": "5e708f9150fcec8f2e52458783d502b91e742e3f037a7d3bdf94837028278a2f",
-    "web/public/chat.html": "b96f1cb69bcaa38a66807f4537e61ea46b04a4ad40a9201de974c5815cbaf7aa",
+    "web/public/chat.html": "ea947d94042ec939784691e1c925cdb7c75a78f1fdaadc25171455784846f8e9",
     "web/public/chat.js": "955085dc1cbc7a8b172b76b06c134f656cd2a535f22bcad18c7745a4ded671bf",
     "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
     "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
@@ -37,13 +41,13 @@
     "web/record-preview-videos.cjs": "38d6086d840086cb69c28b6123384edc90e618989fe8bc8d4b5da878d219ca5e",
     "web/render-preview-stories.cjs": "2e730a3bff33325602cc506d0242d99ad6ec9a5e4fd393a1824dc15d803ddd0d",
     "web/preview-scene.html": "55e94804863416139022ae29e0b8add7a7698a3687c890998a8c4b69a46b3031",
-    "web/preview-flow-results.json": "88caa257de4a92e69157c02f9551371ae99b2af83e0f8f8b568bc2fdaf062c2a",
+    "web/preview-flow-results.json": "9ab96064d19405d962b3be931947a662cc8b179d543865698244a6de8635f63c",
     "web/evidence/preview-replay/private-send-light.png": "4bab6ca127db3cfc5807a286f88559b8809d6118c0c34d476d627ea40e511e2c",
     "web/evidence/preview-replay/private-read-light.png": "53888fe602a564f60508ab6b72f246f9de2fb578850027a17ecf9632f413acdb",
     "web/evidence/preview-replay/payment-received-light.png": "956648ed16dfc4d34acaec0c88356b993591f87af676d417fae420357b48eb3f",
     "web/evidence/preview-replay/payment-onward-light.png": "aa2c749c10635d6ce22dbdcacb66bd6faf076597441b6ebf1cbfb43165a2f7fb",
     "web/evidence/preview-replay/payment-confirmed-light.png": "f81ea5c8a962b4f8f0c2bba4884e20f3d3d0991f55c82779b9914ddb78011dfe",
-    "web/public/money.html": "bbb4505b1f099051bd8a2ddf441639a9a686661554d626abfecfde4f9c8b7150",
+    "web/public/money.html": "6cb6fe0b12b7ecdb621cb93eb51d2e2318abe30ac898dd7f031d24d5f930f2dd",
     "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
     "web/public/near-wallet.css": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9",
     "web/public/money.js": "0eaf4e94101cceb1f9e55711d749984f1193630075077da378816e4c1548f88d",
@@ -71,7 +75,7 @@
       "file": "web/public/previews/chat-light.mp4",
       "sha256": "7105f45c83058b5a650aca80257106342e565527a31b5dde64bd3af8ae51b0b2",
       "poster": "web/public/previews/chat-light.webp",
-      "posterSha256": "b164e602aa9d6d9a1c3bb12cfeab5f5a92ceebb435e366319271b27154dac215"
+      "posterSha256": "d8cc9d5d4fde91f97858e3446eafbdf92c800c485216b8fdcbffb630f204ff8f"
     },
     {
       "view": "wallet",
@@ -84,7 +88,7 @@
       "file": "web/public/previews/wallet-light.mp4",
       "sha256": "8a6290763d642ee826a39625c9021c0354cfe247f3ce3e3207c4816aae95385a",
       "poster": "web/public/previews/wallet-light.webp",
-      "posterSha256": "145828eaca0b0c79c2202631c79388eb9f9ddad4f96c4233f7872d6feb2a3279"
+      "posterSha256": "51fb86e06723e6a437c8247ff1b2a8a6ec541ac5dd320ea04e33a9f91cafa530"
     },
     {
       "view": "profile",
@@ -95,9 +99,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "5e0c3495c5598c0286050a4d88e49870f5591e45a213a919f54ba28141816042",
+      "sha256": "5d287bb4e4c1fd775f17cd568a0f9f39bdae2f8b8f244dab8247a1a292a64bd2",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "d494d9a1c0eaeb660cf6c3b317d867758bb9912346aa00cde5372f872179a26d"
+      "posterSha256": "8bba0d7e5b38594a3135dffb2d2d01b88d213da2d2ca22b28667ca562918347b"
     },
     {
       "view": "chat",
@@ -110,7 +114,7 @@
       "file": "web/public/previews/chat-dark.mp4",
       "sha256": "2bb52179112a12e2026e9fa054ed1ae44fe6ead7d3135460668387bc2a9cc125",
       "poster": "web/public/previews/chat-dark.webp",
-      "posterSha256": "ed108d9e821a0d456861583208a15aeb863c8761aeb913104bbe8468256d3409"
+      "posterSha256": "0140e2a44ab24790870905539582017df67bd23d01ad664b6b43a4befb7fb843"
     },
     {
       "view": "wallet",
@@ -134,9 +138,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "093ac19b19804e5a4cff52c216ec45a43841e06e3f418849c1b9c366521881e2",
+      "sha256": "af0a20c040dc154fce463366c1f626267acddd68e85c5e817b7588d964f00ab2",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "4d2e8434e6d2703b14c88a447624fbd0df373cc68e6b28081790d54b1f20e7ba"
+      "posterSha256": "784b0d1ad08b2dc99f943a0b433b66b163cc2feb35f0f60852c98a7e4fdd05ef"
     }
   ],
   "apiRequests": 0,
