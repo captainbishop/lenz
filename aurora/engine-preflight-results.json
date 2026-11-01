@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-11-01T09:37:49.744Z",
+  "endpoint": "https://test.rpc.fastnear.com",
+  "engine": "aurora",
+  "block": {
+    "hash": "5kqwpKaAWdThmcfFUFbf5n5LHE95t7uGeVscivgcFmkU",
+    "height": 275731024
+  },
+  "codeHash": "HrtBWvCMmVXRLG9vsYAFT7LfJ6mZtCSNTvYnXMF6fwzT",
+  "chainId": "1313161555",
+  "view": {
+    "status": "Succeed",
+    "succeeded": true,
+    "output": "0x"
+  },
+  "token": {
+    "account": "tusd.lenz-dev-1792984696547.testnet",
+    "status": "unmapped",
+    "error": "ERR_NEP141_NOT_FOUND"
+  },
+  "queries": [
+    {
+      "method": "get_chain_id",
+      "argsBase64": "",
+      "resultHex": "000000000000000000000000000000000000000000000000000000004e454153"
+    },
+    {
+      "method": "view",
+      "argsBase64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "resultHex": "0000000000"
+    },
+    {
+      "method": "get_erc20_from_nep141",
+      "argsBase64": "IwAAAHR1c2QubGVuei1kZXYtMTc5Mjk4NDY5NjU0Ny50ZXN0bmV0",
+      "contractError": "wasm execution failed with error: HostError(GuestPanic { panic_msg: \"ERR_NEP141_NOT_FOUND\" })"
+    }
+  ],
+  "scope": "Read-only final-block RPC observations. No signing, funding, deployment or financial transaction. The observed code hash is not a source-revision attestation."
+}

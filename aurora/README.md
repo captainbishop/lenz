@@ -1,6 +1,6 @@
 # Aurora development setup
 
-This folder supplies local EVM development tools and a read-only Aurora testnet check. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
+This folder supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and read-only Aurora testnet checks. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
 
 ## Installed tools
 
@@ -25,6 +25,7 @@ npm run check:local
 npm run check:proof
 node local-evm-mutations.mjs
 npm run check:testnet
+npm run check:engine
 ```
 
 `compile` builds both Solidity files into ignored `artifacts/`. It always compiles from source. `check:local` independently compiles `ToolchainProbe`, deploys it in memory, checks exact runtime bytecode, writes 42 and checks storage and the receipt event. [local-results.json](local-results.json) records four checks and the lockfile hash. The VM has chain ID 31337 and a fresh in-memory fixture account; no RPC transport or user wallet is attached. Static reads roll back temporary state, and transaction balance, gas and failure checks remain enabled.
@@ -39,7 +40,7 @@ The November 1 [npm audit](dependency-audit.json) reports **zero known vulnerabi
 
 Lifecycle scripts remain disabled in `.npmrc`. The current lockfile contains no installation hooks. Tests check pinning, registry integrity metadata, installed versions and absence of nested Zod packages. Dependency packages stay outside the repository and are not imported by the web wallet.
 
-The next Aurora step in [development status](../docs/status.md) is to specify and test a bounded execution adapter, account authorization and NEAR↔Aurora asset/receipt behavior before connecting it to the product.
+The [Engine interface](engine-interface.md) now has bounded call/result serialization and a live read-only mapping check. The configured tUSD token has no Aurora mapping at the checked block. A deployed execution adapter, account authorization and NEAR↔Aurora asset/receipt behavior remain required before connecting it to the product.
 
 ## Payment-proof verifier experiment
 

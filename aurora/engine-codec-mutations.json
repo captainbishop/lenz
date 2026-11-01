@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-01T09:36:31.297Z",
+  "results": [
+    {
+      "name": "revert-is-not-success",
+      "detected": true
+    },
+    {
+      "name": "result-version",
+      "detected": true
+    },
+    {
+      "name": "trailing-bytes",
+      "detected": true
+    },
+    {
+      "name": "vector-bound",
+      "detected": true
+    }
+  ]
+}

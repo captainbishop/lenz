@@ -1,5 +1,14 @@
 # Development freshness review
 
+November 1 Aurora Engine review: call/view encodings, token mapping encodings and
+bounded version-7 result decoding pass 23 tests with the existing Aurora suite.
+Four removed codec guards are detected. The live read-only check reports the
+expected chain ID and an empty successful EVM view; the configured tUSD mapping
+is absent at the checked final block. [Interface evidence](../aurora/engine-interface.md)
+retains the earlier query-shape failure and the source/deployed-code distinction.
+No wallet, contract, cache, preview or dependency version changed. Authorization,
+funded asset routing and settlement recovery remain open.
+
 November 1 repository configuration review: shared exclusions cover build output,
 generated browser assets and private runtime data. Dependency discovery follows
 Git's file inventory and local exclusions while still checking tracked files.

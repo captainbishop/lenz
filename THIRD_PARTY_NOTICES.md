@@ -9,6 +9,10 @@ generated upstream code or downloaded research material.
 - The Aurora local test tools use [EthereumJS](https://github.com/ethereumjs/ethereumjs-monorepo).
   Its packages retain their MPL-2.0 or MIT licenses as recorded in the npm lockfile.
   Installed package source is excluded from this repository.
+- The Engine codec tests include a 42-byte serialization fixture from
+  [Aurora Engine](https://github.com/aurora-is-near/aurora-engine/blob/f296f06ab618468dff58cbef81732b1d0ee1782e/engine-tests/src/tests/res/transaction_status.borsh).
+  Its upstream revision and hash are recorded in [the interface source manifest](aurora/engine-source.json).
+  The fixture is functional ABI data; no Engine implementation source is included.
 - The checked-in NEAR vendor bundle retains the
   notices in [web/public/near-vendor/NOTICE.txt](web/public/near-vendor/NOTICE.txt)
   and their source headers. Current connector scope is documented in

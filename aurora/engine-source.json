@@ -1,0 +1,41 @@
+{
+  "repository": "https://github.com/aurora-is-near/aurora-engine",
+  "commit": "f296f06ab618468dff58cbef81732b1d0ee1782e",
+  "files": [
+    {
+      "path": "engine-types/src/parameters/engine.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine-types/src/parameters/engine.rs",
+      "sha256": "dc574c56b5d1521e683484c18b1a9d71069086bf84b5db9937326bdef4b98e2b"
+    },
+    {
+      "path": "engine-types/src/types/wei.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine-types/src/types/wei.rs",
+      "sha256": "77131a4e67e29ea2a39e47f80dead57d7e5d1e45716ad02d182ddb906d89d195"
+    },
+    {
+      "path": "engine-sdk/src/types.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine-sdk/src/types.rs",
+      "sha256": "4a7aef24c977dda60d1e0f3909e1575f12928b632ecbe99147d021af2dde27bb"
+    },
+    {
+      "path": "engine/src/lib.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine/src/lib.rs",
+      "sha256": "c11bf3c68104d4cd43002a073c055d77c8bd0f7c621cbb93f94c5076f1f1259e"
+    },
+    {
+      "path": "engine/src/contract_methods/evm_transactions.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine/src/contract_methods/evm_transactions.rs",
+      "sha256": "23b23650f2159ff8daf61949aa721982accc714645efe5ca80a0004634837b75"
+    },
+    {
+      "path": "engine/src/engine.rs",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine/src/engine.rs",
+      "sha256": "5caa34c48dcbc5200a9054a50301d7f68c2815d1a470175d22fc16b15448771a"
+    },
+    {
+      "path": "engine-tests/src/tests/res/transaction_status.borsh",
+      "url": "https://raw.githubusercontent.com/aurora-is-near/aurora-engine/f296f06ab618468dff58cbef81732b1d0ee1782e/engine-tests/src/tests/res/transaction_status.borsh",
+      "sha256": "0a36ee02aa5476ae84f77683903a9f8121c3b1ab42830e9685264ca4490a4851"
+    }
+  ]
+}
