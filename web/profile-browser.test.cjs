@@ -37,12 +37,12 @@ async function snapshot(page) {
       assert(await a.locator('#my-avatar img').evaluate(img => img.complete && img.naturalWidth > 0));
       await b.locator('#name').fill('Bola'); await b.locator('#identity-form button[type=submit]').click(); await status(b, 'Identity saved');
       await importCard(a, await profile(b)); await importCard(b, original);
-      await a.locator('#chat-earlier > summary').click(); await a.locator('#enable-demo').click(); await status(a, 'Demo money is ready');
+      await a.evaluate(async () => { const { updateState } = await import('/chat-store.js'); const { enableDemoMoney } = await import('/trade-service.js'); await updateState(enableDemoMoney); });
       await a.locator('#message').fill('Keep this conversation through my profile change.');
       await a.locator('#prepare-message').click(); await status(a, 'Message saved and encrypted');
       await a.locator('[data-close="handover"]').click(); before = await snapshot(a);
     });
-    await check('name and symbol edits preserve account keys, encrypted history and demo vault exactly', async () => {
+    await check('name and symbol edits preserve account keys, encrypted history and an archived demo vault exactly', async () => {
       await a.locator('#show-profile').click(); await a.locator('#edit-profile').waitFor({ state: 'visible' }); await a.locator('#profile-name').fill('River Wren');
       await a.getByRole('button', { name: 'Wave avatar', exact: true }).click(); await a.locator('#save-profile').click(); await status(a, 'Profile saved');
       assert.deepEqual(await snapshot(a), before); assert.equal((await profile(a)).name, 'River Wren');

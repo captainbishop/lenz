@@ -1,5 +1,26 @@
 # Development freshness review
 
+November 1 conversation delivery review: chat Send, chat Pay and wallet Send
+request automatic delivery after saving their encrypted packet when the existing
+carrier preference is enabled. They retain manual file sharing when it is off.
+Eleven local carrier browser checks cover the send actions, offline reload,
+recipient acknowledgements and cross-tab opt-out. Fifty-five payment, receipt,
+message and legacy protocol Node tests pass; the separate freshness regression
+also passes. Five browser compatibility checks preserve existing demo records
+while rejecting new imports, including when testnet configuration is unavailable.
+
+The app removes demo funding/trading controls and adds a local conversation
+wallpaper in both themes. Existing identities, vaults and archived messages remain
+intact. Thirty page/theme/viewport combinations, enlarged text and keyboard
+navigation pass. Two cache-upgrade checks preserve an encrypted vault and pending
+reservation through failed and successful upgrades. The current worker is
+`proof-u-chat-v34-conversations`, with 58 cached routes. SVG files now participate
+in source freshness checks and preview provenance. Contract execution, private
+settlement and recovery capabilities are unchanged. The six light/dark preview videos
+and their posters were visually reviewed against 59 recorded sources. The replay
+preserved all three saved accounts and made no financial request.
+
+
 November 1 naming and interface review: ENS Aurora-record lookup and native NEAR
 account reads use final blocks and fixed public RPC endpoints. Verification passes
 56 Aurora tests, six name API/display checks and four quote-API regressions. Six

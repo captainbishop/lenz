@@ -114,6 +114,47 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
       }
       assert.deepEqual(api,[]);assert.deepEqual(errors,[]);
     });
+    await check('wallet send queues offline without a file dialog and delivers once after reload',async()=>{
+      const before=(await read(b)).messages.length;
+      await a.locator('#near-send').click();await a.locator('#near-recipient').selectOption(profiles[1].id);
+      await a.locator('#near-send-amount').fill('0.5');await contexts[0].setOffline(true);
+      await a.locator('#near-send-form button[type=submit]').click();await idle(a);
+      assert.equal(await a.locator('#near-handover').evaluate(n=>n.open),false);
+      assert.match(await a.locator('#near-feedback').innerText(),/saved for delivery/i);
+      const id=(await read(a)).messages.at(-1).packet.id;
+      await a.reload();await idle(a);await contexts[0].setOffline(false);
+      await waitState(b,s=>s.messages.some(r=>r.packet.id===id));await waitState(a,s=>!!s.messages.find(r=>r.packet.id===id)?.receivedReceipt);
+      assert.equal((await read(b)).messages.length,before+1);assert.deepEqual(api,[]);
+    });
+    await check('chat Send survives offline reload, delivers automatically and receives a signed receipt',async()=>{
+      await a.goto(base+'/chat.html');await idle(a);await a.waitForFunction(()=>document.querySelector('#prepare-message').textContent==='Send');
+      await a.locator('#prepare-offline').click();await idle(a);await contexts[0].setOffline(true);
+      await a.locator('#message').fill('Meet me after the market');await a.locator('#prepare-message').click();await idle(a);
+      assert.equal(await a.locator('#handover').evaluate(n=>n.open),false);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
+      const id=(await read(a)).messages.at(-1).packet.id;
+      await a.reload();await idle(a);assert.match(await a.locator('#messages').innerText(),/Meet me after the market/);
+      await contexts[0].setOffline(false);await waitState(b,s=>s.messages.some(r=>r.packet.id===id));
+      await waitState(a,s=>!!s.messages.find(r=>r.packet.id===id)?.receivedReceipt);
+      assert.equal((await read(b)).messages.filter(r=>r.packet.id===id).length,1);assert.deepEqual(api,[]);
+    });
+    await check('chat Pay queues an offline payment without opening file sharing',async()=>{
+      await contexts[0].setOffline(true);await a.locator('#pay-tusd').click();await idle(a);
+      await a.locator('#chat-pay-amount').fill('0.25');await a.locator('#chat-pay-submit').click();await idle(a);
+      assert.equal(await a.locator('#handover').evaluate(n=>n.open),false);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
+      const id=(await read(a)).messages.at(-1).packet.id;await contexts[0].setOffline(false);
+      await waitState(b,s=>s.messages.some(r=>r.packet.id===id));await waitState(a,s=>!!s.messages.find(r=>r.packet.id===id)?.receivedReceipt);
+      assert.deepEqual(api,[]);
+    });
+    await check('a cross-tab opt-out restores manual sharing even before the composer label refreshes',async()=>{
+      const second=await contexts[0].newPage();await second.goto(base+'/chat.html');await idle(second);
+      await second.evaluate(async()=>{await(await import('/carrier-client.js')).setCarrierEnabled(false);});
+      await a.locator('#message').fill('Keep this file local');await a.locator('#prepare-message').click();await idle(a);
+      assert.equal(await a.locator('#handover').evaluate(n=>n.open),true);
+      const id=(await read(a)).messages.at(-1).packet.id;
+      for(const node of nodes)assert(!node.store.all().some(e=>e.packet.id===id));
+      assert(!(await read(a)).carrier.outbox.some(e=>e.envelope.packet.id===id));await second.close();
+      assert.deepEqual(api,[]);assert.deepEqual(errors,[]);
+    });
     await fs.writeFile(path.join(__dirname,'carrier-browser-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),checks,errors,apiRequests:api,scope:'Three disposable Windows Edge profiles with real WebCrypto, IndexedDB, service-worker offline reloads and three real loopback HTTP/SQLite carriers. tUSD backing is a fixture. No chain request, funding, deployment, physical device, BLE or independent remote operator was used.'},null,2)+'\n');
   }finally{await browser?.close();for(const node of nodes)await node?.close();server.closeAllConnections();await new Promise(r=>server.close(r));assert.equal(path.dirname(directory),path.resolve(os.tmpdir()));await fs.rm(directory,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

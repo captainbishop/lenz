@@ -51,7 +51,7 @@ const base = 'http://127.0.0.1:4173';
       }
       await page.setViewportSize({ width: 375, height: 812 });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-      await page.screenshot({ path: path.join(__dirname, `evidence/video-preview-${theme}.png`) });
+      await page.locator('#product-preview').locator('..').screenshot({ path: path.join(__dirname, `evidence/video-preview-${theme}.png`) });
       await page.setViewportSize({ width: 1280, height: 960 });
     }
     checks.push('all six light/dark videos play and retain source background colors; narrow layouts fit');

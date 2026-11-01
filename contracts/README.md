@@ -1,6 +1,6 @@
 # Lenz tUSD and NEAR reserve
 
-This is a testnet-only settlement implementation, with a NEP-141 token named **Lenz Test Dollar (tUSD)**. It is not a dollar-backed stablecoin. The web app starts at zero. Its older synthetic balances remain in their existing encrypted vault and are accessible through **Earlier prototype**.
+This is a testnet-only settlement implementation, with a NEP-141 token named **Lenz Test Dollar (tUSD)**. It is not a dollar-backed stablecoin. The web app starts at zero. Older synthetic balances remain preserved in their separate encrypted vault; the current app does not expose demo funding or trading.
 
 ## Current verification boundary
 

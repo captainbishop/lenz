@@ -1,5 +1,3 @@
-.wallet-mode{display:block;margin:-12px 0 24px auto;font-size:12px;text-decoration:underline;border:0;min-height:36px}
-[data-wallet-mode="near"] .wallet-balance,[data-wallet-mode="near"] .wallet-activity,[data-wallet-mode="legacy"] .near-wallet,[data-wallet-mode="legacy"] .near-activity{display:none}
 .near-balance{position:relative;overflow:hidden;background:var(--forest);color:var(--paper);border-radius:24px;padding:36px 40px}
 .near-balance::after{content:"";pointer-events:none;position:absolute;right:-35px;top:25px;width:270px;height:270px;border:1px solid #eaffab33;border-radius:50%;box-shadow:0 0 0 34px #eaffab0a,0 0 0 68px #eaffab08}
 .near-network{padding:8px 12px;border:1px solid #eaffab55;border-radius:30px;font-size:11px;letter-spacing:.1em}

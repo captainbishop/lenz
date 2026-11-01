@@ -20,7 +20,7 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
       await network.send('Network.setBypassServiceWorker',{bypass:true});
       await network.send('Network.setCacheDisabled',{cacheDisabled:true});
       await p.route('**/api/**',r=>r.abort());
-      ctx.on('request',r=>{const u=new URL(r.url());if(u.origin===base&&/\.(js|css|html|json)$/.test(u.pathname))sources.add('web/public'+u.pathname);});
+      ctx.on('request',r=>{const u=new URL(r.url());if(u.origin===base&&/\.(js|css|html|json|svg)$/.test(u.pathname))sources.add('web/public'+u.pathname);});
       await p.goto(base+'/chat.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
       const snapshot=()=>p.evaluate(async()=>JSON.stringify(await(await import('/chat-store.js')).readState()));
       const before=await snapshot();

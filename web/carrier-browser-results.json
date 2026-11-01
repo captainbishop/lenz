@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T13:55:59.176Z",
+  "checkedAt": "2026-11-01T14:57:32.660Z",
   "checks": [
     "opt-in leaves old history, identity and wallet ciphertext intact",
     "offline payment survives reload and delivers automatically across three carriers",
@@ -7,7 +7,11 @@
     "invalid carrier mail cannot change money and valid duplicated mail credits once",
     "failed browser persistence prevents any carrier request",
     "hostile inbox contents are isolated and forged custody cannot acknowledge a recipient",
-    "delivery controls fit both themes and mobile widths; keys and finality stay unchanged"
+    "delivery controls fit both themes and mobile widths; keys and finality stay unchanged",
+    "wallet send queues offline without a file dialog and delivers once after reload",
+    "chat Send survives offline reload, delivers automatically and receives a signed receipt",
+    "chat Pay queues an offline payment without opening file sharing",
+    "a cross-tab opt-out restores manual sharing even before the composer label refreshes"
   ],
   "errors": [],
   "apiRequests": [],

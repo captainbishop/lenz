@@ -1,3 +1,4 @@
+import { updateDeliveryMode } from './delivery-mode.js';
 import { readState } from './chat-store.js';
 import { createCarrierClient, setCarrierEnabled } from './carrier-client.js';
 
@@ -10,7 +11,7 @@ const toggle=dialog.querySelector('#carrier-enabled'),status=dialog.querySelecto
 button.onclick=()=>{dialog.showModal();void render();};dialog.querySelector('#carrier-close').onclick=()=>dialog.close();
 let client, lastError='',timer;
 async function render(){
-  const state=await readState();toggle.checked=!!state.carrier?.enabled;toggle.disabled=!state.identity||!client?.carriers.length;
+  const state=await readState();updateDeliveryMode(!!client?.carriers.length,state);toggle.checked=!!state.carrier?.enabled;toggle.disabled=!state.identity||!client?.carriers.length;
   if(!state.identity){status.textContent='Create your profile to set up delivery.';return;}
   if(!client?.carriers.length){status.textContent='No carriers are configured for this app yet. File sharing is available.';return;}
   if(!state.carrier?.enabled){status.textContent=`${client.carriers.length} carrier${client.carriers.length===1?'':'s'} configured. Automatic delivery is off.`;return;}
@@ -33,6 +34,7 @@ toggle.onchange=async()=>{
   try{await setCarrierEnabled(toggle.checked);client?.wake();await tick();}catch(error){status.textContent=error.message;}
   finally{await render();}
 };
+addEventListener('lenz-delivery-ready',()=>{client?.wake();void tick();});
 addEventListener('online',()=>{client?.wake();void tick();});
 addEventListener('offline',()=>{client?.pause();void render();});
 addEventListener('pagehide',()=>{clearInterval(timer);client?.close();});

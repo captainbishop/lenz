@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T14:05:39.889Z",
+  "checkedAt": "2026-11-01T15:10:51.053Z",
   "browser": "156.0.4314.58",
   "checks": [
     "both screens respond to pointer movement and reset on exit; playback controls remain still",

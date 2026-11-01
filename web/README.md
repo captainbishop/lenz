@@ -2,11 +2,11 @@
 
 Open `http://127.0.0.1:4173/` for the homepage, `/money.html` for the wallet or `/chat.html` for conversations. The product name is Lenz; the logo uses two opposing L forms. Native Android and iPhone apps remain on the roadmap.
 
-October 31: ordinary chat **Pay** now sends tUSD using the same encrypted vault/history as the wallet. Received payments can be passed onward offline. Saved swaps explain what needs connectivity and never execute automatically on reconnect. Earlier synthetic assets remain under **Earlier prototype**. [Product flow and fresh verification](../research/offline-social-money.md): 54 Node tests, 50 browser checks and 41 cache routes; browser initial backing is a fixture.
+October 31: ordinary chat **Pay** now sends tUSD using the same encrypted vault/history as the wallet. Received payments can be passed onward offline. Saved swaps explain what needs connectivity and never execute automatically on reconnect. Historical synthetic records remain preserved; demo funding and trading controls have been removed. [Product flow and fresh verification](../research/offline-social-money.md): 54 Node tests, 50 browser checks and 41 cache routes; browser initial backing is a fixture.
 
 The wallet now uses plain actions and payment states. Raw signed-swap import and deposit-action export are on `/swap-tools.html`, outside normal navigation. `/wallet-lab.html` contains the external-signer experiment; MyNearWallet announced retirement on October 31, 2026, so it is not enabled as a product default. Read [connector status and verification](near-connector/README.md) before continuing signer work. These developer pages share the existing browser identity and encrypted vault.
 
-The homepage uses real application previews, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. The previous synthetic payment system remains under Earlier prototype, with its stored identity and balances preserved.
+The homepage uses real application previews, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. Existing identities, messages and encrypted demo vaults remain preserved. The conversation background is a local SVG that also works offline in both themes.
 
 ## Name lookup
 
@@ -19,7 +19,7 @@ It does not link contacts, sign or send payments, or enable account recovery.
 
 ## Profiles and the standalone wallet
 
-Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, exchange contact cards, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. The wallet also reviews incoming swap offers. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. Sending means preparing a file for handover, not confirmed delivery.
+Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, exchange contact cards, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. With automatic delivery enabled, Send saves the encrypted packet and wakes the carrier client. Offline packets survive reload and resume when connected. With delivery off, the app opens the file-sharing dialog. Neither mode implies blockchain confirmation. See [carrier setup and privacy](../carrier/README.md).
 
 Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Pick a name for me in the wallet, or Continue privately in chat, generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.
 
@@ -29,15 +29,13 @@ Save offline on either screen caches both wallet and chat and registers their pa
 
 Clearing site data loses this prototype's account. Recovery and device transfer are not implemented. Current private keys are nonextractable, and old wallet snapshots cannot safely be made spendable without handling later spends and outstanding authorizations. See [behavior and safety boundaries](../docs/behavior.md).
 
-The conversation screen has a people list, search, a message thread and a composer with Pay and Swap actions. Pay prepares an encrypted tUSD payment; Swap opens the wallet's saved swaps. On narrow screens, choose a person to open their conversation and use the back button to return. Research details and the earlier scripted exchange are under About Lenz.
+The conversation screen has a people list, search, a message thread and a composer with Pay and Swap actions. Pay prepares an encrypted tUSD payment; Swap opens the wallet's saved swaps. On narrow screens, choose a person to open their conversation and use the back button to return. About Lenz contains a short explanation of private chat and pending payments.
 
 Share contact opens a name, avatar and QR card. Add someone accepts a camera scan, QR image or legacy contact JSON and asks you to confirm its source. Full fingerprints and JSON remain in technical details. QR processing stays local.
 
-## Demo money in a conversation
+## Archived demo records
 
-Open Earlier prototype and choose Try demo money. Each identity receives synthetic starting roots of 100 demo dollars and 50 demo coins. Their deterministic IDs are verified on import; these are not funded reserves. You can offer a fixed two-asset swap, review it, agree and send some received value to another contact. The chat encrypts the complete financial card for its recipient. Files carry the card between browsers.
-
-A single IndexedDB transaction saves the input reservation, encrypted outbox packet and encrypted trade ledger together. A failed commit exposes no packet and changes no saved balance. Web Locks serialize tabs. Reloads preserve keys, locks and downloadable messages. A pending offer holds its whole source note until agreement; no timeout-only unlock or cancellation is implemented. Accepted trades release change and permit onward use locally. Canonical chain settlement is not connected.
+Previously saved demo cards remain readable and exportable in their original encrypted form. They have no cash value. New demo card imports are rejected in the current app; tUSD payments use the separate testnet vault. Legacy protocol modules remain for compatibility and component tests, without demo funding or trading controls in the product.
 
 The encrypted trade vault has a nonextractable AES-GCM key. Chat uses P-256 signatures, static ECDH and AES-GCM; it has no forward secrecy. Contact names are labels, not identity proofs. Clearing browser storage loses the keys. Copied or rolled-back storage and hidden remote conflicts remain outside the local reservation guarantee.
 

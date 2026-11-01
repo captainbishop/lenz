@@ -1,16 +1,15 @@
 import { createIdentity, sealMessage, openMessage, bytes, digest } from './peer-crypto.js';
 import { transferTerms } from './near-protocol.js';
 import { readState, updateState } from './chat-store.js';
-import { runExchangeScenario } from './peer-scenario.js';
 import { renderProfile, setupContacts } from './contact-ui.js';
 import { paintAvatar, privateName } from './profile-display.js';
 import { setupProfile } from './profile-ui.js';
 import { mountProfilePanels } from './profile-panels.js';
+import { requestAutomaticDelivery } from './delivery-mode.js';
 import { isTrade } from './trade-model.js';
 import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, prepareDeliveryReceipt, deliveryAcknowledged } from './delivery-receipts.js';
 import { saveOffline } from './save-offline.js';
-import { renderMoney, renderTradeCard, setupTrades } from './trade-ui.js';
 import { isNearPayment } from './near-payment-service.js';
 import { loadChatMoney, mountChatMoney, renderChatMoney, renderNearPaymentCard, chatNearContract } from './near-chat.js';
 const $ = selector => document.querySelector(selector);
@@ -38,7 +37,6 @@ async function action(operation) {
   catch (error) {
     status(error.message, true);
     if ($('#add-contact').open) { $('#contact-feedback').textContent = error.message; $('#contact-feedback').className = 'error'; }
-    if ($('#trade-dialog').open) { $('#trade-feedback').textContent = error.message; }
     if ($('#handover').open) { $('#handover-feedback').textContent = error.message; }
     if ($('#edit-profile').open) { $('#profile-feedback').textContent = error.message; }
   }
@@ -74,7 +72,6 @@ async function render() {
   paintAvatar($('#conversation-avatar'), contact ?? {});
   $('#conversation-subtitle').textContent = contact ? `Encrypted between you and ${contact.name}.` : 'Private messages, saved on this device.';
   $('#message').disabled = $('#prepare-message').disabled = !contact;
-  const money = await renderMoney(state, contact);
   const nearMoney = await renderChatMoney(state, contact);
   const messages = $('#messages'); messages.replaceChildren();
   if (!contact) {
@@ -91,7 +88,11 @@ async function render() {
     const paymentBlocked = isNearPayment(payload) && nearMoney?.ledger.blocked.has(await digest(transferTerms(payload.contract, payload.path.at(-1))) + ':0');
     const bubble = element('div', undefined, `bubble${outgoing ? ' outgoing' : ''}${isTrade(payload) || isNearPayment(payload) ? ' financial' : ''}`);
     if (isNearPayment(payload)) bubble.append(await renderNearPaymentCard(payload, record.packet, state, nearMoney));
-    else if (isTrade(payload)) bubble.append(renderTradeCard(payload, record.packet, state, money, reviewOffer));
+    else if (isTrade(payload)) {
+      const archive = element('article', undefined, 'trade-card');
+      archive.append(element('p', 'Archived demo record', 'eyebrow'), element('p', 'This record has no cash value. Demo payments and trades are no longer available.'));
+      bubble.append(archive);
+    }
     else {
       chatPayload(payload); bubble.textContent = payload.text;
       bubble.append(element('small', outgoing ? await deliveryAcknowledged(state, record) ? 'Receipt received · your contact acknowledged this file' : 'Prepared here · delivery not confirmed' : 'Opened here · sender signature checked'));
@@ -105,7 +106,8 @@ async function render() {
         receipt.disabled = true; receipt.textContent = 'Saving receipt…';
         try {
           const packet = await updateState(state => prepareDeliveryReceipt(state, record.packet.id));
-          expose(packet, 'receipt'); status('Receipt saved. Share it back so your contact knows you received the file.');
+          const automatic = await expose(packet, 'receipt');
+          status(automatic ? 'Receipt saved for delivery.' : 'Receipt saved. Share it back so your contact knows you received the file.');
         } finally { receipt.disabled = false; receipt.textContent = 'Share receipt'; }
       });
       bubble.append(receipt);
@@ -131,14 +133,15 @@ $('#contact-search').oninput = () => action(async () => {});
 $('#back-people').onclick = () => { showThread = false; $('main').classList.remove('has-conversation'); };
 $('#open-about').onclick = () => $('#about-lenz').showModal();
 $('#receive-message').onclick = () => { $('#handover-feedback').textContent = ''; $('#handover').showModal(); };
-function expose(packet, kind = 'message') {
+async function expose(packet, kind = 'message') {
+  if (await requestAutomaticDelivery(packet)) return true;
   lastPacket = packet; $('#outgoing').value = JSON.stringify(packet); $('#save-message').disabled = false; $('#handover-feedback').textContent = '';
-  $('#handover-label').textContent = kind === 'receipt' ? 'Receipt ready to share' : kind === 'payment' ? 'Payment ready to share' : 'Message handover';
+  $('#handover-label').textContent = kind === 'receipt' ? 'Receipt ready to share' : kind === 'payment' ? 'Payment ready to share' : 'Share a message';
   $('#handover-description').textContent = kind === 'receipt' ? 'Share this encrypted receipt back to your contact. It acknowledges this file only; it does not confirm a payment on NEAR or guarantee its value.' : kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Save an encrypted message to share, or open a message, payment or receipt you received.';
   $('#save-message').textContent = kind === 'receipt' ? 'Save encrypted receipt' : kind === 'payment' ? 'Save payment file' : 'Save encrypted message';
   if (!$('#handover').open) $('#handover').showModal();
+  return false;
 }
-const reviewOffer = setupTrades({ action, status, selected: () => active, expose });
 mountChatMoney({ action, status, selected: () => active, expose });
 $('#compose').onsubmit = event => { event.preventDefault(); action(async () => {
   const payload = { kind: 'chat', text: $('#message').value }; chatPayload(payload);
@@ -149,9 +152,9 @@ $('#compose').onsubmit = event => { event.preventDefault(); action(async () => {
     const packet = await sealMessage(state.identity, contact, payload);
     state.messages.push({ packet }); return packet;
   });
-  // Expose a handover only after its encrypted history has been committed.
-  expose(packet);
-  $('#message').value = ''; status('Message saved and encrypted. Share the file with your contact.');
+  // Delivery starts only after encrypted history has been committed.
+  const automatic = await expose(packet);
+  $('#message').value = ''; status(automatic ? 'Message saved for delivery.' : 'Message saved and encrypted. Share the file with your contact.');
 }); };
 $('#save-message').onclick = () => { if (lastPacket) save(lastPacket, `proof-u-message-${lastPacket.id}.json`); };
 $('#incoming-file').onchange = () => action(async () => {
@@ -165,19 +168,6 @@ $('#open-message').onclick = () => action(async () => {
   active = received.contactId; showThread = true; const duplicate = received.duplicate;
   $('#incoming').value = ''; $('#incoming-file').value = ''; status(received.kind === DELIVERY_RECEIPT ? duplicate ? 'This receipt is already saved.' : 'Receipt received from your contact. Payment confirmation is separate.' : duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Its sender’s signature is valid.');
   $('#handover').close();
-});
-$('#run-exchange').onclick = () => action(async () => {
-  $('#run-exchange').disabled = true; status('Running the exchange with independent keys…');
-  try {
-    const report = await runExchangeScenario(); const results = $('#exchange-results'); results.replaceChildren();
-    const list = element('ol');
-    for (const message of report.messages) list.append(element('li', `${message.from} → ${message.to}: ${message.text}`));
-    results.append(list); const balances = element('div', undefined, 'balances');
-    for (const row of report.balances) balances.append(element('span', `${row.person}: ${row.value} ${row.asset}`));
-    results.append(balances, element('p', `Two signed agreements checked locally and applied together in a separate settlement model. ${report.elapsedMs} ms on this browser. No server call during the scenario.`, 'quiet'));
-    const download = element('button', 'Save experiment report', 'secondary'); download.type = 'button'; download.onclick = () => save(report, 'direct-exchange-report.json'); results.append(download);
-    status('Exchange experiment finished. Amina passed 6 of her received demo coins to Chidi.');
-  } finally { $('#run-exchange').disabled = false; }
 });
 $('#prepare-offline').onclick = () => action(async () => {
   await saveOffline();

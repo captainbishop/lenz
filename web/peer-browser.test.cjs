@@ -151,8 +151,9 @@ async function receive(page, packet, file = false) {
       await receive(a, reply); await status(a, 'Message opened'); assert.equal(await a.locator('.bubble').count(), 2);
     });
     await check('the actual exchange scenario executes in the offline browser', async () => {
-      await a.locator('#open-about').click(); await a.locator('#run-exchange').click(); await status(a, 'Exchange experiment finished');
-      assert((await a.locator('#exchange-results').innerText()).includes('Chidi: 6 DEMO-COIN')); await a.locator('[data-close="about-lenz"]').click();
+      const report = await a.evaluate(async () => (await import('/peer-scenario.js')).runExchangeScenario());
+      assert(report.balances.some(row => row.person === 'Chidi' && row.value === '6' && row.asset === 'DEMO-COIN'));
+      assert.equal(await a.locator('#run-exchange').count(), 0);
     });
     await check('saved message file contains the encrypted packet', async () => {
       const downloadPromise = b.waitForEvent('download'); await b.locator('#save-message').click();

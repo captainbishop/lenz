@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T13:55:10.221Z",
+  "checkedAt": "2026-11-01T14:54:57.667Z",
   "passed": 8,
   "failed": 0,
   "checks": [
@@ -9,7 +9,7 @@
     "encrypted A → B → C handover runs with all three browsers offline",
     "duplicate and altered payment files cannot add tUSD",
     "failed storage commit releases no payment and preserves the balance",
-    "testnet notes stay encrypted at rest and identity survives switching views",
+    "testnet notes stay encrypted at rest and identity survives reload without a demo mode",
     "tUSD view fits desktop and mobile; the explanation expands by keyboard"
   ],
   "transactions": [],

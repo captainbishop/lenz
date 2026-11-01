@@ -1,16 +1,14 @@
 {
-  "browser": "156.0.4314.50",
-  "passed": 8,
+  "checkedAt": "2026-11-01T14:54:39.678Z",
+  "browser": "156.0.4314.58",
+  "passed": 5,
   "failed": 0,
   "checks": [
-    "wallet profiles and recipient cards work without opening Conversations",
-    "wallets reload offline with the complete account and payment modules cached",
-    "a standalone payment changes both balances after encrypted file handover",
-    "the recipient can pass received value onward from the wallet while offline",
-    "duplicate or altered payment files cannot increase the received balance",
-    "failed payment save leaves no new outgoing file or reduced balance",
-    "chat reads the same identity and balances after wallet use without a reset",
-    "wallet layouts fit desktop and narrow screens with Send and Receive visible"
+    "wallet starts at zero with current tUSD actions and no simulation controls",
+    "receive opens the same public contact card without starting a conversation",
+    "wallet and conversation share the same keys and balances without a reset",
+    "offline reload preserves the account and payment actions",
+    "current wallet fits desktop and phone widths in both themes"
   ],
-  "scope": "Three isolated Windows Edge contexts with offline emulation; synthetic money, no settlement."
+  "scope": "Disposable Windows Edge account with zero balance; APIs blocked. Funded onward-transfer tests are in near-wallet-browser.test.cjs."
 }

@@ -1,5 +1,19 @@
 # Carrier verification
 
+November 1 automatic-send review: eleven [Windows Edge checks](../web/carrier-browser-results.json)
+pass with three local HTTP/SQLite carriers. Both wallet Send and chat Pay save an
+offline payment without a file-sharing dialog. Chat Send retains its encrypted
+message through reload and delivers it after reconnecting. Signed recipient
+receipts return through the carrier route. A cross-tab opt-out restores manual
+sharing before the sending screen refreshes its delivery label.
+
+The send action persists first and then requests delivery. A saved-for-delivery
+status is not a custody receipt, recipient receipt or blockchain confirmation.
+Backing in these checks is a fixture; no chain API was called. Public Nostr
+transport, independent hosted operators and onboarding delivery setup are not
+implemented. The existing opt-in setting remains in Delivery.
+
+
 November 1, 2026. Six Node tests pass for signed retention/content, authenticated
 mailbox reads, allowed origins, durable storage/restart, quota handling, a three-hop
 HTTP route interrupted at its middle carrier, and bounded response streaming.

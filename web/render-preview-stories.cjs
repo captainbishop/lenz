@@ -35,7 +35,7 @@ async function encode(page, file) {
       const context = await browser.newContext({ viewport: { width: 600, height: 660 }, reducedMotion: 'reduce', colorScheme: theme });
       await context.addInitScript(t => localStorage.setItem('lenz-home-theme',t),theme);
       const p = await context.newPage(); p.on('pageerror',e=>errors.push(e.message));
-      context.on('request',r=>{ const u=new URL(r.url()); if(u.origin!==base)return; if(u.pathname.startsWith('/api/'))api.push(u.pathname); if(/\.(js|css|html|json)$/.test(u.pathname))sourceFiles['web/public'+u.pathname]??=null; });
+      context.on('request',r=>{ const u=new URL(r.url()); if(u.origin!==base)return; if(u.pathname.startsWith('/api/'))api.push(u.pathname); if(/\.(js|css|html|json|svg)$/.test(u.pathname))sourceFiles['web/public'+u.pathname]??=null; });
       const images = {};
       for (const [name, captures] of Object.entries(flow.captures)) {
         const shot = captures[theme], data=await fs.readFile(path.join(root,shot.file)); assert.equal(sha(data),shot.sha256); sourceFiles[shot.file]=shot.sha256;

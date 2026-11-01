@@ -31,7 +31,11 @@ node server.mjs
 
 In chat or wallet, open **Delivery** and enable automatic delivery. Both people
 must first verify each other's contact cards. Only new files are queued; enabling
-does not upload existing history. Open pages poll automatically and resume after
+does not upload existing history. With delivery enabled, **Send** saves the message
+or payment and starts delivery without a file-sharing dialog. Offline sends stay
+saved through reload and resume when connected. With delivery off, the file-sharing
+dialog opens instead. The preference is checked again before requesting delivery,
+including changes made in another tab. Open pages poll automatically and resume after
 reconnection. Closing every Lenz page pauses browser work; carriers keep forwarding
 already stored files. Save the app for offline use after configuring its endpoints.
 

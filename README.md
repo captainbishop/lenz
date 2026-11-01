@@ -39,7 +39,7 @@ Send a payment from a chat or your wallet. The recipient can use it to pay someo
 | `/zcash-lab.html` | Separate native Zcash accounts, read/sync and unsigned payment review |
 | `/wallet-lab.html` and `/swap-tools.html` | Developer signing, recovery and transaction diagnostics |
 
-Screenshots are recorded development views. There is no hosted public demo yet. [Run locally](#local-setup) to use the app; the earlier synthetic payment experiment remains under **Earlier prototype**.
+Screenshots are recorded development views. There is no hosted public demo yet. [Run locally](#local-setup) to use the app.
 
 ## Capabilities
 

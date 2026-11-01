@@ -17,7 +17,7 @@ const groups = [
   ['development-checks', /^tooling\/check-/],
   ['other-components', /./],
 ];
-const textFile = /(?:\.(?:[cm]?js|rs|sol|circom|swift|kt|html|css|json|toml|lock|md|ps1|ya?ml|mp4|webp|png|jpe?g)|Dockerfile(?:\.dockerignore)?|Caddyfile\.example|\.env\.(?:example|sample)|\.gitignore)$/;
+const textFile = /(?:\.(?:[cm]?js|rs|sol|circom|swift|kt|html|css|json|toml|lock|md|ps1|ya?ml|mp4|webp|svg|png|jpe?g)|Dockerfile(?:\.dockerignore)?|Caddyfile\.example|\.env\.(?:example|sample)|\.gitignore)$/;
 const files = [...new Set(git('ls-files', '-z', ...(staged ? ['--cached'] : ['--cached', '--others', '--exclude-standard'])).toString().split('\0').filter(Boolean))]
   .filter(name => name !== manifest && textFile.test(name) && groups.some(([,pattern]) => pattern.test(name))).sort();
 const bytes = new Map();

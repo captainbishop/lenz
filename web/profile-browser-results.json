@@ -4,7 +4,7 @@
   "failed": 0,
   "checks": [
     "private onboarding creates a readable alias and default avatar without personal input",
-    "name and symbol edits preserve account keys, encrypted history and demo vault exactly",
+    "name and symbol edits preserve account keys, encrypted history and an archived demo vault exactly",
     "cancel and generated-name preview do not save unwanted changes",
     "photo upload resizes locally, removes source metadata, and makes no network request",
     "contact file carries the photo and an existing contact update requires confirmation",

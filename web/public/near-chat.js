@@ -3,6 +3,7 @@ import { compressed, displayUnits, nearLedger, readNearVault, transferTerms } fr
 import { digest } from './peer-crypto.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
+import { automaticDelivery } from './delivery-mode.js';
 import { walletError } from './wallet-feedback.js';
 import { deliveryAcknowledged } from './delivery-receipts.js';
 const $ = s => document.querySelector(s);
@@ -23,8 +24,15 @@ export async function loadChatMoney() {
 export function mountChatMoney({ action, status, selected, expose }) {
   paymentAction = action;
   let recipient = null;
-  const connection = () => { $('#chat-connection').textContent = navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.'; };
+  const connection = () => {
+    const automatic = automaticDelivery();
+    $('#prepare-message').textContent = automatic ? 'Send' : 'Save to share ↗';
+    if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = automatic ? 'Send payment' : 'Save payment to share';
+    $('#chat-pay-delivery').textContent = automatic ? 'Saved payments will deliver when connected. Your contact can pass them onward offline.' : 'Share the encrypted payment file. Your contact can pass it onward offline.';
+    $('#chat-connection').textContent = automatic ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · sends when connected. File sharing is still available.' : navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.';
+  };
   const updateConnection = () => { connection(); paymentConnection(); };
+  addEventListener('lenz-delivery-mode', updateConnection);
   addEventListener('online', updateConnection); addEventListener('offline', updateConnection); updateConnection();
   $('#pay-tusd').onclick = () => action(async () => {
     const state = await readState(), contact = state.contacts.find(c => c.id === selected());
@@ -38,10 +46,10 @@ export function mountChatMoney({ action, status, selected, expose }) {
     const button = $('#chat-pay-submit'); button.disabled = true; button.textContent = 'Saving payment…';
     try {
       const packet = await updateState(state => prepareNearPayment(state, chatNearContract(), recipient, $('#chat-pay-amount').value));
-      $('#chat-pay-dialog').close(); expose(packet, 'payment');
-      status('Payment saved. Share the encrypted file. Your contact can pass the money onward offline.');
+      $('#chat-pay-dialog').close(); const automatic = await expose(packet, 'payment');
+      status(automatic ? 'Payment saved for delivery. Confirmation happens separately.' : 'Payment saved. Share the encrypted file. Your contact can pass the money onward offline.');
     } catch (error) { const message = walletError(error); $('#chat-pay-feedback').textContent = message; throw Error(message); }
-    finally { button.disabled = false; button.textContent = 'Save payment to share'; }
+    finally { button.disabled = false; connection(); }
   }); };
 }
 export async function renderChatMoney(state, contact) {
