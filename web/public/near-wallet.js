@@ -5,6 +5,7 @@ import { mountRheaWallet, loadRheaConfig, renderRheaWallet } from './rhea-wallet
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
 import { receivePacket } from './receive-packet.js';
+import { DELIVERY_RECEIPT, deliveryAcknowledged, prepareDeliveryReceipt } from './delivery-receipts.js';
 import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits, transferTerms } from './near-protocol.js';
 
 const $ = selector => document.querySelector(selector);
@@ -41,7 +42,7 @@ export function mountNearWallet({ action, status }) {
   const panels=el('div');panels.innerHTML=`
   <dialog id="near-send-dialog" aria-labelledby="near-send-title"><div class="dialog-top"><h2 id="near-send-title">Send tUSD</h2><button class="secondary" type="button" data-close="near-send-dialog">Close</button></div><form id="near-send-form"><label for="near-recipient">To</label><select id="near-recipient" required></select><label for="near-send-amount">Amount in tUSD</label><input id="near-send-amount" inputmode="decimal" placeholder="0.00" required><p class="quiet">Save and share the encrypted file. The recipient can pass it onward before either device reconnects. NEAR settlement confirms which spend succeeds.</p><button type="submit">Prepare payment</button></form><p class="wallet-feedback error" role="status"></p></dialog>
   <dialog id="near-fund-dialog" aria-labelledby="near-fund-title"><div class="dialog-top"><h2 id="near-fund-title">Add test dollars</h2><button class="secondary" type="button" data-close="near-fund-dialog">Close</button></div><p>Add free test dollars to try sending and receiving. They have no cash value.</p><form id="near-fund-form"><label for="near-fund-amount">Amount in tUSD · up to 100</label><input id="near-fund-amount" inputmode="decimal" value="100" required><p class="quiet">Available once per Lenz profile. Online payment records and amounts are public in this test version. Messages stay private between contacts.</p><button type="submit">Add test dollars</button></form><p class="wallet-feedback error" role="status"></p></dialog>
-  <dialog id="near-receive-dialog" aria-labelledby="near-receive-title"><div class="dialog-top"><h2 id="near-receive-title">Receive tUSD</h2><button class="secondary" type="button" data-close="near-receive-dialog">Close</button></div><button id="near-share-card" type="button">Show my contact card</button><label for="near-payment-file">Open an encrypted payment file</label><input type="file" id="near-payment-file" accept=".json,application/json"><button type="button" id="near-import" disabled>Check payment</button><p class="wallet-feedback error" role="status"></p></dialog>
+  <dialog id="near-receive-dialog" aria-labelledby="near-receive-title"><div class="dialog-top"><h2 id="near-receive-title">Receive tUSD</h2><button class="secondary" type="button" data-close="near-receive-dialog">Close</button></div><button id="near-share-card" type="button">Show my contact card</button><label for="near-payment-file">Open an encrypted payment or receipt</label><input type="file" id="near-payment-file" accept=".json,application/json"><button type="button" id="near-import" disabled>Open file</button><p class="wallet-feedback error" role="status"></p></dialog>
   <dialog id="near-handover" aria-labelledby="near-handover-title"><div class="dialog-top"><h2 id="near-handover-title">Ready to share</h2><button type="button" class="secondary" data-close="near-handover">Close</button></div><p>Save this encrypted payment and share it with your recipient. It is already saved in your payment history.</p><button id="near-download" type="button">Save payment file</button></dialog>`;
   document.body.append(panels);
   panels.querySelectorAll('[data-close]').forEach(button=>button.onclick=()=>$('#'+button.dataset.close).close());
@@ -65,8 +66,8 @@ export function mountNearWallet({ action, status }) {
   });};
   $('#near-payment-file').onchange=()=>run(async()=> {const file=$('#near-payment-file').files[0];if(!file)return;if(file.size>205000)throw new Error('This payment file is too large.');selectedFile=JSON.parse(await file.text());$('#near-import').disabled=false;});
   $('#near-import').onclick=()=>run(async()=> {
-    const {duplicate}=await updateState(state=>receivePacket(state,selectedFile,true,config.contract));
-    $('#near-receive-dialog').close();notice(duplicate?'You already received this payment.':'Payment saved. Connect to confirm it.');
+    const {duplicate,kind}=await updateState(state=>receivePacket(state,selectedFile,true,config.contract));
+    $('#near-receive-dialog').close();notice(kind===DELIVERY_RECEIPT?duplicate?'This receipt is already saved.':'Receipt received. Your contact acknowledged the file; NEAR confirmation is separate.':duplicate?'You already received this payment.':'Payment saved. Connect to confirm it.');
   });
   $('#near-refresh').onclick=()=>run(async()=> {
     notice('Refreshing your payments…');
@@ -119,10 +120,24 @@ export async function renderNearWallet(state) {
     const payload=contact?await openMessage(state.identity,contact,outgoing.packet):null;
     const noteId=payload?await digest(transferTerms(config.contract,payload.path.at(-1)))+':0':null;
     const blocked=noteId&&ledger.blocked.has(noteId);
-    row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span',blocked?'Payment could not be confirmed':'Ready to share','near-state'));
+    const acknowledged=await deliveryAcknowledged(state,state.messages.find(r=>r.packet.id===outgoing.packet.id));
+    row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span',blocked?'Payment could not be confirmed':acknowledged?'File received':'Ready to share','near-state'));
+    if(acknowledged)row.append(el('small','Receipt received · your contact acknowledged the file. Payment confirmation is separate.','delivery-state'));
     if(blocked)row.append(el('small','This payment conflicts with an earlier spend. Let your contact know it cannot be confirmed.'));
     else { const save=el('button','Save payment file','secondary');save.onclick=()=>download(outgoing.packet);row.append(save); }
     list.append(row);
   }
+  const receivedFiles=el('details');receivedFiles.id='near-received-files';receivedFiles.append(el('summary','Received payment files'));
+  for(const record of state.messages.filter(r=>r.packet.to===state.identity.profile.id).reverse()) {
+    const contact=state.contacts.find(c=>c.id===record.packet.from);if(!contact)continue;
+    const payload=await openMessage(state.identity,contact,record.packet);
+    if(payload?.kind!=='lenz-near-payment-v1'||payload.contract!==config.contract)continue;
+    const row=el('article',undefined,'near-payment');
+    row.append(el('strong',`${displayUnits(payload.path.at(-1).amount)} tUSD from ${contact.name}`),el('small','A receipt tells your contact this file reached you. It does not confirm the payment on NEAR.'));
+    const receipt=el('button','Save receipt to share','secondary');receipt.type='button';
+    receipt.onclick=()=>run(async()=>{receipt.disabled=true;try{const packet=await updateState(s=>prepareDeliveryReceipt(s,record.packet.id));download(packet,'receipt');notice('Receipt saved. Share it back to your contact.');}finally{receipt.disabled=false;}});
+    row.append(receipt);receivedFiles.append(row);
+  }
+  if(receivedFiles.children.length>1)list.append(receivedFiles);
   $('#near-empty').hidden=!!list.children.length;
 }

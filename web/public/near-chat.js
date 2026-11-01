@@ -4,6 +4,7 @@ import { digest } from './peer-crypto.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
 import { walletError } from './wallet-feedback.js';
+import { deliveryAcknowledged } from './delivery-receipts.js';
 const $ = s => document.querySelector(s);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
 let config = null;
@@ -55,16 +56,18 @@ export async function renderChatMoney(state, contact) {
 }
 export async function renderNearPaymentCard(payload, packet, state, money) {
   const outgoing = packet.from === state.identity.profile.id, card = el('article', undefined, 'trade-card near-chat-card');
-  card.append(el('p', 'tUSD · NEAR TESTNET', 'eyebrow'), el('h3', outgoing ? 'Payment ready to share' : 'Payment received'));
-  card.append(el('p', `${displayUnits(payload.path.at(-1).amount)} tUSD`, 'payment-amount'));
+  const acknowledged = outgoing && await deliveryAcknowledged(state, state.messages.find(r => r.packet.id === packet.id));
   const id = await digest(transferTerms(payload.contract, payload.path.at(-1))), noteId = `${id}:0`;
-  let detail = outgoing ? 'Saved here · delivery not confirmed' : 'Received on this device · awaiting online confirmation';
+  card.append(el('p', 'tUSD · NEAR TESTNET', 'eyebrow'), el('h3', money?.ledger.blocked.has(noteId) ? 'Payment could not be confirmed' : outgoing ? acknowledged ? 'Payment file received' : 'Payment ready to share' : 'Payment received'));
+  card.append(el('p', `${displayUnits(payload.path.at(-1).amount)} tUSD`, 'payment-amount'));
+  let detail = outgoing ? acknowledged ? 'Contact acknowledged the file · awaiting online confirmation' : 'Saved here · delivery not confirmed' : 'Received on this device · awaiting online confirmation';
   if (money?.ledger.blocked.has(noteId)) detail = 'Payment could not be confirmed · excluded from your balance';
   else if (!outgoing && money?.ledger.reserved.has(noteId)) detail = 'Set aside for a saved swap · check the wallet for its status';
   else if (!outgoing && money?.ledger.consumed.has(noteId)) detail = 'Used in a later payment or saved swap · check the wallet for its status';
-  else if (money?.vault.receipts[id]?.finality === 'FINAL') detail = outgoing ? 'Confirmed on NEAR · file delivery not confirmed' : 'Payment confirmed on NEAR';
+  else if (money?.vault.receipts[id]?.finality === 'FINAL') detail = outgoing ? acknowledged ? 'Confirmed on NEAR · receipt received' : 'Confirmed on NEAR · file delivery not confirmed' : 'Payment confirmed on NEAR';
   else if (!outgoing && money?.vault.confirmations?.[noteId]) detail = 'Confirmation pending · check for an update';
   card.append(el('p', detail, 'trade-state'));
+  if (acknowledged) card.append(el('p', 'Receipt received · your contact acknowledged the file. Payment confirmation is separate.', 'delivery-state'));
   card.append(el('small', 'The file is encrypted. Settlement amounts and accounts are public on the test network.'));
   if (paymentAction && money?.ledger.notes?.has(noteId)) {
     const controls = el('div', undefined, 'near-payment-actions');

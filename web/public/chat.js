@@ -1,4 +1,5 @@
-import { createIdentity, sealMessage, openMessage, bytes } from './peer-crypto.js';
+import { createIdentity, sealMessage, openMessage, bytes, digest } from './peer-crypto.js';
+import { transferTerms } from './near-protocol.js';
 import { readState, updateState } from './chat-store.js';
 import { runExchangeScenario } from './peer-scenario.js';
 import { renderProfile, setupContacts } from './contact-ui.js';
@@ -7,6 +8,7 @@ import { setupProfile } from './profile-ui.js';
 import { mountProfilePanels } from './profile-panels.js';
 import { isTrade } from './trade-model.js';
 import { receivePacket } from './receive-packet.js';
+import { DELIVERY_RECEIPT, prepareDeliveryReceipt, deliveryAcknowledged } from './delivery-receipts.js';
 import { saveOffline } from './save-offline.js';
 import { renderMoney, renderTradeCard, setupTrades } from './trade-ui.js';
 import { isNearPayment } from './near-payment-service.js';
@@ -86,16 +88,27 @@ async function render() {
   for (const record of history.slice(-100)) {
     const payload = await openMessage(state.identity, contact, record.packet);
     const outgoing = record.packet.from === state.identity.profile.id;
+    const paymentBlocked = isNearPayment(payload) && nearMoney?.ledger.blocked.has(await digest(transferTerms(payload.contract, payload.path.at(-1))) + ':0');
     const bubble = element('div', undefined, `bubble${outgoing ? ' outgoing' : ''}${isTrade(payload) || isNearPayment(payload) ? ' financial' : ''}`);
     if (isNearPayment(payload)) bubble.append(await renderNearPaymentCard(payload, record.packet, state, nearMoney));
     else if (isTrade(payload)) bubble.append(renderTradeCard(payload, record.packet, state, money, reviewOffer));
     else {
       chatPayload(payload); bubble.textContent = payload.text;
-      bubble.append(element('small', outgoing ? 'Prepared here · delivery not confirmed' : 'Opened here · sender signature checked'));
+      bubble.append(element('small', outgoing ? await deliveryAcknowledged(state, record) ? 'Receipt received · your contact acknowledged this file' : 'Prepared here · delivery not confirmed' : 'Opened here · sender signature checked'));
     }
-    if (outgoing) {
+    if (outgoing && !paymentBlocked) {
       const download = element('button', isNearPayment(payload) ? 'Save payment file' : isTrade(payload) ? 'Save financial card' : 'Save message'); download.type = 'button';
       download.onclick = () => save(record.packet, `proof-u-message-${record.packet.id}.json`); bubble.append(download);
+    } else if (!outgoing && !isTrade(payload)) {
+      const receipt = element('button', 'Share receipt'); receipt.type = 'button';
+      receipt.onclick = () => action(async () => {
+        receipt.disabled = true; receipt.textContent = 'Saving receipt…';
+        try {
+          const packet = await updateState(state => prepareDeliveryReceipt(state, record.packet.id));
+          expose(packet, 'receipt'); status('Receipt saved. Share it back so your contact knows you received the file.');
+        } finally { receipt.disabled = false; receipt.textContent = 'Share receipt'; }
+      });
+      bubble.append(receipt);
     }
     messages.append(bubble);
   }
@@ -120,9 +133,9 @@ $('#open-about').onclick = () => $('#about-lenz').showModal();
 $('#receive-message').onclick = () => { $('#handover-feedback').textContent = ''; $('#handover').showModal(); };
 function expose(packet, kind = 'message') {
   lastPacket = packet; $('#outgoing').value = JSON.stringify(packet); $('#save-message').disabled = false; $('#handover-feedback').textContent = '';
-  $('#handover-label').textContent = kind === 'payment' ? 'Payment ready to share' : 'Message handover';
-  $('#handover-description').textContent = kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Save an encrypted message to share, or open one you received.';
-  $('#save-message').textContent = kind === 'payment' ? 'Save payment file' : 'Save encrypted message';
+  $('#handover-label').textContent = kind === 'receipt' ? 'Receipt ready to share' : kind === 'payment' ? 'Payment ready to share' : 'Message handover';
+  $('#handover-description').textContent = kind === 'receipt' ? 'Share this encrypted receipt back to your contact. It acknowledges this file only; it does not confirm a payment on NEAR or guarantee its value.' : kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Save an encrypted message to share, or open a message, payment or receipt you received.';
+  $('#save-message').textContent = kind === 'receipt' ? 'Save encrypted receipt' : kind === 'payment' ? 'Save payment file' : 'Save encrypted message';
   if (!$('#handover').open) $('#handover').showModal();
 }
 const reviewOffer = setupTrades({ action, status, selected: () => active, expose });
@@ -150,7 +163,7 @@ $('#open-message').onclick = () => action(async () => {
   const packet = parse($('#incoming').value);
   const received = await updateState(state => receivePacket(state, packet, false, chatNearContract()));
   active = received.contactId; showThread = true; const duplicate = received.duplicate;
-  $('#incoming').value = ''; $('#incoming-file').value = ''; status(duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Its sender’s signature is valid.');
+  $('#incoming').value = ''; $('#incoming-file').value = ''; status(received.kind === DELIVERY_RECEIPT ? duplicate ? 'This receipt is already saved.' : 'Receipt received from your contact. Payment confirmation is separate.' : duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Its sender’s signature is valid.');
   $('#handover').close();
 });
 $('#run-exchange').onclick = () => action(async () => {

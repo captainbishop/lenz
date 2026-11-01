@@ -3,6 +3,7 @@ import { isTrade } from './trade-model.js';
 import { openTradeCard } from './trade-service.js';
 import { isNearPayment } from './near-payment-service.js';
 import { acceptNearPayment, readNearVault, saveNearVault } from './near-protocol.js';
+import { DELIVERY_RECEIPT, acceptDeliveryReceipt } from './delivery-receipts.js';
 // Caller commits this together with the updated balance inside updateState.
 export async function receivePacket(state, packet, financialOnly = false, nearContract = null) {
   if (!state.identity) throw new Error('Create your identity first.');
@@ -10,6 +11,7 @@ export async function receivePacket(state, packet, financialOnly = false, nearCo
   const contact = state.contacts.find(p => p.id === packet.from);
   if (!contact) throw new Error('Add and verify the sender’s contact card first.');
   const payload = await openMessage(state.identity, contact, packet);
+  if (payload?.kind === DELIVERY_RECEIPT) return acceptDeliveryReceipt(state, packet, {financialOnly, nearContract});
   if (financialOnly && nearContract && !isNearPayment(payload)) throw new Error('Choose an encrypted tUSD payment file.');
   if (financialOnly && !isTrade(payload) && !isNearPayment(payload)) throw new Error('This file is a chat message. Open it in Conversations.');
   if (!isTrade(payload) && !isNearPayment(payload) && (!payload || payload.kind !== 'chat' || typeof payload.text !== 'string' || !payload.text.trim() || bytes(payload.text).length > 16002)) throw new Error('This is not a supported chat message.');

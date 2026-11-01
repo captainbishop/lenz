@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-01T05:47:01.765Z",
+  "results": [
+    {
+      "guard": "exact file binding",
+      "rejected": true
+    },
+    {
+      "guard": "wallet receipt scope",
+      "rejected": true
+    },
+    {
+      "guard": "payment contract binding",
+      "rejected": true
+    },
+    {
+      "guard": "stored receipt verification",
+      "rejected": true
+    }
+  ]
+}

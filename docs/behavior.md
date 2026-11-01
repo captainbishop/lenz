@@ -2,6 +2,8 @@
 
 Chat and the standalone wallet share one identity and ledger. Payments do not require a conversation. Names and avatars help identify contacts visually; they do not authenticate a person. Contact-card imports require confirmation of their source.
 
+[Optional delivery receipts](delivery-receipts.md) acknowledge an exact encrypted message or payment file. They can be shared back offline and verified by the sender. They do not imply human reading, permanent storage or NEAR settlement, and never change money or release a reservation.
+
 ## Offline payments
 
 A recipient can receive a locally valid payment and use its output in an onward transfer before reconnecting. A voluntary carrier can submit the signed history to NEAR; no local validator group is required. The carrier cannot change the signed recipient or amount.

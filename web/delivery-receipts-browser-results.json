@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-01T05:26:02.511Z",
+  "checks": [
+    "two existing identities cache and reload offline without network or wallet actions",
+    "failed receipt storage exposes no shareable receipt and preserves saved history",
+    "offline message receipt returns to the sender and survives reload without another message",
+    "duplicate and forged receipts cannot change history or create a receipt loop",
+    "an offline tUSD receipt updates the standalone wallet without confirmation or extra credit",
+    "wallet can resend the same receipt without starting a conversation or modifying money",
+    "a delivery receipt never replaces a conflicting-payment warning",
+    "receipt states fit both themes and small screens while identities remain unchanged"
+  ],
+  "errors": [],
+  "apiRequests": [],
+  "scope": "Two disposable Windows Edge profiles with actual WebCrypto, IndexedDB, file import/download and offline cache. tUSD backing/conflict are fixtures; no chain transaction, funding, deployment or existing profile access."
+}

@@ -1,5 +1,25 @@
 # Development freshness review
 
+November 1 offline delivery review: chat and wallet can generate, reopen and verify
+an encrypted acknowledgement of an exact saved file. Delivery status remains
+separate from money confirmation; receipt handling leaves vault bytes unchanged.
+Chat now removes the download action on a conflicted payment card, matching the
+wallet. [Receipt behavior and evidence](../docs/delivery-receipts.md) records 55 Node
+tests, eight new browser checks and four rejected guard removals. Existing social,
+confirmation and wallet checks passed (9, 13 and 8 respectively), plus two cache
+upgrades. The new module is cached in `proof-u-chat-v30-delivery-receipts`.
+
+Both themes and narrow/landscape layouts were checked. Receipt, pending-confirmation
+and confirmed-payment captures were visually reviewed. The existing recorded flow
+was replayed through current renderers with all three stored accounts unchanged.
+All six videos were rendered; 22 sampled frames were reviewed. Five playback,
+three screen-response and five homepage checks passed. All 48 app cache routes
+resolve, and the recording/source hashes match the updated homepage cache.
+NEAR contracts, Rhea, Intents, Aurora, Zcash and proof code are unchanged; their
+partner-access, signing, recovery, private-settlement and device gates remain open.
+Receipt tests use fixture backing and no financial requests. They do not extend
+the earlier live settlement evidence or prove automatic mesh delivery.
+
 November 1 unsigned Zcash output review: the developer page now verifies recipient,
 amount, fee, commitments and owned change through the pinned read-only native
 inspector. Seven actual Edge checkpoints and final native controls inspected one
