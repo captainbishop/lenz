@@ -1,5 +1,16 @@
 # Development freshness review
 
+November 1 Aurora network-reader review: the two read-only network queries now
+enforce a streamed 16-KiB reply limit, a deadline through the response body,
+matching JSON-RPC IDs and canonical integer results. Seven tests and three removed
+guard controls passed; an actual read-only request returned the expected testnet
+ID. [Reader evidence and limits](../aurora/rpc-validation.md). The initial sandbox
+network failure remains distinguished from the authorized successful read.
+The dependency audit still reports four high findings; a compatible patched
+Hardhat/Zod combination has not been established. Package versions and locks,
+contracts, web sources, caches and preview media are unchanged. This check does
+not extend offline payment, privacy, Zcash, Rhea or Intents execution evidence.
+
 November 1 offline delivery review: chat and wallet can generate, reopen and verify
 an encrypted acknowledgement of an exact saved file. Delivery status remains
 separate from money confirmation; receipt handling leaves vault bytes unchanged.

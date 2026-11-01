@@ -37,8 +37,8 @@
         "node_modules/@nomicfoundation/hardhat-zod-utils"
       ],
       "fixAvailable": {
-        "name": "@nomicfoundation/hardhat-ethers",
-        "version": "4.0.13",
+        "name": "hardhat",
+        "version": "2.29.1",
         "isSemVerMajor": true
       }
     },
@@ -95,8 +95,8 @@
         "node_modules/zod"
       ],
       "fixAvailable": {
-        "name": "@nomicfoundation/hardhat-ethers",
-        "version": "4.0.13",
+        "name": "hardhat",
+        "version": "2.29.1",
         "isSemVerMajor": true
       }
     }

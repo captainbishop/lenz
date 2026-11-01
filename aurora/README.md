@@ -26,7 +26,7 @@ npm run check:testnet
 
 `check:local` explicitly creates an in-process Hardhat network. It deploys `ToolchainProbe`, writes 42, checks storage and its receipt event, then writes [local-results.json](local-results.json) with the lockfile hash. It has no user wallet. The forced compile passed for one Solidity file; the four local assertions passed.
 
-`check:testnet` reads `eth_chainId` and `eth_blockNumber` from the [documented Aurora endpoint](https://doc.aurora.dev/dev-reference/network-endpoints/), checks chain ID 1313161555 and writes [testnet-rpc-results.json](testnet-rpc-results.json). It cannot sign or send transactions. Configured HTTP accounts are empty.
+`check:testnet` reads `eth_chainId` and `eth_blockNumber` from the [documented Aurora endpoint](https://doc.aurora.dev/dev-reference/network-endpoints/), checks chain ID 1313161555 and writes [testnet-rpc-results.json](testnet-rpc-results.json). Replies are limited to 16 KiB and a 20-second deadline, including body streaming; redirects, mismatched response IDs and malformed quantities are rejected. It cannot sign or send transactions. Configured HTTP accounts are empty. [Reader tests and limits](rpc-validation.md).
 
 On the recorded Windows host, sandboxed Hardhat startup failed in tsx's `os.userInfo()` call (`uv_os_get_passwd`, ENOMEM). The same command passed outside the sandbox without code changes. Sandboxed external RPC requests returned EACCES; authorized read-only reruns passed. These are host execution restrictions, not failed Solidity assertions. Do not patch dependencies to bypass host restrictions.
 
@@ -35,6 +35,8 @@ On the recorded Windows host, sandboxed Hardhat startup failed in tsx's `os.user
 The initial install reported six high package-level findings. Patching `tmp` reduced this to four, all traced to [Zod GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5). See [dependency-audit.json](dependency-audit.json). `npm audit` still exits 1.
 
 Hardhat and its ethers plugin depend on Zod 3; the advisory lists 4.6.6 as patched. Forcing Zod 4 or downgrading Hardhat changes the supported dependency interface, so that requires its own compatibility work. These dependencies are development tooling in this directory and are not imported by the current web wallet. Keep this dependency finding open; passing fixture checks are not a security audit.
+
+On November 1, a fresh npm audit still reported four high package-level findings. The latest registry Hardhat release, [3.21.2](https://registry.npmjs.org/hardhat/3.21.2), still declared `zod: ^3.23.8`, so a Hardhat patch upgrade alone does not resolve the advisory. The installed versions and lockfile remain unchanged. The bounded testnet reader uses Node's native HTTP client and JSON parser independently of Hardhat/Zod; its input limits do not patch the affected dependency or certify other consumers.
 
 npm also reported an unapproved esbuild postinstall hook. No global installation or hook approval was added; compilation and this JavaScript fixture passed with the installed packages.
 
