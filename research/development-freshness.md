@@ -1,5 +1,22 @@
 # Development freshness review
 
+November 1 pending-confirmation review: chat and wallet persist an attempt before
+submission, display it after reload, and separate status reads from an explicit
+retry of the same signed payment. [Behavior, checks and limits](payment-status.md)
+cover 25 Node tests, 12 fixture browser checks, two removed-guard controls and two
+cache-upgrade checks. The app cache is `proof-u-chat-v27-pending-confirmation`.
+This does not complete live conflict/interruption evidence, recovery or private
+settlement. NEAR contracts, Rhea, Intents, Aurora and Zcash implementations are
+unchanged; their open gates below still apply.
+
+The offline wallet's eight browser checks and nine social-flow checks passed.
+All six previews were rendered again from the recorded flow without financial
+requests; the replay preserved all three stored test accounts. Five playback checks,
+three screen-response checks and five homepage checks passed. Twenty-two sampled
+composition frames and the new pending-state screenshots were visually reviewed in
+both themes. The preview refresh initially stopped because the local server was
+unavailable; it completed after the server was started.
+
 November 1 documentation review: component summaries distinguish the confirmed native Zcash transfer, unsigned browser review, configured Rhea recovery and remaining integration work. Dated reports retain their original test results and failure evidence. Application, contract and circuit code and recorded media are unchanged by this documentation review.
 
 October 31 payment-status review: chat and wallet now share receipt validation, status checks and confirmation. [Evidence and retained failures](payment-status.md) cover 25 Node tests, 41 grouped Edge checks, cache preservation and a read-only check of six live notes. The new cache includes the shared status module. Six light/dark previews were refreshed by presentation replay with all three stored test accounts unchanged. Live browser conflict/interruption evidence remains open; no contract, Rhea, Intents, Aurora, Zcash, proof or recovery implementation changed in this pass.

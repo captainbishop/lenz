@@ -98,18 +98,19 @@ export async function renderNearWallet(state) {
     const row=el('article',undefined,'near-payment');row.append(el('strong',displayUnits(note.amount)+' tUSD'),el('span','Payment could not be confirmed','near-state'),el('small','This money was used in another payment, so it is not included in your balance.'));list.append(row);
   }
   for(const note of owned) {
-    const row=el('article',undefined,'near-payment'), id=note.id.startsWith('root:')?note.id:note.id.split(':')[0], receipt=vault.receipts[id];
-    row.append(el('strong',displayUnits(note.amount)+' tUSD'),el('span',receipt?'Confirmed':'Awaiting confirmation','near-state'));
+    const row=el('article',undefined,'near-payment'), id=note.id.startsWith('root:')?note.id:note.id.split(':')[0], receipt=vault.receipts[id], retry=!!vault.confirmations?.[note.id];
+    row.append(el('strong',displayUnits(note.amount)+' tUSD'),el('span',receipt?'Confirmed':retry?'Confirmation pending':'Awaiting confirmation','near-state'));
     if(receipt?.txHash)row.append(linkReceipt(receipt.txHash));
     else if(receipt?.blockHeight){const a=el('a','View confirmation ↗');a.href='https://testnet.nearblocks.io/blocks/'+receipt.blockHeight;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}
-    if(!receipt && !note.id.startsWith('root:')) { const settle=el('button','Confirm payment','secondary');settle.type='button';settle.dataset.nearOnline='';settle.disabled=!navigator.onLine;settle.onclick=()=>run(async()=> {
+    if(!receipt && retry) { const check=el('button','Check confirmation','secondary');check.type='button';check.dataset.nearOnline='';check.disabled=!navigator.onLine;check.onclick=()=>run(async()=>{await refreshNearPayments(config.contract);notice('Payment status checked.');});row.append(check); }
+    if(!receipt && !note.id.startsWith('root:')) { const settle=el('button',retry?'Retry confirmation':'Confirm payment','secondary');settle.type='button';settle.dataset.nearOnline='';settle.disabled=!navigator.onLine;settle.onclick=()=>run(async()=> {
       notice('Confirming your payment…');
       settle.dataset.nearBusy='true';settle.disabled=true;
-      try { const result=await confirmNearPayment(config.contract,note.id);notice(result.status==='confirmed'?'Payment confirmed.':'This money was used in another payment. It is excluded from your balance.'); }
+      try { const result=await confirmNearPayment(config.contract,note.id,{retry});notice(result.status==='confirmed'?'Payment confirmed.':result.status==='pending'?'Confirmation is still pending. Check again, or choose Retry confirmation to resend the same signed payment.':'This money was used in another payment. It is excluded from your balance.'); }
       catch(error) { notice(walletError(error)); }
       finally { settle.dataset.nearBusy='false';paymentConnection(); }
     });row.append(settle); }
-    if(!receipt)row.append(el('small','Saved offline. Connect to confirm this payment before relying on it.'));
+    if(!receipt)row.append(el('small',retry?'The last confirmation has no verified result yet. Check for an update, or retry the same signed payment.':'Saved offline. Connect to confirm this payment before relying on it.'));
     list.append(row);
   }
   for(const outgoing of [...vault.outbox].reverse()) { const row=el('article',undefined,'near-payment'), contact=state.contacts.find(c=>c.id===outgoing.packet.to);row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span','Ready to share','near-state'));const save=el('button','Save payment file','secondary');save.onclick=()=>download(outgoing.packet);row.append(save);list.append(row); }

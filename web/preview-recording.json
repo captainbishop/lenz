@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-31T18:25:35.230Z",
+  "recordedAt": "2026-11-01T02:10:59.571Z",
   "browser": "156.0.4314.50",
   "encoder": "imageio-ffmpeg 0.6.0 / FFmpeg 7.1",
   "sourceFiles": {
@@ -13,10 +13,10 @@
     "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
     "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
-    "web/public/near-chat.js": "ec3cc7dc0562a8964940f71fff5881ca5802a7234b96d6500c4e3411e93aecd2",
+    "web/public/near-chat.js": "fd29d71a3a87ef2a1d6a7ae9799d1a659dc3c737679a89ca076d89328eb25817",
     "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
     "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
-    "web/public/near-payment-status.js": "57de431aa6d8ec5d81c92e4c6ebe34bba381428db73dd3aee77ec8ca6adab94c",
+    "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
     "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
@@ -36,7 +36,7 @@
     "web/record-preview-videos.cjs": "38d6086d840086cb69c28b6123384edc90e618989fe8bc8d4b5da878d219ca5e",
     "web/render-preview-stories.cjs": "2e730a3bff33325602cc506d0242d99ad6ec9a5e4fd393a1824dc15d803ddd0d",
     "web/preview-scene.html": "55e94804863416139022ae29e0b8add7a7698a3687c890998a8c4b69a46b3031",
-    "web/preview-flow-results.json": "11916fcb1f4ac6cb92963ae7aaeab0367a92aa4a0f8371ec77ec8c06a517604f",
+    "web/preview-flow-results.json": "8ae7e8f4aa78333cd519c2b4941f1276cf6647fc9832749fc705034501c3c707",
     "web/evidence/preview-replay/private-send-light.png": "4bab6ca127db3cfc5807a286f88559b8809d6118c0c34d476d627ea40e511e2c",
     "web/evidence/preview-replay/private-read-light.png": "718dc9b83f8ab579faaa2af544583c445cc05d93f5ae7678a30fffa78a34ece2",
     "web/evidence/preview-replay/payment-received-light.png": "956648ed16dfc4d34acaec0c88356b993591f87af676d417fae420357b48eb3f",
@@ -46,7 +46,7 @@
     "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
     "web/public/near-wallet.css": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9",
     "web/public/money.js": "0eaf4e94101cceb1f9e55711d749984f1193630075077da378816e4c1548f88d",
-    "web/public/near-wallet.js": "64e583f70b80d047f0879a43111aa5525c5bb717a90a2b5a324e80e267ed7a32",
+    "web/public/near-wallet.js": "9f6a8fad8ad154785bdf6966c9d1537fe3fe5042478e99cddca15e352eec51ed",
     "web/public/rhea-wallet.js": "40adeff7bc95c5949db603976f8dd154bd2b5405a83ffc2f9e8ca4f2e84a1c3c",
     "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
@@ -83,7 +83,7 @@
       "file": "web/public/previews/wallet-light.mp4",
       "sha256": "8a6290763d642ee826a39625c9021c0354cfe247f3ce3e3207c4816aae95385a",
       "poster": "web/public/previews/wallet-light.webp",
-      "posterSha256": "145828eaca0b0c79c2202631c79388eb9f9ddad4f96c4233f7872d6feb2a3279"
+      "posterSha256": "51fb86e06723e6a437c8247ff1b2a8a6ec541ac5dd320ea04e33a9f91cafa530"
     },
     {
       "view": "profile",
@@ -94,9 +94,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "870b5a890d022efe2369532f8507fb3985647a2bc81759bc4f94c8e269cdf0fb",
+      "sha256": "07ce0a1ced2f2ca7c4db80f024459e83a6eb2a72aa2b2cfad5c87dff8cd96187",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "d56e3f0cc2f5ea3300ab13ed05b664539728984754c05eca8cbf59bb3b048582"
+      "posterSha256": "f59dca11ee30452cfe4e85add30618ccb53325228b1fc9cf90b0b22b1417fe0e"
     },
     {
       "view": "chat",
@@ -109,7 +109,7 @@
       "file": "web/public/previews/chat-dark.mp4",
       "sha256": "63072df3c30a8ef255ba2f9bcab74f79ea9740f6f214cf7831e3283c6a7ecb98",
       "poster": "web/public/previews/chat-dark.webp",
-      "posterSha256": "ed108d9e821a0d456861583208a15aeb863c8761aeb913104bbe8468256d3409"
+      "posterSha256": "0140e2a44ab24790870905539582017df67bd23d01ad664b6b43a4befb7fb843"
     },
     {
       "view": "wallet",
@@ -122,7 +122,7 @@
       "file": "web/public/previews/wallet-dark.mp4",
       "sha256": "3e8749dd41d4cec7f8424a4869c1096b8987a19913e1332edeee7497a5cc1734",
       "poster": "web/public/previews/wallet-dark.webp",
-      "posterSha256": "8e52d54c35cfffa15374a97d7bb88ccfb68cf841e96fe78460a31d9a2d7a4e98"
+      "posterSha256": "a446200069117f7da2db2a4828137b2d13881d80250b2adb9a500bd375dd247d"
     },
     {
       "view": "profile",
@@ -133,9 +133,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "c8cca7f3fbb2b63089fce7e251ca6fe2bb019c9a7a31a303d8c6ffd07c60a7e7",
+      "sha256": "c149ade91c353e481a40b12e7a5b4d6e3b66ca61301201aa1efb98307d1c52e5",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "87f19a4192021887568aa2f826110e99b739e6a454fc740229f536236f12ce65"
+      "posterSha256": "8a72d161e4a453c518726d289826c85bbbfa004e74b4f71937ae6968e5e1857d"
     }
   ],
   "apiRequests": 0,

@@ -55,17 +55,22 @@ test('final spends and receipts cannot be rolled back by later responses',async(
 
 test('conflicting ancestor excludes onward money; pending responses never invent a final receipt',async()=>{
   const {vault,ids,reply,note}=await fixture();
+  vault.confirmations={[note]:{startedAt:1,attempts:1}};
   for(const row of reply.results)if(!row.id.startsWith('root:'))Object.assign(row,{note:null,spent:null,receipt:null});
   reply.results[0].spent=null;
   const pending=await applyNearCheck(vault,ids,reply);assert(!(await nearLedger(pending)).blocked.has(note));assert.equal(Object.keys(pending.receipts).length,1);
+  assert.deepEqual(pending.confirmations,vault.confirmations);
   reply.results[0].spent='a'.repeat(64);
   const next=await applyNearCheck(pending,ids,reply);assert((await nearLedger(next)).blocked.has(note));assert.equal((await nearLedger(next)).available.length,0);
+  assert.equal(next.confirmations[note],undefined);
 });
 
 test('settlement validates every path receipt and rejects tampering without mutating the vault',async()=>{
   const {vault,note,receipts}=await fixture(),{path}=await paymentPath(vault,note);
+  vault.confirmations={[note]:{startedAt:1,attempts:1}};
   const result={finality:'FINAL',receipts};
   const next=await applyNearSettlement(vault,path,result);assert.equal(Object.keys(next.receipts).length,2);
+  assert.equal(next.confirmations[note],undefined);assert.equal(vault.confirmations[note].attempts,1);
   for(const mutate of [r=>{r.finality='optimistic';},r=>r.receipts.pop(),r=>r.receipts.reverse(),r=>{r.receipts[1].outputs[0].owner='wrong';},r=>{r.receipts[1].input='wrong';}]){
     const bad=structuredClone(result),before=structuredClone(vault);mutate(bad);await assert.rejects(applyNearSettlement(vault,path,bad));assert.deepEqual(vault,before);
   }

@@ -1,5 +1,44 @@
 # Check and confirm payments in chat
 
+## Pending confirmation after an interruption
+
+November 1, 2026. Before submitting a received payment for settlement, Lenz saves a
+confirmation-attempt record in its encrypted vault. Chat and wallet retain a
+**Confirmation pending** state across reloads until validated final evidence
+confirms the payment or identifies a conflicting spend.
+
+Checking status sends only a read request. Reloading or reconnecting sends no
+confirmation request. A repeated service call defaults to checking an existing
+attempt; **Retry confirmation** explicitly resends the same signed history. It
+does not create a new payment or signature. Contract idempotency remains necessary
+because browser/network retries can occur below the application layer.
+
+Saving the attempt must succeed before submission. Status checks preserve newer
+onward payments, existing identities and swap reservations. A pending confirmation
+does not prevent onward use of locally valid money; offline acceptance remains
+provisional. This record is not a backup, a transaction-finality proof or a durable
+server-side transaction journal.
+
+Verification: 25 Node tests, 12 fixture browser checks and two cache-upgrade checks
+passed. The browser checks cover reload in chat and wallet, read-only recovery,
+explicit identical-path retry, failed persistence before submission, offline
+controls, concurrent tabs and conflicting ancestors. Removing either the default
+read guard or the pre-submission save caused the browser suite to fail in isolated
+copies. The first mutation harness expected an assertion error where the removed
+guard instead caused an unexpected submission and an uncertainty error; its
+diagnostic expectation was corrected before both negative controls passed.
+
+The cache test upgrades from the published initial commit and checks both a failed
+update and successful recovery, preserving the identity, encrypted vault and an
+expired swap reservation. [Browser results](../web/near-payment-status-browser-results.json),
+[cache results](../web/near-payment-cache-results.json), and pending views in
+[light](../web/evidence/pending-confirmation-light.png) and
+[dark](../web/evidence/pending-confirmation-dark.png) themes. These are fixture
+responses with actual browser cryptography/storage; live conflict and interrupted
+submission coverage remain open. No funding or chain transaction was performed.
+
+## October 31 implementation and evidence
+
 October 31, 2026. Incoming tUSD cards now offer **Check status** and, when eligible, **Confirm payment**. Chat and the standalone wallet share final-response validation and encrypted storage updates. Offline onward transfer remains available; reconnecting enables controls without submitting anything.
 
 ## Behavior

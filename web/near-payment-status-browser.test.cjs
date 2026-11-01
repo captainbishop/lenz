@@ -2,17 +2,17 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const {securityHeaders}=require('./security-policy.mjs');
 const contract='status-fixture.lenz.testnet', checks=[], errors=[], requests=[];
-let fixture, confirmed=false, mode='normal', releaseCheck, checkStarted, delayed=false;
+let fixture, confirmed=false, mode='normal', releaseCheck, checkStarted, delayed=false, settlements=[];
 const server=http.createServer(async(req,res)=>{try{
   const file=new URL(req.url,'http://localhost').pathname;
   for(const [k,v] of Object.entries(securityHeaders(file)))res.setHeader(k,v);
   if(file.startsWith('/api/')){
     const chunks=[];for await(const c of req)chunks.push(c);const data=JSON.parse(Buffer.concat(chunks));requests.push(file);
     if(file==='/api/testnet/settle'){
-      confirmed=true;
+      settlements.push(data.path);confirmed=mode!=='not-sent';
       // Execution succeeded but the relay lost the chain response. Closing a
       // socket instead lets Chromium itself retry POSTs below the app layer.
-      if(mode==='lost'||mode==='uncertain'){res.writeHead(502,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Relay lost the final response'}));return;}
+      if(mode==='lost'||mode==='uncertain'||mode==='not-sent'){res.writeHead(502,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Relay lost the final response'}));return;}
       res.setHeader('Content-Type','application/json');res.end(JSON.stringify({finality:'FINAL',receipts:fixture.receipts}));return;
     }
     assert.equal(file,'/api/testnet/check');
@@ -31,7 +31,7 @@ const idle=p=>p.waitForFunction(()=>document.querySelector('main').getAttribute(
 const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+name);};
 async function vault(p){return p.evaluate(async c=>{const s=await(await import('/chat-store.js')).readState();return(await import('/near-protocol.js')).readNearVault(s,c);},contract);}
 async function seed(p){
-  confirmed=false;mode='normal';requests.length=0;delayed=false;
+  confirmed=false;mode='normal';requests.length=0;delayed=false;settlements=[];
   fixture=await p.evaluate(async contract=>{
     const {createIdentity,digest}=await import('/peer-crypto.js'),n=await import('/near-protocol.js');
     const {prepareNearPayment}=await import('/near-payment-service.js'),{receivePacket}=await import('/receive-packet.js'),{updateState}=await import('/chat-store.js');
@@ -83,6 +83,47 @@ async function seed(p){
       await seed(p);mode='uncertain';
       const result=await p.evaluate(async({contract,note})=>{try{await(await import('/near-payment-status.js')).confirmNearPayment(contract,note);}catch(e){return{message:e.message,causes:e.errors?.map(e=>e.message)};}},{contract,note:fixture.note});
       assert(result.message.includes('uncertain'));assert.equal(result.causes.length,2);assert(result.causes[1].includes('does not match'));assert.equal((await vault(p)).receipts[fixture.receipts[0].id],undefined);assert.equal(requests.filter(r=>r.endsWith('/settle')).length,1);
+    });
+    await check('pending confirmation survives reload in wallet and chat; a final read resolves it without another submission',async()=>{
+      const saved=await vault(p);assert.equal(saved.confirmations[fixture.note].attempts,1);
+      const identity=await p.evaluate(async()=> (await(await import('/chat-store.js')).readState()).identity.profile.id);
+      await p.reload();await idle(p);await p.getByRole('button',{name:'Check confirmation',exact:true}).waitFor();
+      assert((await p.locator('#near-payments').innerText()).includes('Confirmation pending'));assert.equal(await p.locator('#near-total').innerText(),'6');
+      await p.goto(base+'/chat.html');await idle(p);await p.locator('#contact-list button').filter({hasText:'Amina'}).click();await idle(p);
+      assert((await p.locator('.trade-state').innerText()).includes('Confirmation pending'));assert(await p.getByRole('button',{name:'Retry confirmation',exact:true}).isVisible());
+      for(const theme of ['light','dark']){
+        await p.evaluate(t=>{document.documentElement.dataset.theme=t;},theme);await p.setViewportSize({width:375,height:812});
+        assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+        await p.screenshot({path:path.join(__dirname,'evidence/pending-confirmation-'+theme+'.png'),fullPage:true});
+      }
+      await p.setViewportSize({width:1280,height:900});
+      mode='normal';await p.getByRole('button',{name:'Check status',exact:true}).click();await idle(p);
+      assert((await p.locator('.trade-state').innerText()).includes('Payment confirmed on NEAR'));
+      assert.equal((await vault(p)).confirmations[fixture.note],undefined);assert.equal(settlements.length,1);
+      assert.equal(await p.evaluate(async()=> (await(await import('/chat-store.js')).readState()).identity.profile.id),identity);
+      await p.goto(base+'/money.html');await idle(p);
+    });
+    await check('an unresolved attempt checks by default; only an explicit retry resends the identical signed history',async()=>{
+      await seed(p);mode='not-sent';await p.getByRole('button',{name:'Confirm payment',exact:true}).click();await idle(p);
+      await p.reload();await idle(p);await p.getByRole('button',{name:'Check confirmation',exact:true}).waitFor();
+      const before=await vault(p),result=await p.evaluate(async({contract,note})=>(await import('/near-payment-status.js')).confirmNearPayment(contract,note),{contract,note:fixture.note});
+      assert.deepEqual(result,{status:'pending',recovered:false});assert.equal(settlements.length,1);
+      await context.setOffline(true);await p.waitForFunction(()=>document.querySelector('#near-refresh').disabled);
+      assert(await p.getByRole('button',{name:'Retry confirmation',exact:true}).isDisabled());assert(await p.locator('#near-send').isEnabled());
+      const count=requests.length;await context.setOffline(false);await p.waitForFunction(()=>!document.querySelector('#near-refresh').disabled);assert.equal(requests.length,count);
+      mode='normal';await p.getByRole('button',{name:'Retry confirmation',exact:true}).click();await idle(p);
+      assert.equal(settlements.length,2);assert.deepEqual(settlements[1],settlements[0]);
+      const after=await vault(p);assert.deepEqual(after.spends,before.spends);assert.deepEqual(after.roots,before.roots);assert.equal(after.confirmations[fixture.note],undefined);
+    });
+    await check('failure to persist confirmation intent prevents the settlement request',async()=>{
+      await seed(p);
+      const result=await p.evaluate(async({contract,note})=>{
+        const original=IDBObjectStore.prototype.put;let writes=0;
+        IDBObjectStore.prototype.put=function(...args){if(++writes===2){this.transaction.abort();throw new Error('Simulated storage write failure');}return original.apply(this,args);};
+        try{await(await import('/near-payment-status.js')).confirmNearPayment(contract,note);}catch(e){return {message:e.message,writes};}
+        finally{IDBObjectStore.prototype.put=original;}
+      },{contract,note:fixture.note});
+      assert(result.message.includes('storage write failure'));assert.equal(result.writes,2);assert.equal(settlements.length,0);assert.equal((await vault(p)).confirmations,undefined);
     });
     await check('chat keeps a failed status check on the payment card without marking it confirmed',async()=>{
       await seed(p);mode='malformed';confirmed=true;await p.goto(base+'/chat.html');await idle(p);await p.locator('#contact-list button').filter({hasText:'Amina'}).click();await idle(p);

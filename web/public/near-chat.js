@@ -63,6 +63,7 @@ export async function renderNearPaymentCard(payload, packet, state, money) {
   else if (!outgoing && money?.ledger.reserved.has(noteId)) detail = 'Set aside for a saved swap · check the wallet for its status';
   else if (!outgoing && money?.ledger.consumed.has(noteId)) detail = 'Used in a later payment or saved swap · check the wallet for its status';
   else if (money?.vault.receipts[id]?.finality === 'FINAL') detail = outgoing ? 'Confirmed on NEAR · file delivery not confirmed' : 'Payment confirmed on NEAR';
+  else if (!outgoing && money?.vault.confirmations?.[noteId]) detail = 'Confirmation pending · check for an update';
   card.append(el('p', detail, 'trade-state'));
   card.append(el('small', 'The file is encrypted. Settlement amounts and accounts are public on the test network.'));
   if (paymentAction && money?.ledger.notes?.has(noteId)) {
@@ -82,9 +83,10 @@ export async function renderNearPaymentCard(payload, packet, state, money) {
     };
     addAction('Check status', async () => { await refreshNearPayments(payload.contract); return 'Status checked on NEAR.'; });
     if (!outgoing && !money.ledger.blocked.has(noteId) && !money.ledger.consumed.has(noteId) && !money.ledger.reserved.has(noteId) && !money.vault.receipts[id]) {
-      addAction('Confirm payment', async () => {
-        const result = await confirmNearPayment(payload.contract, noteId);
-        return result.status === 'confirmed' ? 'Payment confirmed.' : 'This money was used in another payment. It is excluded from your balance.';
+      const retry = !!money.vault.confirmations?.[noteId];
+      addAction(retry ? 'Retry confirmation' : 'Confirm payment', async () => {
+        const result = await confirmNearPayment(payload.contract, noteId, { retry });
+        return result.status === 'confirmed' ? 'Payment confirmed.' : result.status === 'pending' ? 'Confirmation is still pending. Check again, or choose Retry confirmation to resend the same signed payment.' : 'This money was used in another payment. It is excluded from your balance.';
       });
     }
     card.append(controls, feedback);

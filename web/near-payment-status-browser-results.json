@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-10-31T18:16:05.329Z",
-  "passed": 9,
+  "checkedAt": "2026-11-01T02:04:15.409Z",
+  "passed": 12,
   "failed": 0,
   "checks": [
     "wallet rejects a final receipt with the right ID but the wrong recipient",
@@ -8,6 +8,9 @@
     "a lost settlement response is recovered by a read, without resubmission",
     "concurrent tabs serialize confirmation and submit the signed path once",
     "an interrupted confirmation with an invalid recovery read remains uncertain and preserves both diagnostics",
+    "pending confirmation survives reload in wallet and chat; a final read resolves it without another submission",
+    "an unresolved attempt checks by default; only an explicit retry resends the identical signed history",
+    "failure to persist confirmation intent prevents the settlement request",
     "chat keeps a failed status check on the payment card without marking it confirmed",
     "a delayed check preserves a newer onward payment, history and expired swap reservation",
     "a conflicting ancestor is shown in chat and wallet and confirmation is never submitted",

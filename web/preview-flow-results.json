@@ -165,10 +165,10 @@
     "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
     "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
-    "web/public/near-chat.js": "ec3cc7dc0562a8964940f71fff5881ca5802a7234b96d6500c4e3411e93aecd2",
+    "web/public/near-chat.js": "fd29d71a3a87ef2a1d6a7ae9799d1a659dc3c737679a89ca076d89328eb25817",
     "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
     "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
-    "web/public/near-payment-status.js": "57de431aa6d8ec5d81c92e4c6ebe34bba381428db73dd3aee77ec8ca6adab94c",
+    "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
     "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
@@ -285,6 +285,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-10-31T18:19:58.236Z",
+  "reframedAt": "2026-11-01T02:07:28.883Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

@@ -28,6 +28,14 @@ function recordConsumption(vault, id, spent) {
   assert(!known || known === spent, 'NEAR response differs from a saved final spend. Check again.');
   vault.chainConsumed ??= {}; vault.chainConsumed[id] = spent;
 }
+async function reconcileConfirmations(vault) {
+  if (!vault.confirmations) return vault;
+  const ledger = await nearLedger(vault);
+  for (const noteId of Object.keys(vault.confirmations)) {
+    if (vault.receipts[transferId(noteId)]?.finality === 'FINAL' || ledger.blocked.has(noteId)) delete vault.confirmations[noteId];
+  }
+  return vault;
+}
 
 // Pure, all-or-nothing validation. Call against the CURRENT vault inside the
 // storage lock; never replace it with the snapshot that started a network read.
@@ -64,7 +72,7 @@ export async function applyNearCheck(vault, ids, reply) {
     if (input) assert(input.spent === row.receipt.id, 'NEAR receipt and consumption records differ.');
     recordConsumption(next, row.receipt.input, row.receipt.id);
   }
-  return next;
+  return reconcileConfirmations(next);
 }
 
 export async function applyNearSettlement(vault, path, result) {
@@ -78,7 +86,7 @@ export async function applyNearSettlement(vault, path, result) {
     next.receipts[id] = { finality: 'FINAL', blockHeight: receipt.block_height,
       ...(typeof result.txHash === 'string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(result.txHash) ? { txHash: result.txHash } : {}) };
   }
-  return next;
+  return reconcileConfirmations(next);
 }
 
 export async function nearPaymentRequest(route, data) {
@@ -114,7 +122,7 @@ async function targetStatus(contract, noteId, requireAvailable = true) {
   if (requireAvailable) assert(!ledger.consumed.has(noteId) && !ledger.reserved.has(noteId), 'This payment is already used or reserved. Check its status in the wallet.');
   return { status: vault.receipts[transferId(noteId)]?.finality === 'FINAL' ? 'confirmed' : 'pending', owner: state.identity.profile.id, vault };
 }
-export async function confirmNearPayment(contract, noteId) {
+export async function confirmNearPayment(contract, noteId, { retry = false } = {}) {
   assert(navigator.onLine !== false, 'Reconnect before confirming a payment.');
   assert(navigator.locks, 'This browser needs Web Locks to confirm payments safely across tabs.');
   return navigator.locks.request('lenz-near-confirm:' + contract, async () => {
@@ -123,7 +131,19 @@ export async function confirmNearPayment(contract, noteId) {
     await refreshNearPayments(contract);
     const current = await targetStatus(contract, noteId);
     if (current.status !== 'pending') return { status: current.status, recovered: true };
-    const { path } = await paymentPath(current.vault, noteId);
+    // An interrupted attempt defaults to a read. Retrying the identical signed
+    // history is an explicit action, never a consequence of reload or reconnect.
+    if (current.vault.confirmations?.[noteId] && !retry) return { status: 'pending', recovered: false };
+    const path = await updateState(async state => {
+      assert(state.identity?.profile.id === current.owner, 'The active Lenz account changed.');
+      const latest = await readNearVault(state, contract), ledger = await nearLedger(latest);
+      assert(!ledger.blocked.has(noteId) && !ledger.consumed.has(noteId) && !ledger.reserved.has(noteId), 'This payment is already used or reserved. Check its status in the wallet.');
+      const { path } = await paymentPath(latest, noteId);
+      latest.confirmations ??= {};
+      latest.confirmations[noteId] = { startedAt: Date.now(), attempts: (latest.confirmations[noteId]?.attempts ?? 0) + 1 };
+      await saveNearVault(state, latest);
+      return path;
+    });
     let result;
     try { result = await nearPaymentRequest('settle', { contract, path }); }
     catch (error) {
