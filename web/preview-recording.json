@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-01T02:10:59.571Z",
+  "recordedAt": "2026-11-01T03:17:39.528Z",
   "browser": "156.0.4314.50",
   "encoder": "imageio-ffmpeg 0.6.0 / FFmpeg 7.1",
   "sourceFiles": {
@@ -36,7 +36,7 @@
     "web/record-preview-videos.cjs": "38d6086d840086cb69c28b6123384edc90e618989fe8bc8d4b5da878d219ca5e",
     "web/render-preview-stories.cjs": "2e730a3bff33325602cc506d0242d99ad6ec9a5e4fd393a1824dc15d803ddd0d",
     "web/preview-scene.html": "55e94804863416139022ae29e0b8add7a7698a3687c890998a8c4b69a46b3031",
-    "web/preview-flow-results.json": "8ae7e8f4aa78333cd519c2b4941f1276cf6647fc9832749fc705034501c3c707",
+    "web/preview-flow-results.json": "2ec580e1834bc3ef0b7938ee13eab3335346b96ff8e7bdd3b69a6148fb7e4a73",
     "web/evidence/preview-replay/private-send-light.png": "4bab6ca127db3cfc5807a286f88559b8809d6118c0c34d476d627ea40e511e2c",
     "web/evidence/preview-replay/private-read-light.png": "718dc9b83f8ab579faaa2af544583c445cc05d93f5ae7678a30fffa78a34ece2",
     "web/evidence/preview-replay/payment-received-light.png": "956648ed16dfc4d34acaec0c88356b993591f87af676d417fae420357b48eb3f",
@@ -46,7 +46,7 @@
     "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
     "web/public/near-wallet.css": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9",
     "web/public/money.js": "0eaf4e94101cceb1f9e55711d749984f1193630075077da378816e4c1548f88d",
-    "web/public/near-wallet.js": "9f6a8fad8ad154785bdf6966c9d1537fe3fe5042478e99cddca15e352eec51ed",
+    "web/public/near-wallet.js": "6abdd29ccfa2dab57c30886399287329e0af02fa84bf79fc74f7c987b74263cc",
     "web/public/rhea-wallet.js": "40adeff7bc95c5949db603976f8dd154bd2b5405a83ffc2f9e8ca4f2e84a1c3c",
     "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
@@ -94,9 +94,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "07ce0a1ced2f2ca7c4db80f024459e83a6eb2a72aa2b2cfad5c87dff8cd96187",
+      "sha256": "71506e1b11b3b2b8a0cea36716afb61e36e48751f0453d680209d37c3624026c",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "f59dca11ee30452cfe4e85add30618ccb53325228b1fc9cf90b0b22b1417fe0e"
+      "posterSha256": "1213e8b003fbf7509b2021fec7e7e65f46fd6050dc203c282ce507c67a2089e6"
     },
     {
       "view": "chat",
@@ -133,9 +133,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "c149ade91c353e481a40b12e7a5b4d6e3b66ca61301201aa1efb98307d1c52e5",
+      "sha256": "e646862aa40f6fe10c5a542fc72fb63144d2a23ea2d109579a893393074f849b",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "8a72d161e4a453c518726d289826c85bbbfa004e74b4f71937ae6968e5e1857d"
+      "posterSha256": "890b44d52a23b1f85e23a69802bcbfde1c292246e8d4c083b04e4941c336bc68"
     }
   ],
   "apiRequests": 0,

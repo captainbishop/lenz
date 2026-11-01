@@ -1,10 +1,11 @@
 import { walletError } from './wallet-feedback.js';
+import { digest, openMessage } from './peer-crypto.js';
 import { updateState } from './chat-store.js';
 import { mountRheaWallet, loadRheaConfig, renderRheaWallet } from './rhea-wallet.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
 import { receivePacket } from './receive-packet.js';
-import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits } from './near-protocol.js';
+import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits, transferTerms } from './near-protocol.js';
 
 const $ = selector => document.querySelector(selector);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if(text !== undefined) n.textContent = text; if(cls) n.className = cls; return n; };
@@ -113,6 +114,15 @@ export async function renderNearWallet(state) {
     if(!receipt)row.append(el('small',retry?'The last confirmation has no verified result yet. Check for an update, or retry the same signed payment.':'Saved offline. Connect to confirm this payment before relying on it.'));
     list.append(row);
   }
-  for(const outgoing of [...vault.outbox].reverse()) { const row=el('article',undefined,'near-payment'), contact=state.contacts.find(c=>c.id===outgoing.packet.to);row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span','Ready to share','near-state'));const save=el('button','Save payment file','secondary');save.onclick=()=>download(outgoing.packet);row.append(save);list.append(row); }
+  for(const outgoing of [...vault.outbox].reverse()) {
+    const row=el('article',undefined,'near-payment'), contact=state.contacts.find(c=>c.id===outgoing.packet.to);
+    const payload=contact?await openMessage(state.identity,contact,outgoing.packet):null;
+    const noteId=payload?await digest(transferTerms(config.contract,payload.path.at(-1)))+':0':null;
+    const blocked=noteId&&ledger.blocked.has(noteId);
+    row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span',blocked?'Payment could not be confirmed':'Ready to share','near-state'));
+    if(blocked)row.append(el('small','This payment conflicts with an earlier spend. Let your contact know it cannot be confirmed.'));
+    else { const save=el('button','Save payment file','secondary');save.onclick=()=>download(outgoing.packet);row.append(save); }
+    list.append(row);
+  }
   $('#near-empty').hidden=!!list.children.length;
 }

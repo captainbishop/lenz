@@ -1,6 +1,6 @@
 # Offline money in conversations
 
-[Payment checks and confirmation in chat](payment-status.md) share the wallet's validated final-state handling, including persisted pending confirmation. The current app cache is `proof-u-chat-v27-pending-confirmation`. The implementation and its recorded checks are described below.
+[Payment checks and confirmation in chat](payment-status.md) share the wallet's validated final-state handling, including persisted pending confirmation and live conflicting-onward-payment checks. The wallet labels conflicted outgoing files and removes their download buttons. The current app cache is `proof-u-chat-v28-conflicted-outgoing`. The implementation and its recorded checks are described below.
 
 October 31, 2026. Chat Pay now uses the same offline tUSD mechanism as the wallet. Earlier synthetic assets remain under Earlier prototype.
 

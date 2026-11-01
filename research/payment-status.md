@@ -1,5 +1,62 @@
 # Check and confirm payments in chat
 
+## Live interruption and conflicting onward payments
+
+November 1, 2026. A bounded exercise used the existing funded test wallets to send
+**0.01 tUSD from A to B**. NEAR finalized the payment, then the test withheld that
+successful response with HTTP 502 and made the immediate recovery read unavailable
+with HTTP 503. The encrypted pending record survived chat and wallet reloads.
+An explicit status check recovered the actual final receipt without another
+settlement request.
+
+The harness also deliberately signed an alternative payment from the same A input
+to C, using an in-memory copy without restoring any saved wallet. C received that
+branch offline and passed its exact output to a new, unfunded disposable receiver
+D. These are real signatures over existing testnet backing; the competing spend
+is a test control outside the ordinary UI. Once the winner settled, actual NEAR
+status reads excluded the losing payment and its descendant. Neither losing path
+was submitted by the browser.
+
+The live check found a wallet display error: after a conflicting payment had been
+passed onward, its outgoing file still said **Ready to share**. The wallet now
+shows **Payment could not be confirmed** and removes that file's download button.
+Chat already identified the conflict. A browser regression reproduced the error
+before the fix and passed afterward, including narrow layouts in both themes.
+
+Seven live checkpoints passed, followed by four saved-evidence checks and four
+rejected alterations of signatures, receipt amounts, submission count and credited
+value. The captured transaction is
+[`6YLxNN2ESvwJMHts9sjEvoTYYPse2ecfVxcSHLCinHEv`](https://testnet.nearblocks.io/txns/6YLxNN2ESvwJMHts9sjEvoTYYPse2ecfVxcSHLCinHEv).
+Final allocations are **A 2.99 / B 2.01 / C 4 / D 0 tUSD**; existing reserve
+backing, supply, identities, history and swap reservations were preserved.
+No funding grant or deployment was performed.
+
+[Live evidence](../web/near-payment-failure-live-results.json),
+[saved-evidence verification](../web/near-payment-failure-verification.json), and
+the outgoing conflict view in [light](../web/evidence/conflicted-outgoing-light.png)
+and [dark](../web/evidence/conflicted-outgoing-dark.png) themes. The screenshots use
+fixture state; the live report records the actual chain/browser exercise.
+
+The first two attempts stopped before submission because the local relay returned
+`fetch failed`, although direct RPC reads succeeded. Restarting that server restored
+the route; the original process's network failure was not diagnosed further. The
+third attempt passed interruption/recovery and exposed the outgoing display error.
+After the fix, the runner resumed with read-only checks and retained that successful
+transaction. The report preserves these failed attempts.
+
+The HTTP failures are injected transport faults, and the on-chain result is real.
+This does not simulate a physical disconnect, prove transaction inclusion with a
+browser light client, or provide guaranteed redemption for money accepted offline.
+Private settlement, safe restoration, broader failure coverage and physical-device
+testing remain open. Cache version: `proof-u-chat-v28-conflicted-outgoing`.
+
+Run `node web/verify-near-payment-failure.mjs` to check saved evidence without network
+or signing. `node web/near-payment-failure-live.cjs --inspect` inspects the dedicated
+profiles before a run. Its `--run` mode is a transaction-producing, single-use
+exercise: it journals the exact path before forwarding one settlement and refuses
+to repeat a completed run. An ambiguous submission requires investigation, not a
+new payment or an automatic retry.
+
 ## Pending confirmation after an interruption
 
 November 1, 2026. Before submitting a received payment for settlement, Lenz saves a
@@ -34,8 +91,9 @@ expired swap reservation. [Browser results](../web/near-payment-status-browser-r
 [cache results](../web/near-payment-cache-results.json), and pending views in
 [light](../web/evidence/pending-confirmation-light.png) and
 [dark](../web/evidence/pending-confirmation-dark.png) themes. These are fixture
-responses with actual browser cryptography/storage; live conflict and interrupted
-submission coverage remain open. No funding or chain transaction was performed.
+responses with actual browser cryptography/storage. That implementation check did
+not perform a funding or chain transaction; the separate live exercise above adds
+conflict and interrupted-submission evidence.
 
 ## October 31 implementation and evidence
 
@@ -62,7 +120,7 @@ The browser/transport can retry an identical request below the application layer
 - **47 cache routes:** all imports are local and cached; cryptographic scenario modules have no network APIs.
 - **Live read-only validation:** six existing notes and their three-transfer ancestry match final NEAR state and the saved signed path. One check request; no funding, signing, settlement or saved-account change. [Report](../web/near-payment-status-live-results.json).
 
-Conflict/interruption coverage added here is fixture evidence. Live browser conflict display and interrupted submission still require a bounded test. This change does not establish phone/Safari/BLE support, private NEAR settlement, recovery, Intents execution, an Aurora adapter or Zcash signing.
+The October 31 conflict/interruption checks are fixture evidence. The separate live exercise above adds browser conflict display and interrupted-submission coverage. These checks do not establish phone/Safari/BLE support, private NEAR settlement, recovery, Intents execution, an Aurora adapter or Zcash signing.
 
 ## Failures retained
 

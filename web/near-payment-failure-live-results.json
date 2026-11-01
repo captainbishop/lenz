@@ -1,0 +1,701 @@
+{
+  "schema": 1,
+  "contract": "tusd.lenz-dev-1792984696547.testnet",
+  "startedAt": "2026-11-01T02:41:42.188Z",
+  "completedAt": "2026-11-01T02:59:11.664Z",
+  "scope": "Existing funded NEAR testnet notes and four isolated Windows Edge profiles. Actual signed conflicting paths; only the winner is submitted. Injected HTTP failures hide its real final response and block immediate recovery. No new grant, deployment, real funds, user profile or physical-device test.",
+  "steps": {
+    "contacts": {
+      "freshReceiver": "7c209ddd0308c9c77c5a781f65cb19e3e0ce7714898760edbe858401293bc4d2",
+      "funded": false
+    },
+    "signed-branches": {
+      "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+      "amount": "10000",
+      "winner": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd",
+      "loser": "8d191089e95c7feef713409e83c33641ef8df696c3842a33c2c2dd332f323bc7"
+    },
+    "offline-onward": {
+      "amount": "10000",
+      "input": "8d191089e95c7feef713409e83c33641ef8df696c3842a33c2c2dd332f323bc7:0",
+      "offlineApiRequests": 0
+    },
+    "interrupted-confirmation": {
+      "persistedAttempts": 1,
+      "reloadApiRequests": 0,
+      "injectedFaults": [
+        "HTTP 502 after actual FINAL settlement",
+        "HTTP 503 on immediate reconciliation"
+      ]
+    },
+    "recovery": {
+      "status": "confirmed",
+      "readOnlyRecovery": true
+    },
+    "conflict-display": {
+      "c": {
+        "total": "4000000",
+        "blockedNote": "8d191089e95c7feef713409e83c33641ef8df696c3842a33c2c2dd332f323bc7:0"
+      },
+      "d": {
+        "total": "0",
+        "blockedNote": "0ec2b8c9eac9992c5f3fd7c74de11d1824acf64ba1f1aa071ef69c7862a0e8bf:0"
+      }
+    },
+    "final-evidence": {
+      "backing": {
+        "supply": "433000000",
+        "reserved": "419000000",
+        "balance": "419000000"
+      },
+      "originalProfilesHistoryAndReservationsPreserved": true
+    }
+  },
+  "paths": {
+    "loser": {
+      "kind": "lenz-near-payment-v1",
+      "contract": "tusd.lenz-dev-1792984696547.testnet",
+      "root": {
+        "id": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+        "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+        "amount": "10000000"
+      },
+      "path": [
+        {
+          "input": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "6000000",
+          "nonce": "ce89f499ae61bc720ef72ede558d4d06",
+          "signature": "99fa7297e96fc248452f95d288ae48bd16af25d0ae05fc73cdd6efbcfae0ae23346aac04ed7689bc378f14bde4e446cb635e0e89c2354933b46780be081b4a28"
+        },
+        {
+          "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "1000000",
+          "nonce": "fcdfa8a9e495a2f01a2926066de44092",
+          "signature": "63a886bd43a90d5243f7dfd8b98a23babc23fd722bc858e870d5b794e9afe4b5f73767bb480f7f5bae4efc05e5e8c1685ce56097d03751125908a53e93555c7a"
+        },
+        {
+          "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "recipient": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "10000",
+          "nonce": "a1bcd538e92103669a107a66751836a2",
+          "signature": "30bde58efc0080c9b828e3a0025b0dea4342966d2e0622e8e2c175ee46086054c86439ef8b4feda5128f6916581d8300ba2377d3cba31fee169bfbd5278be6e7"
+        }
+      ],
+      "id": "8d191089e95c7feef713409e83c33641ef8df696c3842a33c2c2dd332f323bc7"
+    },
+    "winner": {
+      "kind": "lenz-near-payment-v1",
+      "contract": "tusd.lenz-dev-1792984696547.testnet",
+      "root": {
+        "id": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+        "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+        "amount": "10000000"
+      },
+      "path": [
+        {
+          "input": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "6000000",
+          "nonce": "ce89f499ae61bc720ef72ede558d4d06",
+          "signature": "99fa7297e96fc248452f95d288ae48bd16af25d0ae05fc73cdd6efbcfae0ae23346aac04ed7689bc378f14bde4e446cb635e0e89c2354933b46780be081b4a28"
+        },
+        {
+          "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "1000000",
+          "nonce": "fcdfa8a9e495a2f01a2926066de44092",
+          "signature": "63a886bd43a90d5243f7dfd8b98a23babc23fd722bc858e870d5b794e9afe4b5f73767bb480f7f5bae4efc05e5e8c1685ce56097d03751125908a53e93555c7a"
+        },
+        {
+          "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "10000",
+          "nonce": "1cce90dfc7e4d1b18f9351647b235ace",
+          "signature": "0dae06fb01d84a8cc9f39ef7a5bb3e8b30f5de6012626b6f2ba133dc01224398d425324feca34166ce3b4d977733a39405d1e93f25dd29b8b5fea4c6020cd9ac"
+        }
+      ],
+      "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd"
+    },
+    "onward": {
+      "kind": "lenz-near-payment-v1",
+      "contract": "tusd.lenz-dev-1792984696547.testnet",
+      "root": {
+        "id": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+        "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+        "amount": "10000000"
+      },
+      "path": [
+        {
+          "input": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "6000000",
+          "nonce": "ce89f499ae61bc720ef72ede558d4d06",
+          "signature": "99fa7297e96fc248452f95d288ae48bd16af25d0ae05fc73cdd6efbcfae0ae23346aac04ed7689bc378f14bde4e446cb635e0e89c2354933b46780be081b4a28"
+        },
+        {
+          "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+          "recipient": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "1000000",
+          "nonce": "fcdfa8a9e495a2f01a2926066de44092",
+          "signature": "63a886bd43a90d5243f7dfd8b98a23babc23fd722bc858e870d5b794e9afe4b5f73767bb480f7f5bae4efc05e5e8c1685ce56097d03751125908a53e93555c7a"
+        },
+        {
+          "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "recipient": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "10000",
+          "nonce": "a1bcd538e92103669a107a66751836a2",
+          "signature": "30bde58efc0080c9b828e3a0025b0dea4342966d2e0622e8e2c175ee46086054c86439ef8b4feda5128f6916581d8300ba2377d3cba31fee169bfbd5278be6e7"
+        },
+        {
+          "input": "8d191089e95c7feef713409e83c33641ef8df696c3842a33c2c2dd332f323bc7:0",
+          "recipient": "024cd8c13f7ddf90a0aeef5e28717b00846b5c37ac3b51f24ddf1372ee1523d6c6",
+          "amount": "10000",
+          "nonce": "a92b1e15b9ceb9403cb146781b09037e",
+          "signature": "4492abc7a068e6380c7dc67d921349f9a75c36be0a7542bfed8e0f662826a503bb4ff3a9fb2e82c6dff7c4b6a1ec3d37ff4f1640de1efd5e5ad2177ba5f97a3d"
+        }
+      ],
+      "id": "0ec2b8c9eac9992c5f3fd7c74de11d1824acf64ba1f1aa071ef69c7862a0e8bf"
+    }
+  },
+  "receipts": [
+    {
+      "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da",
+      "input": "root:cdd805ffdf527e930d22eb5426092ced185ec4dd5bd52c0362a01790c887ea7e",
+      "outputs": [
+        {
+          "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:0",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "6000000"
+        },
+        {
+          "id": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "4000000"
+        }
+      ],
+      "block_height": 275593664
+    },
+    {
+      "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b",
+      "input": "960cbf855607774e19165bc69f2c617f64d54bd920709bd774e1c539721057da:1",
+      "outputs": [
+        {
+          "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:0",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "1000000"
+        },
+        {
+          "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "3000000"
+        }
+      ],
+      "block_height": 275626846
+    },
+    {
+      "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd",
+      "input": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+      "outputs": [
+        {
+          "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd:0",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "10000"
+        },
+        {
+          "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "2990000"
+        }
+      ],
+      "block_height": 275688806
+    }
+  ],
+  "transaction": {
+    "final_execution_status": "FINAL",
+    "receipts_outcome": [
+      {
+        "block_hash": "BiHtyyHKFn35A6jfMMfzDEs1ztCR92pkwUnJU6srGkS2",
+        "id": "HB5wQieN95eYsaHEHFwkknKakWE1u5xVhuyeCJ5vFLrP",
+        "outcome": {
+          "executor_id": "tusd.lenz-dev-1792984696547.testnet",
+          "gas_burnt": 4504272063348,
+          "logs": [],
+          "metadata": {
+            "contracts": [
+              {
+                "local": "DpwadBEv9QdabdkvAYwBqhaJ6FnTZ1qiCrRZrFzgQFPD"
+              }
+            ],
+            "gas_profile": [
+              {
+                "cost": "NEW_ACTION_RECEIPT",
+                "cost_category": "ACTION_COST",
+                "gas_used": "108059500000"
+              },
+              {
+                "cost": "TRANSFER",
+                "cost_category": "ACTION_COST",
+                "gas_used": "115123062500"
+              },
+              {
+                "cost": "BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "10325956329"
+              },
+              {
+                "cost": "CONTRACT_LOADING_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "35445963"
+              },
+              {
+                "cost": "CONTRACT_LOADING_BYTES",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "400640522410"
+              },
+              {
+                "cost": "P256_VERIFY_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "1300000000000"
+              },
+              {
+                "cost": "P256_VERIFY_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "416000000"
+              },
+              {
+                "cost": "READ_CACHED_TRIE_NODE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "166440000000"
+              },
+              {
+                "cost": "READ_MEMORY_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "67856443200"
+              },
+              {
+                "cost": "READ_MEMORY_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "16531997217"
+              },
+              {
+                "cost": "READ_REGISTER_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "27688817046"
+              },
+              {
+                "cost": "READ_REGISTER_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "241674024"
+              },
+              {
+                "cost": "SHA256_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "18163881000"
+              },
+              {
+                "cost": "SHA256_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "24672050073"
+              },
+              {
+                "cost": "STORAGE_READ_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "338141074494"
+              },
+              {
+                "cost": "STORAGE_READ_KEY_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "10957196682"
+              },
+              {
+                "cost": "STORAGE_READ_VALUE_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "6469487612"
+              },
+              {
+                "cost": "STORAGE_WRITE_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "320983680000"
+              },
+              {
+                "cost": "STORAGE_WRITE_EVICTED_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "2248211490"
+              },
+              {
+                "cost": "STORAGE_WRITE_KEY_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "20228582829"
+              },
+              {
+                "cost": "STORAGE_WRITE_VALUE_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "28288907568"
+              },
+              {
+                "cost": "TOUCHING_TRIE_NODE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "79800000000"
+              },
+              {
+                "cost": "UTF8_DECODING_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "3111779061"
+              },
+              {
+                "cost": "UTF8_DECODING_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "8747414370"
+              },
+              {
+                "cost": "WASM_INSTRUCTION",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "458417428788"
+              },
+              {
+                "cost": "WRITE_MEMORY_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "33645538332"
+              },
+              {
+                "cost": "WRITE_MEMORY_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "6722269296"
+              },
+              {
+                "cost": "WRITE_REGISTER_BASE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "34386269832"
+              },
+              {
+                "cost": "WRITE_REGISTER_BYTE",
+                "cost_category": "WASM_HOST_COST",
+                "gas_used": "5383014624"
+              }
+            ],
+            "version": 4
+          },
+          "receipt_ids": [
+            "3GbhW3YjwEhtSkzumDW2vRQ57PQ4dc29pAmi7j7DaUZB",
+            "4BUk4yQ7xYuRQMi8tT737tmuWMeVht7bkWwb4uuFJL5S"
+          ],
+          "status": {
+            "SuccessValue": "W3siaWQiOiI5NjBjYmY4NTU2MDc3NzRlMTkxNjViYzY5ZjJjNjE3ZjY0ZDU0YmQ5MjA3MDliZDc3NGUxYzUzOTcyMTA1N2RhIiwiaW5wdXQiOiJyb290OmNkZDgwNWZmZGY1MjdlOTMwZDIyZWI1NDI2MDkyY2VkMTg1ZWM0ZGQ1YmQ1MmMwMzYyYTAxNzkwYzg4N2VhN2UiLCJvdXRwdXRzIjpbeyJpZCI6Ijk2MGNiZjg1NTYwNzc3NGUxOTE2NWJjNjlmMmM2MTdmNjRkNTRiZDkyMDcwOWJkNzc0ZTFjNTM5NzIxMDU3ZGE6MCIsIm93bmVyIjoiMDI0ZmQ1MmYzYzY1OTBhMDI1ZTNkZGYwMmQzZmUyY2QwOTI1NDQ4NjQyOGI0NWYzOTlhN2UzODYwOTdmZTBhZGY1IiwiYW1vdW50IjoiNjAwMDAwMCJ9LHsiaWQiOiI5NjBjYmY4NTU2MDc3NzRlMTkxNjViYzY5ZjJjNjE3ZjY0ZDU0YmQ5MjA3MDliZDc3NGUxYzUzOTcyMTA1N2RhOjEiLCJvd25lciI6IjAyYzg0Njk2MTAzMjAyMGIyMWY1Y2QwZjkxZDZlMmQwNTZjYzMxMWZkY2I2NTk1NjEyOWJjZmY3NjU5NTAzMGViOSIsImFtb3VudCI6IjQwMDAwMDAifV0sImJsb2NrX2hlaWdodCI6Mjc1NTkzNjY0fSx7ImlkIjoiZGQyOWU0OGJjYTYxNGZkZDIwY2RjMmIwZTA2MTdmNTg4ZjEyZTBkOTdlMThjZjcxNjA3YzAwMzBhMTdjNGI2YiIsImlucHV0IjoiOTYwY2JmODU1NjA3Nzc0ZTE5MTY1YmM2OWYyYzYxN2Y2NGQ1NGJkOTIwNzA5YmQ3NzRlMWM1Mzk3MjEwNTdkYToxIiwib3V0cHV0cyI6W3siaWQiOiJkZDI5ZTQ4YmNhNjE0ZmRkMjBjZGMyYjBlMDYxN2Y1ODhmMTJlMGQ5N2UxOGNmNzE2MDdjMDAzMGExN2M0YjZiOjAiLCJvd25lciI6IjAyNGZkNTJmM2M2NTkwYTAyNWUzZGRmMDJkM2ZlMmNkMDkyNTQ0ODY0MjhiNDVmMzk5YTdlMzg2MDk3ZmUwYWRmNSIsImFtb3VudCI6IjEwMDAwMDAifSx7ImlkIjoiZGQyOWU0OGJjYTYxNGZkZDIwY2RjMmIwZTA2MTdmNTg4ZjEyZTBkOTdlMThjZjcxNjA3YzAwMzBhMTdjNGI2YjoxIiwib3duZXIiOiIwMmM4NDY5NjEwMzIwMjBiMjFmNWNkMGY5MWQ2ZTJkMDU2Y2MzMTFmZGNiNjU5NTYxMjliY2ZmNzY1OTUwMzBlYjkiLCJhbW91bnQiOiIzMDAwMDAwIn1dLCJibG9ja19oZWlnaHQiOjI3NTYyNjg0Nn0seyJpZCI6ImQ3Y2U5YWM4MTE5YzJlOWU0N2UwMDQwNDIwYzEyZDg2MTY2ZjdiNjZjNTNlZDFjZWJhZWZmMTI0MGY5NmRmZGQiLCJpbnB1dCI6ImRkMjllNDhiY2E2MTRmZGQyMGNkYzJiMGUwNjE3ZjU4OGYxMmUwZDk3ZTE4Y2Y3MTYwN2MwMDMwYTE3YzRiNmI6MSIsIm91dHB1dHMiOlt7ImlkIjoiZDdjZTlhYzgxMTljMmU5ZTQ3ZTAwNDA0MjBjMTJkODYxNjZmN2I2NmM1M2VkMWNlYmFlZmYxMjQwZjk2ZGZkZDowIiwib3duZXIiOiIwMjRmZDUyZjNjNjU5MGEwMjVlM2RkZjAyZDNmZTJjZDA5MjU0NDg2NDI4YjQ1ZjM5OWE3ZTM4NjA5N2ZlMGFkZjUiLCJhbW91bnQiOiIxMDAwMCJ9LHsiaWQiOiJkN2NlOWFjODExOWMyZTllNDdlMDA0MDQyMGMxMmQ4NjE2NmY3YjY2YzUzZWQxY2ViYWVmZjEyNDBmOTZkZmRkOjEiLCJvd25lciI6IjAyYzg0Njk2MTAzMjAyMGIyMWY1Y2QwZjkxZDZlMmQwNTZjYzMxMWZkY2I2NTk1NjEyOWJjZmY3NjU5NTAzMGViOSIsImFtb3VudCI6IjI5OTAwMDAifV0sImJsb2NrX2hlaWdodCI6Mjc1Njg4ODA2fV0="
+          },
+          "tokens_burnt": "450427206334800000000"
+        },
+        "proof": [
+          {
+            "direction": "Left",
+            "hash": "6GmpvJvh3UkhqQZei2CXjEy3ZpRh4Pa91Y5P3CaPhLsg"
+          },
+          {
+            "direction": "Left",
+            "hash": "DYCLt39YUYTzBKaAJ15fDLST42LABEVoxvqFbqCsig3W"
+          }
+        ]
+      },
+      {
+        "block_hash": "GHYUiPdg3xAwDFVLphijgGTEz4T7ELvBpQcF1wjA3i7b",
+        "id": "3GbhW3YjwEhtSkzumDW2vRQ57PQ4dc29pAmi7j7DaUZB",
+        "outcome": {
+          "executor_id": "lenz-dev-1792984696547.testnet",
+          "gas_burnt": 223182562500,
+          "logs": [],
+          "metadata": {
+            "contracts": [
+              null
+            ],
+            "gas_profile": [],
+            "version": 4
+          },
+          "receipt_ids": [
+            "JA96nUAUG96xhHcsMSZqwhtpuf76Lh4eTJRT94ZYDGyS"
+          ],
+          "status": {
+            "SuccessValue": ""
+          },
+          "tokens_burnt": "22318256250000000000"
+        },
+        "proof": [
+          {
+            "direction": "Right",
+            "hash": "4jKhLD7kTmGJTLWCxMvJwH8qo9rS8DbzipdhY4w5eP12"
+          }
+        ]
+      },
+      {
+        "block_hash": "C9pHKwUUD4BAMRyNv9DDqCK5C51y1Xtd1rpLxcgfTtZb",
+        "id": "JA96nUAUG96xhHcsMSZqwhtpuf76Lh4eTJRT94ZYDGyS",
+        "outcome": {
+          "executor_id": "lenz-dev-1792984696547.testnet",
+          "gas_burnt": 223182562500,
+          "logs": [],
+          "metadata": {
+            "contracts": [
+              null
+            ],
+            "gas_profile": [],
+            "version": 4
+          },
+          "receipt_ids": [],
+          "status": {
+            "SuccessValue": ""
+          },
+          "tokens_burnt": "0"
+        },
+        "proof": [
+          {
+            "direction": "Left",
+            "hash": "7kguurABezu9n7bZKYcXvJMt1Xr1E8M7WzbW8tqZTdWy"
+          }
+        ]
+      },
+      {
+        "block_hash": "GHYUiPdg3xAwDFVLphijgGTEz4T7ELvBpQcF1wjA3i7b",
+        "id": "4BUk4yQ7xYuRQMi8tT737tmuWMeVht7bkWwb4uuFJL5S",
+        "outcome": {
+          "executor_id": "lenz-dev-1792984696547.testnet",
+          "gas_burnt": 223182562500,
+          "logs": [],
+          "metadata": {
+            "contracts": [
+              null
+            ],
+            "gas_profile": [],
+            "version": 4
+          },
+          "receipt_ids": [],
+          "status": {
+            "SuccessValue": ""
+          },
+          "tokens_burnt": "0"
+        },
+        "proof": [
+          {
+            "direction": "Left",
+            "hash": "HE7SAR9i53Ei9PkqNdNqBd9uy8W1ySmMHYbhzRBGacZA"
+          }
+        ]
+      }
+    ],
+    "status": {
+      "SuccessValue": "W3siaWQiOiI5NjBjYmY4NTU2MDc3NzRlMTkxNjViYzY5ZjJjNjE3ZjY0ZDU0YmQ5MjA3MDliZDc3NGUxYzUzOTcyMTA1N2RhIiwiaW5wdXQiOiJyb290OmNkZDgwNWZmZGY1MjdlOTMwZDIyZWI1NDI2MDkyY2VkMTg1ZWM0ZGQ1YmQ1MmMwMzYyYTAxNzkwYzg4N2VhN2UiLCJvdXRwdXRzIjpbeyJpZCI6Ijk2MGNiZjg1NTYwNzc3NGUxOTE2NWJjNjlmMmM2MTdmNjRkNTRiZDkyMDcwOWJkNzc0ZTFjNTM5NzIxMDU3ZGE6MCIsIm93bmVyIjoiMDI0ZmQ1MmYzYzY1OTBhMDI1ZTNkZGYwMmQzZmUyY2QwOTI1NDQ4NjQyOGI0NWYzOTlhN2UzODYwOTdmZTBhZGY1IiwiYW1vdW50IjoiNjAwMDAwMCJ9LHsiaWQiOiI5NjBjYmY4NTU2MDc3NzRlMTkxNjViYzY5ZjJjNjE3ZjY0ZDU0YmQ5MjA3MDliZDc3NGUxYzUzOTcyMTA1N2RhOjEiLCJvd25lciI6IjAyYzg0Njk2MTAzMjAyMGIyMWY1Y2QwZjkxZDZlMmQwNTZjYzMxMWZkY2I2NTk1NjEyOWJjZmY3NjU5NTAzMGViOSIsImFtb3VudCI6IjQwMDAwMDAifV0sImJsb2NrX2hlaWdodCI6Mjc1NTkzNjY0fSx7ImlkIjoiZGQyOWU0OGJjYTYxNGZkZDIwY2RjMmIwZTA2MTdmNTg4ZjEyZTBkOTdlMThjZjcxNjA3YzAwMzBhMTdjNGI2YiIsImlucHV0IjoiOTYwY2JmODU1NjA3Nzc0ZTE5MTY1YmM2OWYyYzYxN2Y2NGQ1NGJkOTIwNzA5YmQ3NzRlMWM1Mzk3MjEwNTdkYToxIiwib3V0cHV0cyI6W3siaWQiOiJkZDI5ZTQ4YmNhNjE0ZmRkMjBjZGMyYjBlMDYxN2Y1ODhmMTJlMGQ5N2UxOGNmNzE2MDdjMDAzMGExN2M0YjZiOjAiLCJvd25lciI6IjAyNGZkNTJmM2M2NTkwYTAyNWUzZGRmMDJkM2ZlMmNkMDkyNTQ0ODY0MjhiNDVmMzk5YTdlMzg2MDk3ZmUwYWRmNSIsImFtb3VudCI6IjEwMDAwMDAifSx7ImlkIjoiZGQyOWU0OGJjYTYxNGZkZDIwY2RjMmIwZTA2MTdmNTg4ZjEyZTBkOTdlMThjZjcxNjA3YzAwMzBhMTdjNGI2YjoxIiwib3duZXIiOiIwMmM4NDY5NjEwMzIwMjBiMjFmNWNkMGY5MWQ2ZTJkMDU2Y2MzMTFmZGNiNjU5NTYxMjliY2ZmNzY1OTUwMzBlYjkiLCJhbW91bnQiOiIzMDAwMDAwIn1dLCJibG9ja19oZWlnaHQiOjI3NTYyNjg0Nn0seyJpZCI6ImQ3Y2U5YWM4MTE5YzJlOWU0N2UwMDQwNDIwYzEyZDg2MTY2ZjdiNjZjNTNlZDFjZWJhZWZmMTI0MGY5NmRmZGQiLCJpbnB1dCI6ImRkMjllNDhiY2E2MTRmZGQyMGNkYzJiMGUwNjE3ZjU4OGYxMmUwZDk3ZTE4Y2Y3MTYwN2MwMDMwYTE3YzRiNmI6MSIsIm91dHB1dHMiOlt7ImlkIjoiZDdjZTlhYzgxMTljMmU5ZTQ3ZTAwNDA0MjBjMTJkODYxNjZmN2I2NmM1M2VkMWNlYmFlZmYxMjQwZjk2ZGZkZDowIiwib3duZXIiOiIwMjRmZDUyZjNjNjU5MGEwMjVlM2RkZjAyZDNmZTJjZDA5MjU0NDg2NDI4YjQ1ZjM5OWE3ZTM4NjA5N2ZlMGFkZjUiLCJhbW91bnQiOiIxMDAwMCJ9LHsiaWQiOiJkN2NlOWFjODExOWMyZTllNDdlMDA0MDQyMGMxMmQ4NjE2NmY3YjY2YzUzZWQxY2ViYWVmZjEyNDBmOTZkZmRkOjEiLCJvd25lciI6IjAyYzg0Njk2MTAzMjAyMGIyMWY1Y2QwZjkxZDZlMmQwNTZjYzMxMWZkY2I2NTk1NjEyOWJjZmY3NjU5NTAzMGViOSIsImFtb3VudCI6IjI5OTAwMDAifV0sImJsb2NrX2hlaWdodCI6Mjc1Njg4ODA2fV0="
+    },
+    "transaction": {
+      "actions": [
+        {
+          "FunctionCall": {
+            "args": "eyJwYXRoIjpbeyJpbnB1dCI6InJvb3Q6Y2RkODA1ZmZkZjUyN2U5MzBkMjJlYjU0MjYwOTJjZWQxODVlYzRkZDViZDUyYzAzNjJhMDE3OTBjODg3ZWE3ZSIsInJlY2lwaWVudCI6IjAyNGZkNTJmM2M2NTkwYTAyNWUzZGRmMDJkM2ZlMmNkMDkyNTQ0ODY0MjhiNDVmMzk5YTdlMzg2MDk3ZmUwYWRmNSIsImFtb3VudCI6IjYwMDAwMDAiLCJub25jZSI6ImNlODlmNDk5YWU2MWJjNzIwZWY3MmVkZTU1OGQ0ZDA2Iiwic2lnbmF0dXJlIjoiOTlmYTcyOTdlOTZmYzI0ODQ1MmY5NWQyODhhZTQ4YmQxNmFmMjVkMGFlMDVmYzczY2RkNmVmYmNmYWUwYWUyMzM0NmFhYzA0ZWQ3Njg5YmMzNzhmMTRiZGU0ZTQ0NmNiNjM1ZTBlODljMjM1NDkzM2I0Njc4MGJlMDgxYjRhMjgifSx7ImlucHV0IjoiOTYwY2JmODU1NjA3Nzc0ZTE5MTY1YmM2OWYyYzYxN2Y2NGQ1NGJkOTIwNzA5YmQ3NzRlMWM1Mzk3MjEwNTdkYToxIiwicmVjaXBpZW50IjoiMDI0ZmQ1MmYzYzY1OTBhMDI1ZTNkZGYwMmQzZmUyY2QwOTI1NDQ4NjQyOGI0NWYzOTlhN2UzODYwOTdmZTBhZGY1IiwiYW1vdW50IjoiMTAwMDAwMCIsIm5vbmNlIjoiZmNkZmE4YTllNDk1YTJmMDFhMjkyNjA2NmRlNDQwOTIiLCJzaWduYXR1cmUiOiI2M2E4ODZiZDQzYTkwZDUyNDNmN2RmZDhiOThhMjNiYWJjMjNmZDcyMmJjODU4ZTg3MGQ1Yjc5NGU5YWZlNGI1ZjczNzY3YmI0ODBmN2Y1YmFlNGVmYzA1ZTVlOGMxNjg1Y2U1NjA5N2QwMzc1MTEyNTkwOGE1M2U5MzU1NWM3YSJ9LHsiaW5wdXQiOiJkZDI5ZTQ4YmNhNjE0ZmRkMjBjZGMyYjBlMDYxN2Y1ODhmMTJlMGQ5N2UxOGNmNzE2MDdjMDAzMGExN2M0YjZiOjEiLCJyZWNpcGllbnQiOiIwMjRmZDUyZjNjNjU5MGEwMjVlM2RkZjAyZDNmZTJjZDA5MjU0NDg2NDI4YjQ1ZjM5OWE3ZTM4NjA5N2ZlMGFkZjUiLCJhbW91bnQiOiIxMDAwMCIsIm5vbmNlIjoiMWNjZTkwZGZjN2U0ZDFiMThmOTM1MTY0N2IyMzVhY2UiLCJzaWduYXR1cmUiOiIwZGFlMDZmYjAxZDg0YThjYzlmMzllZjdhNWJiM2U4YjMwZjVkZTYwMTI2MjZiNmYyYmExMzNkYzAxMjI0Mzk4ZDQyNTMyNGZlY2EzNDE2NmNlM2I0ZDk3NzczM2EzOTQwNWQxZTkzZjI1ZGQyOWI4YjVmZWE0YzYwMjBjZDlhYyJ9XX0=",
+            "deposit": "200000000000000000000000",
+            "gas": 250000000000000,
+            "method_name": "settle"
+          }
+        }
+      ],
+      "hash": "6YLxNN2ESvwJMHts9sjEvoTYYPse2ecfVxcSHLCinHEv",
+      "nonce": 274793650000111,
+      "priority_fee": 0,
+      "public_key": "ed25519:2KBJKkwv9c5hAstF1cyqqCLbuZQSmAkTHJf1ZbfGwu4U",
+      "receiver_id": "tusd.lenz-dev-1792984696547.testnet",
+      "signature": "ed25519:HKsP497rNUvdXnAqpnhPFSVwAie7BsUGqCzbbD3ZBhTzEuSmXJZ2znodQry3a3LCogPA8PEJDQeEcmpvgKABrso",
+      "signer_id": "lenz-dev-1792984696547.testnet"
+    },
+    "transaction_outcome": {
+      "block_hash": "PThAwEyTaLMMMh4QSWsttEMHgUfQ6rQVbSHEq4PwYhf",
+      "id": "6YLxNN2ESvwJMHts9sjEvoTYYPse2ecfVxcSHLCinHEv",
+      "outcome": {
+        "executor_id": "lenz-dev-1792984696547.testnet",
+        "gas_burnt": 361083791080,
+        "logs": [],
+        "metadata": {
+          "gas_profile": null,
+          "version": 1
+        },
+        "receipt_ids": [
+          "HB5wQieN95eYsaHEHFwkknKakWE1u5xVhuyeCJ5vFLrP"
+        ],
+        "status": {
+          "SuccessReceiptId": "HB5wQieN95eYsaHEHFwkknKakWE1u5xVhuyeCJ5vFLrP"
+        },
+        "tokens_burnt": "36108379108000000000"
+      },
+      "proof": []
+    }
+  },
+  "before": {
+    "a": {
+      "total": "3000000",
+      "notes": [
+        {
+          "id": "dd29e48bca614fdd20cdc2b0e0617f588f12e0d97e18cf71607c0030a17c4b6b:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "3000000"
+        }
+      ]
+    },
+    "b": {
+      "total": "2000000",
+      "notes": [
+        {
+          "id": "62c70e0dd54bc53a7634124c64f1e24b4d5ea654e80c020620ce49708a0b30fc:1",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "2000000"
+        }
+      ]
+    },
+    "c": {
+      "total": "4000000",
+      "notes": [
+        {
+          "id": "0d0a9231c5964aac900c3792640567e10a991b8572d23f57788d315b454a4687:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "2000000"
+        },
+        {
+          "id": "62c70e0dd54bc53a7634124c64f1e24b4d5ea654e80c020620ce49708a0b30fc:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "1000000"
+        },
+        {
+          "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "1000000"
+        }
+      ]
+    }
+  },
+  "after": {
+    "a": {
+      "total": "2990000",
+      "notes": [
+        {
+          "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd:1",
+          "owner": "02c846961032020b21f5cd0f91d6e2d056cc311fdcb65956129bcff76595030eb9",
+          "amount": "2990000"
+        }
+      ]
+    },
+    "b": {
+      "total": "2010000",
+      "notes": [
+        {
+          "id": "62c70e0dd54bc53a7634124c64f1e24b4d5ea654e80c020620ce49708a0b30fc:1",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "2000000"
+        },
+        {
+          "id": "d7ce9ac8119c2e9e47e0040420c12d86166f7b66c53ed1cebaeff1240f96dfdd:0",
+          "owner": "024fd52f3c6590a025e3ddf02d3fe2cd09254486428b45f399a7e386097fe0adf5",
+          "amount": "10000"
+        }
+      ]
+    },
+    "c": {
+      "total": "4000000",
+      "notes": [
+        {
+          "id": "0d0a9231c5964aac900c3792640567e10a991b8572d23f57788d315b454a4687:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "2000000"
+        },
+        {
+          "id": "62c70e0dd54bc53a7634124c64f1e24b4d5ea654e80c020620ce49708a0b30fc:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "1000000"
+        },
+        {
+          "id": "8ade531de5af17eb37d336ecc55981f3e79d841425d235d8ba287953c4d8e227:0",
+          "owner": "0353eb3a5809cdfe342eff59a995dbee1e0b9f3ed41010a3e5802f03391d743292",
+          "amount": "1000000"
+        }
+      ]
+    },
+    "d": {
+      "total": "0",
+      "notes": []
+    }
+  },
+  "backingBefore": {
+    "supply": "433000000",
+    "reserved": "419000000",
+    "balance": "419000000"
+  },
+  "requests": [
+    {
+      "role": "b",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "b",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "b",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "b",
+      "name": "/api/testnet/settle",
+      "method": "POST"
+    },
+    {
+      "role": "b",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "b",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "c",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "c",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    },
+    {
+      "role": "d",
+      "name": "/api/testnet/check",
+      "method": "POST"
+    }
+  ],
+  "failures": [
+    {
+      "step": "interrupted-confirmation",
+      "error": "Submission is uncertain; inspect saved path and chain without resubmitting",
+      "at": "2026-11-01T02:41:50.492Z"
+    },
+    {
+      "step": "interrupted-confirmation",
+      "error": "No settlement sent: fetch failed",
+      "diagnostics": [],
+      "at": "2026-11-01T02:44:32.318Z"
+    },
+    {
+      "step": "conflict-display",
+      "error": "The expression evaluated to a falsy value:\n\n  assert((await p.locator('#near-payments').innerText()).includes('could not be confirmed'))\n",
+      "diagnostics": [],
+      "at": "2026-11-01T02:50:35.050Z"
+    }
+  ],
+  "sourceHashes": {
+    "web/near-payment-failure-live.cjs": "e523f26a40d2d7fae894745d373ef4e31e0736ce00060a9fd8f807ded96995d5",
+    "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
+    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/near-chat.js": "fd29d71a3a87ef2a1d6a7ae9799d1a659dc3c737679a89ca076d89328eb25817",
+    "web/public/near-wallet.js": "6abdd29ccfa2dab57c30886399287329e0af02fa84bf79fc74f7c987b74263cc",
+    "web/testnet-relay.mjs": "37b33e59362bf481b9e16188d21ac21df2e82ee0a060c787e90778bcfa089194",
+    "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a"
+  }
+}

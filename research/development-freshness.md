@@ -1,5 +1,31 @@
 # Development freshness review
 
+November 1 live payment-failure review: seven live checkpoints verified actual
+NEAR response-loss recovery and a deliberately conflicting offline branch passed
+onward. The wallet now identifies its conflicted outgoing file and removes its
+download button. [Evidence and limits](payment-status.md) include the original
+display failure, pre-submission relay failures, final transaction and unchanged
+backing. Four saved-evidence checks and four altered-record controls passed.
+
+Regression checks passed: 25 Node tests, 13 payment-status browser checks, two
+cache-upgrade checks, eight wallet checks and nine offline-social checks. The new
+outgoing-state assertion failed before the fix. Light/dark conflict cards fit at
+375 and 1280 pixels. App cache `proof-u-chat-v28-conflicted-outgoing` preserves
+existing storage namespaces, identities and swap reservations.
+
+All six previews were rendered from the saved flow with no financial requests;
+the replay preserved the three existing accounts. Twenty-two sampled composition
+frames and both new conflict screenshots were visually reviewed. Five playback,
+three screen-response and five homepage checks passed; 47 static cache routes
+resolve. The encoder initially returned `ENOENT` in the restricted environment,
+then rendered successfully with access to the installed executable.
+
+NEAR contracts, Rhea, NEAR Intents, Aurora, Zcash and proof implementations are
+unchanged. Their private-settlement, signing, partner-access, recovery and device
+requirements remain open. This review closes the bounded live conflict/interruption
+evidence gap, not those wider integration requirements. Older dated reviews below
+retain the evidence available at their respective checkpoints.
+
 November 1 pending-confirmation review: chat and wallet persist an attempt before
 submission, display it after reload, and separate status reads from an explicit
 retry of the same signed payment. [Behavior, checks and limits](payment-status.md)

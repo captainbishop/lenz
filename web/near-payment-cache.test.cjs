@@ -42,7 +42,7 @@ const server=http.createServer(async(req,res)=>{try{
     assert.equal(await snapshot(),before);console.log('PASS failed payment-module cache update preserves old offline chat, identity and reservation');
     await context.setOffline(false);fail=false;assert.equal(await update(),'activated');
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v27-pending-confirmation');return !!key&&!!(await(await caches.open(key)).match('/near-payment-status.js'));});
+    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v28-conflicted-outgoing');return !!key&&!!(await(await caches.open(key)).match('/near-payment-status.js'));});
     assert(cached);assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
     console.log('PASS successful cache update loads new payment module offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');

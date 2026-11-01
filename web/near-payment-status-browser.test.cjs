@@ -150,6 +150,23 @@ async function seed(p){
       assert((await p.locator('.near-chat-card').innerText()).includes('could not be confirmed'));assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert(!requests.some(r=>r.endsWith('/settle')));
       await p.goto(base+'/money.html');await idle(p);assert.equal(await p.locator('#near-total').innerText(),'0');assert((await p.locator('#near-payments').innerText()).includes('could not be confirmed'));
     });
+    await check('a conflicted onward payment is labelled in the wallet and cannot be exported again',async()=>{
+      await seed(p);
+      await p.evaluate(async({contract,recipient})=>{
+        await(await import('/chat-store.js')).updateState(s=>(import('/near-payment-service.js')).then(m=>m.prepareNearPayment(s,contract,recipient,'2')));
+      },{contract,recipient:fixture.recipient});
+      mode='conflict';await p.reload();await idle(p);await p.locator('#near-refresh').click();await idle(p);
+      const outgoing=p.locator('.near-payment').filter({has:p.getByText('2 tUSD → Chidi',{exact:true})});
+      assert((await outgoing.innerText()).includes('Payment could not be confirmed'));
+      assert.equal(await outgoing.getByRole('button',{name:'Save payment file',exact:true}).count(),0);
+      assert.equal(await p.locator('#near-total').innerText(),'0');
+      for(const theme of ['light','dark']){
+        await p.evaluate(t=>{document.documentElement.dataset.theme=t;},theme);
+        for(const[width,height]of[[375,812],[1280,900]]){await p.setViewportSize({width,height});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
+        await p.setViewportSize({width:375,height:812});await outgoing.screenshot({path:path.join(__dirname,'evidence/conflicted-outgoing-'+theme+'.png')});
+      }
+      await p.setViewportSize({width:1280,height:900});
+    });
     await check('offline controls send no requests; reconnect only enables explicit actions',async()=>{
       await seed(p);await context.setOffline(true);await p.waitForFunction(()=>document.querySelector('#near-refresh').disabled);
       assert(await p.getByRole('button',{name:'Confirm payment',exact:true}).isDisabled());assert(await p.locator('#near-send').isEnabled());

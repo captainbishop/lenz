@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-01T02:04:15.409Z",
-  "passed": 12,
+  "checkedAt": "2026-11-01T03:01:09.826Z",
+  "passed": 13,
   "failed": 0,
   "checks": [
     "wallet rejects a final receipt with the right ID but the wrong recipient",
@@ -14,6 +14,7 @@
     "chat keeps a failed status check on the payment card without marking it confirmed",
     "a delayed check preserves a newer onward payment, history and expired swap reservation",
     "a conflicting ancestor is shown in chat and wallet and confirmation is never submitted",
+    "a conflicted onward payment is labelled in the wallet and cannot be exported again",
     "offline controls send no requests; reconnect only enables explicit actions"
   ],
   "scope": "Disposable Windows Edge context, actual encryption/signatures/storage; fixture reserve and RPC responses. No live transactions, physical phones or Safari."

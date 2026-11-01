@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-01T03:18:41.063Z",
+  "checks": [
+    "Both competing paths and the losing onward transfer have valid signatures over the same existing funded input",
+    "The recorded FINAL transaction calls settle with only the winning path and returns exact conserved outputs",
+    "The browser trace records one settlement, no losing-branch submission, a durable pending attempt and read-only recovery",
+    "Final wallet allocations conserve existing backing and exclude both the losing payment and its descendant"
+  ],
+  "rejectedAlterations": [
+    "wrong confirmed amount",
+    "forged losing signature",
+    "extra submission",
+    "conflicted value credited"
+  ],
+  "evidenceSha256": "b363e4234a3d390cc2fab507850eba6cedc195b1de66fc9b9df60df2eb0b4454",
+  "scope": "Saved signatures, transaction outcomes, accounting, browser trace and source hashes. No independent RPC consensus verification or new financial action."
+}
