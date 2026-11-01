@@ -238,7 +238,7 @@ The automated gate detects content drift, including less-visible components. It 
 
 `node web/record-preview-videos.cjs` exports six checked 1200 × 1320, 30-fps H.264 compositions. Chat and payments use the [verified source flow and read-only presentation replay](preview-motion.md); Lenz ID scenes use a fresh zero-balance account. [Rendering setup](../web/preview-rendering.md). Rendering sends no financial request. Original captures, edited frames and receipts are distinct in the evidence. The installed encoder, private checkpoints and intermediate media remain ignored. Use `--frames` to review the compositions before encoding.
 
-The homepage loops the matching video for its theme and selected panel. Click or tap a preview to pause/resume. Contextual controls and arrow keys move between scenes. Videos pause when off-screen or hidden and respect reduced motion. A viewer's account is never opened by playback. There is no embedded wallet or broadened framing permission.
+The homepage loops the matching video for its theme and selected panel. Tap the left/right half of a preview to change scenes; hold to pause. Arrow keys navigate, and Space or Enter toggles playback. There are no separate playback buttons or decorative dotted path. Videos pause when off-screen or hidden and respect reduced motion. A viewer's account is never opened by playback. There is no embedded wallet or broadened framing permission.
 
 `node web/verify-preview-videos.mjs` checks video/poster hashes against the recorded source snapshot and checks the homepage's cache revision. After recording or changing homepage code, `--update-cache` updates the worker marker only after these media/source checks pass. The staged freshness gate checks the same source and media provenance. It cannot replace visual review: watch the clips and inspect both themes before publishing. The freshness gate now includes source PNGs, so an altered capture also requires review.
 
@@ -276,8 +276,11 @@ Six Hyperframes compositions passed runtime, layout and contrast checks. Each
 video has three or four distinct product scenes, rendered at 1200 × 1320. The
 exporter checks UTF-8 text, decoded motion, scene regions, dimensions and duration.
 All 22 decoded scene frames were reviewed in light/dark phone sheets. The six
-files total 3.00 MB. Six browser checks cover playback, exact offline seeking, scene controls, themes,
-visibility and unchanged account storage. The saved flow was replayed without
+files total 3.00 MB. Seven browser checks cover playback, exact offline seeking,
+left/right taps, hold-to-pause, themes, visibility and unchanged account storage.
+Edge touch emulation also checks cancellation and vertical scrolling without
+accidental scene changes. Five homepage checks and three responsive-layout groups
+cover both themes and six viewport sizes; physical phone testing remains open. The saved flow was replayed without
 financial requests or changes to its three test accounts.
 
 Public delivery also passed fifteen Node and ten browser checks with the final

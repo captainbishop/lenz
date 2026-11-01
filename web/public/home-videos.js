@@ -1,30 +1,17 @@
 const root = document.documentElement;
 const videos = [...document.querySelectorAll('.video-preview')];
 const visible = new WeakSet(), held = new WeakSet(), manual = new WeakSet();
-const pendingTime = new WeakMap();
+const pendingTime = new WeakMap(), pressing = new WeakSet();
 let timelines = {};
-function buttonFor(video) { return document.querySelector(`[data-video="${video.id}"]`); }
 function viewFor(video) { return video.dataset.view ?? (video.id === 'hero-preview' ? 'chat' : 'wallet'); }
 function scenesFor(video) { return timelines[viewFor(video)] ?? []; }
 function sceneIndex(video) { return Math.max(0, scenesFor(video).findLastIndex(s => s.start <= video.currentTime + .05)); }
 function label(video) {
-  const button = buttonFor(video);
-  if (button) {
-    button.textContent = video.paused ? 'Play' : 'Pause';
-    button.setAttribute('aria-label', `${video.paused ? 'Play' : 'Pause'} ${video.id === 'hero-preview' ? 'conversation' : 'product'} preview`);
-  }
-  const wrap = video.closest('.hero-preview-wrap, .product-screen-wrap');
-  if (wrap) wrap.dataset.paused = String(video.paused);
   video.setAttribute('aria-pressed', String(!video.paused));
-  video.title = video.paused ? 'Click to play. Arrow keys change scene.' : 'Click to pause. Arrow keys change scene.';
-  for (const button of document.querySelectorAll(`[data-for="${video.id}"]`)) {
-    const next = sceneIndex(video) + Number(button.dataset.scene);
-    button.disabled = !scenesFor(video).length || next < 0 || next >= scenesFor(video).length;
-  }
 }
 function update(video) {
   const motionAllowed = !root.classList.contains('motion-off') || manual.has(video);
-  if (document.hidden || !visible.has(video) || held.has(video) || !motionAllowed) video.pause();
+  if (document.hidden || !visible.has(video) || held.has(video) || pressing.has(video) || !motionAllowed) video.pause();
   else video.play().catch(() => label(video));
   label(video);
 }
@@ -34,8 +21,9 @@ function toggle(video) {
   update(video);
 }
 function step(video, direction) {
-  const scenes = scenesFor(video), next = sceneIndex(video) + direction;
-  if (next < 0 || next >= scenes.length) return;
+  const scenes = scenesFor(video);
+  if (!scenes.length) return;
+  const next = direction < 0 ? Math.max(0, sceneIndex(video) - 1) : (sceneIndex(video) + 1) % scenes.length;
   video.currentTime = scenes[next].start + .05;
   label(video);
 }
@@ -75,13 +63,38 @@ for (const video of videos) {
     if (time > 0 && Number.isFinite(video.duration)) video.currentTime = Math.min(time, video.duration - .1);
   });
   video.addEventListener('loadeddata', () => update(video));
-  video.addEventListener('click', () => toggle(video));
+  // Assistive technology can activate the focused preview without pointer coordinates.
+  video.addEventListener('click', event => { if (event.detail === 0) toggle(video); });
+  const surface = video.closest('[data-tilt-surface]');
+  let press = null;
+  function release(event, cancelled = false) {
+    if (!press || (event && event.pointerId !== press.id)) return;
+    const current = press; press = null; pressing.delete(video);
+    if (surface.hasPointerCapture(current.id)) surface.releasePointerCapture(current.id);
+    const rect = surface.getBoundingClientRect();
+    if (!cancelled && !current.moved && performance.now() - current.started < 300 &&
+        event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+      step(video, event.clientX < rect.left + rect.width / 2 ? -1 : 1);
+    }
+    update(video);
+  }
+  surface.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || event.button !== 0 || press) return;
+    press = { id: event.pointerId, x: event.clientX, y: event.clientY, started: performance.now(), moved: false };
+    pressing.add(video); update(video); surface.setPointerCapture(event.pointerId);
+  });
+  surface.addEventListener('pointermove', event => {
+    if (press && press.id === event.pointerId && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 12) press.moved = true;
+  });
+  surface.addEventListener('pointerup', event => release(event));
+  for (const type of ['pointercancel', 'lostpointercapture']) surface.addEventListener(type, event => release(event, true));
+  surface.addEventListener('contextmenu', event => event.preventDefault());
+  window.addEventListener('blur', () => release(null, true));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) release(null, true); });
   video.addEventListener('keydown', event => {
     if ([' ', 'Enter'].includes(event.key)) { event.preventDefault(); toggle(video); }
     else if (['ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); step(video, event.key === 'ArrowLeft' ? -1 : 1); }
   });
-  buttonFor(video)?.addEventListener('click', () => toggle(video));
-  for (const button of document.querySelectorAll(`[data-for="${video.id}"]`)) button.addEventListener('click', () => step(video, Number(button.dataset.scene)));
   label(video);
 }
 void fetch('/previews/timelines.json').then(response => {

@@ -58,7 +58,8 @@ posters and their source manifest into the app. Review the generated phone sheet
 in the external workspace's `decoded` directory. Passing machine checks does not
 replace visual inspection or establish production safety.
 
-The homepage keeps click/tap and keyboard play/pause, previous/next scenes,
+The homepage uses left/right taps for scene navigation and press-and-hold to pause.
+Arrow keys navigate; Space or Enter toggles playback. It retains
 reduced-motion preferences, off-screen pause,
 theme switching, keyboard tabs, pointer response and offline playback. An updated
 service-worker revision prevents a saved homepage from retaining obsolete videos.

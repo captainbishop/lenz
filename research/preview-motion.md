@@ -2,7 +2,7 @@
 
 November 1, 2026. The homepage has six silent videos with distinct scenes for private messages, offline onward payments and sharing a Lenz ID. Text and vector elements render directly at 1200 × 1320, without scaling up interface screenshots. The sequences are illustrated replays of verified behavior.
 
-The homepage now uses 1200 × 1320 compositions at 30 frames per second. Only the screen tilts; its contextual controls stay still. Light/dark themes, keyboard tabs, reduced motion, viewport visibility and offline playback remain supported. The normal app also received a targeted dark-theme payment-status contrast correction.
+The homepage now uses 1200 × 1320 compositions at 30 frames per second. Only the screen tilts; its caption stays still. Light/dark themes, keyboard tabs, reduced motion, viewport visibility and offline playback remain supported. The normal app also received a targeted dark-theme payment-status contrast correction.
 
 ## What the sequences show
 
@@ -18,7 +18,7 @@ The homepage clips are **edited replays**, not live executions in a viewer's acc
 
 `node web/reframe-preview-flow.cjs` checks the saved flow through current UI renderers. `node web/render-preview-stories.cjs` creates editable Hyperframes compositions in an external rendering workspace. After Hyperframes checks and visual review, `node web/record-preview-videos.cjs` exports the videos, probes dimensions and duration, and compares decoded scene regions. See [rendering setup](../web/preview-rendering.md). Source captures, public receipts, composition scripts and finished media are tracked; intermediate render files are external.
 
-`node web/verify-preview-flow.mjs` checks the recorded receipt chain, the single settlement route and capture/source hashes. It reads saved evidence, not current chain state. `node web/verify-preview-videos.mjs` checks final media/provenance/cache integrity. Browser verification covers playback, themes, reduced motion, keyboard selection, six viewport sizes, stationary controls, offline loading and account preservation. Windows viewport emulation does not establish phone or Safari support.
+`node web/verify-preview-flow.mjs` checks the recorded receipt chain, the single settlement route and capture/source hashes. It reads saved evidence, not current chain state. `node web/verify-preview-videos.mjs` checks final media/provenance/cache integrity. Browser verification covers playback, themes, reduced motion, keyboard selection, six viewport sizes, stationary captions, offline loading and account preservation. Windows viewport emulation does not establish phone or Safari support.
 
 ## Failures retained
 
@@ -37,10 +37,14 @@ Fresh runs passed five homepage checks, five video/account/offline checks, and t
 ## November 1 interaction and seeking checks
 
 The full two-sentence message types out before sending. A crossed-out Wi-Fi
-symbol marks offline scenes. Click/tap and keyboard controls pause or resume;
-previous/next controls use exported scene timings. Theme changes retain the
-current playhead. Controls appear on interaction or pause, with visible touch
-controls; no pause icon is burned into the video.
+symbol marks offline scenes. Tap the left half of a preview to go back or the
+right half to advance. Hold to pause; release resumes the previous playback state.
+Arrow keys navigate, and Space or Enter toggles playback. Scene changes use the
+exported timings; theme changes retain the playhead. The preview has no separate
+playback buttons or decorative dotted path. Keyboard focus remains visible.
+
+Edge touch emulation checks both tap directions, holding, cancellation and vertical
+scrolling without changing scenes. This is separate from physical phone testing.
 
 The local server and offline cache now return exact video byte ranges. Earlier
 capture checks could receive a seek event while remaining at frame zero; the

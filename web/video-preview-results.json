@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-01T18:05:21.086Z",
+  "checkedAt": "2026-11-01T18:32:41.800Z",
   "browser": "156.0.4314.58",
-  "passed": 6,
+  "passed": 7,
   "failed": 0,
   "apiRequests": 0,
   "checks": [
@@ -10,6 +10,7 @@
     "playing video pauses when it leaves the viewport",
     "actual wallet/profile follows the chosen theme without changing identity or balances",
     "offline video playback, seeking and theme switching work; cached wallet identity remains unchanged",
-    "click/keyboard play-pause and previous/next scene navigation work offline at exact scene boundaries"
+    "left/right taps and keyboard navigation work offline; hold pauses without seeking, drag is ignored, and no playback buttons or dotted trace remain",
+    "Edge touch emulation: both tap directions, press-and-hold, cancellation and vertical scrolling work without accidental scene changes"
   ]
 }

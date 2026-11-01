@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-01T18:05:37.509Z",
+  "checkedAt": "2026-11-01T18:28:59.705Z",
   "browser": "156.0.4314.58",
   "checks": [
-    "both screens respond to pointer movement and reset on exit; playback controls remain still",
+    "both screens respond to pointer movement and reset on exit; captions remain still",
     "both themes fit six phone/tablet/desktop and landscape viewport sizes",
     "reduced motion disables tilt and autoplay"
   ],

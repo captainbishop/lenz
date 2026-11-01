@@ -19,15 +19,15 @@ const path = require('node:path');
       await page.mouse.move(box.x + box.width * .85, box.y + box.height * .4);
       await page.waitForTimeout(250);
       assert.notEqual(await screen.evaluate(n => getComputedStyle(n).transform), before, 'Pointer movement must change the screen transform');
-      const control = area.locator('.video-toggle');
+      const control = area.locator('.video-caption');
       const controlBefore = await control.boundingBox();
       await page.mouse.move(box.x + box.width * .15, box.y + box.height * .6);
       await page.waitForTimeout(250);
-      assert.deepEqual(await control.boundingBox(), controlBefore, 'Playback controls must remain still');
+      assert.deepEqual(await control.boundingBox(), controlBefore, 'Captions must remain still');
       await page.mouse.move(1, 1); await page.waitForTimeout(250);
       assert.equal(await screen.evaluate(n => n.style.getPropertyValue('--rx')), '0deg');
     }
-    checks.push('both screens respond to pointer movement and reset on exit; playback controls remain still');
+    checks.push('both screens respond to pointer movement and reset on exit; captions remain still');
     for (const theme of ['light', 'dark']) {
       await page.evaluate(t => document.documentElement.dataset.theme = t, theme);
       for (const [width, height] of [[320,740], [375,812], [768,1024], [844,390], [1280,900], [1536,960]]) {
