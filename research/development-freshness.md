@@ -1,5 +1,25 @@
 # Development freshness review
 
+November 1 naming and interface review: ENS Aurora-record lookup and native NEAR
+account reads use final blocks and fixed public RPC endpoints. Verification passes
+56 Aurora tests, six name API/display checks and four quote-API regressions. Six
+removed guards are detected. Three live read-only naming observations are recorded
+separately from nine Edge fixture checks. Both themes and desktop/narrow captures
+were visually reviewed. [Name evidence](../aurora/names.md) documents missing and
+off-chain records, RPC trust, ownership limits and the mutation controls.
+
+The homepage, wallet, conversations, profile editor and developer pages use shorter
+copy and expandable explanations. Payment warnings and carrier metadata disclosures
+remain beside their actions. Input labels no longer receive the focus outline
+intended for visually hidden file inputs. The app worker is
+`proof-u-chat-v33-simpler-flow`. Both cache-upgrade checks preserve identity,
+encrypted vault and the pending reservation. The preview captures were replayed
+from the existing verified payment records; all three stored accounts were
+unchanged and no financial action was repeated. Six light/dark videos and their
+posters match 59 recorded sources. Name ownership binding, portable login,
+signing and funded Aurora execution remain open.
+
+
 November 1 Aurora receipt review: the read-only transaction checker matches the
 expected call against a complete final receipt graph and decodes the returned
 Engine result. Forty-three Aurora tests and twelve existing adapter-recovery

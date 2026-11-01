@@ -61,7 +61,7 @@ async function state(p){return p.evaluate(async contract=>{const s=await(await i
     });
     await check('a swap saved offline stays reserved across chat, reload and reconnection without automatic execution',async()=>{
       await wallet(b);await b.locator('#rhea-open').click();assert(await b.locator('#rhea-quote').isDisabled());await b.locator('#rhea-amount').fill('1');await b.locator('#rhea-minimum').fill('0.0001');await b.locator('#rhea-receiver').fill('receiver.testnet');await b.locator('#rhea-form button[type=submit]').click();await idle(b);
-      assert.equal(await b.locator('#near-total').innerText(),'3');assert(await b.getByRole('button',{name:'Start swap',exact:true}).isDisabled());assert((await b.locator('#rhea-queue').innerText()).includes('Connect to start'));
+      assert.equal(await b.locator('#near-total').innerText(),'3');assert(await b.getByRole('button',{name:'Start swap',exact:true}).isDisabled());assert((await b.locator('#rhea-queue').innerText()).includes('Reconnect to execute'));
       await chat(b);assert.equal(await b.locator('#chat-balance').innerText(),'3 tUSD');await wallet(b);await b.reload();await status(b,'Your wallet is ready');assert.equal(await b.locator('#near-total').innerText(),'3');
       const before=await state(b);await b.context().setOffline(false);await b.getByRole('button',{name:'Start swap',exact:true}).waitFor();await b.waitForFunction(()=>!Array.from(document.querySelectorAll('#rhea-orders button')).find(b=>b.textContent==='Start swap').disabled);
       assert((await b.locator('#rhea-queue').innerText()).includes('Nothing is sent automatically'));assert.deepEqual(await state(b),before);assert.deepEqual(requests,[]);await b.context().setOffline(true);

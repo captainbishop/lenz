@@ -8,11 +8,20 @@ The wallet now uses plain actions and payment states. Raw signed-swap import and
 
 The homepage uses real application previews, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. The previous synthetic payment system remains under Earlier prototype, with its stored identity and balances preserved.
 
+## Name lookup
+
+Open /name-lab.html to check ENS records for Aurora or a native NEAR account.
+The [naming integration](../aurora/names.md) supports both themes, explicit
+network options and opt-in saved results marked as past observations offline.
+The name suffix selects NEAR mainnet or testnet automatically. ENS defaults to
+Aurora testnet; its destination network is under Options & privacy.
+It does not link contacts, sign or send payments, or enable account recovery.
+
 ## Profiles and the standalone wallet
 
 Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, exchange contact cards, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. The wallet also reviews incoming swap offers. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. Sending means preparing a file for handover, not confirmed delivery.
 
-Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Continue privately generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.
+Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Pick a name for me in the wallet, or Continue privately in chat, generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.
 
 Photos are centre-cropped to 128×128 JPEG locally and re-encoded without the original metadata. Remote URLs and SVG uploads are rejected. Public contact files carry the photo; compact QR cards carry the name, symbol and public keys. An updated contact card requires source confirmation before replacing the existing contact with the same keys. Profile metadata is a label confirmed by the user, not a cryptographic assertion of someone's real-world identity.
 

@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-01T08:06:58.657Z",
+  "recordedAt": "2026-11-01T14:13:43.575Z",
   "browser": "156.0.4314.58",
   "encoder": "imageio-ffmpeg 0.6.0 / FFmpeg 7.1",
   "sourceFiles": {
@@ -8,17 +8,17 @@
     "web/public/carrier-client.js": "5264823507603b98eda15f77cdc9f9ba26f47fd27166fe15fdc9e000173ac098",
     "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
-    "web/public/carrier-ui.js": "e2897001637e5000b60836e285e3eba7236006ed9b23d0b4ebe8b00f3ff52ace",
+    "web/public/carrier-ui.js": "a9b5335d864b129277d5c428ada5cc875e1cf2702c85810187e752b6b5112329",
     "web/public/chat-layout.css": "82a47e83421f5910e561c1dcbecbc236c700dc68b524ba5ca310677d16a97817",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/chat.css": "5e708f9150fcec8f2e52458783d502b91e742e3f037a7d3bdf94837028278a2f",
-    "web/public/chat.html": "ea947d94042ec939784691e1c925cdb7c75a78f1fdaadc25171455784846f8e9",
+    "web/public/chat.css": "405cae0fc830c45d7ce2370446554f7c62667bced497e950ef6ac45ba11a71f6",
+    "web/public/chat.html": "916d5c8bc292494178848deaa82175e9af980393ce44a2eeffb51063ff3ad660",
     "web/public/chat.js": "955085dc1cbc7a8b172b76b06c134f656cd2a535f22bcad18c7745a4ded671bf",
     "web/public/contact-card.js": "43a8f9b90856653b23a7ef0c30713da20cd931d8164b3e2cefa23d9ebd473d34",
     "web/public/contact-ui.js": "1e16952f6560684ea18d9f99423561acb3adaeb23a66c30413340af946c9328f",
     "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
-    "web/public/near-chat.js": "3478223e158eaaffdde869815395f5cb19ebcee68169a5ecbc20fe68a6c81e07",
+    "web/public/near-chat.js": "e50cdf83fa725b9943a1b5ba10b2df8dd2d11e5a9e6084d6707729235c26eea2",
     "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
     "web/public/near-payment-service.js": "f1f3493981e4f1bd4189342ddd9eaed66e80767f43c6ee6b706e128a98ca36b4",
     "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
@@ -27,7 +27,7 @@
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/peer-scenario.js": "0fd34bae514ddfe361c83b59d346c27605d62b392e4d3cd5e47f0c6458b87934",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "37dd1e8ff26e41d80d4485c7647fc54f0661b93419c55da50ad5e75d535f74f6",
+    "web/public/profile-panels.js": "5438e2d33f33a7f2dc277f4b9f4d87af787b898dc587601be7f057a41ebbe3dc",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
@@ -40,19 +40,19 @@
     "web/reframe-preview-flow.cjs": "ee6070bb3e2778a7417730a9b1cead72c8920951bd5f66f32131df8f0632811a",
     "web/record-preview-videos.cjs": "38d6086d840086cb69c28b6123384edc90e618989fe8bc8d4b5da878d219ca5e",
     "web/render-preview-stories.cjs": "2e730a3bff33325602cc506d0242d99ad6ec9a5e4fd393a1824dc15d803ddd0d",
-    "web/preview-scene.html": "55e94804863416139022ae29e0b8add7a7698a3687c890998a8c4b69a46b3031",
-    "web/preview-flow-results.json": "9ab96064d19405d962b3be931947a662cc8b179d543865698244a6de8635f63c",
+    "web/preview-scene.html": "2a9d8106841566cd24f3ae659e713028f6bcbb2e4c3cfe570a50e779e60d4d29",
+    "web/preview-flow-results.json": "a479ad683496d86bd1bd171239a33e63aa097220af1708f12f9ef415a657977a",
     "web/evidence/preview-replay/private-send-light.png": "4bab6ca127db3cfc5807a286f88559b8809d6118c0c34d476d627ea40e511e2c",
     "web/evidence/preview-replay/private-read-light.png": "53888fe602a564f60508ab6b72f246f9de2fb578850027a17ecf9632f413acdb",
     "web/evidence/preview-replay/payment-received-light.png": "956648ed16dfc4d34acaec0c88356b993591f87af676d417fae420357b48eb3f",
     "web/evidence/preview-replay/payment-onward-light.png": "aa2c749c10635d6ce22dbdcacb66bd6faf076597441b6ebf1cbfb43165a2f7fb",
     "web/evidence/preview-replay/payment-confirmed-light.png": "f81ea5c8a962b4f8f0c2bba4884e20f3d3d0991f55c82779b9914ddb78011dfe",
-    "web/public/money.html": "6cb6fe0b12b7ecdb621cb93eb51d2e2318abe30ac898dd7f031d24d5f930f2dd",
+    "web/public/money.html": "52fe7ffddfcd531e95693b91e08fef5328e0a1b3d834e505b19ce933edabd19a",
     "web/public/money.css": "e129a99b30c88f88494404e14bb6c217bdfbfc4c5fa0fe63afbf13f462354a84",
     "web/public/near-wallet.css": "ad29ca5a2aea0190b48da4b058c4349bbddfe5835af3941044b0dab1ef5155f9",
     "web/public/money.js": "0eaf4e94101cceb1f9e55711d749984f1193630075077da378816e4c1548f88d",
-    "web/public/near-wallet.js": "5592f8bfbd22f4b9f70c1feb94229c849cb0caff6299bf2194e7e2d62238d01d",
-    "web/public/rhea-wallet.js": "40adeff7bc95c5949db603976f8dd154bd2b5405a83ffc2f9e8ca4f2e84a1c3c",
+    "web/public/near-wallet.js": "ce69ddc06b03069dd8026799584e994cb934b6be49749137095cbea4394f7a72",
+    "web/public/rhea-wallet.js": "225504091816037e67a90002403156c07eb9c85aac444e9bade24b6c0f22098f",
     "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
     "web/public/near-signer.js": "23e4cfedbd15b5c5bb512ca53c5d41a4bb7fd5ba82d257feb395914c76168388",
@@ -88,7 +88,7 @@
       "file": "web/public/previews/wallet-light.mp4",
       "sha256": "8a6290763d642ee826a39625c9021c0354cfe247f3ce3e3207c4816aae95385a",
       "poster": "web/public/previews/wallet-light.webp",
-      "posterSha256": "51fb86e06723e6a437c8247ff1b2a8a6ec541ac5dd320ea04e33a9f91cafa530"
+      "posterSha256": "145828eaca0b0c79c2202631c79388eb9f9ddad4f96c4233f7872d6feb2a3279"
     },
     {
       "view": "profile",
@@ -99,9 +99,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "5d287bb4e4c1fd775f17cd568a0f9f39bdae2f8b8f244dab8247a1a292a64bd2",
+      "sha256": "df8bfa5555a94278b849b06afecca8d42aaa33128de85b161d7c4273a900139e",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "8bba0d7e5b38594a3135dffb2d2d01b88d213da2d2ca22b28667ca562918347b"
+      "posterSha256": "1f59b02c6e3007d375428a8c3ba2a4119208bca294b9f7f45974d0dd4982180a"
     },
     {
       "view": "chat",
@@ -127,7 +127,7 @@
       "file": "web/public/previews/wallet-dark.mp4",
       "sha256": "3e8749dd41d4cec7f8424a4869c1096b8987a19913e1332edeee7497a5cc1734",
       "poster": "web/public/previews/wallet-dark.webp",
-      "posterSha256": "a446200069117f7da2db2a4828137b2d13881d80250b2adb9a500bd375dd247d"
+      "posterSha256": "8e52d54c35cfffa15374a97d7bb88ccfb68cf841e96fe78460a31d9a2d7a4e98"
     },
     {
       "view": "profile",
@@ -138,9 +138,9 @@
       "width": 600,
       "height": 660,
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "af0a20c040dc154fce463366c1f626267acddd68e85c5e817b7588d964f00ab2",
+      "sha256": "791798cb4d950b4291ec0877efb15d743c4e4069c5973cbf44bc673b05dbfae0",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "784b0d1ad08b2dc99f943a0b433b66b163cc2feb35f0f60852c98a7e4fdd05ef"
+      "posterSha256": "d782145427f628f9fa65f310eed995c20704c7beafb2361dfbfa6e28f8bcdf7e"
     }
   ],
   "apiRequests": 0,

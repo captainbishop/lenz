@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-01T13:30:59.579Z",
+  "sourceSha256": "e7595b1aa25ca8a253a6678dbdc66dd3d3c0178f36dca66a0d13935edfec1aa8",
+  "scope": "Read-only public RPC observations at final blocks; no identity ownership verification, signing, deployment or financial transaction.",
+  "results": [
+    {
+      "version": 1,
+      "name": "ur.integration-tests.eth",
+      "requestedName": "ur.integration-tests.eth",
+      "network": "mainnet",
+      "system": "ens",
+      "chainId": 1313161554,
+      "identityBinding": "not_verified",
+      "authority": "ethereum:mainnet",
+      "coinType": "3460645202",
+      "block": {
+        "hash": "0x44dc3e342327350bf699cde3e77f776a537ded6d414dc987605e6ef528c2a95d",
+        "height": "26320164"
+      },
+      "checkedAt": "2026-11-01T13:30:44.997Z",
+      "state": "address_found",
+      "resolver": "0x1c7B2739AaA9ea0Fc79deB45e0Bb25A1fbb058df",
+      "auroraAddress": "0x2222222222222222222222222222222222222222",
+      "addressKind": "ens-aurora-record"
+    },
+    {
+      "version": 1,
+      "name": "wrap.near",
+      "requestedName": "wrap.near",
+      "network": "mainnet",
+      "system": "near",
+      "chainId": 1313161554,
+      "identityBinding": "not_verified",
+      "authority": "near:mainnet",
+      "block": {
+        "hash": "CH8vHvUTEkhGSdVG8V54QVa6UasyvkkzjszzwDaSaXWL",
+        "height": 222575775
+      },
+      "checkedAt": "2026-11-01T13:30:54.165Z",
+      "state": "account_found",
+      "accountId": "wrap.near",
+      "auroraAddress": "0x13896015e525a44360de29d4b1b55b47c28ce746",
+      "addressKind": "derived-near-caller"
+    },
+    {
+      "version": 1,
+      "name": "tusd.lenz-dev-1792984696547.testnet",
+      "requestedName": "tusd.lenz-dev-1792984696547.testnet",
+      "network": "testnet",
+      "system": "near",
+      "chainId": 1313161555,
+      "identityBinding": "not_verified",
+      "authority": "near:testnet",
+      "block": {
+        "hash": "5DHgfSWmPjMDerFL3T8WsJ9KBDdpPKd8ariWaoVa2BUf",
+        "height": 275755086
+      },
+      "checkedAt": "2026-11-01T13:30:59.356Z",
+      "state": "account_found",
+      "accountId": "tusd.lenz-dev-1792984696547.testnet",
+      "auroraAddress": "0x2042d33016c76b9d127c7ecc64f109c6ad78c521",
+      "addressKind": "derived-near-caller"
+    }
+  ]
+}

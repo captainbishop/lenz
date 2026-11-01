@@ -11,8 +11,9 @@
     "check:testnet": "node scripts/check-testnet.js",
     "test:rpc": "node --test rpc.test.mjs",
     "check:engine": "node scripts/check-engine.js",
+    "check:names": "node scripts/check-names.js",
     "check:transaction": "node scripts/check-transaction.js",
-    "test": "node --test dependencies.test.mjs local-evm.test.mjs rpc.test.mjs engine-codec.test.mjs engine-query.test.mjs engine-receipt.test.mjs"
+    "test": "node --test dependencies.test.mjs local-evm.test.mjs rpc.test.mjs engine-codec.test.mjs engine-query.test.mjs engine-receipt.test.mjs name-resolution.test.mjs"
   },
   "devDependencies": {
     "@ethereumjs/common": "10.1.3",

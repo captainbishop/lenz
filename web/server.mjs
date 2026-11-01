@@ -3,6 +3,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { testnetRoute } from './testnet-relay.mjs';
 import { defiRoute } from './defi-relay.mjs';
+import { nameRoute } from './name-relay.mjs';
 import { rheaRoute } from './rhea-relay.mjs';
 import { zcashRoute } from './zcash-relay.mjs';
 import { securityHeaders } from './security-policy.mjs';
@@ -17,6 +18,7 @@ http.createServer(async (req, res) => {
     // Keep the local sponsor and browser identity on the documented loopback origin.
     if (req.headers.host !== '127.0.0.1:4173') { res.writeHead(403); res.end('Use http://127.0.0.1:4173'); return; }
     if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
+    if (await nameRoute(req, res)) return;
     if (await zcashRoute(req, res)) return;
     if (await rheaRoute(req, res)) return;
     if (await defiRoute(req, res)) return;

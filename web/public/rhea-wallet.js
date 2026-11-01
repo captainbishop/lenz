@@ -12,7 +12,7 @@ const labels={checking:'Checking your swap',ready:'Ready',redeeming:'Starting sw
 const notice=text=>{$('#rhea-feedback').textContent=text;};
 function refreshSwapConnection(){
   const online=navigator.onLine, summary=$('#rhea-queue');if(!summary)return;
-  summary.textContent=savedCount?`${savedCount} saved swap${savedCount===1?'':'s'} to review. ${online?'A connection is available; start or check each swap below.':'Connect to start or check your swaps.'} Nothing is sent automatically.`:online?'Prepare a swap now or offline. You choose when to send it for execution.':'You’re offline. You can save a swap with your own minimum; check rates and execute after connecting.';
+  summary.textContent=savedCount?`${savedCount} saved swap${savedCount===1?'':'s'} to review. ${online?'Review before sending.':'Reconnect to execute.'} Nothing is sent automatically.`:online?'Save offline · execute when connected.':'Offline · set your minimum and save. Reconnect to check rates and execute.';
   document.querySelectorAll('[data-rhea-online]').forEach(button=>{button.disabled=!online||button.dataset.rheaBusy==='true';});
 }
 function needsConnection(button){button.dataset.rheaOnline='';button.disabled=!navigator.onLine;return button;}

@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-01T14:00:55.408Z",
+  "sourceSha256": "e7595b1aa25ca8a253a6678dbdc66dd3d3c0178f36dca66a0d13935edfec1aa8",
+  "testSha256": "f8adbe7b394a7cc45b68f4587c9ef4a6f3bf842f1e1ebf302491e05b454b4ca2",
+  "scope": "Synthetic naming responses; no live ownership or financial execution.",
+  "results": [
+    {
+      "name": "ethereum-authority",
+      "detected": true
+    },
+    {
+      "name": "aurora-record",
+      "detected": true
+    },
+    {
+      "name": "near-suffix",
+      "detected": true
+    },
+    {
+      "name": "near-block",
+      "detected": true
+    },
+    {
+      "name": "canonical-abi",
+      "detected": true
+    },
+    {
+      "name": "rpc-identity",
+      "detected": true
+    }
+  ]
+}

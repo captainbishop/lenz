@@ -46,7 +46,7 @@ window.render = t => {
   $('.stamp').textContent=view==='chat'&&index===1?'ENCRYPTION ILLUSTRATION':view==='profile'?'LENZ PROFILE':'RECORDED FLOW · REPLAY';
   const online=view==='wallet'&&index===3;
   $('#network').textContent=online?'ONLINE · CONFIRMED':view==='profile'?'ON YOUR DEVICE':'OFFLINE';$('.network svg').style.opacity=online||view==='profile'?0:1;
-  $('.footnote').textContent=view==='wallet'?'Testnet tUSD · settlement amounts and accounts are public.':view==='chat'?'Message content is encrypted. Routing and timing remain visible.':'No phone number or real name required. Back up separately.';
+  $('.footnote').textContent=view==='wallet'?'Testnet tUSD · settlement amounts and accounts are public.':view==='chat'?'Message content is encrypted. Routing and timing remain visible.':'No phone number required. Account recovery is not available yet.';
   let travel=view==='wallet'?(index===0?.5*ease((age-1)/2):index===1?.5+.5*ease((age-1)/2):1):ease((t-4)/4);
   $('.rail-fill').style.transform=`scaleX(${travel})`;$('.traveller').style.left=`${travel*100}%`;$('.traveller').textContent=view==='wallet'?'1 tUSD':'Encrypted file';
   $('.traveller').style.opacity=view==='wallet'&&(index===0||index===1)&&age>1&&age<3?1:view==='chat'&&index===1&&age>.4&&age<3.7?1:0;

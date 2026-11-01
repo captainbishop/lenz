@@ -23,7 +23,7 @@ export async function loadChatMoney() {
 export function mountChatMoney({ action, status, selected, expose }) {
   paymentAction = action;
   let recipient = null;
-  const connection = () => { $('#chat-connection').textContent = navigator.onLine ? 'Prepare messages and payments here, then share their encrypted files. Swaps and final confirmation need a connection.' : 'You’re offline. Keep messaging and paying by file. Received money can be passed onward; final confirmation waits for a connection.'; };
+  const connection = () => { $('#chat-connection').textContent = navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.'; };
   const updateConnection = () => { connection(); paymentConnection(); };
   addEventListener('online', updateConnection); addEventListener('offline', updateConnection); updateConnection();
   $('#pay-tusd').onclick = () => action(async () => {
