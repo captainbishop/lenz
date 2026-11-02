@@ -1,5 +1,15 @@
 # Security verification and failures
 
+## November 2: durable wallet approval
+
+The [browser service review](../../carrier/defi-wallet.md) records atomic encrypted
+approval/reservation writes, stable retries, cross-tab serialization and storage-only
+receipts. Thirteen actual Edge cases and eleven deliberate alterations pass, plus
+63 existing executor/intake/money regressions. Tests preserve identities, history,
+keys, change and pending obligations. Playwright resolution and Windows sandbox
+account launch failures are retained with the corrected passing runs. No app
+activation, financial call or physical-device result is established.
+
 ## November 2: dependency cleanup and recipient verification
 
 The [latest dependency report](dependency-cleanup-2026-11-02.md) supersedes the

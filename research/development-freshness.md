@@ -1,5 +1,16 @@
 # Development freshness review
 
+## Durable wallet approval, November 2, 2026
+
+The [new browser service](../carrier/defi-wallet.md) saves executor authorization,
+the existing Rhea reservation and encrypted handoff together. It preserves one
+request across retries and commits before returning a packet or receipt success.
+Thirteen Edge cases, eleven deliberate alterations and 63 existing regressions
+pass. The test origin uses disposable stores and synthetic funding; no live
+financial call or user identity change occurs. The API is not imported by the
+app entry points yet, so cache versions and preview videos remain unchanged.
+Approval UI, delivery and verified result/credit integration remain open.
+
 ## Development checkpoint checks, November 2, 2026
 
 Fresh verification passes 112 application/protocol/authentication regressions,

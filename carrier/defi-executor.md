@@ -11,6 +11,10 @@ container. Wallet approval, automatic nearby handoff, operator discovery and
 recipient-side chain verification are not wired into the app yet. The existing
 wallet flow is unchanged. No production funds or shielded settlement are supported.
 
+The [durable wallet approval service](defi-wallet.md) now supplies a tested browser
+storage boundary for approvals and encrypted handoffs. Its user controls and
+transport/result integration are still pending.
+
 ## Execution boundary
 
 [The NEAR client](../contracts/defi-executor-client.mjs) checks the chain ID,

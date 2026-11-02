@@ -1,0 +1,73 @@
+{
+  "checkedAt": "2026-11-02T17:32:37.727Z",
+  "passed": 13,
+  "failed": 0,
+  "apiRequests": 0,
+  "results": [
+    {
+      "name": "atomic approval keeps identity, history and remaining change",
+      "pass": true
+    },
+    {
+      "name": "failed approval commit exposes no handoff and leaves the entire store unchanged",
+      "pass": true
+    },
+    {
+      "name": "repeated approval after reload reuses one reservation and exact ciphertext",
+      "pass": true
+    },
+    {
+      "name": "two tabs cannot reserve the same money and concurrent retries keep one approval",
+      "pass": true
+    },
+    {
+      "name": "changed approval terms and missing disclosure cannot replace a saved approval",
+      "pass": true
+    },
+    {
+      "name": "approval snapshots caller inputs before awaiting storage or signing",
+      "pass": true
+    },
+    {
+      "name": "expiry during encryption does not save a new approval or stranded reservation",
+      "pass": true
+    },
+    {
+      "name": "offline approval and expired handoff retain the signed reservation",
+      "pass": true
+    },
+    {
+      "name": "storage receipts survive expiry but never credit, unlock or mark execution complete",
+      "pass": true
+    },
+    {
+      "name": "forged, foreign, future and financial receipts leave stored approval untouched",
+      "pass": true
+    },
+    {
+      "name": "known input conflict and substituted saved packet prevent handoff",
+      "pass": true
+    },
+    {
+      "name": "a replaced reservation or reversed saved envelope cannot be handed off",
+      "pass": true
+    },
+    {
+      "name": "failed handoff and receipt commits return no confirmation and preserve saved money",
+      "pass": true
+    }
+  ],
+  "sourceFiles": {
+    "web/public/defi-wallet.js": "c19d704fb48b0b08776d8394a2bdcacffaa505ed959581a7fe4952e26a58f218",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
+    "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
+    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
+    "web/defi-wallet-browser.test.cjs": "2098a8f8843ae6d763725e7ea87e5a49471441884960632743f22313818a96f4",
+    "web/security-policy.mjs": "e7da2be46c337221387a83630da30e612fe515c504e08b5cb6f0d0f0d135b93b"
+  },
+  "scope": "Disposable Windows Edge, real IndexedDB/Web Locks/WebCrypto, synthetic funded roots and two same-origin tabs. No user identity, live chain transaction, transport activation or wallet credit."
+}
