@@ -1,5 +1,120 @@
 # Development freshness review
 
+## Development checkpoint checks, November 2, 2026
+
+Fresh verification passes 112 application/protocol/authentication regressions,
+28 proof/provenance/dependency/worker tests, and 16 reserve plus 26 adapter native
+tests. Guard suites pass for intake (13 alterations), executor/recipient (18),
+proof provenance (seven) and empty authentication (seven). These suites overlap;
+their counts are not a coverage percentage or a count of distinct vulnerabilities.
+The web build preserves all twelve recorded browser/metadata file hashes. Eight
+dependency metadata policies pass. Existing browser evidence remains dated to
+its original runs; it was not relabelled as a fresh device test. The reviewed
+preview frames and exact source/video/poster hashes remain unchanged.
+
+## Dependency cleanup and recipient checks, November 2, 2026
+
+The [cleanup record](security/dependency-cleanup-2026-11-02.md) binds the final
+Intents helper, proof utility and Rust compression changes. The isolated helper
+tree has one dependency and zero advisories; proof tooling retains 15 low entries;
+NEAR retains the documented crypto/runtime/maintenance findings. Checks pass 26
+authentication/quote/HTTP/receipt tests, seven auth alterations, 28 proof-related
+tests and 16/26 native contract tests. Both Wasm builds and the web build pass.
+All twelve saved browser/metadata file hashes and seven original proof artifact
+hashes match. The cache-provenance discrepancy for older Wasm targets is retained.
+
+The [recipient verifier](../carrier/defi-results.md) is a new developer module;
+the combined executor suite passes 21 tests and 18 guard alterations. It is not
+imported by the browser and cannot create wallet credit or release reservations.
+No app-runtime/cache or preview changes arise from this increment. No new preview
+render is required. Earlier sections record their original check counts.
+
+## Intents protobuf update, November 2, 2026
+
+The [protobuf compatibility review](security/intents-protobuf-refresh-2026-11-02.md)
+records a scoped cross-major override from 6.11.6 to 7.6.6, its required long
+4.0.0 to 5.3.2 change and two removed unused packages. SDK 0.93.0 and complete
+ICS23 generated-code package hashes are unchanged. A harmless bytes-default
+code-injection regression fails before and passes after. All 25 compatibility,
+quote, local HTTP and receipt tests pass; eight npm metadata policy checks pass.
+The updated Intents audit has 50 affected-package entries: 22 low, ten moderate,
+18 high and zero critical. Earlier 52-entry snapshots remain historical.
+
+No quote implementation, HTTP route, browser source/cache, preview or contract
+changed. No video refresh or app cache increment is needed. No user-wallet,
+live authentication, signing, execution or deployment ran. Remaining signer
+dependencies, bridge coverage, partner access, funded routes, privacy and recovery
+requirements remain open. The earlier proof-tooling report's metadata-policy
+hash identifies its historical check; the current policy report includes the
+updated Intents lock. Original advisory/proof evidence remains unchanged.
+
+## Proof-tooling utility update, November 2, 2026
+
+The [compatibility review](security/proof-dependency-refresh-2026-11-02.md)
+updates only `ws` and `underscore`, removing the four high-severity affected-package
+entries from the proof-tree registry result. Twenty low/moderate entries remain;
+the original snapshot below is historical. Cryptographic package versions and
+all seven original artifact hashes are unchanged. The explicit compatibility
+record preserves original build provenance while binding the refreshed lock and
+installed sources. Its directory digest uses unambiguous file records after a
+reproduced delimiter-encoding flaw; the review preserves that failure and the
+historical snapshot's comparison limit.
+
+Fresh checks pass 27 tests and seven deliberate provenance alterations. The
+browser build and eight-project dependency metadata policy check pass. Generated
+asset snapshot digests match; there is no app runtime, service-worker, identity,
+wallet, video or poster change from this update. No cache increment or preview
+re-export is required for these build-only changes. The combined runner's initial
+wrong-directory failure is retained alongside the passing corrected run.
+
+Intents and Rust advisories, proof residuals, full cryptographic/recovery review,
+physical devices and executor activation remain open. This slice does not approve
+publication or real-fund use. Earlier sections retain their dated scope.
+
+## Executor and security review, November 2, 2026
+
+The developer executor adds pinned final-block checks, durable dispatch attempts
+and reconciliation for existing supported NEAR actions. It preserves saved final
+observations and prevents a regressed chain response from causing a new dispatch.
+Intake conflict slots now bind the spending key, including older per-profile
+records. [Executor evidence](../carrier/defi-executor-results.json) passes 18 tests
+and 11 guard alterations; [intake](../carrier/defi-inbox-results.json) passes 18
+and 13. Wallet consent/atomic reservation, nearby handoff, independent recipient
+verification and live executor testing remain required before product activation.
+
+A relay cancellation during initial consent previously opened a socket. A new
+pre-construction abort check has a failing-before/passing-after regression and
+guard-removal control. Cache v41 loads the exact fixed module after a successful
+upgrade; a failed update retains the old offline app without changing identity,
+vault or reservations. The relay tooling now has the same lifecycle-script and
+exact-version policy as the other seven npm projects. No lockfile changed.
+
+The [component review](security/review-2026-11-02.md) records native reserve/adapter,
+Zcash, EVM, browser, ownership-model and dependency results with their limits.
+The explicit Solidity proof check passes separately from the 105-test default
+Aurora suite. The 52 Intents and 24 proof-tooling affected-package entries remain
+unresolved. The offline proof timeout remains unexplained; its failed and passing
+reports are both retained. These checks do not resolve private settlement,
+restoration, independent release authority, funded routes or device requirements.
+
+The later review assembled all twelve Solidity specialty passes and eight
+preparation areas, added their bounded contract scope and retained two unproved
+verifier leads. Source checks confirm the reviewed contracts are unchanged. The
+[Rust advisory snapshot](security/rust-dependency-audit-2026-11-02.json) adds scans
+of three unchanged Cargo locks using a pinned official database. The two NEAR
+locks share four vulnerability IDs in native-test dependencies; their Wasm build
+trees exclude those packages but retain an unmaintained allocator. The inspector
+has zero advisory matches within its narrower scope. Fresh intake/executor/relay
+and explicit EVM-proof checks pass; saved wider browser/native/media results were
+inspected with their limits. No product dependency or contract source changed.
+
+The saved preview flow was replayed in both themes without changing its three
+accounts. All six compositions and decoded-video checks pass; all 22 scene frames
+were visually reviewed. The videos total 2.99 MB and bind to 53 source files.
+Seven Edge playback checks pass, including offline seeking and unchanged account
+data. No new financial flow, funding, deployment, physical-device test or Git
+publication ran. The sections below retain their earlier dated scopes.
+
 ## Encrypted DeFi intake, November 2, 2026
 
 A developer inbox verifies encrypted Rhea swap and refund-return requests bound to

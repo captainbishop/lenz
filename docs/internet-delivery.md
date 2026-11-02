@@ -88,10 +88,17 @@ changes. Keep the local sponsor/wallet server private.
 
 ## Verification and limits
 
-Fifteen Node checks cover direction/contact separation, independent NIP-59 decoding,
+Sixteen Node checks cover direction/contact separation, independent NIP-59 decoding,
 fragment loss/reordering/duplicates, signatures, expiry, capacity, pagination,
 relay refusal, forged acknowledgements, disconnects and opt-out. Removing the
 fragment-authentication guard admits the forged negative control.
+
+The November 2 review reproduced a cancellation race: an abort during the initial
+asynchronous consent check could still open a relay connection. The socket now
+checks cancellation again before construction. The regression failed before the
+fix and passes afterward with zero sockets opened. This was a connection-metadata
+exposure; no message or payment transmission was demonstrated. Cache v41 carries
+the fix, with failed/successful update checks preserving identity and reservations.
 
 [Browser evidence](../web/nostr-browser-results.json) uses disposable Edge profiles,
 real WebCrypto/IndexedDB, actual Send actions and loopback WebSocket relays.

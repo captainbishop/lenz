@@ -67,7 +67,7 @@ export async function openDefiRequest(identity, sender, config, packet, now = Da
 }
 
 // Bind a local conflict slot to the economic input, not to randomized signature/ciphertext bytes.
-export const defiConflictId = r => digest([DEFI_REQUEST, 'input', r.sender, r.operation.kind,
+export const defiConflictId = r => digest([DEFI_REQUEST, 'input', r.operation.packet.instruction.owner, r.operation.kind,
   r.operation.packet.config.reserve, r.operation.kind === 'rhea-swap'
     ? r.operation.packet.instruction.input : r.operation.deposit.id]);
 

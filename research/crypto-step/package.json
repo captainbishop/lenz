@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test step.test.mjs",
+    "test": "node --test step.test.mjs artifact-provenance.test.mjs dependency-compatibility.test.mjs",
     "benchmark": "node benchmark.mjs",
     "mutations": "node mutations.mjs"
   },
@@ -14,5 +14,10 @@
     "circomlib": "2.0.5",
     "circomlibjs": "0.1.7",
     "snarkjs": "0.7.6"
+  },
+  "overrides": {
+    "@ethersproject/providers": { "ws": "8.22.1" },
+    "jsonpath": { "underscore": "1.13.8" },
+    "jake": { "filelist": { ".": "2.0.2", "minimatch": "11.0.4" } }
   }
 }

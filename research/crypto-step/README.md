@@ -1,5 +1,11 @@
 # Real payment-step proof experiment
 
+November 2 dependency status: [the latest cleanup](../security/dependency-cleanup-2026-11-02.md)
+retains the ws/underscore patches and adds compatible filelist/minimatch updates.
+Twenty-eight proof/provenance/dependency/worker tests pass; 15 low advisory
+entries remain. Original setup metadata, seven proof artifact hashes and saved
+browser assets match. The local TEST-ONLY setup remains unsuitable for funds.
+
 2026-10-25. Local research for Proof of U. This implements a one-input/two-output PLONK proof and connects its verifier to the existing dependency witness assembler. It is a custom circuit, not Orchard or a Zcash transfer. The full private settlement statement remains unimplemented.
 
 ## Statement and ownership
@@ -53,6 +59,30 @@ Dependencies are pinned in `package-lock.json`: `circom2` 0.2.23 (Circom 2.2.3),
 
 `build.mjs` uses power-14 universal parameters with one random local contribution. **These parameters are TEST ONLY, not an independently contributed production ceremony. Never use this setup for real funds.** Entropy and spending secrets are not saved. Generated build artifacts and dependencies are ignored by Git. New clean builds create different setup keys; saved sample proofs remain tied to their recorded sample verification key.
 
+### Existing-artifact dependency refresh
+
+The November 2 utility update pins `@ethersproject/providers`'s `ws` to 8.22.1
+and `jsonpath`'s `underscore` to 1.13.8 through scoped npm overrides. The compiler,
+circuit libraries and prover versions stay pinned above. See the
+[compatibility review](../security/proof-dependency-refresh-2026-11-02.md) for
+advisory results, verification and remaining limits.
+
+For the existing test setup, `dependency-refresh.json` binds the original build
+metadata and lock hashes to the reviewed current lock and installed package
+contents. `artifact-provenance.mjs`, used by the browser build, checks this record
+whenever the lock differs from the one that generated the setup. File records use
+JSON-encoded relative names and SHA-256 content hashes, so embedded delimiters
+cannot hide a changed file layout. Missing or extra package entries in the record,
+changed sources and changed proof artifacts cause a build failure. `node provenance-verification.mjs` checks the
+guards using disposable files, without generating new setup keys.
+
+This record applies only to its exact local artifacts and dependency bytes. It
+is not a signed release attestation or a malware scanner. A fresh `npm run build`
+records its own lock and new test keys; it does not need the older compatibility
+record. Do not regenerate an existing setup merely to clear a provenance failure.
+Dependency changes need compatibility review and a new exact record before the
+existing artifacts can be reused.
+
 The compiler uses its supported runner API with only the current folder preopened. Compilation writes into a fresh staging directory before copying completed artifacts. On this Windows/WASI host, runs targeting an already existing circuit-output directory stalled while fresh-directory runs completed. The exact upstream cause has not been established. Earlier attribution to binary assembly/optimization alone was incomplete; an attempted WABT alternative was removed.
 
 The selected `--O0` circuit has 8,892 R1CS constraints, 8,898 wires, seven public inputs and 11,964 PLONK gates in a 16,384-row domain. An earlier `--O2` experiment had fewer R1CS constraints (2,178) but expanded to 44,584 PLONK gates and exceeded the chosen parameters. R1CS count alone is not a PLONK cost estimate. No optimality claim is made for O0.
@@ -83,7 +113,7 @@ Observed on 2026-10-25: all 10 proof tests passed, all 10 circuit guard-removal 
 | Assembled witness JSON | 313,456 bytes |
 | Whole benchmark process peak resident memory | 399.56 MiB |
 
-These desktop costs are a feasibility baseline, not an acceptable mobile latency promise. Proof generation uses snarkjs's single-thread option; verification initializes its cached curve on first use. Dependencies have not received a security audit in this work.
+These desktop costs are a feasibility baseline, not an acceptable mobile latency promise. Proof generation uses snarkjs's single-thread option; verification initializes its cached curve on first use. The November 2 dependency checks are bounded advisory and compatibility checks, not a complete package-code audit.
 
 ## Privacy and remaining boundaries
 

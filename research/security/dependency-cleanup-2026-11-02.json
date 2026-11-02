@@ -1,0 +1,788 @@
+{
+  "checkedAt": "2026-11-02T16:58:08.700Z",
+  "scope": "Bounded dependency remediation and compatibility checks. No live authentication, funding, financial transaction, deployment, user-wallet operation or new proof setup.",
+  "intents": {
+    "beforePackageEntries": 586,
+    "packageEntries": 1,
+    "retainedDependency": "@scure/base 1.2.6",
+    "sdkFixtures": {
+      "sdk": "0.93.0",
+      "compared": 32,
+      "checkedAt": "2026-11-02T16:30:35.982Z",
+      "sourceHashes": {
+        "src/intents/expirable-nonce.cjs": "a4a921f223df0c5664c85669ff8f2de26139529d52bfb9c4f3b26cb883b99586",
+        "src/intents/intent-payload-builder.cjs": "df62c4a358b8445ba45542df56a4450d1c74f663d46796ebfdc58b4763ce3f52",
+        "src/intents/salt-manager.cjs": "f053bf2d708fbae54a0e75e29256dbff3d76367553888846650113e7d78da9d1"
+      }
+    },
+    "tests": {
+      "command": "node --test --test-reporter=tap integrations/intents-auth-payload.test.mjs integrations/quotes.test.mjs web/defi-relay.test.mjs contracts/client.test.mjs",
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "rawSha256": "1f2d6adc8f9f13eec832fa49cc4c9bb001eac9f53d980b537322a6c9c4b5037e"
+    },
+    "mutations": {
+      "checkedAt": "2026-11-02T16:47:42.664Z",
+      "sourceHash": "946c7554b141e458030b387064c9fb917ba819c94cfc76fe882864504f391441",
+      "results": [
+        {
+          "name": "signer",
+          "failedTests": [
+            "authentication refuses malformed identity, salt, randomness, lifetime and overflowing times"
+          ]
+        },
+        {
+          "name": "lifetime",
+          "failedTests": [
+            "authentication refuses malformed identity, salt, randomness, lifetime and overflowing times"
+          ]
+        },
+        {
+          "name": "salt-length",
+          "failedTests": [
+            "authentication refuses malformed identity, salt, randomness, lifetime and overflowing times"
+          ]
+        },
+        {
+          "name": "random-length",
+          "failedTests": [
+            "authentication refuses malformed identity, salt, randomness, lifetime and overflowing times"
+          ]
+        },
+        {
+          "name": "rpc-binding",
+          "failedTests": [
+            "salt lookup pins contract, view method and finality and rejects malformed responses"
+          ]
+        },
+        {
+          "name": "salt-format",
+          "failedTests": [
+            "salt lookup pins contract, view method and finality and rejects malformed responses"
+          ]
+        },
+        {
+          "name": "nonce-domain",
+          "failedTests": [
+            "all 32 saved official-SDK payload fixtures remain byte-identical",
+            "empty authentication matches the SDK v0 wire format and has no token actions"
+          ]
+        }
+      ]
+    },
+    "audit": {
+      "capturedAt": "2026-11-02T16:34:15.818Z",
+      "rawSha256": "7b128b18b3c78980c595461643e5396c001ac428f604438bb7efd180b955b8e4",
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "vulnerabilities": {}
+    },
+    "limits": "Only empty authentication payloads are implemented. Existing independent 1Click quote verification is retained. No full Intents SDK execution, live provider authentication recheck, partner credentials, funded route or privacy guarantee."
+  },
+  "proof": {
+    "tests": {
+      "checkedAt": "2026-11-02T16:46:40.222Z",
+      "node": "v24.21.0",
+      "platform": "win32",
+      "cwd": "research/crypto-step",
+      "command": "node --test --test-reporter=tap step.test.mjs artifact-provenance.test.mjs dependency-compatibility.test.mjs ../../web/build-proof-worker.test.mjs ../../web/proof-worker.test.mjs",
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "sourceFiles": {
+        "research/crypto-step/package.json": "5a8b9f41ce067e5ccbee83e41575365c600120ac4defdcb9884142d2342b510e",
+        "research/crypto-step/package-lock.json": "677aa572bfc75ffc3f2a99e321c42a6803ef64bac45d1758556f72712148efdf",
+        "research/crypto-step/artifact-provenance.mjs": "6aac8bc817f861473035ea5ea3125f680f6b83080e75581089a686d6b5d7bd0b",
+        "research/crypto-step/dependency-refresh.json": "bbf2400dd19627bed4587805aeadb28c170ee49bcbdff26f07c609d015bc6670",
+        "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
+        "web/build.mjs": "a6552cdc5ff784840b5513aa621f4e802fb6d0560f93eab35c01c4e599746edc",
+        "web/build-proof-worker.mjs": "c5cb1a33614a291a385ff400af8d55f7c1a1be4cb592b8abcadb021d9db41f2c",
+        "web/public/proof-worker.js": "dfe3fa893225fcbc26c83c4dc28fc7ddb6a3dee39ecfcc09ce4e6f7bc02ae017",
+        "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
+        "research/crypto-step/artifact-provenance.test.mjs": "c7df1c0ea829691f2e6ec0e2aea0783a90118dc34d2b6f8f30a646d7373b91c3",
+        "research/crypto-step/dependency-compatibility.test.mjs": "81b29d3011c3baa613c90531ad116542fc30386cc43efaf987ca86cedc5344b2",
+        "web/build-proof-worker.test.mjs": "3d7affff36fc7e3b079775069c9a684c65ef46497f08c977468cb4f6584b2b54",
+        "web/proof-worker.test.mjs": "f65adfb91202823932f8c3ecf425193b464018ab859def16af4c1609fdc680a1"
+      }
+    },
+    "packageEntries": 128,
+    "changes": [
+      {
+        "path": "node_modules/balanced-match",
+        "from": "1.0.2",
+        "to": "4.0.4"
+      },
+      {
+        "path": "node_modules/brace-expansion",
+        "from": "2.1.7",
+        "to": "5.0.12"
+      },
+      {
+        "path": "node_modules/filelist",
+        "from": "1.0.6",
+        "to": "2.0.2"
+      },
+      {
+        "path": "node_modules/minimatch",
+        "from": "5.1.9",
+        "to": "11.0.4"
+      },
+      {
+        "path": "node_modules/underscore",
+        "from": "1.13.6",
+        "to": "1.13.8"
+      },
+      {
+        "path": "node_modules/ws",
+        "from": "8.18.0",
+        "to": "8.22.1"
+      },
+      {
+        "path": "node_modules/@isaacs/nonrecursive-glob-match",
+        "from": null,
+        "to": "1.0.3"
+      }
+    ],
+    "audit": {
+      "capturedAt": "2026-11-02T16:45:49.107Z",
+      "rawSha256": "e2cc831a5740e18bca53b2807d09c4de81fbd6d1fc8543ce030a4abee9a1b28a",
+      "counts": {
+        "info": 0,
+        "low": 15,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 15
+      },
+      "vulnerabilities": {
+        "@ethersproject/abi": {
+          "name": "@ethersproject/abi",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/hash"
+          ],
+          "effects": [
+            "@ethersproject/contracts",
+            "ethers"
+          ],
+          "range": "5.0.10 - 5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/abi"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/abstract-provider": {
+          "name": "@ethersproject/abstract-provider",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/transactions"
+          ],
+          "effects": [
+            "@ethersproject/abstract-signer",
+            "@ethersproject/contracts",
+            "@ethersproject/providers",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/@ethersproject/abstract-provider"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/abstract-signer": {
+          "name": "@ethersproject/abstract-signer",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-provider"
+          ],
+          "effects": [
+            "@ethersproject/contracts",
+            "@ethersproject/hash",
+            "@ethersproject/hdnode",
+            "@ethersproject/json-wallets",
+            "@ethersproject/providers",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/@ethersproject/abstract-signer"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/contracts": {
+          "name": "@ethersproject/contracts",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abi",
+            "@ethersproject/abstract-provider",
+            "@ethersproject/abstract-signer",
+            "@ethersproject/transactions"
+          ],
+          "effects": [
+            "ethers"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/@ethersproject/contracts"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/hash": {
+          "name": "@ethersproject/hash",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-signer"
+          ],
+          "effects": [
+            "@ethersproject/abi",
+            "@ethersproject/providers",
+            "@ethersproject/wallet",
+            "@ethersproject/wordlists",
+            "ethers"
+          ],
+          "range": "5.0.6 - 5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/hash"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/hdnode": {
+          "name": "@ethersproject/hdnode",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-signer",
+            "@ethersproject/signing-key",
+            "@ethersproject/transactions",
+            "@ethersproject/wordlists"
+          ],
+          "effects": [
+            "@ethersproject/json-wallets",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/@ethersproject/hdnode"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/json-wallets": {
+          "name": "@ethersproject/json-wallets",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-signer",
+            "@ethersproject/hdnode",
+            "@ethersproject/transactions"
+          ],
+          "effects": [
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/@ethersproject/json-wallets"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/providers": {
+          "name": "@ethersproject/providers",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-provider",
+            "@ethersproject/abstract-signer",
+            "@ethersproject/hash",
+            "@ethersproject/transactions"
+          ],
+          "effects": [
+            "ethers"
+          ],
+          "range": "<=5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/providers"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/signing-key": {
+          "name": "@ethersproject/signing-key",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "elliptic"
+          ],
+          "effects": [
+            "@ethersproject/hdnode",
+            "@ethersproject/transactions",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "<=5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/signing-key"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/transactions": {
+          "name": "@ethersproject/transactions",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/signing-key"
+          ],
+          "effects": [
+            "@ethersproject/abstract-provider",
+            "@ethersproject/contracts",
+            "@ethersproject/hdnode",
+            "@ethersproject/json-wallets",
+            "@ethersproject/providers",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "<=5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/transactions"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/wallet": {
+          "name": "@ethersproject/wallet",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abstract-provider",
+            "@ethersproject/abstract-signer",
+            "@ethersproject/hash",
+            "@ethersproject/hdnode",
+            "@ethersproject/json-wallets",
+            "@ethersproject/signing-key",
+            "@ethersproject/transactions",
+            "@ethersproject/wordlists"
+          ],
+          "effects": [
+            "ethers"
+          ],
+          "range": "<=5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/wallet"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "@ethersproject/wordlists": {
+          "name": "@ethersproject/wordlists",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/hash"
+          ],
+          "effects": [
+            "@ethersproject/hdnode",
+            "@ethersproject/wallet",
+            "ethers"
+          ],
+          "range": "5.0.8 - 5.8.0",
+          "nodes": [
+            "node_modules/@ethersproject/wordlists"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "circomlibjs": {
+          "name": "circomlibjs",
+          "severity": "low",
+          "isDirect": true,
+          "via": [
+            "ethers"
+          ],
+          "effects": [],
+          "range": ">=0.1.0",
+          "nodes": [
+            "node_modules/circomlibjs"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "elliptic": {
+          "name": "elliptic",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            {
+              "source": 1112030,
+              "name": "elliptic",
+              "dependency": "elliptic",
+              "title": "Elliptic Uses a Cryptographic Primitive with a Risky Implementation",
+              "url": "https://github.com/advisories/GHSA-848j-6mx2-7j84",
+              "severity": "low",
+              "cwe": [
+                "CWE-1240"
+              ],
+              "cvss": {
+                "score": 5.6,
+                "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L"
+              },
+              "range": "<=6.6.1"
+            }
+          ],
+          "effects": [
+            "@ethersproject/signing-key"
+          ],
+          "range": "*",
+          "nodes": [
+            "node_modules/elliptic"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        },
+        "ethers": {
+          "name": "ethers",
+          "severity": "low",
+          "isDirect": false,
+          "via": [
+            "@ethersproject/abi",
+            "@ethersproject/abstract-provider",
+            "@ethersproject/abstract-signer",
+            "@ethersproject/contracts",
+            "@ethersproject/hash",
+            "@ethersproject/hdnode",
+            "@ethersproject/json-wallets",
+            "@ethersproject/providers",
+            "@ethersproject/signing-key",
+            "@ethersproject/transactions",
+            "@ethersproject/wallet",
+            "@ethersproject/wordlists"
+          ],
+          "effects": [
+            "circomlibjs"
+          ],
+          "range": "5.0.0-beta.119 - 5.8.0",
+          "nodes": [
+            "node_modules/ethers"
+          ],
+          "fixAvailable": {
+            "name": "circomlibjs",
+            "version": "0.0.8",
+            "isSemVerMajor": true
+          }
+        }
+      }
+    },
+    "unchangedArtifacts": {
+      "step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
+      "node_modules/circom2/circom.wasm": "96fc92a93768f38979db6c2bac4b1aa9fc7d66742121a63d4c4792d5b4037162",
+      "build/step.r1cs": "1c7a5fff0389c8c3f76da1eb0903c51dca6d2d63f48d3841051be6e92dfe9c31",
+      "build/step_js/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+      "build/local-test-only.ptau": "cadd3b35a4775afebb14c39671d2ca5d592380beaff39c2b42e30b92734c201e",
+      "build/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+      "build/verification-key.json": "b0cc47c8100d16a59cfc2e40cac208deb454258cd165f60099e52cd9c198e45e"
+    },
+    "unchangedBrowserAndMetadataFiles": {
+      "web/public/vendor/ffjavascript-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+      "web/public/vendor/ffjavascript-worker.js": "d62dee6cff2bf15bb9bce562d1d35bd96a045bcd30557010894d35c3334f699e",
+      "web/public/vendor/ffjavascript.js": "eac6ef8180ed3cf0500c68efa172164dcf663f46c432f891aa7d6331483d9652",
+      "web/public/vendor/poseidon.js": "6583b16f417a28075e49e1cfc01e17b0e9e4cd1b4f4d3484d780910391fcf9ec",
+      "web/public/vendor/poseidon_constants_opt.js": "5d24cde82a0858cc17f4941bd2a18f4a69906f3d050cd5f19d0d221802abd1bd",
+      "web/public/vendor/snarkjs-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+      "web/public/vendor/snarkjs.js": "52645f2ff4662b5192c89e7a0d7315e763faa18aece53657a176cfd6e4e5a1f9",
+      "web/public/assets/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+      "web/public/assets/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+      "web/public/config.js": "0464118f2489bd0032a89a00c7f5459db29852904b4a44f04b7e71e44b29372b",
+      "web/public/capsule.js": "a9264ae81c4b9b40a6f4bbf5dbf4317c0c32dc913dd86905b4e8da1fc7bf57fb",
+      "research/crypto-step/build/build-metadata.json": "f55c8a7e58035d5ab7396edd08876ab6d894ec5874a1aae8627cb4ea1e206a4e"
+    },
+    "limits": "Fifteen low affected-package entries remain through elliptic 6.6.1. Original TEST-ONLY setup and cryptographic packages retained. Neither this audit nor compatibility tests establish proof soundness."
+  },
+  "rust": {
+    "reserve": {
+      "lockSha256": "064a8c486bd27b37009adef584d44106d9c62b2b1817ac840711d6d495bd87de",
+      "changes": [
+        {
+          "package": "zstd",
+          "from": "0.13.3",
+          "to": "0.13.4"
+        },
+        {
+          "package": "zstd-safe",
+          "from": "7.3.0",
+          "to": "7.4.0"
+        }
+      ],
+      "results": {
+        "test": {
+          "checkedAt": "2026-11-02T16:37:59.3626217Z",
+          "action": "test",
+          "exitCode": 0,
+          "sourceSha256": "49c7462621c487d60452a03bdac6001f6aad467d62d2f0331133c71e38a7c9fb",
+          "cargoLockSha256": "064a8c486bd27b37009adef584d44106d9c62b2b1817ac840711d6d495bd87de",
+          "log": "contracts/test-output.txt",
+          "scope": "Local Rust result only; no deployment or network transaction.",
+          "logSha256": "774902e6370e467e74f3ba53e516b8b740a42b1014d7507eac8974cb23d959a7",
+          "rawLogSha256": "cba0eae7578f2a404eb57d3c16b6e301b42ec73a4e965057addabdf2b758da9f",
+          "passed": 16
+        },
+        "wasm": {
+          "checkedAt": "2026-11-02T16:49:39.7661207Z",
+          "action": "wasm",
+          "exitCode": 0,
+          "sourceSha256": "49c7462621c487d60452a03bdac6001f6aad467d62d2f0331133c71e38a7c9fb",
+          "cargoLockSha256": "064a8c486bd27b37009adef584d44106d9c62b2b1817ac840711d6d495bd87de",
+          "log": "contracts/wasm-output.txt",
+          "scope": "Local Rust result only; no deployment or network transaction.",
+          "logSha256": "810c54bba9b7c9eadf1bfd4eaca201a03a126e4d3d50af68a2ff8ccc6510b7d0",
+          "rawLogSha256": "810c54bba9b7c9eadf1bfd4eaca201a03a126e4d3d50af68a2ff8ccc6510b7d0"
+        }
+      },
+      "audit": {
+        "capturedAt": "2026-11-02T16:41:19.901Z",
+        "rawSha256": "5d97dc15ff0dd64fdf59202f80234e1b3f30d9c2b092dbd19c4a61233b91ed9a",
+        "database": {
+          "advisory-count": 1402,
+          "last-commit": null,
+          "last-updated": null
+        },
+        "vulnerabilities": [
+          {
+            "id": "RUSTSEC-2026-0387",
+            "package": "crypto-bigint",
+            "version": "0.5.5",
+            "title": "Multiple timing variability issues in operations intended to be constant-time",
+            "patched": [
+              ">=0.7.6"
+            ],
+            "url": "https://github.com/RustCrypto/crypto-bigint/pull/1365"
+          }
+        ],
+        "warnings": {
+          "unmaintained": [
+            {
+              "id": "RUSTSEC-2024-0449",
+              "package": "unsafe-libyaml",
+              "version": "0.2.11",
+              "title": "unsafe-libyaml is unmaintained",
+              "patched": [],
+              "url": "https://github.com/dtolnay/unsafe-libyaml"
+            },
+            {
+              "id": "RUSTSEC-2022-0054",
+              "package": "wee_alloc",
+              "version": "0.4.5",
+              "title": "wee_alloc is Unmaintained",
+              "patched": [],
+              "url": "https://github.com/rustwasm/wee_alloc/issues/107"
+            }
+          ],
+          "unsound": [
+            {
+              "id": "RUSTSEC-2026-0253",
+              "package": "lru",
+              "version": "0.16.4",
+              "title": "Potential use-after-free due to lack of panic safety in `LruCache::pop()`",
+              "patched": [
+                ">=0.18.2"
+              ],
+              "url": "https://github.com/jeromefroe/lru-rs/pull/238"
+            }
+          ]
+        }
+      },
+      "currentWasmSha256": "df4c7870fe9743ccaf63df219c4e4179a415fd5ac1f658c713b1eb422a14c418"
+    },
+    "adapter": {
+      "lockSha256": "c674a27d1e188f172b5056f525b0586a8f1479b71754e7f19a962eea028e94a2",
+      "changes": [
+        {
+          "package": "zstd",
+          "from": "0.13.3",
+          "to": "0.13.4"
+        },
+        {
+          "package": "zstd-safe",
+          "from": "7.3.0",
+          "to": "7.4.0"
+        }
+      ],
+      "results": {
+        "test": {
+          "checkedAt": "2026-11-02T16:38:09.3714287Z",
+          "action": "test",
+          "exitCode": 0,
+          "sourceSha256": "339d28408234647b9ced9b973175a44340c6d83608ed73325f9cf42e47b52041",
+          "cargoLockSha256": "c674a27d1e188f172b5056f525b0586a8f1479b71754e7f19a962eea028e94a2",
+          "log": "contracts/adapter/test-output.txt",
+          "scope": "Local Rust result only; no deployment or network transaction.",
+          "logSha256": "95567a69c21ddfe54b9772bef3882f49c1957d07c8c79fd814bad294fe66ea15",
+          "rawLogSha256": "6155c5507463f341e32efae70296223485ca13a9f2bff1fba379dc673c6e410e",
+          "passed": 26
+        },
+        "wasm": {
+          "checkedAt": "2026-11-02T16:49:40.7412179Z",
+          "action": "wasm",
+          "exitCode": 0,
+          "sourceSha256": "339d28408234647b9ced9b973175a44340c6d83608ed73325f9cf42e47b52041",
+          "cargoLockSha256": "c674a27d1e188f172b5056f525b0586a8f1479b71754e7f19a962eea028e94a2",
+          "log": "contracts/adapter/wasm-output.txt",
+          "scope": "Local Rust result only; no deployment or network transaction.",
+          "logSha256": "3d9629f373307ff96c90f5df0ee27681e0c3017820f348f99fff24dc9ca59b6c",
+          "rawLogSha256": "3d9629f373307ff96c90f5df0ee27681e0c3017820f348f99fff24dc9ca59b6c"
+        }
+      },
+      "audit": {
+        "capturedAt": "2026-11-02T16:41:20.825Z",
+        "rawSha256": "b211ad98adb2c14c8d9a730bed226fff28810cecf713ddee0099a940dda51e13",
+        "database": {
+          "advisory-count": 1402,
+          "last-commit": null,
+          "last-updated": null
+        },
+        "vulnerabilities": [
+          {
+            "id": "RUSTSEC-2026-0387",
+            "package": "crypto-bigint",
+            "version": "0.5.5",
+            "title": "Multiple timing variability issues in operations intended to be constant-time",
+            "patched": [
+              ">=0.7.6"
+            ],
+            "url": "https://github.com/RustCrypto/crypto-bigint/pull/1365"
+          }
+        ],
+        "warnings": {
+          "unmaintained": [
+            {
+              "id": "RUSTSEC-2024-0449",
+              "package": "unsafe-libyaml",
+              "version": "0.2.11",
+              "title": "unsafe-libyaml is unmaintained",
+              "patched": [],
+              "url": "https://github.com/dtolnay/unsafe-libyaml"
+            },
+            {
+              "id": "RUSTSEC-2022-0054",
+              "package": "wee_alloc",
+              "version": "0.4.5",
+              "title": "wee_alloc is Unmaintained",
+              "patched": [],
+              "url": "https://github.com/rustwasm/wee_alloc/issues/107"
+            }
+          ],
+          "unsound": [
+            {
+              "id": "RUSTSEC-2026-0253",
+              "package": "lru",
+              "version": "0.16.4",
+              "title": "Potential use-after-free due to lack of panic safety in `LruCache::pop()`",
+              "patched": [
+                ">=0.18.2"
+              ],
+              "url": "https://github.com/jeromefroe/lru-rs/pull/238"
+            }
+          ]
+        }
+      },
+      "currentWasmSha256": "1c2d143dcb7549ff0c961ec61d4c46ce4901aaddd484865ec41919237a26b520"
+    }
+  },
+  "wasmComparison": {
+    "initialCached": {
+      "reserve": "be94412f5384d3a291874696e568f943219f7b99cd88084544849e2fd4d97aa8",
+      "adapter": "53b9b2ebb270ceb643aae7f07fcb4ab852ca47882bd17375b27db04d45bc4a80"
+    },
+    "current": {
+      "reserve": "df4c7870fe9743ccaf63df219c4e4179a415fd5ac1f658c713b1eb422a14c418",
+      "adapter": "1c2d143dcb7549ff0c961ec61d4c46ce4901aaddd484865ec41919237a26b520"
+    },
+    "controlledRebuild": "Old and new locks were rebuilt with the same current command/toolchain; both produced the current hashes. Original cached target hashes differed and that cache provenance discrepancy remains unexplained. No deployment occurred.",
+    "archivedAdapterCandidateSha256": "53b9b2ebb270ceb643aae7f07fcb4ab852ca47882bd17375b27db04d45bc4a80"
+  },
+  "retainedFailures": [
+    "Minimatch-only override made the real Windows filelist glob return no files; updating filelist fixed the regression.",
+    "Sibling overrides left a nested minimatch 10.2.6; nested filelist override now pins 11.0.4 and the actual tree is checked.",
+    "Initial proof snapshot refresh rejected the unexpected nested entry; final tree reviewed before refreshing.",
+    "Initial cached Wasm bytes differ from controlled rebuild outputs; do not equate them."
+  ],
+  "sourceFiles": {
+    "integrations/package.json": "f6ce7314355e90ba77f54cb97f04a2bfa4359abf510028616f5dc9fb0bf22d59",
+    "integrations/package-lock.json": "6de47c02d814b93090315193a2b31b31d2db7abfc4c1ddd1219d44688d7fcdbd",
+    "integrations/intents-auth-payload.mjs": "946c7554b141e458030b387064c9fb917ba819c94cfc76fe882864504f391441",
+    "integrations/intents-auth-payload.test.mjs": "e07c657e0fdeee57bc37a652108b0815fadea10393be96fd7daaa673820458ad",
+    "integrations/intents-auth-sdk-fixtures.json": "60691cb248ac7060479b14fcced92b13226729328af232e4dc4f2f1385df1e39",
+    "integrations/disposable-intents-session.mjs": "a5d769d63b806d1f603cb999b3d5ba125ebc54c13141e04fb8e918e906fc86f3",
+    "integrations/check-installed.mjs": "106164b4e6dfaf1c4aff5b8109f8b592073c0230199cf3a6bbb3c491303702f9",
+    "integrations/installation-results.json": "88aecc48a894741eb3ac6200056cdf5cd445f16c0005ae51c4764585655b3edd",
+    "research/crypto-step/package.json": "5a8b9f41ce067e5ccbee83e41575365c600120ac4defdcb9884142d2342b510e",
+    "research/crypto-step/package-lock.json": "677aa572bfc75ffc3f2a99e321c42a6803ef64bac45d1758556f72712148efdf",
+    "research/crypto-step/dependency-refresh.json": "bbf2400dd19627bed4587805aeadb28c170ee49bcbdff26f07c609d015bc6670",
+    "research/crypto-step/dependency-compatibility.test.mjs": "81b29d3011c3baa613c90531ad116542fc30386cc43efaf987ca86cedc5344b2",
+    "contracts/Cargo.lock": "064a8c486bd27b37009adef584d44106d9c62b2b1817ac840711d6d495bd87de",
+    "contracts/adapter/Cargo.lock": "c674a27d1e188f172b5056f525b0586a8f1479b71754e7f19a962eea028e94a2"
+  }
+}

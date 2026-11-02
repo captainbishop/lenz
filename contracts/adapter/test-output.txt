@@ -1,34 +1,34 @@
    Compiling lenz-rhea-adapter v0.1.0 (<workspace>\contracts\adapter)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.12s
-     Running unittests src\lib.rs (contracts\target\debug\deps\lenz_rhea_adapter-334f638602b5b784.exe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.53s
+     Running unittests src\lib.rs (contracts\target\debug\deps\lenz_rhea_adapter-ed72bb5068407f30.exe)
 
 running 26 tests
 test tests::failed_reserve_redemption_never_credits_input ... ok
-test tests::expiry_before_deposit_refunds_without_exchange_call ... ok
 test tests::expiry_before_swap_withdraws_input_without_swapping ... ok
+test tests::expiry_before_deposit_refunds_without_exchange_call ... ok
 test tests::ambiguous_withdrawal_or_below_minimum_output_freezes ... ok
 test tests::output_payout_failure_is_retryable ... ok
 test tests::another_adapter_or_network_domain_signature_is_rejected ... ok
-test tests::oversized_success_is_not_mistaken_for_failed_swap_or_payout ... ok
 test tests::ambiguous_deposits_freeze_instead_of_spending_shared_balance ... ok
-test tests::recovery_cannot_attribute_a_sibling_orders_redemption_to_this_order ... ok
+test tests::oversized_success_is_not_mistaken_for_failed_swap_or_payout ... ok
 test tests::recovery_queries_only_the_configured_reserve_without_moving_money ... ok
-test tests::recovery_racing_original_or_duplicate_callbacks_cannot_restore_spent_backing ... ok
 test tests::recovery_rejects_external_or_unbound_callback_results ... ok
-test tests::rejects_unicode_input_without_invalid_utf8_slice - should panic ... ok
-test tests::rejects_callback_without_result - should panic ... ok
+test tests::recovery_cannot_attribute_a_sibling_orders_redemption_to_this_order ... ok
 test tests::every_signed_field_and_configuration_is_bound ... ok
+test tests::recovery_racing_original_or_duplicate_callbacks_cannot_restore_spent_backing ... ok
 test tests::rejects_external_callback - should panic ... ok
+test tests::rejects_callback_without_result - should panic ... ok
 test tests::rejects_replayed_callback - should panic ... ok
-test tests::verifies_actual_edge_signatures_and_matches_order_id ... ok
+test tests::rejects_unicode_input_without_invalid_utf8_slice - should panic ... ok
 test tests::recovery_restores_only_exact_redemption_and_expiry_can_refund_once ... ok
+test tests::verifies_actual_edge_signatures_and_matches_order_id ... ok
 test tests::wrong_note_amount_is_rejected ... ok
 test tests::zero_deposit_result_refunds ... ok
-test tests::recovery_unknown_failed_and_foreign_consumption_remain_unavailable ... ok
 test tests::slippage_failure_and_refund_payout_retry ... ok
+test tests::recovery_unknown_failed_and_foreign_consumption_remain_unavailable ... ok
 test tests::wrong_owner_does_not_poison_input_and_second_order_cannot_reuse_it ... ok
 test tests::successful_flow_binds_output_and_never_repeats_inflight_or_terminal_calls ... ok
 test tests::recovery_never_rewinds_other_stages_even_with_matching_consumption ... ok
 
-test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.73s
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.17s
 

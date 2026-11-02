@@ -2,7 +2,7 @@
 
 Rhea, NEAR Intents, Zcash and privacy are part of the current Lenz build alongside NEAR settlement. These modules implement the quote stage. The separate [Rhea adapter](../contracts/adapter/README.md) now has funded testnet swap/refund and browser evidence. A [native shielded Zcash transfer](../zcash/pczt.md) is confirmed, with separate [unsigned browser review and expiry checks](../zcash/payment-freshness.md). NEAR Intents execution, browser Zcash signing, the shielded DeFi route and private NEAR settlement remain incomplete. Aurora has local execution/verifier evidence; no separate Aurora Intents connection is implemented.
 
-October 30: [installation checks](installation-results.json) confirm Intents SDK 0.93.0 and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) adds SDK 0.1.26 and requires valid signatures on preview quotes. The latest confidential live preview still returns HTTP 401.
+November 2: [installation checks](installation-results.json) confirm the empty-authentication payload builder and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) retains SDK 0.1.26 and requires valid signatures on preview quotes. The latest confidential live preview still returns HTTP 401.
 
 `web/server.mjs` now mounts these same-origin local routes:
 
@@ -21,10 +21,10 @@ The [1Click quote API](https://docs.near-intents.org/api-reference/oneclick/requ
 ## Local evidence
 
 ```powershell
-node --test integrations/quotes.test.mjs web/defi-relay.test.mjs contracts/client.test.mjs
+node --test integrations/intents-auth-payload.test.mjs integrations/quotes.test.mjs web/defi-relay.test.mjs contracts/client.test.mjs
 ```
 
-Twenty tests passed on October 30: thirteen quote/authentication tests, four local route tests and three NEAR receipt tests. Upstream responses are fixtures, with real local signatures for the quote-verification tests. Checks include altered terms, signature/key substitution, timestamp freshness, confidentiality downgrade, slippage, inconsistent blocks and receipt handling. Both removed signature/freshness guards were detected. These are not evidence of a live provider signature or executed Intents swap.
+Twenty-six tests passed on November 2: six empty-authentication checks plus the existing thirteen quote/authentication, four local route and three NEAR receipt checks. Upstream responses are fixtures, with real local signatures. Checks include altered terms, signature/key substitution, timestamp freshness, confidentiality downgrade, slippage, inconsistent blocks and receipt handling. The earlier quote signature/freshness controls and seven new authentication guard/domain alterations are detected. These are not evidence of a live provider signature or executed Intents swap.
 
 Live checks run with:
 
@@ -38,7 +38,18 @@ These scripts save dated result files and return nonzero on failure. [Rhea's liv
 
 Confidential quote requests still return HTTP 401. The public token list works. A user-session token was also rejected by the quote endpoint, so it is not substituted for partner credentials. Partner access is not configured. Obtain one through the [partner dashboard](https://partners.near-intents.org), configure `LENZ_INTENTS_API_KEY` only in the server environment, and rerun the dry quote check. Do not paste it into chat or put it in browser assets. The [authentication docs](https://docs.near-intents.org/integration/distribution-channels/1click-api/authentication) distinguish partner and user-session credentials. No public-route fallback was used.
 
-The experimental signer dependencies are isolated here: `@defuse-protocol/intents-sdk` 0.93.0, pinned by the lockfile. Its ESM entry fails under Node due to an extensionless import; the probe uses its supported CommonJS export without patching dependencies. [dependency-audit.json](dependency-audit.json) records 52 package findings (17 low, 10 moderate, 24 high, 1 critical). These need assessment before broader signer use. The quote routes do not import this SDK.
+The experimental bridge SDK was used only for an empty authentication payload and
+a probe. It has been removed. The current lock contains only `@scure/base` 1.2.6
+and reports zero registry advisories. The bounded [authentication builder](intents-auth-payload.mjs)
+retains the SDK v0 wire format, validated against [32 official-SDK fixtures](intents-auth-sdk-fixtures.json)
+before removal. The existing disposable signer remains; no live authentication
+was repeated after this change. Quote routes retain their separate verifier.
+
+The [cleanup evidence](../research/security/dependency-cleanup-2026-11-02.md)
+records compatibility checks and scope. The original [dependency audit](dependency-audit.json)
+and [protobuf update](../research/security/intents-protobuf-refresh-2026-11-02.md)
+describe the retired SDK environment. No bridge/token execution is implemented
+by this replacement; full Intents integration remains open.
 
 The NEAR reserve now builds, deploys and redeems. [Rhea's funded test](../contracts/rhea-flow-results.json) created tUSD/wrapped-NEAR pool 2870, rejected an impossible minimum without debiting deposits, swapped one tUSD for `16631929970821175489787` base units of wrapped test NEAR and withdrew the output into the disposable account. Every successful call includes final receipts. The documented `register_tokens` example omitted the required one-yocto deposit; a live failure identified it and the corrected run passed. The deployed code hash is recorded; source-to-bytecode equivalence has not been established.
 

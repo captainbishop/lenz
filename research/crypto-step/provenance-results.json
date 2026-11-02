@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-11-02T15:30:45.218Z",
+  "node": "v24.21.0",
+  "platform": "win32",
+  "scope": "Temporary file fixtures and deliberate guard changes. No dependency installation, new setup, blockchain calls or wallet operation.",
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "mutations": [
+    {
+      "name": "original-metadata",
+      "detected": true,
+      "failedTests": [
+        "refresh rejects changed lock, original build, dependency source and proof artifact"
+      ]
+    },
+    {
+      "name": "original-lock",
+      "detected": true,
+      "failedTests": [
+        "refresh requires complete sources and both original and current lock identities"
+      ]
+    },
+    {
+      "name": "current-lock",
+      "detected": true,
+      "failedTests": [
+        "refresh rejects changed lock, original build, dependency source and proof artifact",
+        "refresh requires complete sources and both original and current lock identities"
+      ]
+    },
+    {
+      "name": "package-sources",
+      "detected": true,
+      "failedTests": [
+        "refresh rejects changed lock, original build, dependency source and proof artifact"
+      ]
+    },
+    {
+      "name": "artifact",
+      "detected": true,
+      "failedTests": [
+        "original setup verifies without a refresh and still rejects changed artifacts",
+        "refresh rejects changed lock, original build, dependency source and proof artifact"
+      ]
+    },
+    {
+      "name": "package-coverage",
+      "detected": true,
+      "failedTests": [
+        "refresh requires complete sources and both original and current lock identities"
+      ]
+    },
+    {
+      "name": "digest-boundaries",
+      "detected": true,
+      "failedTests": [
+        "package digests distinguish embedded delimiters from separate files"
+      ]
+    }
+  ],
+  "sourceFiles": {
+    "artifact-provenance.mjs": "6aac8bc817f861473035ea5ea3125f680f6b83080e75581089a686d6b5d7bd0b",
+    "artifact-provenance.test.mjs": "c7df1c0ea829691f2e6ec0e2aea0783a90118dc34d2b6f8f30a646d7373b91c3",
+    "provenance-verification.mjs": "15f7e14e8440a7263d9b2174183e679fe3f53133c83e4b19111a9f66f8cfa794"
+  }
+}

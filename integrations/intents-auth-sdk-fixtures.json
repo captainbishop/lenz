@@ -1,0 +1,876 @@
+{
+  "checkedAt": "2026-11-02T16:30:35.982Z",
+  "sdk": "0.93.0",
+  "sourceHashes": {
+    "src/intents/expirable-nonce.cjs": "a4a921f223df0c5664c85669ff8f2de26139529d52bfb9c4f3b26cb883b99586",
+    "src/intents/intent-payload-builder.cjs": "df62c4a358b8445ba45542df56a4450d1c74f663d46796ebfdc58b4763ce3f52",
+    "src/intents/salt-manager.cjs": "f053bf2d708fbae54a0e75e29256dbff3d76367553888846650113e7d78da9d1"
+  },
+  "scope": "32 generated non-signing fixture payloads compared byte-for-byte before removing the unused bridge SDK.",
+  "fixtures": [
+    {
+      "signerId": "177e9d548cf717afcb44f0fd56372f378aa7f405b57e5855fb9cd34167b191ff",
+      "now": 1793577600000,
+      "lifetimeMs": 1,
+      "salt": [
+        78,
+        101,
+        55,
+        250
+      ],
+      "random": [
+        192,
+        90,
+        251,
+        195,
+        23,
+        26,
+        0
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "177e9d548cf717afcb44f0fd56372f378aa7f405b57e5855fb9cd34167b191ff",
+        "deadline": "2026-11-02T00:00:00.001Z",
+        "nonce": "Vij2xgBOZTf6QEIoDVMR5BgAABkNUxHkGMBa+8MXGgA=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "6bd739163c0794bf47b6df365d83c752246bbf6b9dff700938b20d8bbfd34f99",
+      "now": 1793577612345,
+      "lifetimeMs": 8001,
+      "salt": [
+        13,
+        86,
+        186,
+        9
+      ],
+      "random": [
+        141,
+        237,
+        173,
+        214,
+        241,
+        15,
+        231
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "6bd739163c0794bf47b6df365d83c752246bbf6b9dff700938b20d8bbfd34f99",
+        "deadline": "2026-11-02T00:00:20.346Z",
+        "nonce": "Vij2xgANVroJgFLQyVcR5BhAwOrsVRHkGI3trdbxD+c=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "05003624e0142ae28f226c7964580223c34d2c40eacc03f68cd2e0a98110a79e",
+      "now": 1793577624690,
+      "lifetimeMs": 16001,
+      "salt": [
+        221,
+        41,
+        200,
+        80
+      ],
+      "random": [
+        146,
+        43,
+        52,
+        151,
+        26,
+        253,
+        20
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "05003624e0142ae28f226c7964580223c34d2c40eacc03f68cd2e0a98110a79e",
+        "deadline": "2026-11-02T00:00:40.691Z",
+        "nonce": "Vij2xgDdKchQwGJ4hlwR5BiAgLzMWBHkGJIrNJca/RQ=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "c887499113add93ee09d3f2aa6e8670f722fd68e4beb686914ac7bfd45de2450",
+      "now": 1793577637035,
+      "lifetimeMs": 24001,
+      "salt": [
+        116,
+        205,
+        72,
+        128
+      ],
+      "random": [
+        4,
+        135,
+        25,
+        48,
+        254,
+        175,
+        195
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "c887499113add93ee09d3f2aa6e8670f722fd68e4beb686914ac7bfd45de2450",
+        "deadline": "2026-11-02T00:01:01.036Z",
+        "nonce": "Vij2xgB0zUiAAHMgQ2ER5BjAQI6sWxHkGASHGTD+r8M=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "4669bf36721e81ed5c18dfd0324ccf010933826c0f8b08d7897ad7262882983e",
+      "now": 1793577649380,
+      "lifetimeMs": 32001,
+      "salt": [
+        12,
+        225,
+        78,
+        201
+      ],
+      "random": [
+        6,
+        194,
+        127,
+        202,
+        253,
+        146,
+        109
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "4669bf36721e81ed5c18dfd0324ccf010933826c0f8b08d7897ad7262882983e",
+        "deadline": "2026-11-02T00:01:21.381Z",
+        "nonce": "Vij2xgAM4U7JQIPI/2UR5BgAAWCMXhHkGAbCf8r9km0=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "0e7a9b52990b863fad2d165d04a21afb46c8f7da4927dbbc8c09f73260131c51",
+      "now": 1793577661725,
+      "lifetimeMs": 40001,
+      "salt": [
+        111,
+        14,
+        217,
+        171
+      ],
+      "random": [
+        79,
+        165,
+        148,
+        54,
+        64,
+        77,
+        200
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "0e7a9b52990b863fad2d165d04a21afb46c8f7da4927dbbc8c09f73260131c51",
+        "deadline": "2026-11-02T00:01:41.726Z",
+        "nonce": "Vij2xgBvDtmrgJNwvGoR5BhAwTFsYRHkGE+llDZATcg=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "62f0c19627d6410b83e62d941ac0c3176b8c0c7b39e7a7fbff0ab3d3132241e6",
+      "now": 1793577674070,
+      "lifetimeMs": 48001,
+      "salt": [
+        108,
+        120,
+        85,
+        114
+      ],
+      "random": [
+        157,
+        247,
+        80,
+        45,
+        65,
+        148,
+        11
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "62f0c19627d6410b83e62d941ac0c3176b8c0c7b39e7a7fbff0ab3d3132241e6",
+        "deadline": "2026-11-02T00:02:02.071Z",
+        "nonce": "Vij2xgBseFVywKMYeW8R5BiAgQNMZBHkGJ33UC1BlAs=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "5cee194c2ecde8a01f307a15c2a358e2a957d60c9ea8581e07ce6a6f2fd6c96e",
+      "now": 1793577686415,
+      "lifetimeMs": 56001,
+      "salt": [
+        61,
+        25,
+        241,
+        218
+      ],
+      "random": [
+        111,
+        72,
+        136,
+        179,
+        205,
+        53,
+        203
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "5cee194c2ecde8a01f307a15c2a358e2a957d60c9ea8581e07ce6a6f2fd6c96e",
+        "deadline": "2026-11-02T00:02:22.416Z",
+        "nonce": "Vij2xgA9GfHaALTANXQR5BjAQdUrZxHkGG9IiLPNNcs=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "7dbef66b5f7ad66f04c3ac5b40d7ee5dba3f0c3c33085688ce1555b40baf1da2",
+      "now": 1793577698760,
+      "lifetimeMs": 64001,
+      "salt": [
+        121,
+        46,
+        108,
+        22
+      ],
+      "random": [
+        177,
+        172,
+        63,
+        89,
+        184,
+        179,
+        204
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "7dbef66b5f7ad66f04c3ac5b40d7ee5dba3f0c3c33085688ce1555b40baf1da2",
+        "deadline": "2026-11-02T00:02:42.761Z",
+        "nonce": "Vij2xgB5LmwWQMRo8ngR5BgAAqcLahHkGLGsP1m4s8w=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "b352f884027a66e9e9da979321acf78d72e97aa2e3286216cca6869e5cf4e188",
+      "now": 1793577711105,
+      "lifetimeMs": 72001,
+      "salt": [
+        49,
+        84,
+        8,
+        49
+      ],
+      "random": [
+        98,
+        171,
+        235,
+        189,
+        70,
+        207,
+        0
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "b352f884027a66e9e9da979321acf78d72e97aa2e3286216cca6869e5cf4e188",
+        "deadline": "2026-11-02T00:03:03.106Z",
+        "nonce": "Vij2xgAxVAgxgNQQr30R5BhAwnjrbBHkGGKr671GzwA=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "fe4565d905765b687dad296bdc5ecdfd653882916f78f04212ae3ccb52d7267a",
+      "now": 1793577723450,
+      "lifetimeMs": 80001,
+      "salt": [
+        242,
+        149,
+        173,
+        108
+      ],
+      "random": [
+        141,
+        110,
+        13,
+        64,
+        254,
+        182,
+        16
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "fe4565d905765b687dad296bdc5ecdfd653882916f78f04212ae3ccb52d7267a",
+        "deadline": "2026-11-02T00:03:23.451Z",
+        "nonce": "Vij2xgDyla1swOS4a4IR5BiAgkrLbxHkGI1uDUD+thA=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "0fe8e47ab644988a5dcabdfaed54d6a7bf51b4eb66289c538f141d1cbf3d90b9",
+      "now": 1793577735795,
+      "lifetimeMs": 88001,
+      "salt": [
+        25,
+        69,
+        87,
+        138
+      ],
+      "random": [
+        37,
+        58,
+        41,
+        61,
+        41,
+        209,
+        52
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "0fe8e47ab644988a5dcabdfaed54d6a7bf51b4eb66289c538f141d1cbf3d90b9",
+        "deadline": "2026-11-02T00:03:43.796Z",
+        "nonce": "Vij2xgAZRVeKAPVgKIcR5BjAQhyrchHkGCU6KT0p0TQ=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "a0a379ff94cec04fbac3a99aedf95ba0734280858f8d6b2da8ce673b67221875",
+      "now": 1793577748140,
+      "lifetimeMs": 96001,
+      "salt": [
+        234,
+        162,
+        92,
+        226
+      ],
+      "random": [
+        14,
+        201,
+        148,
+        144,
+        17,
+        99,
+        137
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "a0a379ff94cec04fbac3a99aedf95ba0734280858f8d6b2da8ce673b67221875",
+        "deadline": "2026-11-02T00:04:04.141Z",
+        "nonce": "Vij2xgDqolziQAUJ5YsR5BgAA+6KdRHkGA7JlJARY4k=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "77aacc5c6fec0b11b972afee048ba317dd9368167b3d0096329ca6b781dc94d8",
+      "now": 1793577760485,
+      "lifetimeMs": 104001,
+      "salt": [
+        153,
+        120,
+        163,
+        108
+      ],
+      "random": [
+        188,
+        217,
+        60,
+        234,
+        251,
+        78,
+        120
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "77aacc5c6fec0b11b972afee048ba317dd9368167b3d0096329ca6b781dc94d8",
+        "deadline": "2026-11-02T00:04:24.486Z",
+        "nonce": "Vij2xgCZeKNsgBWxoZAR5BhAw79qeBHkGLzZPOr7Tng=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "7ec9ac48ee57c46aaacae1517aae3b723dec749eb173266aaf27f2bca2c026ee",
+      "now": 1793577772830,
+      "lifetimeMs": 112001,
+      "salt": [
+        152,
+        202,
+        118,
+        3
+      ],
+      "random": [
+        213,
+        35,
+        72,
+        227,
+        231,
+        151,
+        149
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "7ec9ac48ee57c46aaacae1517aae3b723dec749eb173266aaf27f2bca2c026ee",
+        "deadline": "2026-11-02T00:04:44.831Z",
+        "nonce": "Vij2xgCYynYDwCVZXpUR5BiAg5FKexHkGNUjSOPnl5U=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "5d1e18453830dd93b5f4c16821a77c45de44d58331f12f4678a066c2f518f7eb",
+      "now": 1793577785175,
+      "lifetimeMs": 120001,
+      "salt": [
+        102,
+        230,
+        214,
+        80
+      ],
+      "random": [
+        128,
+        128,
+        44,
+        81,
+        131,
+        159,
+        13
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "5d1e18453830dd93b5f4c16821a77c45de44d58331f12f4678a066c2f518f7eb",
+        "deadline": "2026-11-02T00:05:05.176Z",
+        "nonce": "Vij2xgBm5tZQADYBG5oR5BjAQ2MqfhHkGICALFGDnw0=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "a1e508791ee02bc1fa7f2b52a5f7220149658bc69398aa91bfa15a4f557055e7",
+      "now": 1793577797520,
+      "lifetimeMs": 128001,
+      "salt": [
+        174,
+        47,
+        116,
+        183
+      ],
+      "random": [
+        248,
+        89,
+        157,
+        42,
+        247,
+        74,
+        87
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "a1e508791ee02bc1fa7f2b52a5f7220149658bc69398aa91bfa15a4f557055e7",
+        "deadline": "2026-11-02T00:05:25.521Z",
+        "nonce": "Vij2xgCuL3S3QEap154R5BgABDUKgRHkGPhZnSr3Slc=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "a7536a8251d69e261dc7e16fbc9f86131e27d725aa57f07fd1d3e19a47adb4b5",
+      "now": 1793577809865,
+      "lifetimeMs": 136001,
+      "salt": [
+        68,
+        99,
+        166,
+        221
+      ],
+      "random": [
+        57,
+        97,
+        243,
+        232,
+        109,
+        236,
+        115
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "a7536a8251d69e261dc7e16fbc9f86131e27d725aa57f07fd1d3e19a47adb4b5",
+        "deadline": "2026-11-02T00:05:45.866Z",
+        "nonce": "Vij2xgBEY6bdgFZRlKMR5BhAxAbqgxHkGDlh8+ht7HM=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "b018d1cbcc5bba1b70520fc03f3ef04c8a7a85adb128d1bf667dd0e72846c751",
+      "now": 1793577822210,
+      "lifetimeMs": 144001,
+      "salt": [
+        76,
+        13,
+        195,
+        218
+      ],
+      "random": [
+        116,
+        163,
+        245,
+        124,
+        87,
+        209,
+        247
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "b018d1cbcc5bba1b70520fc03f3ef04c8a7a85adb128d1bf667dd0e72846c751",
+        "deadline": "2026-11-02T00:06:06.211Z",
+        "nonce": "Vij2xgBMDcPawGb5UKgR5BiAhNjJhhHkGHSj9XxX0fc=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "cc63ac9c4247917b7a5963a256dd2dca397b804e4a49aff51e1153576e00aa7a",
+      "now": 1793577834555,
+      "lifetimeMs": 152001,
+      "salt": [
+        58,
+        83,
+        253,
+        181
+      ],
+      "random": [
+        127,
+        49,
+        45,
+        62,
+        197,
+        171,
+        158
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "cc63ac9c4247917b7a5963a256dd2dca397b804e4a49aff51e1153576e00aa7a",
+        "deadline": "2026-11-02T00:06:26.556Z",
+        "nonce": "Vij2xgA6U/21AHehDa0R5BjARKqpiRHkGH8xLT7Fq54=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "40d5e5554d07bad28e709bca9217ea486ba5d58e7bf02783aa04f1eaa03c5571",
+      "now": 1793577846900,
+      "lifetimeMs": 160001,
+      "salt": [
+        130,
+        71,
+        74,
+        109
+      ],
+      "random": [
+        13,
+        169,
+        84,
+        183,
+        115,
+        19,
+        116
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "40d5e5554d07bad28e709bca9217ea486ba5d58e7bf02783aa04f1eaa03c5571",
+        "deadline": "2026-11-02T00:06:46.901Z",
+        "nonce": "Vij2xgCCR0ptQIdJyrER5BgABXyJjBHkGA2pVLdzE3Q=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "f116d5cacc03a0cd664a7de8da31dd6cec85abcd2a1ede75b57f6c07f048a3ee",
+      "now": 1793577859245,
+      "lifetimeMs": 168001,
+      "salt": [
+        197,
+        83,
+        201,
+        76
+      ],
+      "random": [
+        9,
+        189,
+        233,
+        53,
+        189,
+        243,
+        186
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "f116d5cacc03a0cd664a7de8da31dd6cec85abcd2a1ede75b57f6c07f048a3ee",
+        "deadline": "2026-11-02T00:07:07.246Z",
+        "nonce": "Vij2xgDFU8lMgJfxhrYR5BhAxU1pjxHkGAm96TW987o=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "fe67bcbb8dc12ff29a4bd3da3e7c0ca6803a25d58f84c9a8e089e3c5cbe9aa0a",
+      "now": 1793577871590,
+      "lifetimeMs": 176001,
+      "salt": [
+        227,
+        86,
+        242,
+        41
+      ],
+      "random": [
+        132,
+        52,
+        24,
+        115,
+        233,
+        99,
+        211
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "fe67bcbb8dc12ff29a4bd3da3e7c0ca6803a25d58f84c9a8e089e3c5cbe9aa0a",
+        "deadline": "2026-11-02T00:07:27.591Z",
+        "nonce": "Vij2xgDjVvIpwKeZQ7sR5BiAhR9JkhHkGIQ0GHPpY9M=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "035e3d039427a32729455846122119988651e32e84d8bf04ee5a65be98835e7b",
+      "now": 1793577883935,
+      "lifetimeMs": 184001,
+      "salt": [
+        214,
+        51,
+        61,
+        203
+      ],
+      "random": [
+        187,
+        39,
+        147,
+        242,
+        163,
+        159,
+        91
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "035e3d039427a32729455846122119988651e32e84d8bf04ee5a65be98835e7b",
+        "deadline": "2026-11-02T00:07:47.936Z",
+        "nonce": "Vij2xgDWMz3LALhBAMAR5BjARfEolRHkGLsnk/Kjn1s=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "f8c813e37156caea138951a421872dbb1c4c7bf21fbd886746b5a757acea47b9",
+      "now": 1793577896280,
+      "lifetimeMs": 192001,
+      "salt": [
+        206,
+        53,
+        126,
+        222
+      ],
+      "random": [
+        89,
+        9,
+        211,
+        6,
+        28,
+        200,
+        210
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "f8c813e37156caea138951a421872dbb1c4c7bf21fbd886746b5a757acea47b9",
+        "deadline": "2026-11-02T00:08:08.281Z",
+        "nonce": "Vij2xgDONX7eQMjpvMQR5BgABsMImBHkGFkJ0wYcyNI=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "a05cbbc4dd70771b2baa5efcdefed2d658c24b5fcae967f9a95050a92b84a9b5",
+      "now": 1793577908625,
+      "lifetimeMs": 200001,
+      "salt": [
+        145,
+        166,
+        10,
+        176
+      ],
+      "random": [
+        34,
+        246,
+        24,
+        72,
+        113,
+        89,
+        90
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "a05cbbc4dd70771b2baa5efcdefed2d658c24b5fcae967f9a95050a92b84a9b5",
+        "deadline": "2026-11-02T00:08:28.626Z",
+        "nonce": "Vij2xgCRpgqwgNiReckR5BhAxpTomhHkGCL2GEhxWVo=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "101ed5897d1a33077b1120a6f0c25e009cb428e4fcdb2e497f0a21c182021a84",
+      "now": 1793577920970,
+      "lifetimeMs": 208001,
+      "salt": [
+        227,
+        47,
+        145,
+        249
+      ],
+      "random": [
+        164,
+        148,
+        82,
+        172,
+        168,
+        27,
+        87
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "101ed5897d1a33077b1120a6f0c25e009cb428e4fcdb2e497f0a21c182021a84",
+        "deadline": "2026-11-02T00:08:48.971Z",
+        "nonce": "Vij2xgDjL5H5wOg5Ns4R5BiAhmbInRHkGKSUUqyoG1c=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "03061eef04de3a9a2fde63b82250257262385429aeab0eac8245ba943def2ae7",
+      "now": 1793577933315,
+      "lifetimeMs": 216001,
+      "salt": [
+        153,
+        152,
+        124,
+        117
+      ],
+      "random": [
+        74,
+        207,
+        221,
+        223,
+        162,
+        44,
+        76
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "03061eef04de3a9a2fde63b82250257262385429aeab0eac8245ba943def2ae7",
+        "deadline": "2026-11-02T00:09:09.316Z",
+        "nonce": "Vij2xgCZmHx1APnh8tIR5BjARjiooBHkGErP3d+iLEw=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "13ab3633fc9391205857eb41e55a2b502c04cc3a9a78dc3bf0b83a507728e2af",
+      "now": 1793577945660,
+      "lifetimeMs": 224001,
+      "salt": [
+        227,
+        5,
+        201,
+        210
+      ],
+      "random": [
+        43,
+        102,
+        243,
+        145,
+        108,
+        189,
+        97
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "13ab3633fc9391205857eb41e55a2b502c04cc3a9a78dc3bf0b83a507728e2af",
+        "deadline": "2026-11-02T00:09:29.661Z",
+        "nonce": "Vij2xgDjBcnSQAmKr9cR5BgABwqIoxHkGCtm85FsvWE=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "0d2408dc5ecfa9a4c7aa9a587fc3c4f82f4d396ce549c72418b55859d5510364",
+      "now": 1793577958005,
+      "lifetimeMs": 232001,
+      "salt": [
+        80,
+        239,
+        51,
+        226
+      ],
+      "random": [
+        117,
+        246,
+        131,
+        110,
+        244,
+        60,
+        22
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "0d2408dc5ecfa9a4c7aa9a587fc3c4f82f4d396ce549c72418b55859d5510364",
+        "deadline": "2026-11-02T00:09:50.006Z",
+        "nonce": "Vij2xgBQ7zPigBkybNwR5BhAx9tnphHkGHX2g270PBY=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "c578829be069db4c2d8804505c4ea8323390d4b1583c8d763c12cb65b0609bca",
+      "now": 1793577970350,
+      "lifetimeMs": 240001,
+      "salt": [
+        128,
+        39,
+        38,
+        169
+      ],
+      "random": [
+        9,
+        157,
+        65,
+        200,
+        252,
+        219,
+        6
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "c578829be069db4c2d8804505c4ea8323390d4b1583c8d763c12cb65b0609bca",
+        "deadline": "2026-11-02T00:10:10.351Z",
+        "nonce": "Vij2xgCAJyapwCnaKOER5BiAh61HqRHkGAmdQcj82wY=",
+        "intents": []
+      }
+    },
+    {
+      "signerId": "5dff0fe7a9c4513ba28fdcf183e6ea4f3c1323195422ea9c51ea946ece112f19",
+      "now": 1793577982695,
+      "lifetimeMs": 248001,
+      "salt": [
+        150,
+        4,
+        170,
+        17
+      ],
+      "random": [
+        168,
+        38,
+        181,
+        150,
+        78,
+        88,
+        244
+      ],
+      "expected": {
+        "verifying_contract": "intents.near",
+        "signer_id": "5dff0fe7a9c4513ba28fdcf183e6ea4f3c1323195422ea9c51ea946ece112f19",
+        "deadline": "2026-11-02T00:10:30.696Z",
+        "nonce": "Vij2xgCWBKoRADqC5eUR5BjAR38nrBHkGKgmtZZOWPQ=",
+        "intents": []
+      }
+    }
+  ]
+}

@@ -1,5 +1,62 @@
 # Security verification and failures
 
+## November 2: dependency cleanup and recipient verification
+
+The [latest dependency report](dependency-cleanup-2026-11-02.md) supersedes the
+earlier advisory counts below. The empty-authentication helper now has one
+dependency and zero advisories; proof tooling has 15 low entries. Both NEAR locks
+retain crypto-bigint, lru and two maintenance warnings after zstd patches.
+Verification passes 26 authentication/quote/route/receipt tests, seven new auth
+alterations, 28 proof/provenance/dependency/worker tests and 16/26 native contract
+tests. Both Wasm builds pass. Twelve saved browser/metadata file hashes and seven
+original proof artifact hashes match. The report preserves the initial glob
+failure and the unexplained difference from older cached Wasm targets.
+
+The [read-only recipient module](../../carrier/defi-results.md) checks encrypted
+executor reports against original approvals and independent final-block reads.
+The combined suite passes 21 tests with 18 detected alterations. Its initial
+missing test import and mutation-runner diagnostic mismatch are recorded.
+No wallet activation, deployment, live authentication or financial action ran.
+The earlier sections retain their historical scope and counts.
+
+## November 2: executor and broad component review
+
+The [current security review](review-2026-11-02.md) records three reproduced
+executor/intake defects, a relay cancellation race and their checked local fixes.
+Intake passes 18 tests with 13 detected guard alterations; executor passes 18 with
+11 detected alterations. The relay cancellation regression fails without its
+new guard. App cache v41 preserves identity, encrypted vault and reservations
+through failed and successful updates. Seven preview playback checks pass.
+
+The [dependency advisory snapshot](dependency-audit-2026-11-02.json) records 52
+affected-package entries in the experimental Intents SDK tree and 24 in proof
+tooling. Six other trees report zero advisories. All eight installation-policy
+checks pass after adding the missing relay-tools policy file. These claims have
+different scopes; no dependency versions or locks changed in that initial scan.
+The later [proof-tooling remediation](proof-dependency-refresh-2026-11-02.md)
+updates only `ws` and `underscore`. Its current lock has 20 affected-package
+entries (15 low, five moderate, zero high or critical); Intents remains unresolved.
+The later [Intents protobuf update](intents-protobuf-refresh-2026-11-02.md)
+removes that tree's critical entry while preserving SDK 0.93.0. Its current lock
+has 50 entries (22 low, ten moderate, 18 high), with 25 local compatibility and
+quote/route tests passing. The reproduced dependency injection fails its safety
+assertion before the update and passes afterward. Product signing remains held.
+
+The twelve Solidity specialty passes and eight preparation areas are now reviewed;
+two verifier investigation leads remain without a demonstrated exploit. Saved
+Slither output and its provenance limits are recorded separately. RustSec scans
+find the same four advisory IDs in both NEAR locks and none in the tracked Zcash
+inspector lock. The packages behind those four NEAR matches are absent from the Wasm
+normal/build trees; native-test exposure and separate maintenance/unsound warnings
+remain unresolved. See the [Rust snapshot](rust-dependency-audit-2026-11-02.json).
+
+Native Rust, local EVM, browser protocol/policy and Zcash review evidence is
+listed by component in the review. The default 105 Aurora tests are separate
+from the explicit Solidity proof check. The combined Zcash/security run's npm
+cache failure, the 100-ms relay test timeout and the repeated 90-second offline
+proof timeout are retained with their later passing checks. The proof timeout
+remains unexplained. No live financial action or publication occurred.
+
 ## October 31: shared offline social payments
 
 The ordinary chat payment/import path now uses the tUSD wallet and saves encrypted history with the same atomic balance update. [Scope and failure record](../offline-social-money.md), [source/report hashes](../offline-social-verification.json). Fresh checks: 54 Node tests, 50 browser checks and 41 static routes. Tests cover contract/participant/signature binding, duplicate/competing payments, existing swap reservations, failed commits, earlier wallet imports and offline onward transfer. The integrated three-profile browser scenario records zero API calls with fixture initial backing; no new chain or real-fund action occurred.

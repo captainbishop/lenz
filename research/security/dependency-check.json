@@ -1,24 +1,13 @@
 {
-  "checkedAt": "2026-10-30T19:39:11.172Z",
+  "checkedAt": "2026-11-02T16:49:43.105Z",
   "scope": "Project npm lockfiles and installed version metadata; no host forensic or package-code audit",
   "results": [
     {
       "file": "aurora/package-lock.json",
-      "entries": 102,
+      "entries": 44,
       "findings": [],
       "watched": [],
-      "installScripts": [
-        {
-          "path": "node_modules/esbuild",
-          "name": "esbuild",
-          "version": "0.28.2"
-        },
-        {
-          "path": "node_modules/fsevents",
-          "name": "fsevents",
-          "version": "2.3.3"
-        }
-      ]
+      "installScripts": []
     },
     {
       "file": "contracts/package-lock.json",
@@ -29,52 +18,10 @@
     },
     {
       "file": "integrations/package-lock.json",
-      "entries": 588,
+      "entries": 1,
       "findings": [],
-      "watched": [
-        {
-          "path": "node_modules/axios",
-          "name": "axios",
-          "version": "1.20.0"
-        }
-      ],
-      "installScripts": [
-        {
-          "path": "node_modules/bigint-buffer",
-          "name": "bigint-buffer",
-          "version": "1.1.5"
-        },
-        {
-          "path": "node_modules/bufferutil",
-          "name": "bufferutil",
-          "version": "4.1.0"
-        },
-        {
-          "path": "node_modules/core-js-pure",
-          "name": "core-js-pure",
-          "version": "3.51.0"
-        },
-        {
-          "path": "node_modules/protobufjs",
-          "name": "protobufjs",
-          "version": "6.11.6"
-        },
-        {
-          "path": "node_modules/rpc-websockets/node_modules/utf-8-validate",
-          "name": "utf-8-validate",
-          "version": "6.0.6"
-        },
-        {
-          "path": "node_modules/secp256k1",
-          "name": "secp256k1",
-          "version": "5.0.1"
-        },
-        {
-          "path": "node_modules/utf-8-validate",
-          "name": "utf-8-validate",
-          "version": "5.0.10"
-        }
-      ]
+      "watched": [],
+      "installScripts": []
     },
     {
       "file": "integrations/quote-verifier/package-lock.json",
@@ -91,7 +38,7 @@
     },
     {
       "file": "research/crypto-step/package-lock.json",
-      "entries": 127,
+      "entries": 128,
       "findings": [],
       "watched": [],
       "installScripts": [
@@ -105,6 +52,19 @@
     {
       "file": "web/near-connector/package-lock.json",
       "entries": 95,
+      "findings": [],
+      "watched": [],
+      "installScripts": [
+        {
+          "path": "node_modules/esbuild",
+          "name": "esbuild",
+          "version": "0.28.2"
+        }
+      ]
+    },
+    {
+      "file": "web/nostr-tools/package-lock.json",
+      "entries": 35,
       "findings": [],
       "watched": [],
       "installScripts": [

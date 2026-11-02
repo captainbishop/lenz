@@ -30,6 +30,22 @@ guarantee or safe-harbor commitment is offered by this file.
 - Native Zcash tests use prerelease tooling and disposable test coins. The local
   companion is not a production signer.
 
+## Review during development
+
+Security review is required at each stage. Before implementation, identify the
+assets, actors, authorization and privacy boundaries affected by the change.
+During implementation, review every path that can sign, send, credit, release a
+reservation or recover an outstanding obligation. Use the review method for the
+actual component: browser and transport, Rust/NEAR, Solidity/EVM, or the precise
+cryptographic statement and verifier.
+
+Before publication, reproduce reported defects with disposable data, verify the
+fix and relevant failure cases, and run the affected regression and guard-removal
+checks. Record dependency/analyzer availability, source hashes, observed failures
+and untested scope. Review outgoing files and cached-app updates as part of the
+same change. A passing component suite does not establish safe recovery, private
+settlement, live deployment behavior or approval to handle real funds.
+
 Read the [behavior and safety boundaries](docs/behavior.md),
 [verification and failure record](research/security/verification.md) and
 [development status](docs/status.md). Keep secrets out of Git even when

@@ -5,6 +5,7 @@ import { relayOrigin, MAX_EVENT_BYTES } from './nostr-protocol.js';
 export async function openRelay(origin, {signal, allowed, WebSocketImpl = WebSocket, timeout = 10000} = {}) {
   relayOrigin(origin);
   assert(!signal?.aborted && await allowed(), 'Public delivery is off.');
+  assert(!signal?.aborted, 'Public delivery is off.');
   const ws = new WebSocketImpl(origin), pending = new Map();
   let closed = false, serial = 0, totalBytes = 0;
   const abort = () => close(new Error('Relay connection closed.'));

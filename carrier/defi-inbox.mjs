@@ -1,10 +1,10 @@
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { assert, sealMessage } from '../web/public/peer-crypto.js';
+import { assert, digest, sealMessage } from '../web/public/peer-crypto.js';
 import { validateEnvelope } from '../web/public/carrier-protocol.js';
 import { checkRheaConfig } from '../web/public/rhea-protocol.js';
-import { DEFI_RECEIPT, carrierSenderProfile, openDefiRequest, defiConflictId } from '../web/public/defi-request.js';
+import { DEFI_REQUEST, DEFI_RECEIPT, carrierSenderProfile, openDefiRequest, defiConflictId } from '../web/public/defi-request.js';
 
 // Separate from the forwarding carrier. No chain credentials, calls or wallet mutations.
 export class DefiInbox {
@@ -33,6 +33,12 @@ export class DefiInbox {
     const sender = carrierSenderProfile(e.sender);
     const request = await openDefiRequest(this.#identity, sender, this.#config, e.packet, now);
     const conflict = await defiConflictId(request), body = JSON.stringify(e), size = Buffer.byteLength(body);
+    // Older inboxes keyed conflicts by messaging identity. Preserve those records while
+    // checking every identity that used the same spending public key.
+    const aliases=this.#db.prepare("SELECT DISTINCT sender FROM requests WHERE json_extract(envelope,'$.sender.signingPublic')=?").all(e.sender.signingPublic);
+    const legacy=await Promise.all(aliases.map(({sender})=>digest([DEFI_REQUEST,'input',sender,request.operation.kind,
+      request.operation.packet.config.reserve,request.operation.kind==='rhea-swap'
+        ? request.operation.packet.instruction.input : request.operation.deposit.id])));
     // Crypto checks may take time: reject expiry at the actual durable acceptance boundary.
     const storedAt = this.#now();
     assert(storedAt < request.expiresAt && storedAt < e.expiresAt, 'DeFi request expired before storage');
@@ -42,7 +48,8 @@ export class DefiInbox {
       stored = this.#db.prepare('SELECT stored FROM requests WHERE id=?').get(request.id);
       if (stored) duplicate = true;
       else {
-        assert(!this.#db.prepare('SELECT id FROM requests WHERE conflict=?').get(conflict), 'Conflicting DeFi authorization; existing request is retained');
+        for(const slot of [conflict,...legacy])
+          assert(!this.#db.prepare('SELECT id FROM requests WHERE conflict=?').get(slot), 'Conflicting DeFi authorization; existing request is retained');
         const total = this.#db.prepare('SELECT COUNT(*) AS n, COALESCE(SUM(size),0) AS bytes FROM requests').get();
         const count = this.#db.prepare('SELECT COUNT(*) AS n FROM requests WHERE sender=?').get(request.sender).n;
         assert(total.n < this.#limits.maxRequests && total.bytes + size <= this.#limits.maxBytes && count < this.#limits.perSender, 'DeFi inbox quota reached');

@@ -6,8 +6,9 @@ checks the action and disclosure consent, and saves ciphertext before returning
 an encrypted storage receipt. Forwarding uses the existing carrier protocol.
 
 This is a developer library. The wallet and chat do not yet publish these requests,
-and no executor worker dispatches them to a chain. The inbox contains no chain
-signer, sponsor key or financial API. Its receipt means **stored**, never executed,
+and automatic execution is not enabled in the app. A separate [executor library](defi-executor.md)
+can dispatch validated requests. The inbox itself contains no chain signer, sponsor
+key or financial API. Its receipt means **stored**, never executed,
 refunded or spendable. Existing wallet reservations remain unchanged.
 
 ## Supported requests
@@ -71,7 +72,7 @@ to it. Repeated delivery of the same request returns another receipt with the
 original storage time, including after restart. Newly encrypted copies of the same
 request still deduplicate.
 
-A different authorization for the same owner's swap input or refund deposit ID
+A different authorization for the same spending key's swap input or refund deposit ID
 is rejected, including a newly signed expiry or altered destination. Expired rows
 retain their conflict protection. This is local duplicate/conflict protection;
 it does not detect every conflicting ancestor, copied wallet, other executor or
@@ -80,7 +81,7 @@ requests to admit new ones. Default limits are 256 requests, 32 MiB and 32 per o
 operator retention and recovery of a full inbox remain deployment work.
 
 `read(id)` returns the saved encrypted envelope and storage/expiry metadata. It
-conveys no execution authority. A future worker must revalidate policy, deadline
+conveys no execution authority. The executor must revalidate policy, deadline
 and current chain state before dispatching and preserve ambiguous attempts for
 receipt reconciliation. Wallet integration must atomically save its reservation
 and request before exposing the encrypted packet to any transport.

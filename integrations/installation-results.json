@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T06:59:15.348Z",
+  "checkedAt": "2026-11-02T16:35:26.957Z",
   "node": "v24.21.0",
   "aurora": {
     "installed": {
@@ -14,9 +14,9 @@
   },
   "intents": {
     "installed": {
-      "@defuse-protocol/intents-sdk": "0.93.0"
+      "@scure/base": "1.2.6"
     },
-    "lockSha256": "08c301c3d1f49fa09d175f1494bda71105b63108253d991414e33d01679e4bf2"
+    "lockSha256": "6de47c02d814b93090315193a2b31b31d2db7abfc4c1ddd1219d44688d7fcdbd"
   },
   "oneclick": {
     "installed": {
@@ -26,7 +26,7 @@
   },
   "checks": [
     "Installed versions match manifests and lockfiles",
-    "NEAR Intents SDK loads and builds an unsigned empty fixture payload",
+    "Authentication builder creates an unsigned empty fixture payload",
     "1Click verifier loads and rejects an empty response"
   ],
   "partnerKeyPresentInThisProcess": false,

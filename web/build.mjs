@@ -1,14 +1,11 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 import { context, DOMAIN, closeCurve } from '../research/crypto-step/step.mjs';
+import { verifyProofArtifacts } from '../research/crypto-step/artifact-provenance.mjs';
 import { externalizeProofWorker } from './build-proof-worker.mjs';
 const base = '../research/crypto-step/';
 mkdirSync('public/vendor', { recursive: true });
 mkdirSync('public/assets', { recursive: true });
-const metadata = JSON.parse(readFileSync(base + 'build/build-metadata.json', 'utf8'));
-for (const [file, hash] of Object.entries(metadata.hashes)) {
-  if (createHash('sha256').update(readFileSync(base + file)).digest('hex') !== hash) throw new Error(`Stale proof artifact: ${file}`);
-}
+const metadata = verifyProofArtifacts(base);
 const modules = [
   ['node_modules/ffjavascript/build/browser.esm.js', 'ffjavascript.js'],
   ['node_modules/snarkjs/build/browser.esm.js', 'snarkjs.js'],

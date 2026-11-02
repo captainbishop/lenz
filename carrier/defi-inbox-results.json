@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-11-02T07:39:13.000Z",
+  "checkedAt": "2026-11-02T14:33:47.207Z",
   "node": "v24.21.0",
   "platform": "win32",
   "scope": "Disposable identities, synthetic reserve roots, real P-256/AES-GCM, local SQLite and two loopback HTTP carriers. No chain calls, funding, wallet changes or physical-device tests.",
   "tests": {
-    "passed": 17,
+    "passed": 18,
     "failed": 0,
     "skipped": 0
   },
@@ -57,7 +57,8 @@
       "name": "conflict-slot",
       "detected": true,
       "failedTests": [
-        "different signed authorizations for the same input conflict even after the old request expires"
+        "different signed authorizations for the same input conflict even after the old request expires",
+        "a second messaging identity using the same spending key cannot bypass input conflicts, including older records"
       ]
     },
     {
@@ -82,6 +83,20 @@
       ]
     },
     {
+      "name": "spending-authority",
+      "detected": true,
+      "failedTests": [
+        "a second messaging identity using the same spending key cannot bypass input conflicts, including older records"
+      ]
+    },
+    {
+      "name": "legacy-conflicts",
+      "detected": true,
+      "failedTests": [
+        "a second messaging identity using the same spending key cannot bypass input conflicts, including older records"
+      ]
+    },
+    {
       "name": "input-snapshot",
       "detected": true,
       "failedTests": [
@@ -90,12 +105,12 @@
     }
   ],
   "sourceFiles": {
-    "carrier/defi-inbox.mjs": "78b03afe4cc79e7c08331aaf9826aa32a37e2f500963158a22e982fe36edeb86",
-    "carrier/defi-inbox.test.mjs": "f83001be9eff3eee7ce06179f9d3f9f098f63d184e717f25572ad7c27327e98a",
-    "carrier/defi-inbox-verification.mjs": "7e69944e2be6f2f4f6e2631626c6e13cfc647ed1392114dc06bdce96d0773221",
+    "carrier/defi-inbox.mjs": "c83abff87a3bf0af97d58a0853840391de8c542c2cbc8b1f3569899d4b8754dd",
+    "carrier/defi-inbox.test.mjs": "16ce875c550ede53a9120b9eb85939e35ab975d41fb5b0d81ab494034c76c909",
+    "carrier/defi-inbox-verification.mjs": "caba4c0e932fa3a5594b21657433f5768893c55edf6c5c89c64002b02c006609",
     "carrier/server.mjs": "14f7b155a02cc0115ec39265336d911cabb1df46ba3874885b60de5939e5a7ec",
     "carrier/store.mjs": "3f39a9113affb7b75175483816d563da6a41f131e9f90088a09283d8eeab0e3d",
-    "web/public/defi-request.js": "55a30279f3964816c6186a63262844b0555a0d7a85a6e91c58166300046667fb",
+    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",

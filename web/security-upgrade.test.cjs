@@ -27,7 +27,7 @@ const checks=[];
     browser=await chromium.launch({channel:'msedge',headless:true});
     const ctx=await browser.newContext(),page=await ctx.newPage();
     await page.goto(base+'/money.html');
-    await page.getByRole('button',{name:'Continue privately',exact:true}).click();
+    await page.locator('#wallet-private').click();
     await page.locator('#wallet-content').waitFor();
     const identity=await page.evaluate(async()=>(await(await import('/chat-store.js')).readState()).identity);
     await page.goto(base+'/tests.html');

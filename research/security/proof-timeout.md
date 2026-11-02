@@ -4,6 +4,14 @@ Recorded October 31, 2026. The original 90-second timeout remains unexplained. F
 
 ## Evidence
 
+November 2 review found another saved 90-second timeout, followed by a successful
+run under the same allowance. The [failed run](../../web/security-proof-offline-2026-11-02T08-49-28-156Z.json)
+completed the first proof in 64.404 seconds and timed out during the onward proof.
+The [later run](../../web/security-proof-offline-2026-11-02T08-59-50-987Z.json)
+passed 25 checks; its proofs took 32.962 and 32.285 seconds. This is a recurrence,
+not a fixed timeout. The saved process/memory samples do not establish a causal
+explanation, and no timeout or accounting behavior was changed by this review.
+
 The original [failure](../../web/security-proof-offline-timeout.json) reached `Creating proof…` on the second payment. That stage is emitted before `snarkjs.plonk.prove` opens the proving key. It establishes that worker startup and witness calculation completed, but cannot distinguish loading the key from proof computation. Its bytes remain unchanged; the SHA-256 is recorded in the [review record](proof-timeout-review.json).
 
 | Run | Result | Individual proofs | Evidence |

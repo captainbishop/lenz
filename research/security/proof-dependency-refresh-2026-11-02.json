@@ -1,0 +1,615 @@
+{
+  "checkedAt": "2026-11-02T15:35:26.996Z",
+  "scope": "Two utility dependency patches and compatibility with existing local TEST-ONLY proof artifacts. No new setup, deployment, live transaction or user-wallet operation.",
+  "originalLockSha256": "62bc330a2f9209daca69d422a94f52465c3e496b92e1c68b39b08a8a75182869",
+  "currentLockSha256": "f294fd2dc3ad2499b06986b757d5b98391854996bc010d639228dea28d2ce727",
+  "originalMetadataSha256": "f55c8a7e58035d5ab7396edd08876ab6d894ec5874a1aae8627cb4ea1e206a4e",
+  "changes": [
+    {
+      "path": "node_modules/underscore",
+      "from": "1.13.6",
+      "to": "1.13.8"
+    },
+    {
+      "path": "node_modules/ws",
+      "from": "8.18.0",
+      "to": "8.22.1"
+    }
+  ],
+  "installedPackages": 127,
+  "unchangedPackageSnapshotDigests": 125,
+  "comparisonLimit": "The immutable pre-install package/directory snapshot used the older delimiter encoding. It matches for 125 package trees and all generated assets, but has the reproduced transcript ambiguity and is not a retroactive per-file attestation. Individual proof artifacts and metadata use ordinary SHA-256; the current compatibility record uses unambiguous per-file hash records.",
+  "unchangedArtifacts": {
+    "step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
+    "node_modules/circom2/circom.wasm": "96fc92a93768f38979db6c2bac4b1aa9fc7d66742121a63d4c4792d5b4037162",
+    "build/step.r1cs": "1c7a5fff0389c8c3f76da1eb0903c51dca6d2d63f48d3841051be6e92dfe9c31",
+    "build/step_js/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+    "build/local-test-only.ptau": "cadd3b35a4775afebb14c39671d2ca5d592380beaff39c2b42e30b92734c201e",
+    "build/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+    "build/verification-key.json": "b0cc47c8100d16a59cfc2e40cac208deb454258cd165f60099e52cd9c198e45e"
+  },
+  "currentBrowserAndMetadataFiles": {
+    "web/public/vendor/ffjavascript-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+    "web/public/vendor/ffjavascript-worker.js": "d62dee6cff2bf15bb9bce562d1d35bd96a045bcd30557010894d35c3334f699e",
+    "web/public/vendor/ffjavascript.js": "eac6ef8180ed3cf0500c68efa172164dcf663f46c432f891aa7d6331483d9652",
+    "web/public/vendor/poseidon.js": "6583b16f417a28075e49e1cfc01e17b0e9e4cd1b4f4d3484d780910391fcf9ec",
+    "web/public/vendor/poseidon_constants_opt.js": "5d24cde82a0858cc17f4941bd2a18f4a69906f3d050cd5f19d0d221802abd1bd",
+    "web/public/vendor/snarkjs-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+    "web/public/vendor/snarkjs.js": "52645f2ff4662b5192c89e7a0d7315e763faa18aece53657a176cfd6e4e5a1f9",
+    "web/public/assets/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+    "web/public/assets/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+    "web/public/config.js": "0464118f2489bd0032a89a00c7f5459db29852904b4a44f04b7e71e44b29372b",
+    "web/public/capsule.js": "a9264ae81c4b9b40a6f4bbf5dbf4317c0c32dc913dd86905b4e8da1fc7bf57fb",
+    "research/crypto-step/build/build-metadata.json": "f55c8a7e58035d5ab7396edd08876ab6d894ec5874a1aae8627cb4ea1e206a4e"
+  },
+  "audit": {
+    "checkedAt": "2026-11-02T15:21:33.307Z",
+    "command": "npm audit --json --ignore-scripts",
+    "cwd": "research/crypto-step",
+    "exitCode": 1,
+    "rawSha256": "3f96c7148b5aa4d0e8e9ec5254922f9beace0a5687efdda77351080de7dbb630",
+    "before": {
+      "info": 0,
+      "low": 13,
+      "moderate": 7,
+      "high": 4,
+      "critical": 0,
+      "total": 24
+    },
+    "after": {
+      "info": 0,
+      "low": 15,
+      "moderate": 5,
+      "high": 0,
+      "critical": 0,
+      "total": 20
+    },
+    "vulnerabilities": {
+      "@ethersproject/abi": {
+        "name": "@ethersproject/abi",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/hash"
+        ],
+        "effects": [
+          "@ethersproject/contracts",
+          "ethers"
+        ],
+        "range": "5.0.10 - 5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/abi"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/abstract-provider": {
+        "name": "@ethersproject/abstract-provider",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/transactions"
+        ],
+        "effects": [
+          "@ethersproject/abstract-signer",
+          "@ethersproject/contracts",
+          "@ethersproject/providers",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/@ethersproject/abstract-provider"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/abstract-signer": {
+        "name": "@ethersproject/abstract-signer",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-provider"
+        ],
+        "effects": [
+          "@ethersproject/contracts",
+          "@ethersproject/hash",
+          "@ethersproject/hdnode",
+          "@ethersproject/json-wallets",
+          "@ethersproject/providers",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/@ethersproject/abstract-signer"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/contracts": {
+        "name": "@ethersproject/contracts",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abi",
+          "@ethersproject/abstract-provider",
+          "@ethersproject/abstract-signer",
+          "@ethersproject/transactions"
+        ],
+        "effects": [
+          "ethers"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/@ethersproject/contracts"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/hash": {
+        "name": "@ethersproject/hash",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-signer"
+        ],
+        "effects": [
+          "@ethersproject/abi",
+          "@ethersproject/providers",
+          "@ethersproject/wallet",
+          "@ethersproject/wordlists",
+          "ethers"
+        ],
+        "range": "5.0.6 - 5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/hash"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/hdnode": {
+        "name": "@ethersproject/hdnode",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-signer",
+          "@ethersproject/signing-key",
+          "@ethersproject/transactions",
+          "@ethersproject/wordlists"
+        ],
+        "effects": [
+          "@ethersproject/json-wallets",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/@ethersproject/hdnode"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/json-wallets": {
+        "name": "@ethersproject/json-wallets",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-signer",
+          "@ethersproject/hdnode",
+          "@ethersproject/transactions"
+        ],
+        "effects": [
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/@ethersproject/json-wallets"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/providers": {
+        "name": "@ethersproject/providers",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-provider",
+          "@ethersproject/abstract-signer",
+          "@ethersproject/hash",
+          "@ethersproject/transactions"
+        ],
+        "effects": [
+          "ethers"
+        ],
+        "range": "<=5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/providers"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/signing-key": {
+        "name": "@ethersproject/signing-key",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "elliptic"
+        ],
+        "effects": [
+          "@ethersproject/hdnode",
+          "@ethersproject/transactions",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "<=5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/signing-key"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/transactions": {
+        "name": "@ethersproject/transactions",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/signing-key"
+        ],
+        "effects": [
+          "@ethersproject/abstract-provider",
+          "@ethersproject/contracts",
+          "@ethersproject/hdnode",
+          "@ethersproject/json-wallets",
+          "@ethersproject/providers",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "<=5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/transactions"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/wallet": {
+        "name": "@ethersproject/wallet",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abstract-provider",
+          "@ethersproject/abstract-signer",
+          "@ethersproject/hash",
+          "@ethersproject/hdnode",
+          "@ethersproject/json-wallets",
+          "@ethersproject/signing-key",
+          "@ethersproject/transactions",
+          "@ethersproject/wordlists"
+        ],
+        "effects": [
+          "ethers"
+        ],
+        "range": "<=5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/wallet"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "@ethersproject/wordlists": {
+        "name": "@ethersproject/wordlists",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/hash"
+        ],
+        "effects": [
+          "@ethersproject/hdnode",
+          "@ethersproject/wallet",
+          "ethers"
+        ],
+        "range": "5.0.8 - 5.8.0",
+        "nodes": [
+          "node_modules/@ethersproject/wordlists"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "circomlibjs": {
+        "name": "circomlibjs",
+        "severity": "low",
+        "isDirect": true,
+        "via": [
+          "ethers"
+        ],
+        "effects": [],
+        "range": ">=0.1.0",
+        "nodes": [
+          "node_modules/circomlibjs"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "ejs": {
+        "name": "ejs",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          "jake"
+        ],
+        "effects": [
+          "snarkjs"
+        ],
+        "range": "3.1.2 - 4.0.1",
+        "nodes": [
+          "node_modules/ejs"
+        ],
+        "fixAvailable": {
+          "name": "snarkjs",
+          "version": "0.3.60",
+          "isSemVerMajor": true
+        }
+      },
+      "elliptic": {
+        "name": "elliptic",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1112030,
+            "name": "elliptic",
+            "dependency": "elliptic",
+            "title": "Elliptic Uses a Cryptographic Primitive with a Risky Implementation",
+            "url": "https://github.com/advisories/GHSA-848j-6mx2-7j84",
+            "severity": "low",
+            "cwe": [
+              "CWE-1240"
+            ],
+            "cvss": {
+              "score": 5.6,
+              "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L"
+            },
+            "range": "<=6.6.1"
+          }
+        ],
+        "effects": [
+          "@ethersproject/signing-key"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/elliptic"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "ethers": {
+        "name": "ethers",
+        "severity": "low",
+        "isDirect": false,
+        "via": [
+          "@ethersproject/abi",
+          "@ethersproject/abstract-provider",
+          "@ethersproject/abstract-signer",
+          "@ethersproject/contracts",
+          "@ethersproject/hash",
+          "@ethersproject/hdnode",
+          "@ethersproject/json-wallets",
+          "@ethersproject/providers",
+          "@ethersproject/signing-key",
+          "@ethersproject/transactions",
+          "@ethersproject/wallet",
+          "@ethersproject/wordlists"
+        ],
+        "effects": [
+          "circomlibjs"
+        ],
+        "range": "5.0.0-beta.119 - 5.8.0",
+        "nodes": [
+          "node_modules/ethers"
+        ],
+        "fixAvailable": {
+          "name": "circomlibjs",
+          "version": "0.0.8",
+          "isSemVerMajor": true
+        }
+      },
+      "filelist": {
+        "name": "filelist",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          "minimatch"
+        ],
+        "effects": [
+          "jake"
+        ],
+        "range": ">=0.0.2",
+        "nodes": [
+          "node_modules/filelist"
+        ],
+        "fixAvailable": {
+          "name": "snarkjs",
+          "version": "0.3.60",
+          "isSemVerMajor": true
+        }
+      },
+      "jake": {
+        "name": "jake",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          "filelist"
+        ],
+        "effects": [
+          "ejs"
+        ],
+        "range": ">=10.6.1",
+        "nodes": [
+          "node_modules/jake"
+        ],
+        "fixAvailable": {
+          "name": "snarkjs",
+          "version": "0.3.60",
+          "isSemVerMajor": true
+        }
+      },
+      "minimatch": {
+        "name": "minimatch",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1244012,
+            "name": "minimatch",
+            "dependency": "minimatch",
+            "title": "minimatch has potential denial of service via globparts amplification",
+            "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-405"
+            ],
+            "cvss": {
+              "score": 0,
+              "vectorString": null
+            },
+            "range": "<11.0.1"
+          }
+        ],
+        "effects": [
+          "filelist"
+        ],
+        "range": "<11.0.1",
+        "nodes": [
+          "node_modules/minimatch"
+        ],
+        "fixAvailable": {
+          "name": "snarkjs",
+          "version": "0.3.60",
+          "isSemVerMajor": true
+        }
+      },
+      "snarkjs": {
+        "name": "snarkjs",
+        "severity": "moderate",
+        "isDirect": true,
+        "via": [
+          "ejs"
+        ],
+        "effects": [],
+        "range": ">=0.4.0",
+        "nodes": [
+          "node_modules/snarkjs"
+        ],
+        "fixAvailable": {
+          "name": "snarkjs",
+          "version": "0.3.60",
+          "isSemVerMajor": true
+        }
+      }
+    }
+  },
+  "tests": {
+    "checkedAt": "2026-11-02T15:33:46.611Z",
+    "node": "v24.21.0",
+    "platform": "win32",
+    "cwd": "research/crypto-step",
+    "command": "node --test --test-reporter=tap step.test.mjs artifact-provenance.test.mjs dependency-compatibility.test.mjs ../../web/build-proof-worker.test.mjs ../../web/proof-worker.test.mjs",
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "sourceFiles": {
+      "research/crypto-step/package.json": "0526a0f56a8af89b8b07faf890a6fd5fd074db7c0bc2915ae2493a30ec1a8d75",
+      "research/crypto-step/package-lock.json": "f294fd2dc3ad2499b06986b757d5b98391854996bc010d639228dea28d2ce727",
+      "research/crypto-step/artifact-provenance.mjs": "6aac8bc817f861473035ea5ea3125f680f6b83080e75581089a686d6b5d7bd0b",
+      "research/crypto-step/dependency-refresh.json": "a28251683677e181cc2f595a5196d2be8f44e8b2dbec954b09fe179cc336a79a",
+      "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
+      "web/build.mjs": "a6552cdc5ff784840b5513aa621f4e802fb6d0560f93eab35c01c4e599746edc",
+      "web/build-proof-worker.mjs": "c5cb1a33614a291a385ff400af8d55f7c1a1be4cb592b8abcadb021d9db41f2c",
+      "web/public/proof-worker.js": "dfe3fa893225fcbc26c83c4dc28fc7ddb6a3dee39ecfcc09ce4e6f7bc02ae017",
+      "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
+      "research/crypto-step/artifact-provenance.test.mjs": "c7df1c0ea829691f2e6ec0e2aea0783a90118dc34d2b6f8f30a646d7373b91c3",
+      "research/crypto-step/dependency-compatibility.test.mjs": "13a15efb9f0f4dc71fe14ddecb76d85f0e74932c068e9d65452babb3a6b247cf",
+      "web/build-proof-worker.test.mjs": "3d7affff36fc7e3b079775069c9a684c65ef46497f08c977468cb4f6584b2b54",
+      "web/proof-worker.test.mjs": "f65adfb91202823932f8c3ecf425193b464018ab859def16af4c1609fdc680a1"
+    }
+  },
+  "provenance": {
+    "report": "../crypto-step/provenance-results.json",
+    "sha256": "ad2f216cd0f9aac3667cbc9e817c243c0bc259f1b1e5713e438c4d9aff2458dc",
+    "tests": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "detectedMutations": 7
+  },
+  "browserBuild": {
+    "command": "node build.mjs",
+    "cwd": "web",
+    "exitCode": 0,
+    "generatedAssetSnapshotDigestsMatch": true
+  },
+  "dependencyPolicy": {
+    "report": "dependency-check.json",
+    "sha256": "dc2f5b603316ce564b25c0fc2b1678645992dccd99733cadf46e87933e5f4178",
+    "projects": 8,
+    "passed": true
+  },
+  "retainedFailures": [
+    "The original browser build rejected the patched lock as a stale proof artifact before the explicit compatibility record was implemented.",
+    "The first package digest allowed two files (a=a, b=b) to match one file containing a\\0b\\0b. The regression failed before the unambiguous encoding fix and fails again under its mutation control.",
+    "The combined runner initially used the repository root, causing verification-key ENOENT (17 passes, one failed test file). Running from the documented proof directory passed 27 tests.",
+    "Registry reads/install initially hit sandbox EACCES; approved retries succeeded. The final audit exits 1 because low/moderate entries remain."
+  ],
+  "limits": [
+    "No full dependency source-code or cryptographic audit.",
+    "Current record is unsigned and trusts reviewed repository metadata.",
+    "Proof setup remains test-only.",
+    "No new browser/device proof performance measurement; intermittent timeout remains open.",
+    "Intents, Rust advisories, recovery and other SEC2 requirements remain unresolved."
+  ]
+}

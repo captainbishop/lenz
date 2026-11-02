@@ -4,11 +4,12 @@ import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import net from 'node:net';
-import { createIdentity, sealMessage, openMessage, digest, signValue } from '../web/public/peer-crypto.js';
+import { DatabaseSync } from 'node:sqlite';
+import { CHAT_DOMAIN, createIdentity, sealMessage, openMessage, digest, signValue } from '../web/public/peer-crypto.js';
 import { emptyNearVault, fundingRequest, nearLedger } from '../web/public/near-protocol.js';
 import { prepareRheaSwap } from '../web/public/rhea-protocol.js';
 import { makeDepositRequest, refundSource } from '../web/public/near-deposit.js';
-import { createDefiRequest, checkDefiRequest, sealDefiRequest, openDefiRequest, openDefiReceipt,
+import { createDefiRequest, checkDefiRequest, sealDefiRequest, openDefiRequest, openDefiReceipt, defiConflictId,
   DEFI_REQUEST, DEFI_RECEIPT, PUBLIC_TESTNET_DISCLOSURE, MAX_REQUEST_BYTES } from '../web/public/defi-request.js';
 import { wrapForCarrier, inboxRequest, carrierPost } from '../web/public/carrier-protocol.js';
 import { DefiInbox } from './defi-inbox.mjs';
@@ -257,4 +258,34 @@ test('real HTTP carriers forward the request and encrypted storage receipt witho
     const outsider=await createIdentity('Outsider');assert.deepEqual((await carrierPost(origins[1],'/v1/inbox',await inboxRequest(outsider,origins[1]))).envelopes,[]);
     assert.equal((await nearLedger(f.prepared.vault)).reserved.size,1);
   } finally {inbox.close();for(const node of nodes)await node?.close();}
+}));
+
+test('a second messaging identity using the same spending key cannot bypass input conflicts, including older records',async()=>temporary(async directory=>{
+  const f=await fixture(),alias=await createIdentity('Alias');
+  alias.signingPrivate=f.owner.signingPrivate;alias.profile.signingPublic=f.owner.profile.signingPublic;
+  alias.profile.id=await digest([CHAT_DOMAIN,alias.profile.signingPublic,alias.profile.boxPublic]);
+  const request=await createDefiRequest(alias,f.executor.profile,c,f.operation,options,now);
+  assert.notEqual(request.sender,f.request.sender);
+  assert.equal(await defiConflictId(request),await defiConflictId(f.request),
+    'Competing input reservations must share one conflict identity across messaging profiles');
+  const e=await wrapForCarrier(alias,await sealDefiRequest(alias,f.executor.profile,c,request,now),now);
+  const concurrent=setup(join(directory,'concurrent'),f);
+  try {
+    const arrivals=await Promise.allSettled([concurrent.receive(f.envelope),concurrent.receive(e)]);
+    assert.equal(arrivals.filter(r=>r.status==='fulfilled').length,1);
+    assert.equal(arrivals.filter(r=>r.status==='rejected').length,1);
+  } finally {concurrent.close();}
+  for(const legacy of [false,true]) {
+    const path=join(directory,String(legacy)),inbox=setup(path,f);
+    try {
+      await inbox.receive(f.envelope);
+      if(legacy) {
+        const db=new DatabaseSync(join(path,'defi.sqlite'));
+        try {db.prepare('UPDATE requests SET conflict=? WHERE id=?').run(await digest([DEFI_REQUEST,'input',f.request.sender,f.operation.kind,c.reserve,f.operation.packet.instruction.input]),f.request.id);}
+        finally {db.close();}
+      }
+      await assert.rejects(inbox.receive(e),/Conflicting/);assert.equal(inbox.read(request.id),null);
+      assert.deepEqual(inbox.read(f.request.id).envelope,f.envelope);
+    } finally {inbox.close();}
+  }
 }));

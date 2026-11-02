@@ -186,7 +186,7 @@
     "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
     "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
     "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
-    "web/public/nostr-socket.js": "f11fb505e1b87d70a9d83a185383d34703ce99ba4c196871866512ff3a9e6225",
+    "web/public/nostr-socket.js": "594e4939319eaca0555261e4f0aaea9bffc3062dff6f41569f7465c7b94effb2",
     "web/public/nostr-vendor/nostr.js": "19d16a5d3c86c851c895e8e9f9e19656423a46f70b79bac4dfef4ccca76b63df",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
@@ -300,6 +300,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-02T04:16:20.285Z",
+  "reframedAt": "2026-11-02T10:21:34.062Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

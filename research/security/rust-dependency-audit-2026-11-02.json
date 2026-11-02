@@ -1,0 +1,433 @@
+{
+  "checkedAt": "2026-11-02T14:57:57.804Z",
+  "tool": "cargo-audit 0.22.2",
+  "toolSha256": "2be56ea224ae2d073d0a260c3bb8d33d4b121d9044b33ced96862fa0c1b21272",
+  "database": {
+    "commit": "263a4d951a0867d4bddc29dddd6d59427c78f9a7",
+    "advisories": 1402
+  },
+  "scope": "All three tracked Cargo locks, no target/advisory filters. Official RustSec database fetched once; subsequent scans use the same local database. Yanked-crate checks disabled. Advisory matches are not demonstrated Lenz exploits. No source, manifest, lockfile, deployed Wasm or wallet changed.",
+  "commands": [
+    "cargo audit --file <lockfile> --db <database> --no-yanked --json",
+    "cargo audit --file <lockfile> --db <same database> --no-fetch --no-yanked --json",
+    "cargo tree --manifest-path <manifest> --locked --offline --target wasm32-unknown-unknown --edges normal,build --prefix none"
+  ],
+  "projects": [
+    {
+      "lockfile": "contracts/Cargo.lock",
+      "lockSha256": "87f5cfc229ff9ff0dc55c98dc40585b131b3aa3eb210929b4ba472b6b11d68b2",
+      "rawReportSha256": "cbea170fc1a3a56a077211f551a3e39b0ac0e90621c10ae1687a3214333c7070",
+      "exitCode": 1,
+      "dependencies": 287,
+      "vulnerabilities": [
+        {
+          "id": "RUSTSEC-2026-0387",
+          "package": "crypto-bigint",
+          "version": "0.5.5",
+          "title": "Multiple timing variability issues in operations intended to be constant-time",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0387.html",
+          "patched": [
+            ">=0.7.6"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0391",
+          "package": "zstd",
+          "version": "0.13.3",
+          "title": "Data from an abandoned stream leaks into the next stream on a reused context",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0391.html",
+          "patched": [
+            "^0.13.4",
+            ">=0.14.3"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0398",
+          "package": "zstd-safe",
+          "version": "7.3.0",
+          "title": "`Seekable::decompress` sets a `Vec` length beyond its capacity for offsets past the end",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0398.html",
+          "patched": [
+            "^7.4.0",
+            ">=8.2.0"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0403",
+          "package": "zstd-safe",
+          "version": "7.3.0",
+          "title": "Uninitialized memory exposed when streaming decompression of a legacy frame fails",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0403.html",
+          "patched": [
+            "^7.4.0",
+            ">=8.2.0"
+          ],
+          "presentInWasmNormalBuildTree": false
+        }
+      ],
+      "warnings": {
+        "unmaintained": [
+          {
+            "id": "RUSTSEC-2024-0449",
+            "package": "unsafe-libyaml",
+            "version": "0.2.11",
+            "title": "unsafe-libyaml is unmaintained",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2024-0449.html",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2022-0054",
+            "package": "wee_alloc",
+            "version": "0.4.5",
+            "title": "wee_alloc is Unmaintained",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2022-0054.html",
+            "patched": []
+          }
+        ],
+        "unsound": [
+          {
+            "id": "RUSTSEC-2026-0253",
+            "package": "lru",
+            "version": "0.16.4",
+            "title": "Potential use-after-free due to lack of panic safety in `LruCache::pop()`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0253.html",
+            "patched": [
+              ">=0.18.2"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0395",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free with `CParameter::StableInBuffer`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0395.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0396",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "`Seekable` reads a NULL or out-of-bounds seek table",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0396.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0397",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "`OutBuffer::around_pos` exposes uninitialized memory",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0397.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0399",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free through `init_using_cdict` and `init_using_ddict`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0399.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0400",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free of a dictionary after a one-shot call on a context with an open stream",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0400.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0401",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Out-of-bounds read in `train_from_buffer` when sample sizes overflow",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0401.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0402",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Heap buffer overflow in `CCtx::try_clone` on a multithreaded context",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0402.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0404",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Double free in `DCtx::try_clone`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0404.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0405",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Out-of-bounds read with an out-of-range `InBuffer::pos`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0405.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0406",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free when changing a multithreaded context with an unfinished frame",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0406.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          }
+        ]
+      },
+      "wasmNormalBuildTreeSha256": "3ddc7b27357889f9c9d8d1490b4080087a8981d9d30179ce90810a66c6fc4ae5",
+      "runtimeMaintenanceWarning": "wee_alloc 0.4.5; RUSTSEC-2022-0054"
+    },
+    {
+      "lockfile": "contracts/adapter/Cargo.lock",
+      "lockSha256": "65022838191ee88aa4ab8f6e9f8fbdf40253b0dfaab01d1507c64801d133d82e",
+      "rawReportSha256": "cf5c4ab143ad8431d80655050fc748b1da80f1e11acd3214bea4c534610676dc",
+      "exitCode": 1,
+      "dependencies": 286,
+      "vulnerabilities": [
+        {
+          "id": "RUSTSEC-2026-0387",
+          "package": "crypto-bigint",
+          "version": "0.5.5",
+          "title": "Multiple timing variability issues in operations intended to be constant-time",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0387.html",
+          "patched": [
+            ">=0.7.6"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0391",
+          "package": "zstd",
+          "version": "0.13.3",
+          "title": "Data from an abandoned stream leaks into the next stream on a reused context",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0391.html",
+          "patched": [
+            "^0.13.4",
+            ">=0.14.3"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0398",
+          "package": "zstd-safe",
+          "version": "7.3.0",
+          "title": "`Seekable::decompress` sets a `Vec` length beyond its capacity for offsets past the end",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0398.html",
+          "patched": [
+            "^7.4.0",
+            ">=8.2.0"
+          ],
+          "presentInWasmNormalBuildTree": false
+        },
+        {
+          "id": "RUSTSEC-2026-0403",
+          "package": "zstd-safe",
+          "version": "7.3.0",
+          "title": "Uninitialized memory exposed when streaming decompression of a legacy frame fails",
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0403.html",
+          "patched": [
+            "^7.4.0",
+            ">=8.2.0"
+          ],
+          "presentInWasmNormalBuildTree": false
+        }
+      ],
+      "warnings": {
+        "unmaintained": [
+          {
+            "id": "RUSTSEC-2024-0449",
+            "package": "unsafe-libyaml",
+            "version": "0.2.11",
+            "title": "unsafe-libyaml is unmaintained",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2024-0449.html",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2022-0054",
+            "package": "wee_alloc",
+            "version": "0.4.5",
+            "title": "wee_alloc is Unmaintained",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2022-0054.html",
+            "patched": []
+          }
+        ],
+        "unsound": [
+          {
+            "id": "RUSTSEC-2026-0253",
+            "package": "lru",
+            "version": "0.16.4",
+            "title": "Potential use-after-free due to lack of panic safety in `LruCache::pop()`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0253.html",
+            "patched": [
+              ">=0.18.2"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0395",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free with `CParameter::StableInBuffer`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0395.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0396",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "`Seekable` reads a NULL or out-of-bounds seek table",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0396.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0397",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "`OutBuffer::around_pos` exposes uninitialized memory",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0397.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0399",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free through `init_using_cdict` and `init_using_ddict`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0399.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0400",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free of a dictionary after a one-shot call on a context with an open stream",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0400.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0401",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Out-of-bounds read in `train_from_buffer` when sample sizes overflow",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0401.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0402",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Heap buffer overflow in `CCtx::try_clone` on a multithreaded context",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0402.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0404",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Double free in `DCtx::try_clone`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0404.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0405",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Out-of-bounds read with an out-of-range `InBuffer::pos`",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0405.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0406",
+            "package": "zstd-safe",
+            "version": "7.3.0",
+            "title": "Use-after-free when changing a multithreaded context with an unfinished frame",
+            "url": "https://rustsec.org/advisories/RUSTSEC-2026-0406.html",
+            "patched": [
+              "^7.4.0",
+              ">=8.2.0"
+            ]
+          }
+        ]
+      },
+      "wasmNormalBuildTreeSha256": "fb10656aeeb528c7171a7e2cf8c942c7b99d7f32944a4a38b5aada31b96e4915",
+      "runtimeMaintenanceWarning": "wee_alloc 0.4.5; RUSTSEC-2022-0054"
+    },
+    {
+      "lockfile": "zcash/review-inspector/Cargo.lock",
+      "lockSha256": "b4c63769b30d936b82b692611a5712f4592a7afaf06c6305cef09dbe00c7ebf8",
+      "rawReportSha256": "659e1277e0f8207493f1d02b3fa2a76408778a16a6178c7d547e3520c3f1f94e",
+      "exitCode": 0,
+      "dependencies": 147,
+      "vulnerabilities": [],
+      "warnings": {}
+    }
+  ],
+  "limits": [
+    "No yanked-crate scan or compiled-binary scan.",
+    "The four vulnerability matches in each NEAR lock are absent from its Wasm normal/build dependency tree, but present in native test dependencies. Function-level exploitability was not established.",
+    "The two NEAR locks share the same four advisory IDs; this is not eight distinct vulnerabilities.",
+    "The Zcash scan covers the tracked review inspector only, not the separate wallet CLI, signer source checkout or the complete prerelease Zcash stack.",
+    "Unmaintained and unsound advisories remain separately recorded; no upgrades were applied."
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-02T04:21:28.674Z",
+  "recordedAt": "2026-11-02T10:36:59.722Z",
   "renderer": "Hyperframes 0.8.226 / FFmpeg 9.0.2",
   "sourceFiles": {
     "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
@@ -33,7 +33,7 @@
     "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
     "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
     "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
-    "web/public/nostr-socket.js": "f11fb505e1b87d70a9d83a185383d34703ce99ba4c196871866512ff3a9e6225",
+    "web/public/nostr-socket.js": "594e4939319eaca0555261e4f0aaea9bffc3062dff6f41569f7465c7b94effb2",
     "web/public/nostr-vendor/nostr.js": "19d16a5d3c86c851c895e8e9f9e19656423a46f70b79bac4dfef4ccca76b63df",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
@@ -50,7 +50,7 @@
     "web/render-preview-stories.cjs": "c77a06202bf0c8a242e276bf33e9747126ab29d7606b03ab422af9036c9013c1",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
     "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
-    "web/preview-flow-results.json": "fec866aa928dcec73c43b36e6ebc442a96e9d707a2b93216cfeb3d1a4ea3cbba",
+    "web/preview-flow-results.json": "ed4fd1d832991ed22c6d65e77b9b0bb4a17ca3cad469fc3fe6d424a0705a2ac6",
     "web/lenz-id-browser-results.json": "a47665bf1793234ab6ec874372b9b2204bc11f86b502f146fe146e91d61b94da",
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
@@ -154,7 +154,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 169,
+      "changingFrames": 165,
       "states": [
         {
           "id": "share",
@@ -176,14 +176,14 @@
         }
       ],
       "sceneHashes": [
-        "5ad59f87a9e98d8d32c2a63bd57159b6aeeeca9123401fd80c24050fca175474",
-        "04bf56732da6d9ae3b3bddf680f4eaba609d39ec19082fbcd6f4678f62075aa3",
-        "a4fc69c3af386c6587f9e5623ff49baf039f5ba08dc23e12646d8942b45709a4"
+        "4ad050e8381ec3d967e327bddbda23e66a1e7926e4e1aa39f9cece0a0a0cb17e",
+        "bc87735305c5f88d1b27c8a5c26d06d79cc48efb68e474e9339933b27362c356",
+        "a45d2db362847fbe35e2c26d46c78fe07ec59c5ed7143800c93987cec0dd2029"
       ],
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "10561b8b06c01575fb54fc3ce06a18a04582b0283b8533a1536ffd9a871f2f12",
+      "sha256": "07b3f71190f48ed0022a91e62c65109d67c5659b5887f86d35a36bf90262ee0e",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "a1dce6e46e3efdaed162e75272897d9027984ecf83f990305ffce6753da3484b"
+      "posterSha256": "362d1766cf316a5f148aa8d518a697b7e20d4fbf14ebfc1550fe640732cad6db"
     },
     {
       "view": "chat",
@@ -192,7 +192,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 283,
+      "changingFrames": 309,
       "states": [
         {
           "id": "write",
@@ -223,10 +223,10 @@
         "a2426f1e173c6ea984dceba6edbb33b09999aa1c0cb341b4fe0c5cf4f0ad4273",
         "af66618f1b340dd863c430dcde0b23c1cf86ec56ed671c6b91d7b74144189b3d",
         "75053fd369ce19bb11b4907e2c2542685384abd2256a08e7f1dbf999c6fbf747",
-        "73656d54aa343200bd475da8745507551cdf6a8fb03da50e4c17fca72b9d3f3d"
+        "885e5bd32bc2f8f711108242d267cd7a3b3e701ee7cf6558cbd2687a5d10c3ad"
       ],
       "file": "web/public/previews/chat-dark.mp4",
-      "sha256": "74b19de42a0d6c675dc594e3e587972a90c71fc035ab4fa854f6f425729d802a",
+      "sha256": "67c63c29cd3d409775347db57dd963aa8f9771f32246bf85ecf73e9a43c6bc3c",
       "poster": "web/public/previews/chat-dark.webp",
       "posterSha256": "fb0aa6b25ad01529395ea6c3e44681669565e56dade1189818baa30c50f8df14"
     },
@@ -282,7 +282,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 197,
+      "changingFrames": 210,
       "states": [
         {
           "id": "share",
@@ -304,14 +304,14 @@
         }
       ],
       "sceneHashes": [
-        "a88223e4a52df6fde90fc17982885b57d3dd69c791b8693b13b333a3a4a712ce",
-        "c7694f927f90535b1173779a30dd702edd469eadcc466e24548b8d55cf53732b",
-        "21c165895199c8ea66630d49c204fc0616ae6d8a414afcc08d9503643a05552c"
+        "d99d9cd3abaa48c45503aa2bdd25619e38cf1ae61b946ed198acc53625da181e",
+        "3e24eefe5806e7302afa3a49249f8948159c79ef054c00269183a102f4013f18",
+        "72bf5119c1fc587fded8c7ef6aa71224101d82e873ba02f4f7ddf44f828451d7"
       ],
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "489a072eb95a4a3393fe6cfae6d260d3c0e2a16a8610b020ab089af2ee5e8d6f",
+      "sha256": "a560f94a460d86b8dcfa4d3093e57a095032af81fe01954e71a7f2d7a1cd7129",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "10249ea4c6b1c5b2f1624525d054b09dfa0ffe3fd6e67b33223dd85ab671fd6e"
+      "posterSha256": "3cec4e9ed23ed2d774dbe5b5f9ca76b869b30ec07f38b2914a5919379c87b7f9"
     }
   ],
   "apiRequests": 0,

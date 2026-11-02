@@ -13,7 +13,8 @@ money or establishes that an offline payment will redeem.
 
 A separate [DeFi inbox library](defi-inbox.md) verifies and durably stores encrypted
 swap and refund-return requests for a selected executor. It is tested through these
-carriers but is not yet connected to wallet delivery or a chain execution worker.
+carriers. The separate [executor library](defi-executor.md) adds durable testnet
+dispatch and receipt recovery; wallet delivery and operator deployment remain open.
 
 ## Run locally
 

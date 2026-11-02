@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@defuse-protocol/intents-sdk": "0.93.0"
+    "@scure/base": "1.2.6"
   }
 }

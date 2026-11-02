@@ -1,24 +1,32 @@
+ Downloading crates ...
+  Downloaded zstd v0.13.4
+  Downloaded zstd-safe v7.4.0
+   Compiling zstd-safe v7.4.0
+   Compiling zstd v0.13.4
+   Compiling near-primitives v0.37.4
+   Compiling near-sdk v5.29.1
+   Compiling near-contract-standards v5.29.1
    Compiling lenz-test-dollar v0.1.0 (<workspace>\contracts)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.45s
-     Running unittests src\lib.rs (contracts\target\debug\deps\lenz_test_dollar-d3ffafc2e93e5e53.exe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 19s
+     Running unittests src\lib.rs (contracts\target\debug\deps\lenz_test_dollar-2e612f633a955b86.exe)
 
 running 16 tests
 test tests::existing_serialized_state_roundtrips_with_notes_balances_and_consumption ... ok
 test tests::redemption_consumption_identifies_exact_transfer_and_survives_later_balance_changes ... ok
 test tests::deposit_cannot_create_unbacked_notes - should panic ... ok
-test tests::charges_storage_to_submitter - should panic ... ok
-test tests::offline_onward_settlement_replay_and_redemption_conserve_reserve ... ok
 test tests::deposit_moves_existing_tokens_and_retry_after_spend_never_revives_value ... ok
+test tests::charges_storage_to_submitter - should panic ... ok
 test tests::deposit_rejects_zero_attached_deposit - should panic ... ok
-test tests::rejects_changed_recipient - should panic ... ok
-test tests::rejects_competing_spend - should panic ... ok
+test tests::offline_onward_settlement_replay_and_redemption_conserve_reserve ... ok
 test tests::rejects_inflation - should panic ... ok
+test tests::rejects_competing_spend - should panic ... ok
+test tests::rejects_changed_recipient - should panic ... ok
 test tests::rejects_repeated_grant - should panic ... ok
+test tests::same_source_cannot_change_owner_even_with_valid_signature - should panic ... ok
 test tests::verifies_actual_edge_deposit_signature_and_root_id ... ok
 test tests::same_source_cannot_change_amount_even_with_valid_signature - should panic ... ok
-test tests::same_source_cannot_change_owner_even_with_valid_signature - should panic ... ok
 test tests::verifies_browser_signatures_and_matches_browser_output_ids ... ok
 test tests::deposit_signature_binds_payer_source_owner_amount_and_reserve ... ok
 
-test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s
 

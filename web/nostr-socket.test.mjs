@@ -25,6 +25,18 @@ test('opt-out before connection opens no socket and abort closes pending work',a
     server.controls.wrongAck=true;const pending=relay.publish(event());controller.abort();await assert.rejects(pending,/closed|off/);
   }finally{relay?.close();await server.close();}
 });
+test('cancellation during the initial consent check opens no socket',async()=>{
+  const server=await testRelay();let relay,opened=0;
+  const controller=new AbortController();
+  class ObservedSocket extends WebSocket {constructor(...args){super(...args);opened++;}}
+  try{
+    await assert.rejects(openRelay(server.origin,{
+      allowed:async()=>{controller.abort();return true;},
+      signal:controller.signal,WebSocketImpl:ObservedSocket,
+    }).then(value=>{relay=value;return value;}),/off/);
+    assert.equal(opened,0);
+  }finally{relay?.close();await server.close();}
+});
 test('oversized replies and disconnect fail bounded exchanges',async()=>{
   const server=await testRelay();let relay;
   try{

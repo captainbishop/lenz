@@ -1,0 +1,172 @@
+{
+  "checkedAt": "2026-11-02T17:01:11.433Z",
+  "node": "v24.21.0",
+  "nearApiJs": "7.4.0",
+  "scope": "Real P-256 encryption, NEAR SDK signing, SQLite and local HTTP. Synthetic funded roots and chain/receipt responses; no live transaction or wallet changes.",
+  "tests": {
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0
+  },
+  "mutations": [
+    {
+      "name": "final-report",
+      "detected": true,
+      "failedTests": [
+        "unavailable and stale observations cannot overwrite a saved final result",
+        "a saved final state prevents dispatch from a later regressed chain response with no prior attempts"
+      ]
+    },
+    {
+      "name": "final-dispatch",
+      "detected": true,
+      "failedTests": [
+        "a saved final state prevents dispatch from a later regressed chain response with no prior attempts"
+      ]
+    },
+    {
+      "name": "duplicate-step",
+      "detected": true,
+      "failedTests": [
+        "unresolved attempt is status-only across restart even when the chain still offers the same action",
+        "parallel workers cannot broadcast the same planned step twice"
+      ]
+    },
+    {
+      "name": "signing-expiry",
+      "detected": true,
+      "failedTests": [
+        "approval expiring during signing cannot broadcast and remains recoverable"
+      ]
+    },
+    {
+      "name": "durable-reference",
+      "detected": true,
+      "failedTests": [
+        "recipient recovery remains available after request expiry without dispatch or unlocking",
+        "real SDK dispatch progresses settled input through all swap stages, returning encrypted observations",
+        "refund deposit requires the payer and produces a checked new-root observation without a wallet credit",
+        "lost replies recover after restart and never resend the same execution step",
+        "unresolved attempt is status-only across restart even when the chain still offers the same action",
+        "parallel workers cannot broadcast the same planned step twice",
+        "in-flight, rejected and attention states wait; redemption recovery needs the exact consumption record",
+        "journal failure before dispatch or signed-reference persistence stops broadcasting",
+        "receipt checks reject mismatched actions, nonfinal status, missing/cyclic graphs and invented success",
+        "unavailable and stale observations cannot overwrite a saved final result",
+        "encrypted request and completed observation travel over a real HTTP carrier"
+      ]
+    },
+    {
+      "name": "funded-root",
+      "detected": true,
+      "failedTests": [
+        "code hash, chain, freshness, funded root and signed order mismatches stop dispatch"
+      ]
+    },
+    {
+      "name": "code-pin",
+      "detected": true,
+      "failedTests": [
+        "code hash, chain, freshness, funded root and signed order mismatches stop dispatch"
+      ]
+    },
+    {
+      "name": "payer-authority",
+      "detected": true,
+      "failedTests": [
+        "refund absent, unfunded or mismatched never dispatches; a different sponsor cannot debit the payer"
+      ]
+    },
+    {
+      "name": "finality",
+      "detected": true,
+      "failedTests": [
+        "receipt checks reject mismatched actions, nonfinal status, missing/cyclic graphs and invented success"
+      ]
+    },
+    {
+      "name": "receipt-arguments",
+      "detected": true,
+      "failedTests": [
+        "receipt checks reject mismatched actions, nonfinal status, missing/cyclic graphs and invented success"
+      ]
+    },
+    {
+      "name": "signed-bytes",
+      "detected": true,
+      "failedTests": [
+        "a signer replacing the already checked transaction cannot reach broadcast"
+      ]
+    },
+    {
+      "name": "recipient-independent-read",
+      "detected": true,
+      "failedTests": [
+        "recipient checks use independent final state despite a signed executor success claim",
+        "recipient rejects foreign requests, malformed reports and nonfinal independent observations"
+      ]
+    },
+    {
+      "name": "recipient-request-binding",
+      "detected": true,
+      "failedTests": [
+        "recipient rejects foreign requests, malformed reports and nonfinal independent observations"
+      ]
+    },
+    {
+      "name": "recipient-report-time",
+      "detected": true,
+      "failedTests": [
+        "recipient rejects foreign requests, malformed reports and nonfinal independent observations"
+      ]
+    },
+    {
+      "name": "recipient-finality",
+      "detected": true,
+      "failedTests": [
+        "recipient rejects foreign requests, malformed reports and nonfinal independent observations"
+      ]
+    },
+    {
+      "name": "recipient-known-state",
+      "detected": true,
+      "failedTests": [
+        "recipient rejects foreign requests, malformed reports and nonfinal independent observations"
+      ]
+    },
+    {
+      "name": "recipient-unavailable",
+      "detected": true,
+      "failedTests": [
+        "recipient checks use independent final state despite a signed executor success claim"
+      ]
+    },
+    {
+      "name": "recipient-expired-recovery",
+      "detected": true,
+      "failedTests": [
+        "recipient recovery remains available after request expiry without dispatch or unlocking"
+      ]
+    }
+  ],
+  "sourceFiles": {
+    "carrier/defi-executor.mjs": "2300fd90fecdd6f246171c20b78970d6e5de611cdc4583686c60934453f491cd",
+    "carrier/defi-executor-verification.mjs": "1c4f353dc7e1dcc321de877971ccebe790392832a437a309e70c96aa920773f4",
+    "carrier/defi-inbox.mjs": "c83abff87a3bf0af97d58a0853840391de8c542c2cbc8b1f3569899d4b8754dd",
+    "carrier/server.mjs": "14f7b155a02cc0115ec39265336d911cabb1df46ba3874885b60de5939e5a7ec",
+    "carrier/store.mjs": "3f39a9113affb7b75175483816d563da6a41f131e9f90088a09283d8eeab0e3d",
+    "contracts/defi-executor-client.mjs": "00560a556f301e0d4830204d22bab4f096e2ea4b147ceab1fb4583dfab1279a3",
+    "contracts/defi-result-client.mjs": "0e1adf63c3b5a1aaa08adbe7e7ab7d39c2270d9a2601058398caf2b37288ad1b",
+    "contracts/defi-executor.test.mjs": "6f6b04a23c4554be0149af38f1d383e6fa0cacaf3424d00587a09c11fdc53b8b",
+    "contracts/client.mjs": "2b63ee4d674c310426c399cfae00805283dca9ace54bb9489ec7f3c1e26f8284",
+    "integrations/near-network.mjs": "ab3bd88366a2cb70da27ae67b08372e7df043bf2921c4c5f3410241f55b82f3d",
+    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
+    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
+    "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
+    "contracts/package-lock.json": "fc1802115ecae8e4da51bb7442a25810354165ad1a4e517ed1da0622596d0b44"
+  }
+}

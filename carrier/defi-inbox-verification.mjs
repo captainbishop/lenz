@@ -33,6 +33,8 @@ const variants=[
   ['capacity',inbox,'total.n < this.#limits.maxRequests','true','global, byte'],
   ['late-expiry',inbox,'storedAt < request.expiresAt && storedAt < e.expiresAt','true','expiry during verification'],
   ['receipt-state',protocol,"receipt.state === 'stored'",'true','storage receipts reject'],
+  ['spending-authority',protocol,"[DEFI_REQUEST, 'input', r.operation.packet.instruction.owner, r.operation.kind,","[DEFI_REQUEST, 'input', r.sender, r.operation.kind,",'a second messaging identity'],
+  ['legacy-conflicts',inbox,'[conflict,...legacy]','[conflict]','a second messaging identity'],
   ['input-snapshot',protocol,'const r = structuredClone(input), c = structuredClone(config);','const r = input, c = structuredClone(config);','validation snapshots'],
 ];
 const mutations=[];

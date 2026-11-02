@@ -1,2 +1,1 @@
-   Compiling lenz-rhea-adapter v0.1.0 (<workspace>\contracts\adapter)
-    Finished `release` profile [optimized] target(s) in 6.80s
+    Finished `release` profile [optimized] target(s) in 0.78s
