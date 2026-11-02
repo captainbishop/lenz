@@ -165,7 +165,7 @@
     "web/public/carrier-ui.js": "38947ba4ce139d2700773d398994709caf73ecee193ed5888b156bda328d4e19",
     "web/public/chat-layout.css": "06049f7f1d0db78b76bb15c3c3daf3a9f00b5f2a77080b386f72f5fb7f53ff16",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/chat.css": "23eda0aaeb8e7ce14832b7a12fbac6a14b59d5c3c4df053bc84219b751daa1a0",
+    "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
     "web/public/chat.html": "c415db22c139ca3b5222953d5915e9637a2d9936fafc4455f01096fd3b359391",
     "web/public/chat.js": "ebb3f18c7e7bb9ce09f39cb963a7223b613dd445c4f84a3d821dbdf35d75559f",
     "web/public/contact-card.js": "03a27e5df37f2ca57e47e8c433eadac6fee4de6bcf0b669838e43157940eda32",
@@ -191,7 +191,7 @@
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "222235fbf60950d8834504c574179746153fad88a5f68a3eb9ab2b8f00fc65bb",
+    "web/public/profile-panels.js": "da77e618ebea2a87eb7c54582fe4871ce72ad1df8013db35aa2652e3324cdd18",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
@@ -300,6 +300,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-01T20:01:58.351Z",
+  "reframedAt": "2026-11-02T04:16:20.285Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

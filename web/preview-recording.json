@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-01T20:08:17.558Z",
+  "recordedAt": "2026-11-02T04:21:28.674Z",
   "renderer": "Hyperframes 0.8.226 / FFmpeg 9.0.2",
   "sourceFiles": {
     "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
@@ -12,7 +12,7 @@
     "web/public/carrier-ui.js": "38947ba4ce139d2700773d398994709caf73ecee193ed5888b156bda328d4e19",
     "web/public/chat-layout.css": "06049f7f1d0db78b76bb15c3c3daf3a9f00b5f2a77080b386f72f5fb7f53ff16",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/chat.css": "23eda0aaeb8e7ce14832b7a12fbac6a14b59d5c3c4df053bc84219b751daa1a0",
+    "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
     "web/public/chat.html": "c415db22c139ca3b5222953d5915e9637a2d9936fafc4455f01096fd3b359391",
     "web/public/chat.js": "ebb3f18c7e7bb9ce09f39cb963a7223b613dd445c4f84a3d821dbdf35d75559f",
     "web/public/contact-card.js": "03a27e5df37f2ca57e47e8c433eadac6fee4de6bcf0b669838e43157940eda32",
@@ -38,7 +38,7 @@
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "222235fbf60950d8834504c574179746153fad88a5f68a3eb9ab2b8f00fc65bb",
+    "web/public/profile-panels.js": "da77e618ebea2a87eb7c54582fe4871ce72ad1df8013db35aa2652e3324cdd18",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
@@ -47,11 +47,11 @@
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
     "web/public/wallet-feedback.js": "55cf85c4c634f6a800cbc6e3d7a324aa1b425fe9489d2077e4df1709b65ff3de",
     "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221",
-    "web/render-preview-stories.cjs": "070baf5e7474d81dc2d99e560c7f2b75bf1121378b5767a5b7a1bb53c88059be",
+    "web/render-preview-stories.cjs": "c77a06202bf0c8a242e276bf33e9747126ab29d7606b03ab422af9036c9013c1",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
-    "web/preview-story.css": "fef3eb18cc0e06bc772d4c7770d9007a763c5649c6fafd7b2eca1ebf09d4f005",
-    "web/preview-flow-results.json": "795e5336b1620e1f51370d2b961cb264b4587f364ed0e92c8b9b8b784b30bc93",
-    "web/lenz-id-browser-results.json": "5b7a10635388605fb39e19193486b1996fe75f7f7951a17ed58d8de987de089a",
+    "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
+    "web/preview-flow-results.json": "fec866aa928dcec73c43b36e6ebc442a96e9d707a2b93216cfeb3d1a4ea3cbba",
+    "web/lenz-id-browser-results.json": "a47665bf1793234ab6ec874372b9b2204bc11f86b502f146fe146e91d61b94da",
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
     "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23"
@@ -154,7 +154,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 196,
+      "changingFrames": 169,
       "states": [
         {
           "id": "share",
@@ -176,14 +176,14 @@
         }
       ],
       "sceneHashes": [
-        "b26ee3c4c071351cbf0ac0c1b91cf8a96c95eae1e1bd8296222f9b5cf68ccd65",
-        "c06be7b13b244fb7f68cd53d89e5f864ca35987cb1671f1a953f3d4039def2d3",
-        "56e7e0a5cf982cdcaf6e77fb24c7f20ed7e9e04e810b8483fd8bc69362a997fa"
+        "5ad59f87a9e98d8d32c2a63bd57159b6aeeeca9123401fd80c24050fca175474",
+        "04bf56732da6d9ae3b3bddf680f4eaba609d39ec19082fbcd6f4678f62075aa3",
+        "a4fc69c3af386c6587f9e5623ff49baf039f5ba08dc23e12646d8942b45709a4"
       ],
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "1b4b17e19270f57671bcc0c6d7b5229d1847b864c76aca6cb187fef4b96addf3",
+      "sha256": "10561b8b06c01575fb54fc3ce06a18a04582b0283b8533a1536ffd9a871f2f12",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "c7bfd4942261f55c77ed20c88ebfcdecc5fa8f2a66f1e851bec0adefb4d197fe"
+      "posterSha256": "a1dce6e46e3efdaed162e75272897d9027984ecf83f990305ffce6753da3484b"
     },
     {
       "view": "chat",
@@ -192,7 +192,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 309,
+      "changingFrames": 283,
       "states": [
         {
           "id": "write",
@@ -223,10 +223,10 @@
         "a2426f1e173c6ea984dceba6edbb33b09999aa1c0cb341b4fe0c5cf4f0ad4273",
         "af66618f1b340dd863c430dcde0b23c1cf86ec56ed671c6b91d7b74144189b3d",
         "75053fd369ce19bb11b4907e2c2542685384abd2256a08e7f1dbf999c6fbf747",
-        "885e5bd32bc2f8f711108242d267cd7a3b3e701ee7cf6558cbd2687a5d10c3ad"
+        "73656d54aa343200bd475da8745507551cdf6a8fb03da50e4c17fca72b9d3f3d"
       ],
       "file": "web/public/previews/chat-dark.mp4",
-      "sha256": "67c63c29cd3d409775347db57dd963aa8f9771f32246bf85ecf73e9a43c6bc3c",
+      "sha256": "74b19de42a0d6c675dc594e3e587972a90c71fc035ab4fa854f6f425729d802a",
       "poster": "web/public/previews/chat-dark.webp",
       "posterSha256": "fb0aa6b25ad01529395ea6c3e44681669565e56dade1189818baa30c50f8df14"
     },
@@ -282,7 +282,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 218,
+      "changingFrames": 197,
       "states": [
         {
           "id": "share",
@@ -304,14 +304,14 @@
         }
       ],
       "sceneHashes": [
-        "3af058fc2f0ed4ec2530f9f126fdb7994d6f97cf64da080f2a7c3863e301518a",
-        "6e90116e198f04e1dbc5ad91f052169ec6df5c705b29e52e540bf9eeae6a7a34",
-        "064ff3b117020e94d4c3c332f18d734065d4fc3f57643c08ef046a76f8c30f02"
+        "a88223e4a52df6fde90fc17982885b57d3dd69c791b8693b13b333a3a4a712ce",
+        "c7694f927f90535b1173779a30dd702edd469eadcc466e24548b8d55cf53732b",
+        "21c165895199c8ea66630d49c204fc0616ae6d8a414afcc08d9503643a05552c"
       ],
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "5d179b271562c172cf0fc4e713cd3d12a9889975c3c4eac06650e6c1da04bf46",
+      "sha256": "489a072eb95a4a3393fe6cfae6d260d3c0e2a16a8610b020ab089af2ee5e8d6f",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "66a8f581ba1525644187f0e815dad3b56df568281e15bbb435c4d771a41dfc92"
+      "posterSha256": "10249ea4c6b1c5b2f1624525d054b09dfa0ffe3fd6e67b33223dd85ab671fd6e"
     }
   ],
   "apiRequests": 0,

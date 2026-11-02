@@ -1,5 +1,32 @@
 # Development freshness review
 
+## Wallet display controls, November 2, 2026
+
+The shared Lenz ID dialog uses accessible share, copy and download icons. The
+wallet eye button masks balances, payment amounts and saved-swap amounts, with a
+browser-local preference that survives tabs and offline reloads. Transaction inputs
+and approval amounts remain visible. This changes display privacy, not chain
+visibility, payment authorizations or storage encryption. Readiness notices clear
+after 3.5 seconds; subsequent errors cancel that timer and remain visible.
+
+[Five visibility checks](../web/wallet-visibility-browser-results.json),
+[three ID checks](../web/lenz-id-browser-results.json),
+[five wallet checks](../web/money-browser-results.json),
+[eight offline payment checks](../web/near-wallet-browser-results.json) and
+[two cache-upgrade checks](../web/near-payment-cache-results.json) pass in disposable
+Windows Edge contexts. The local swap fixture uses integer base units. Keys,
+encrypted vault bytes and outstanding reservations are preserved. Funding responses
+in the handover suite are fixtures; no live funding or settlement ran.
+
+The app cache advances to v40. All six Hyperframes composition checks and decoded
+video checks pass; seven homepage playback checks cover both themes, gestures,
+keyboard, reduced motion and offline use. The ID preview uses the same three symbols.
+The saved flow replay preserves its three test accounts and original payment
+receipts. The regenerated videos bind 53 presentation sources. Reviewed screenshots
+show the icon row and masked wallet in both themes. Backend, contract, Aurora and
+dependency-lock sources are unchanged.
+
+
 ## Aurora token-transfer receipts — November 2, 2026
 
 A read-only developer checker binds independent token/from/to/amount expectations

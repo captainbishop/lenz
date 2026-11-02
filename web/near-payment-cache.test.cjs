@@ -2,8 +2,8 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{execFileSync}=require('node:child_process');
 const {securityHeaders}=require('./security-policy.mjs');
-const previous='d0ea4ee8b81c71747141050f88ad5f99b6a35294';
-const old=new Map(['carrier-client.js','delivery-mode.js','carrier-ui.js','chat.html','money.html','money.js','chat-sw.js','chat.js','receive-packet.js','near-payment-status.js','near-chat.js','near-wallet.js','wallet-feedback.js','chat-layout.css'].map(f=>['/'+f,execFileSync('git',['show',previous+':web/public/'+f],{windowsHide:true})]));
+const previous='daf4da23aaed2455b8c288294e36e27009c861a9';
+const old=new Map(['rhea-wallet.js','profile-panels.js','chat.css','money.css','near-wallet.css','carrier-client.js','delivery-mode.js','carrier-ui.js','chat.html','money.html','money.js','chat-sw.js','chat.js','receive-packet.js','near-payment-status.js','near-chat.js','near-wallet.js','wallet-feedback.js','chat-layout.css'].map(f=>['/'+f,execFileSync('git',['show',previous+':web/public/'+f],{windowsHide:true})]));
 let modern=false,fail=false,api=0;
 const server=http.createServer(async(req,res)=>{try{
   const file=new URL(req.url,'http://localhost').pathname;
@@ -11,7 +11,7 @@ const server=http.createServer(async(req,res)=>{try{
   res.setHeader('Cache-Control','no-store');
   res.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.html':'text/html','.css':'text/css','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');
   if(file.startsWith('/api/')){api++;throw Error('No financial request allowed');}
-  if(fail&&file==='/nearby-connection.js'){res.writeHead(503);res.end('Deliberately unavailable update');return;}
+  if(fail&&file==='/wallet-visibility.js'){res.writeHead(503);res.end('Deliberately unavailable update');return;}
   res.end(!modern&&old.has(file)?old.get(file):await fs.readFile(path.join(__dirname,'public',file)));
 }catch{res.writeHead(404);res.end('Unavailable');}});
 (async()=>{
@@ -39,12 +39,12 @@ const server=http.createServer(async(req,res)=>{try{
     });
     modern=true;fail=true;assert.equal(await update(),'redundant');
     await context.setOffline(true);assert((await p.goto(base+'/chat.html')).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    assert.equal(await snapshot(),before);console.log('PASS failed nearby cache update preserves old offline chat, identity and reservation');
+    assert.equal(await snapshot(),before);console.log('PASS failed wallet cache update preserves old offline chat, identity and reservation');
     await context.setOffline(false);fail=false;assert.equal(await update(),'activated');
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v39-delivery-status');return !!key&&!!(await(await caches.open(key)).match('/nearby-connection.js'));});
+    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v40-wallet-visibility');return !!key&&!!(await(await caches.open(key)).match('/wallet-visibility.js'));});
     assert(cached);assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
-    console.log('PASS successful cache update loads nearby dependencies offline and preserves identity, encrypted vault and reservation');
+    console.log('PASS successful cache update loads balance visibility offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');
   }finally{await browser.close();await new Promise(r=>server.close(r));}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1;});

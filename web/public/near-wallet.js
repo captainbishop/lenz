@@ -1,4 +1,5 @@
 import { walletError } from './wallet-feedback.js';
+import { walletAmount, setupBalanceVisibility } from './wallet-visibility.js';
 import { digest, openMessage } from './peer-crypto.js';
 import { updateState } from './chat-store.js';
 import { mountRheaWallet, loadRheaConfig, renderRheaWallet } from './rhea-wallet.js';
@@ -11,6 +12,7 @@ import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, d
 
 const $ = selector => document.querySelector(selector);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if(text !== undefined) n.textContent = text; if(cls) n.className = cls; return n; };
+function amountLabel(value, suffix = '') { const label=el('strong'); label.append(walletAmount(el('span'),displayUnits(value)),document.createTextNode(' tUSD'+suffix)); return label; }
 let config = { contract: null, ready: false }, currentPacket = null, selectedFile = null, run;
 async function api(route, data) {
   const response = await fetch('/api/testnet/' + route, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: AbortSignal.timeout(90000) });
@@ -28,11 +30,14 @@ function linkReceipt(hash) {
   const a = el('a','View confirmation ↗'); a.href = 'https://testnet.nearblocks.io/txns/' + encodeURIComponent(hash); a.target='_blank'; a.rel='noopener noreferrer'; return a;
 }
 export function mountNearWallet({ action, status }) {
-  run = operation => action(async()=> { try { await operation(); status('Your wallet is ready.'); } catch(error) { const message=walletError(error); notice(message); throw new Error(message); } });
+  run = operation => action(async()=> { try { await operation(); status('Your wallet is ready.', false, { transient: true }); } catch(error) { const message=walletError(error); notice(message); throw new Error(message); } });
   const section = el('section',undefined,'near-wallet'); section.id='near-wallet';
-  section.innerHTML = `<div class="near-balance"><div class="balance-top"><span>OFFLINE WALLET</span><span class="near-network">NEAR · TESTNET</span></div><div class="near-amount"><strong id="near-total">0</strong><span>tUSD</span></div><p id="near-balance-caption">Fund your first offline payment.</p><div class="near-actions"><button id="near-send" type="button">↗ Send</button><button id="near-receive" type="button">↙ Receive</button><button id="near-fund" type="button">Add tUSD</button></div><p class="near-token-note">Lenz Test Dollar · a test token with no cash value</p></div>
+  section.innerHTML = `<div class="near-balance"><div class="balance-top"><div class="balance-label"><span>OFFLINE WALLET</span><button id="toggle-balances" type="button" aria-label="Hide balances" title="Hide balances" aria-pressed="false"><span data-eye-open><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><span data-eye-closed hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 3 18 18M10.6 5.1 12 5c6.5 0 10 7 10 7a20 20 0 0 1-3.2 4M6.3 6.3A22 22 0 0 0 2 12s3.5 7 10 7a12 12 0 0 0 5.7-1.7M10 10a3 3 0 0 0 4 4"/></svg></span></button></div><span class="near-network">NEAR · TESTNET</span></div><div class="near-amount"><strong id="near-total">0</strong><span>tUSD</span></div><p id="near-balance-caption">Fund your first offline payment.</p><div class="near-actions"><button id="near-send" type="button">↗ Send</button><button id="near-receive" type="button">↙ Receive</button><button id="near-fund" type="button">Add tUSD</button></div><p class="near-token-note">Lenz Test Dollar · a test token with no cash value</p></div>
   <div class="near-journey"><div class="section-heading"><h2>Offline payments</h2><button id="near-explain" type="button" class="secondary" aria-expanded="false" aria-controls="near-explanation">How it works</button></div><div id="near-explanation" hidden><ol><li><span>01</span><strong>Add money</strong><small>Start with test dollars</small></li><li><span>02</span><strong>Go offline</strong><small>Send it. Receive it. Send it again.</small></li><li><span>03</span><strong>Confirm online</strong><small>Check that your payment went through</small></li></ol><p>You can send a payment while offline, and the recipient can pass it on. Share it using a nearby sharing app. Payments remain pending until checked online; if the same money was sent twice, only one payment can be confirmed.</p></div><p id="near-connection" class="quiet" role="status">Checking testnet configuration…</p><p id="near-feedback" class="status" role="status"></p></div>`;
   $('#wallet-content').prepend(section);
+  walletAmount($('#near-total'), '0');
+  walletAmount($('#near-balance-caption'), 'Fund your first offline payment.', 'Saved on this device.');
+  setupBalanceVisibility();
   mountRheaWallet({action});
   const activity=el('section',undefined,'near-activity');activity.innerHTML='<div class="section-heading"><h2>Payments</h2><button id="near-refresh" class="secondary" type="button">Refresh payments</button></div><p id="near-empty" class="quiet">Your payments will appear here.</p><div id="near-payments"></div>';
   $('.wallet-lower').prepend(activity);
@@ -103,15 +108,15 @@ export async function renderNearWallet(state) {
   const vault=await readNearVault(state,config.contract), ledger=await nearLedger(vault), owner=compressed(state.identity.profile.signingPublic);
   await renderRheaWallet(vault,state.identity);
   const owned=ledger.available.filter(n=>n.owner===owner), total=owned.reduce((n,v)=>n+BigInt(v.amount),0n);
-  $('#near-total').textContent=displayUnits(total);$('#near-fund').disabled=!!vault.roots.find(n=>n.owner===owner && vault.receipts[n.id]);
-  $('#near-balance-caption').textContent=total?'Saved on this device · check payment status below.':'Add test dollars or receive a payment.';
+  walletAmount($('#near-total'),displayUnits(total));$('#near-fund').disabled=!!vault.roots.find(n=>n.owner===owner && vault.receipts[n.id]);
+  walletAmount($('#near-balance-caption'),total?'Saved on this device · check payment status below.':'Add test dollars or receive a payment.','Saved on this device.');
   const list=$('#near-payments');list.replaceChildren();
   for(const note of ledger.notes.values()) if(note.owner===owner&&ledger.blocked.has(note.id)&&!ledger.consumed.has(note.id)) {
-    const row=el('article',undefined,'near-payment');row.append(el('strong',displayUnits(note.amount)+' tUSD'),el('span','Payment could not be confirmed','near-state'),el('small','This money was used in another payment, so it is not included in your balance.'));list.append(row);
+    const row=el('article',undefined,'near-payment');row.append(amountLabel(note.amount),el('span','Payment could not be confirmed','near-state'),el('small','This money was used in another payment, so it is not included in your balance.'));list.append(row);
   }
   for(const note of owned) {
     const row=el('article',undefined,'near-payment'), id=note.id.startsWith('root:')?note.id:note.id.split(':')[0], receipt=vault.receipts[id], retry=!!vault.confirmations?.[note.id];
-    row.append(el('strong',displayUnits(note.amount)+' tUSD'),el('span',receipt?'Confirmed':retry?'Confirmation pending':'Awaiting confirmation','near-state'));
+    row.append(amountLabel(note.amount),el('span',receipt?'Confirmed':retry?'Confirmation pending':'Awaiting confirmation','near-state'));
     if(receipt?.txHash)row.append(linkReceipt(receipt.txHash));
     else if(receipt?.blockHeight){const a=el('a','View confirmation ↗');a.href='https://testnet.nearblocks.io/blocks/'+receipt.blockHeight;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}
     if(!receipt && retry) { const check=el('button','Check confirmation','secondary');check.type='button';check.dataset.nearOnline='';check.disabled=!navigator.onLine;check.onclick=()=>run(async()=>{await refreshNearPayments(config.contract);notice('Payment status checked.');});row.append(check); }
@@ -131,7 +136,7 @@ export async function renderNearWallet(state) {
     const noteId=payload?await digest(transferTerms(config.contract,payload.path.at(-1)))+':0':null;
     const blocked=noteId&&ledger.blocked.has(noteId);
     const acknowledged=await deliveryAcknowledged(state,state.messages.find(r=>r.packet.id===outgoing.packet.id));
-    row.append(el('strong',`${displayUnits(outgoing.amount)} tUSD → ${contact?.name??'Contact'}`),el('span',blocked?'Payment could not be confirmed':acknowledged?'File received':'Ready to share','near-state'));
+    row.append(amountLabel(outgoing.amount,` → ${contact?.name??'Contact'}`),el('span',blocked?'Payment could not be confirmed':acknowledged?'File received':'Ready to share','near-state'));
     if(acknowledged)row.append(el('small','Receipt received · your contact acknowledged the file. Payment confirmation is separate.','delivery-state'));
     if(blocked)row.append(el('small','This payment conflicts with an earlier spend. Let your contact know it cannot be confirmed.'));
     else { const save=el('button','Save payment file','secondary');save.onclick=()=>download(outgoing.packet);row.append(save); }
@@ -143,7 +148,7 @@ export async function renderNearWallet(state) {
     const payload=await openMessage(state.identity,contact,record.packet);
     if(payload?.kind!=='lenz-near-payment-v1'||payload.contract!==config.contract)continue;
     const row=el('article',undefined,'near-payment');
-    row.append(el('strong',`${displayUnits(payload.path.at(-1).amount)} tUSD from ${contact.name}`),el('small','A receipt tells your contact this file reached you. It does not confirm the payment on NEAR.'));
+    row.append(amountLabel(payload.path.at(-1).amount,` from ${contact.name}`),el('small','A receipt tells your contact this file reached you. It does not confirm the payment on NEAR.'));
     const receipt=el('button','Save receipt to share','secondary');receipt.type='button';
     receipt.onclick=()=>run(async()=>{receipt.disabled=true;try{const packet=await updateState(s=>prepareDeliveryReceipt(s,record.packet.id));download(packet,'receipt');notice('Receipt saved. Share it back to your contact.');}finally{receipt.disabled=false;}});
     row.append(receipt);receivedFiles.append(row);

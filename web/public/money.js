@@ -9,8 +9,12 @@ import { mountNearWallet, loadNearConfig, renderNearWallet, openNearSend } from 
 mountProfilePanels();
 const $ = selector => document.querySelector(selector);
 const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
-let busy = false;
-function status(text, error = false) { $('#status').textContent = text; $('#status').className = error ? 'status error' : 'status'; }
+let busy = false, statusTimer;
+function status(text, error = false, { transient = false } = {}) {
+  clearTimeout(statusTimer);
+  const node = $('#status'); node.textContent = text; node.className = error ? 'status error' : 'status';
+  if (transient && !error) statusTimer = setTimeout(() => { node.textContent = ''; }, 3500);
+}
 async function action(operation) {
   if (busy) return; busy = true; $('main').setAttribute('aria-busy', 'true');
   document.querySelectorAll('.wallet-feedback').forEach(node => { node.textContent = ''; });
@@ -36,7 +40,7 @@ function start(name, privateProfile = false) { return action(async () => {
   await updateState(async state => {
     if (state.identity) throw new Error('This browser already has a profile. Reload to see it.');
     state.identity = await createIdentity(name); if (privateProfile) state.identity.profile.avatar = 'moon';
-  }); status('Profile saved. Your wallet is ready.');
+  }); status('Profile saved. Your wallet is ready.', false, { transient: true });
 }); }
 $('#wallet-identity-form').onsubmit = event => { event.preventDefault(); start($('#wallet-name').value); };
 $('#wallet-private').onclick = () => start(privateName(), true);
@@ -45,4 +49,4 @@ setupContacts({ action, status, select: id => { $('#near-recipient').value = id;
 $('#prepare-money-offline').onclick = () => action(async () => { await saveOffline(); status('Wallet and conversation files saved for offline use.'); });
 channel?.addEventListener('message', () => { if (!busy) render().catch(error => status(error.message, true)); });
 mountNearWallet({ action, status });
-try { await loadNearConfig(); await render(); status('Your wallet is ready.'); } catch (error) { status(error.message, true); }
+try { await loadNearConfig(); await render(); status('Your wallet is ready.', false, { transient: true }); } catch (error) { status(error.message, true); }

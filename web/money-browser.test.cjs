@@ -31,6 +31,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
    await p.locator('#near-send').click();assert(await p.locator('#near-send-amount').isVisible());assert((await p.locator('#near-send-dialog').innerText()).includes('NEAR settlement'));await p.locator('[data-close=near-send-dialog]').click();
   });
   await check('current wallet fits desktop and phone widths in both themes',async()=>{
+   await p.waitForFunction(()=>document.querySelector('#status').textContent==='');
    for(const theme of ['light','dark'])for(const [label,width,height] of [['desktop',1280,900],['narrow',375,812]]){
     await p.setViewportSize({width,height});await p.evaluate(t=>document.documentElement.dataset.theme=t,theme);
     assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));

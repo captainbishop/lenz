@@ -19,6 +19,17 @@ It does not link contacts, sign or send payments, or enable account recovery.
 
 ## Profiles and the standalone wallet
 
+The eye button hides wallet amounts, including payment history and saved-swap
+amounts. This browser remembers the choice across tabs and offline reloads.
+Amounts being entered or approved remain visible. This is display privacy;
+on-chain records and shared files are unchanged. Startup readiness notices clear
+after 3.5 seconds, while errors remain visible. Lenz ID sharing uses labelled
+share, copy and PNG-download icons in both themes.
+
+Run `node web/wallet-visibility-browser.test.cjs` for the [visibility checks](wallet-visibility-browser-results.json).
+The test uses disposable Edge profiles and local fixture backing, verifies existing
+keys/vault/reservations are unchanged, and sends no financial API request.
+
 Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, share Lenz IDs, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. With automatic delivery enabled, Send saves the encrypted packet and wakes the enabled delivery clients. Offline packets survive reload and resume when connected. With delivery off, the app opens the file-sharing dialog. Neither mode implies blockchain confirmation. See [internet delivery](../docs/internet-delivery.md) for existing public relays or [carrier setup and privacy](../carrier/README.md) for separately operated Lenz carriers.
 
 Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Pick a name for me in the wallet, or Continue privately in chat, generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.

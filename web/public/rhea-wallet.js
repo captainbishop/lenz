@@ -1,4 +1,5 @@
 import { readState, updateState } from './chat-store.js';
+import { walletAmount } from './wallet-visibility.js';
 import { readNearVault, saveNearVault, displayUnits, units, compressed } from './near-protocol.js';
 import { prepareRefundReturn, acceptDepositResult } from './near-deposit.js';
 import { prepareRheaSwap, checkRheaConfig } from './rhea-protocol.js';
@@ -96,7 +97,10 @@ export async function renderRheaWallet(vault,identity){
   savedCount=(vault.rheaOrders??[]).filter(o=>!['complete','refunded'].includes(o.status?.stage)).length;
   for(const o of [...(vault.rheaOrders??[])].reverse()){
     const row=el('article',undefined,'near-payment'),i=o.packet.instruction;
-    row.append(el('strong',`${displayUnits(i.amount)} tUSD → wrapped NEAR`),el('span',labels[o.status?.stage]??'Saved · money set aside','near-state'),el('small',`Receiving wallet: ${i.receiver_id}. Receive at least: ${wrapped(i.min_output)} wrapped test NEAR.`));
+    const amount=el('strong'),minimum=el('small');
+    amount.append(walletAmount(el('span'),displayUnits(i.amount)),document.createTextNode(' tUSD → wrapped NEAR'));
+    minimum.append(document.createTextNode(`Receiving wallet: ${i.receiver_id}. Receive at least: `),walletAmount(el('span'),wrapped(i.min_output)),document.createTextNode(' wrapped test NEAR.'));
+    row.append(amount,el('span',labels[o.status?.stage]??'Saved · money set aside','near-state'),minimum);
 
     if(o.returnReceipt)row.append(el('small','Refund returned to Lenz.'));
     const save=el('button','Share swap request','secondary');save.onclick=()=>download(o.packet);row.append(save);
