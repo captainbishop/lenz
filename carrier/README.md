@@ -11,6 +11,10 @@ back through the same network. A carrier acknowledgement means only **stored by
 that carrier**. A recipient receipt acknowledges the exact file. Neither settles
 money or establishes that an offline payment will redeem.
 
+A separate [DeFi inbox library](defi-inbox.md) verifies and durably stores encrypted
+swap and refund-return requests for a selected executor. It is tested through these
+carriers but is not yet connected to wallet delivery or a chain execution worker.
+
 ## Run locally
 
 Requires Node.js 24.21.0, including its built-in SQLite module. No npm installation

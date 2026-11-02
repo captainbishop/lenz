@@ -1,5 +1,26 @@
 # Development freshness review
 
+## Encrypted DeFi intake, November 2, 2026
+
+A developer inbox verifies encrypted Rhea swap and refund-return requests bound to
+an owner, executor, exact operation, expiry and explicit public-testnet disclosure.
+It commits ciphertext before acknowledging storage, retains conflict records across
+expiry/restart and never changes wallet funds. Existing contract signatures and
+funding/finality requirements remain in force.
+
+[Verification](../carrier/defi-inbox-results.json) passes 17 local tests and detects
+11 guard alterations. Tests exercise actual WebCrypto, SQLite and two loopback HTTP
+carriers using disposable identities and synthetic reserve roots. The existing
+carrier, reserve, swap and deposit suites pass 31 additional tests. No chain call,
+funding, user-wallet change or physical-device test ran.
+
+[Implementation limits](../carrier/defi-inbox.md) distinguish intake from executor
+dispatch and settlement. Wallet approval, nearby DeFi handoff, chain execution,
+verified results and additional protocol/privacy adapters remain open. The new
+module is not imported by the app, so no UI, cache or preview source changes are
+required. Existing video/poster source hashes remain applicable. Carrier container
+runtime, chain contracts and dependencies are unchanged.
+
 ## Wallet display controls, November 2, 2026
 
 The shared Lenz ID dialog uses accessible share, copy and download icons. The
