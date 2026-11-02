@@ -1,5 +1,23 @@
 # Development freshness review
 
+## Aurora token-transfer receipts — November 2, 2026
+
+A read-only developer checker binds independent token/from/to/amount expectations
+to exact direct-transfer calldata, final successful receipts, canonical true return
+and one matching Transfer event. False, absent, malformed and mismatched evidence
+cannot become a reported transfer. It changes no journal state or wallet balance.
+
+The full suite passes 105 Aurora tests and one independent SDK check. Eleven new
+transfer guard alterations are detected, alongside the existing 24 submission and
+receipt controls. Fourteen transfer checks include actual local Solidity/EVM
+execution and balance reads. A deliberately dishonest token reports the matching
+event without moving balances; [verification and limits](../aurora/engine-transfers.md)
+retain that counterexample. Matching events require token/code trust before any
+settlement decision. The surrounding NEAR receipts are synthetic, and no live
+transaction or funding ran. App, contract, carrier, dependency-lock and preview
+sources remain unchanged; their recorded preview provenance remains applicable.
+
+
 ## Aurora access-key preflight — November 2, 2026
 
 The submission journal now checks the exact signed account/key at finality before

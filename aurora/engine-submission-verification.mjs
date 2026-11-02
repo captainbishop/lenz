@@ -12,7 +12,7 @@ function run(args){
   assert.equal(result.error,undefined);assert.equal(result.status,0,result.stdout+result.stderr);
   return result.stdout;
 }
-const files=['engine-access.mjs','engine-access.test.mjs','engine-access-source.json','engine-signed.mjs','engine-journal.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs',
+const files=['engine-transfer.mjs','engine-transfer.test.mjs','engine-transfer-evm.test.mjs','engine-transfer-cli.test.mjs','engine-transfer-fixtures.mjs','engine-transfer-mutations.mjs','engine-transfer-mutations.json','scripts/check-transfer.js','local-evm.mjs','compiler.mjs','engine-access.mjs','engine-access.test.mjs','engine-access-source.json','engine-signed.mjs','engine-journal.mjs','engine-submit-rpc.mjs','engine-receipt.mjs','engine-codec.mjs',
   'engine-journal.test.mjs','engine-submit-rpc.test.mjs','engine-submission-cli.test.mjs','engine-submission-sdk.test.mjs',
   'engine-submission-fixtures.mjs','scripts/engine-submission.js','engine-submission-mutations.mjs',
   'engine-submission-mutations.json','engine-receipt-mutations.mjs','engine-receipt-mutations.json',
@@ -27,7 +27,7 @@ for(const [name,files] of [['aurora',pkg.scripts.test.slice('node --test '.lengt
   assert(count>0);assert.match(output,/^# fail 0$/m);assert.match(output,/^# cancelled 0$/m);assert.match(output,/^# skipped 0$/m);
   results.push({name,passed:count,failed:0});console.log(name+': '+count+' passed');
 }
-for(const file of ['engine-submission-mutations.mjs','engine-receipt-mutations.mjs'])console.log(run([file]).trim());
+for(const file of ['engine-submission-mutations.mjs','engine-receipt-mutations.mjs','engine-transfer-mutations.mjs'])console.log(run([file]).trim());
 const sourceFiles={};
 for(const file of files){
   sourceFiles[file]=await shaFile(file);
@@ -37,5 +37,5 @@ const sdk=JSON.parse(await readFile(new URL('../contracts/node_modules/near-api-
 assert.equal(sdk.version,'7.4.0');
 await writeFile(new URL('./engine-submission-results.json',import.meta.url),JSON.stringify({
   checkedAt:new Date().toISOString(),node:process.version,platform:process.platform,arch:process.arch,nearApiJs:sdk.version,
-  scope:'Local SQLite, child-process interruption, synthetic signed calls/receipts and loopback HTTP. No live transaction or wallet changes.',
+  scope:'Local SQLite, child-process interruption, synthetic signed calls/NEAR receipts, actual local EVM token execution and loopback HTTP. No live transaction or wallet changes.',
   results,sourceFiles},null,2)+'\n');

@@ -1,14 +1,14 @@
 {
-  "checkedAt": "2026-11-01T23:18:52.791Z",
+  "checkedAt": "2026-11-02T03:55:48.109Z",
   "node": "v24.21.0",
   "platform": "win32",
   "arch": "x64",
   "nearApiJs": "7.4.0",
-  "scope": "Local SQLite, child-process interruption, synthetic signed calls/receipts and loopback HTTP. No live transaction or wallet changes.",
+  "scope": "Local SQLite, child-process interruption, synthetic signed calls/NEAR receipts, actual local EVM token execution and loopback HTTP. No live transaction or wallet changes.",
   "results": [
     {
       "name": "aurora",
-      "passed": 91,
+      "passed": 105,
       "failed": 0
     },
     {
@@ -18,6 +18,16 @@
     }
   ],
   "sourceFiles": {
+    "engine-transfer.mjs": "83db2a110b75685290d0ddd2211d10240253cf23e59d4e8cac87211f04a48a22",
+    "engine-transfer.test.mjs": "4a74cda3681eecceab6c3f76170a3c2d470a0a93c937c85a3ec4872b1d3e201b",
+    "engine-transfer-evm.test.mjs": "5cb0e12e47b45bc07dc898a2e0acbb722a3f223733f85313a375044d926e33a3",
+    "engine-transfer-cli.test.mjs": "e95d79aa7b714ed41eaf763fddc22ed0f0c34486d1184ced013146ee7b826de8",
+    "engine-transfer-fixtures.mjs": "fc5bd53bed388d9d6a0fddc93561f817de51bd2659e88e7cc900008130e83f56",
+    "engine-transfer-mutations.mjs": "5b53dcc46f15935bca550810f60ebde8b312eac6879e085b9d1b3c74d5ceb890",
+    "engine-transfer-mutations.json": "23819538b525664d79c5d4d168e45994fc17086f3e628b999f8d30aef0b3e1ed",
+    "scripts/check-transfer.js": "c22bfbc9fa895a5de5636ff947a69055da038e27cbf3a510c58d76a035cd0b7c",
+    "local-evm.mjs": "d99ea4acf6bff577f8809df63640626432e860038a7ba9a4a2c0dcfb48cbc04b",
+    "compiler.mjs": "c31bcb35f3c9892e6aaa7ddefea0b2bd6d886c600e4c6d66f6e542676c937cba",
     "engine-access.mjs": "0fb33349f0a46274ebd0c0ec91b452a605b7765734c949909f286c7ca4f99b24",
     "engine-access.test.mjs": "4f7b723b3f9f83e0655fb1ea75679ecee914a99331fa102d26926b0a0bd73ea0",
     "engine-access-source.json": "26bb4bec967f098f7603f59df48f2b31dca7f24595f58ada9f31b31304a34c7e",
@@ -33,12 +43,12 @@
     "engine-submission-fixtures.mjs": "e4ff14a7966616e78eb41ffca15158b2683bbab3e0febfcb829d6227771ec749",
     "scripts/engine-submission.js": "c6d1816c012b53f5d57f97d808bf97972681e394027fd2138a78343992d2ac72",
     "engine-submission-mutations.mjs": "e53e993c134d98a4a090da2990dc2e62dc8474376dc61491841e1aa13d55eee7",
-    "engine-submission-mutations.json": "055ab96eb8a12181b0d21dd0a8384ccff5c84e90123e177d51c1f62585f390a7",
+    "engine-submission-mutations.json": "7399dba9b7c47214f583f08e551053d3c694aea726d0f0766fe7535b440fa22f",
     "engine-receipt-mutations.mjs": "23675cbb5b1b0e725f1542e7eff1edb02d7c768c81ffbddc5e4277ee7c6a3f52",
-    "engine-receipt-mutations.json": "892c448826794af163b1b73fa6c10856c60e39dc5b61661b9e8cb47080a261ae",
-    "engine-submission-verification.mjs": "67f9d55ddfd006a6bec4ca11eaaba3311d5c5910713d7e8a8eee9abc506d1a85",
+    "engine-receipt-mutations.json": "b9b2fd63d9e9a8f754dd721dffa11453f49393dded11b6476575087d22abc343",
+    "engine-submission-verification.mjs": "2853a6859fcfcfd98ed8bc85fadeebbb8a1ef6f9788aa0319cfd717038fedcbf",
     "engine-submission-source.json": "ef642f5bfd5baea9b5e8aadbd7d09cc78803609a276e093fac3db835e6b5b51b",
-    "package.json": "57a78c9e01884069b0e554e29f42671ddc3433d19eb7e5cac38dbff9947cca8b",
+    "package.json": "dd98c96422cbe1bf7955e3c418ef867fb27e0a2663ccdac89b81add8f2b18817",
     "package-lock.json": "933097564fbf2f5e12d9c07808d54b3c4060f5087864d3983367fa2e311712a6",
     "../contracts/package-lock.json": "fc1802115ecae8e4da51bb7442a25810354165ad1a4e517ed1da0622596d0b44"
   }

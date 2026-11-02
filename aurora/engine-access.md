@@ -65,7 +65,8 @@ executed; recovery still checks the saved transaction hash.
 
 Run `node engine-submission-verification.mjs` from this directory after installing
 the pinned Aurora and contracts dependencies. The [recorded run](engine-submission-results.json)
-passes 91 Aurora tests, one independent SDK check and 24 detected guard removals.
+passes 105 Aurora tests, one independent SDK check and 35 detected guard alterations,
+including eleven [transfer-receipt controls](engine-transfers.md).
 
 Eleven access tests cover exact query identity/finality, restricted keys, nonce
 boundaries, integer precision, unsupported permissions, missing keys, changing

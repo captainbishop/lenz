@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-11-02T03:55:48.076Z",
+  "scope": "Synthetic Engine receipts and independent ethers ABI encodings. No live submission.",
+  "sourceFiles": {
+    "engine-transfer.mjs": "83db2a110b75685290d0ddd2211d10240253cf23e59d4e8cac87211f04a48a22",
+    "engine-transfer.test.mjs": "4a74cda3681eecceab6c3f76170a3c2d470a0a93c937c85a3ec4872b1d3e201b",
+    "engine-transfer-fixtures.mjs": "fc5bd53bed388d9d6a0fddc93561f817de51bd2659e88e7cc900008130e83f56",
+    "engine-submission-fixtures.mjs": "e4ff14a7966616e78eb41ffca15158b2683bbab3e0febfcb829d6227771ec749",
+    "engine-codec.mjs": "86062d116e759dc7bc29affff122b6a2636346c92dae4c2eb0e0f95099dfc854",
+    "engine-receipt.mjs": "34f28a26586c11a96cb0d2c3ac70fd0ee37a21475f17018b0ef92ad7640289c1"
+  },
+  "results": [
+    {
+      "name": "execution-success",
+      "detected": true
+    },
+    {
+      "name": "canonical-true",
+      "detected": true
+    },
+    {
+      "name": "exact-calldata",
+      "detected": true
+    },
+    {
+      "name": "engine-caller",
+      "detected": true
+    },
+    {
+      "name": "token-and-value",
+      "detected": true
+    },
+    {
+      "name": "single-transfer",
+      "detected": true
+    },
+    {
+      "name": "event-emitter",
+      "detected": true
+    },
+    {
+      "name": "event-sender",
+      "detected": true
+    },
+    {
+      "name": "event-recipient",
+      "detected": true
+    },
+    {
+      "name": "event-amount",
+      "detected": true
+    },
+    {
+      "name": "expectation-snapshot",
+      "detected": true
+    }
+  ]
+}

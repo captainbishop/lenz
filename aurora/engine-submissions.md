@@ -94,10 +94,12 @@ After installing both the Aurora and `../contracts/` pinned dependencies, run:
 node engine-submission-verification.mjs
 ```
 
-The [recorded run](engine-submission-results.json) passed 91 Aurora tests and one
+The [recorded run](engine-submission-results.json) passed 105 Aurora tests and one
 independent near-api-js 7.4.0 check of encoding, transaction hash and signature.
 [Sixteen submission guard removals](engine-submission-mutations.json) and
 [eight receipt guard removals](engine-receipt-mutations.json) were detected.
+[Eleven transfer controls](engine-transfer-mutations.json) also pass for the
+[direct ERC-20 receipt checker](engine-transfers.md).
 Reports bind the checked implementation and tests by SHA-256.
 
 Tests cover failed record/attempt/result writes, visibility from another database

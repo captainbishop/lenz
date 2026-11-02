@@ -106,7 +106,9 @@ distinguishes `EXECUTED` from `FINAL`, which includes completion of refund
 receipts. An incomplete final graph is rejected rather than treated as success.
 
 Even a successful EVM call may return false, do nothing or only begin an
-asynchronous asset transfer. The execution adapter must still verify the intended
+asynchronous asset transfer. The [direct ERC-20 checker](engine-transfers.md)
+now checks exact transfer calldata, canonical true return and matching event
+parties/amount. Its reported result does not establish token trust or credit money. The execution adapter must still verify the intended
 asset, recipient and amount, final bridge/callback outcomes and conservation of
 liabilities. The [developer journal](engine-submissions.md) now saves signed calls
 before dispatch and checks interrupted submissions by hash. Account authorization,

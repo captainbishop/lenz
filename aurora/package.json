@@ -13,8 +13,9 @@
     "check:engine": "node scripts/check-engine.js",
     "check:names": "node scripts/check-names.js",
     "check:transaction": "node scripts/check-transaction.js",
+    "check:transfer": "node scripts/check-transfer.js",
     "submission": "node scripts/engine-submission.js",
-    "test": "node --test dependencies.test.mjs local-evm.test.mjs rpc.test.mjs engine-codec.test.mjs engine-query.test.mjs engine-receipt.test.mjs name-resolution.test.mjs engine-journal.test.mjs engine-submit-rpc.test.mjs engine-submission-cli.test.mjs engine-access.test.mjs"
+    "test": "node --test dependencies.test.mjs local-evm.test.mjs rpc.test.mjs engine-codec.test.mjs engine-query.test.mjs engine-receipt.test.mjs name-resolution.test.mjs engine-journal.test.mjs engine-submit-rpc.test.mjs engine-submission-cli.test.mjs engine-access.test.mjs engine-transfer.test.mjs engine-transfer-evm.test.mjs engine-transfer-cli.test.mjs"
   },
   "devDependencies": {
     "@ethereumjs/common": "10.1.3",

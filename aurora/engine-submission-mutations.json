@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-01T23:18:44.453Z",
+  "checkedAt": "2026-11-02T03:55:33.401Z",
   "scope": "Local synthetic signed calls and SQLite failure/restart tests. No live chain submission.",
   "sourceFiles": {
     "engine-access.test.mjs": "4f7b723b3f9f83e0655fb1ea75679ecee914a99331fa102d26926b0a0bd73ea0",
