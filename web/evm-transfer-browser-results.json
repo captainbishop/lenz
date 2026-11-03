@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-04T15:22:25.072Z",
+  "passed": 6,
+  "failed": 0,
+  "checks": [
+    "public disclosure precedes transfer queries; reviewed terms are exact and editing removes approval",
+    "failed durable storage prevents wallet dispatch; review fits phone and desktop in both themes",
+    "closing review during preflight prevents a later wallet prompt",
+    "encrypted journal survives reload, preserves Lenz identity, distinguishes inclusion from finality and never resends",
+    "lost ERC20 send reply recovers from the exact wallet hash; unrelated hash cannot confirm or unlock another send",
+    "network changes invalidate review; offline reload preserves encrypted history without prompting or sending"
+  ],
+  "sources": {
+    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
+    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
+    "web/public/evm-transfer.js": "8636a85b654cdc9501dd8d8c8dd559a242698f41b38986a55ef7226f6bd09990",
+    "web/public/evm-transfer-store.js": "783e76119d7f316807ebbbe645c8db62be0d5c19cbf7d4dbb816e2c3f3458abb",
+    "web/public/evm-transfer-service.js": "155179a9092779b3ca8c086fcb6025680b5c9af7e2ebea42d79fee8b5aa00412",
+    "web/public/evm-transfer-ui.js": "65652da38785dc5922b0310783d62939ab8ed858d7c5c095d07f920e1132f995",
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/money.css": "d8cbe410a71f890c90739bd0c199dba4c6aad7e04298020351a28cb1963a9ee7",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
+    "web/evm-transfer-browser.test.cjs": "d9be9685b2e1b9f5188134df1192c887d59bb2f08c23ceec4e63edb0376e8df1"
+  },
+  "scope": "Disposable Edge with injected wallet/chain fixture and actual IndexedDB, QR/cache and UI. No installed wallet, live chain, funds, signature or external transaction."
+}

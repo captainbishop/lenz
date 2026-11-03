@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -39,7 +40,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     });
     await check('offline wallet send persists exact ciphertext, survives reload, and relay OK does not mean delivery',async()=>{
       await a.locator('#prepare-money-offline').click();await idle(a);
-      await contexts[0].setOffline(true);await a.locator('#near-send').click();await a.locator('#near-recipient').selectOption(profiles[1].id);await a.locator('#near-send-amount').fill('4');await a.locator('#near-send-form button[type=submit]').click();await idle(a);
+      await contexts[0].setOffline(true);await a.locator('#near-send').click();await selectRecipient(a,profiles[1].id);await a.locator('#near-send-amount').fill('4');await a.locator('#near-send-form button[type=submit]').click();await idle(a);
       assert.equal(await a.locator('#near-handover').evaluate(n=>n.open),false);
       const id=(await read(a)).messages.at(-1).packet.id;
       await a.reload();await idle(a);await contexts[0].setOffline(false);
@@ -58,7 +59,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     await check('received value can pass onward offline through the wallet send button',async()=>{
       await c.locator('#carrier-open').click();await c.locator('#nostr-enabled').check();await c.locator('#carrier-close').click();
       await b.locator('#prepare-money-offline').click();await idle(b);await contexts[1].setOffline(true);
-      await b.locator('#near-send').click();await b.locator('#near-recipient').selectOption(profiles[2].id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
+      await b.locator('#near-send').click();await selectRecipient(b,profiles[2].id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
       assert.equal(await b.locator('#near-handover').evaluate(n=>n.open),false);
       await b.reload();await idle(b);assert.equal(await b.locator('#near-total').innerText(),'3');
       await contexts[1].setOffline(false);await wait(c,s=>s.messages.length===1);assert.equal(await c.locator('#near-total').innerText(),'1');assert.deepEqual(api,[]);

@@ -71,6 +71,17 @@ async function run({draftSource,filter,record=true}={}){
         await store.updateState(async s=>{s.routeDraftBox=original.routeDraftBox;s.identity=await p.createIdentity('Different owner');});try{await d.listRouteDrafts();rejected.push(false);}catch{rejected.push(true);}
         return {rejected,nearBox:(await store.readState()).nearBox};});assert.deepEqual(r.rejected,[true,true]);assert.deepEqual(r.nearBox,{iv:'unchanged',ciphertext:'unchanged-reservation'});
     });
+    await check('quoted draft save is atomic, idempotent and leaves no partial draft on failure',async({a})=>{
+      const r=await a.evaluate(async()=>{const before=await snapshot(),encrypt=crypto.subtle.encrypt.bind(crypto.subtle);let expired=false;
+        crypto.subtle.encrypt=async(...args)=>{const x=await encrypt(...args);t=f.quote.expiresAt;return x;};try{await d.saveRouteDraft(f.objective,{quote:f.quote});}catch{expired=true;}finally{crypto.subtle.encrypt=encrypt;t=f.quote.observedAt;}
+        const after=await snapshot(),saved=await d.saveRouteDraft(f.objective,{quote:f.quote}),box=await snapshot(),repeated=await d.saveRouteDraft(f.objective,{quote:f.quote});
+        return {expired,before,after,saved,repeated,box,final:await snapshot()};});assert(r.expired);assert.equal(r.before,r.after);assert.equal(r.saved.status,'estimate-saved');assert.equal(r.saved.revision,1);assert.deepEqual(r.saved,r.repeated);assert.equal(r.box,r.final);
+    });
+    await check('deletion requires current revision and a late estimate cannot restore the draft',async({a})=>{
+      const r=await a.evaluate(async()=>{await d.saveRouteDraft(f.objective,{quote:f.quote});const before=await snapshot();let stale=false,late=false;
+        try{await d.removeRouteDraft(f.objective.id,2);}catch{stale=true;}const after=await snapshot();try{await d.removeRouteDraft(f.objective.id,1);}catch{}
+        try{await d.attachRouteQuote(f.objective.id,1,f.quote);}catch{late=true;}return {stale,late,before,after,rows:await d.listRouteDrafts(),nearBox:(await store.readState()).nearBox};});assert(r.stale);assert(r.late);assert.equal(r.before,r.after);assert.deepEqual(r.rows,[]);assert.deepEqual(r.nearBox,{iv:'unchanged',ciphertext:'unchanged-reservation'});
+    });
     assert.equal(requests,0);assert.deepEqual(errors,[]);assert(results.length>0);
     const sourceFiles={};for(const [f,source]of Object.entries(sources))sourceFiles['web/public'+f]=createHash('sha256').update(source).digest('hex');
     for(const f of ['web/route-drafts-browser.test.cjs','integrations/route-quote-fixtures.mjs'])sourceFiles[f]=createHash('sha256').update(await fs.readFile(path.join(__dirname,'..',f))).digest('hex');

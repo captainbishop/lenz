@@ -2,6 +2,8 @@ import { Interface } from 'ethers';
 // Fixed read/simulation ABI. All calls use eth_call; no transaction builder.
 const abi = new Interface([
   'function decimals() view returns (uint8)',
+  'function description() view returns (string)',
+  'function latestRoundData() view returns (uint80,int256,uint256,uint256,uint80)',
   'function getPool(address,address,uint24) view returns (address)',
   'function token0() view returns (address)', 'function token1() view returns (address)',
   'function fee() view returns (uint24)', 'function liquidity() view returns (uint128)',

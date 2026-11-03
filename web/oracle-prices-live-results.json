@@ -1,0 +1,311 @@
+{
+  "checkedAt": "2026-11-04T15:21:33.541Z",
+  "passed": 4,
+  "checks": [
+    "Four actual mainnet Chainlink sources",
+    "18 feeds with onchain identity, decimals, timestamps and L2 checks",
+    "Automatic UI with no address or amount transmitted",
+    "Both themes at desktop and phone widths"
+  ],
+  "snapshots": [
+    {
+      "version": 1,
+      "kind": "oracle-prices",
+      "network": "ethereum",
+      "chainId": 1,
+      "source": "https://ethereum-rpc.publicnode.com",
+      "observedAt": 1793805686615,
+      "blockNumber": "26342310",
+      "blockHash": "0xaf5ce472226315d2ce885fd1e0927173a3adf8d100d8719244da2a4939581b53",
+      "blockTime": 1793805659000,
+      "sequencer": null,
+      "feeds": [
+        {
+          "id": "ethereum:BTC",
+          "status": "current",
+          "address": "0xf4030086522a5beea4988f8ca5b36dbc97bee88c",
+          "decimals": 8,
+          "description": "BTC / USD",
+          "answer": "8078766316926",
+          "roundId": "129127208515966887025",
+          "answeredInRound": "129127208515966887025",
+          "startedAt": 1793805335000,
+          "updatedAt": 1793805347000
+        },
+        {
+          "id": "ethereum:ETH",
+          "status": "current",
+          "address": "0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419",
+          "decimals": 8,
+          "description": "ETH / USD",
+          "answer": "244015058168",
+          "roundId": "129127208515966896655",
+          "answeredInRound": "129127208515966896655",
+          "startedAt": 1793805228000,
+          "updatedAt": 1793805239000
+        },
+        {
+          "id": "ethereum:LINK",
+          "status": "current",
+          "address": "0x2c1d072e956affc0d435cb7ac38ef18d24d9127c",
+          "decimals": 8,
+          "description": "LINK / USD",
+          "answer": "1171093000",
+          "roundId": "129127208515966896316",
+          "answeredInRound": "129127208515966896316",
+          "startedAt": 1793804677000,
+          "updatedAt": 1793804699000
+        },
+        {
+          "id": "ethereum:USDC",
+          "status": "current",
+          "address": "0x8fffffd4afb6115b954bd326cbe7b4ba576818f6",
+          "decimals": 8,
+          "description": "USDC / USD",
+          "answer": "99994185",
+          "roundId": "73786976294838206518",
+          "answeredInRound": "73786976294838206518",
+          "startedAt": 1793792993000,
+          "updatedAt": 1793793011000
+        }
+      ],
+      "executable": false
+    },
+    {
+      "version": 1,
+      "kind": "oracle-prices",
+      "network": "base",
+      "chainId": 8453,
+      "source": "https://mainnet.base.org",
+      "observedAt": 1793805690344,
+      "blockNumber": "53508169",
+      "blockHash": "0xf497e3f05c9bd070182e257a23b37543907a5fe4e687d708b3616528b1291bfc",
+      "blockTime": 1793805685000,
+      "sequencer": {
+        "address": "0xbcf85224fc0756b9fa45aa7892530b47e10b6433",
+        "answer": "0",
+        "startedAt": 1782491507000,
+        "updatedAt": 1793726589000
+      },
+      "feeds": [
+        {
+          "id": "base:BTC",
+          "status": "current",
+          "address": "0x64c911996d3c6ac71f9b455b1e8e7266bcbd848f",
+          "decimals": 8,
+          "description": "BTC / USD",
+          "answer": "8063101625937",
+          "roundId": "55340232221128668436",
+          "answeredInRound": "55340232221128668436",
+          "startedAt": 1793805595000,
+          "updatedAt": 1793805609000
+        },
+        {
+          "id": "base:ETH",
+          "status": "current",
+          "address": "0x71041dddad3595f9ced3dccfbe3d1f4b0a16bb70",
+          "decimals": 8,
+          "description": "ETH / USD",
+          "answer": "243523614776",
+          "roundId": "55340232221128666617",
+          "answeredInRound": "55340232221128666617",
+          "startedAt": 1793805533000,
+          "updatedAt": 1793805547000
+        },
+        {
+          "id": "base:LINK",
+          "status": "current",
+          "address": "0x17cab8fe31e32f08326e5e27412894e49b0f9d65",
+          "decimals": 8,
+          "description": "LINK / USD",
+          "answer": "1170145008",
+          "roundId": "36893488147419110835",
+          "answeredInRound": "36893488147419110835",
+          "startedAt": 1793804697000,
+          "updatedAt": 1793804711000
+        },
+        {
+          "id": "base:USDC",
+          "status": "current",
+          "address": "0x7e860098f58bbfc8648a4311b374b1d669a2bc6b",
+          "decimals": 8,
+          "description": "USDC / USD",
+          "answer": "99982711",
+          "roundId": "55340232221128654925",
+          "answeredInRound": "55340232221128654925",
+          "startedAt": 1793796961000,
+          "updatedAt": 1793796975000
+        }
+      ],
+      "executable": false
+    },
+    {
+      "version": 1,
+      "kind": "oracle-prices",
+      "network": "arbitrum",
+      "chainId": 42161,
+      "source": "https://arb1.arbitrum.io/rpc",
+      "observedAt": 1793805691943,
+      "blockNumber": "521211750",
+      "blockHash": "0x6463b32a96465e37fb10c74bd0eda32ade148d5c5ff458c69bfeae7677f12d7e",
+      "blockTime": 1793805685000,
+      "sequencer": {
+        "address": "0xfdb631f5ee196f0ed6faa767959853a9f217697d",
+        "answer": "0",
+        "startedAt": 1779307607000,
+        "updatedAt": 1779307607000
+      },
+      "feeds": [
+        {
+          "id": "arbitrum:BTC",
+          "status": "current",
+          "address": "0x6ce185860a4963106506c203335a2910413708e9",
+          "decimals": 8,
+          "description": "BTC / USD",
+          "answer": "8058913159537",
+          "roundId": "36893488147419199455",
+          "answeredInRound": "36893488147419199455",
+          "startedAt": 1793805613000,
+          "updatedAt": 1793805625000
+        },
+        {
+          "id": "arbitrum:ETH",
+          "status": "current",
+          "address": "0x639fe6ab55c921f74e7fac1ee960c0b6293ba612",
+          "decimals": 8,
+          "description": "ETH / USD",
+          "answer": "243410000000",
+          "roundId": "36893488147419253513",
+          "answeredInRound": "36893488147419253513",
+          "startedAt": 1793805545000,
+          "updatedAt": 1793805557000
+        },
+        {
+          "id": "arbitrum:LINK",
+          "status": "current",
+          "address": "0x86e53cf1b870786351da77a57575e79cb55812cb",
+          "decimals": 8,
+          "description": "LINK / USD",
+          "answer": "1170707000",
+          "roundId": "36893488147419115192",
+          "answeredInRound": "36893488147419115192",
+          "startedAt": 1793804702000,
+          "updatedAt": 1793804716000
+        },
+        {
+          "id": "arbitrum:USDC",
+          "status": "current",
+          "address": "0x50834f3163758fcc1df9973b6e91f0f0f0434ad3",
+          "decimals": 8,
+          "description": "USDC / USD",
+          "answer": "99981292",
+          "roundId": "55340232221128679097",
+          "answeredInRound": "55340232221128679097",
+          "startedAt": 1793805650000,
+          "updatedAt": 1793805663000
+        },
+        {
+          "id": "arbitrum:NEAR",
+          "status": "current",
+          "address": "0xbf5c3fb2633e924598a46b9d07a174a9dbcf57c0",
+          "decimals": 8,
+          "description": "NEAR / USD",
+          "answer": "421966083",
+          "roundId": "36893488147419122320",
+          "answeredInRound": "36893488147419122320",
+          "startedAt": 1793805536000,
+          "updatedAt": 1793805548000
+        },
+        {
+          "id": "arbitrum:HYPE",
+          "status": "current",
+          "address": "0xf9ce4fe2f0ece0362cb416844ae179a49591d567",
+          "decimals": 8,
+          "description": "HYPE / USD",
+          "answer": "8723803265",
+          "roundId": "36893488147419115016",
+          "answeredInRound": "36893488147419115016",
+          "startedAt": 1793805581000,
+          "updatedAt": 1793805593000
+        }
+      ],
+      "executable": false
+    },
+    {
+      "version": 1,
+      "kind": "oracle-prices",
+      "network": "hyperevm",
+      "chainId": 999,
+      "source": "https://rpc.hyperliquid.xyz/evm",
+      "observedAt": 1793805692819,
+      "blockNumber": "50374718",
+      "blockHash": "0x7636de630d927e1158b917a2d817fbee7c410547478aa125e83933387603a933",
+      "blockTime": 1793805686000,
+      "sequencer": null,
+      "feeds": [
+        {
+          "id": "hyperevm:BTC",
+          "status": "current",
+          "address": "0x71a2017296de30f4597b36fbd90b7e8ec6e97a82",
+          "decimals": 8,
+          "description": "BTC / USD",
+          "answer": "8079883209688",
+          "roundId": "18446744073709558214",
+          "answeredInRound": "18446744073709558214",
+          "startedAt": 1793805220000,
+          "updatedAt": 1793805234000
+        },
+        {
+          "id": "hyperevm:ETH",
+          "status": "current",
+          "address": "0x017151e74fb3a393673b5b5149f53578c0fa55b0",
+          "decimals": 8,
+          "description": "ETH / USD",
+          "answer": "243225562835",
+          "roundId": "18446744073709563017",
+          "answeredInRound": "18446744073709563017",
+          "startedAt": 1793805612000,
+          "updatedAt": 1793805629000
+        },
+        {
+          "id": "hyperevm:USDC",
+          "status": "current",
+          "address": "0xa0adc43ce7afe3ee7d7eac3c994e178d0620223b",
+          "decimals": 8,
+          "description": "USDC / USD",
+          "answer": "99977432",
+          "roundId": "36893488147419103308",
+          "answeredInRound": "36893488147419103308",
+          "startedAt": 1793724855000,
+          "updatedAt": 1793724869000
+        },
+        {
+          "id": "hyperevm:HYPE",
+          "status": "current",
+          "address": "0xa5a72ef19f82a579431186402425593a559ed352",
+          "decimals": 8,
+          "description": "HYPE / USD",
+          "answer": "8739334850",
+          "roundId": "18446744073709578674",
+          "answeredInRound": "18446744073709578674",
+          "startedAt": 1793805554000,
+          "updatedAt": 1793805569000
+        }
+      ],
+      "executable": false
+    }
+  ],
+  "sourceFiles": {
+    "web/public/oracle-feeds.js": "f92411d708ed00c51a0337c44df183b069a54a7f5ab1a124d209e5bcdb2b5b06",
+    "web/public/oracle-prices-ui.js": "a278d689415a5cfdccd4e3c02daec3e68bc65b9bdd445524f9dcfa3765ca30ec",
+    "web/public/oracle-prices.css": "04e98fb0cc1525f5c1567f45d5ae52e588dc1e545503ca6199cfa40f745d80fc",
+    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/public/markets.html": "533f0a2014c059b9c2754fafce3805abba4c590f5de546737a23b30699e039a8",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "integrations/oracle-prices.mjs": "f91a0fb83d98f8db3ce12061db05d69a8240bb2b27f0ae8d289b6ac0fa813421",
+    "integrations/market-http.mjs": "fa373c47bd1dbc819a88947aca903b6aa580ae215ce111543066a55852e40fa2",
+    "aurora/market-read-codec.mjs": "ea36fc95971c20b55fe05354fd84efb340b3c74f5ddd7d5bffe8682a5878083d",
+    "web/oracle-prices-live.test.cjs": "7b825eb5501ca8074538784818b473131fb00dd1b0f2e64fbec680af2837e321"
+  },
+  "scope": "Actual public RPC reads in disposable Windows Edge. Provider HTTPS and block consistency, not independent chain proofs. No wallet, signing, quote or financial submission."
+}

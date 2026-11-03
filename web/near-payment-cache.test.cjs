@@ -1,3 +1,4 @@
+async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 // Existing-cache upgrade using a disposable Edge profile and fixture backing.
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{execFileSync}=require('node:child_process');
@@ -28,7 +29,7 @@ const server=http.createServer(async(req,res)=>{try{
         await n.saveNearVault(s,reserved.vault);
       });
     });
-    await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')!=='true');
+    await walletSettings(p);await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')!=='true');
     assert((await p.locator('#status').innerText()).includes('files saved'),await p.locator('#status').innerText());
     const snapshot=()=>p.evaluate(async()=>JSON.stringify(await(await import('/chat-store.js')).readState()));
     const before=await snapshot();
@@ -42,7 +43,9 @@ const server=http.createServer(async(req,res)=>{try{
     assert.equal(await snapshot(),before);console.log('PASS failed wallet cache update preserves old offline chat, identity and reservation');
     await context.setOffline(false);fail=false;assert.equal(await update(),'activated');
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v44-defi-copy');return key?await(await(await caches.open(key)).match('/nostr-socket.js')).text():null;});
+    const expectedCache=(await fs.readFile(path.join(__dirname,'public/chat-sw.js'),'utf8')).match(/const CACHE = '([^']+)'/)[1];
+    const cached=await p.evaluate(async key=>{const match=await(await caches.open(key)).match('/nostr-socket.js');return match?await match.text():null;},expectedCache);
+    for(const file of ['evm-wallet.js','evm-wallet-ui.js'])assert.equal(await p.evaluate(async({key,file})=>{const match=await(await caches.open(key)).match('/'+file);return match?await match.text():null;},{key:expectedCache,file}),await fs.readFile(path.join(__dirname,'public',file),'utf8'));
     assert.equal(cached,await fs.readFile(path.join(__dirname,'public/nostr-socket.js'),'utf8'));assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
     console.log('PASS successful cache update loads relay cancellation protection offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');

@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-04T15:26:02.575Z",
+  "passed": 4,
+  "checks": [
+    "Prices opens all four networks automatically with 18 exact feed identities and no extra update button",
+    "Both themes reflow to phone width, search keeps exact assets and source links remain available",
+    "Wrong-network responses retain earlier prices with a visible failure state",
+    "Offline reload keeps saved feed timestamps and unrelated identity storage"
+  ],
+  "sourceFiles": {
+    "web/public/oracle-feeds.js": "f92411d708ed00c51a0337c44df183b069a54a7f5ab1a124d209e5bcdb2b5b06",
+    "web/public/oracle-prices-ui.js": "a278d689415a5cfdccd4e3c02daec3e68bc65b9bdd445524f9dcfa3765ca30ec",
+    "web/public/oracle-prices.css": "04e98fb0cc1525f5c1567f45d5ae52e588dc1e545503ca6199cfa40f745d80fc",
+    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/public/markets.html": "533f0a2014c059b9c2754fafce3805abba4c590f5de546737a23b30699e039a8",
+    "web/public/sw.js": "b2681be1d9be097e17ed6aca32db75ae04e6e646cb144bbb434e71a3ad7941f4",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/oracle-prices-browser.test.cjs": "4870ea3bddd90fceb073cb66b214bbc2ecb73868832fd25c5ae0a55150bdd0a5"
+  },
+  "scope": "Synthetic public data in disposable Windows Edge. No user profile, wallet read, quote, signature or transaction."
+}

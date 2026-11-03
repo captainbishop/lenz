@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {MARKET_READS,baseSnapshot,discoverHyperliquid,marketJson} from './market-discovery.mjs';
 import {marketQuoteRequest,checkedMarketQuote,decimalUnits,canonicalAmount,requireQuote as check} from '../web/public/market-quote.js';
+import {marketFetch} from './market-http.mjs';
 export const BASE_QUOTER='0x3d4e44eb1374240ce5f1b871ab261cd16335b76a';
 function preview(request,result,evidence,sourceTime,clock){
   const observedAt=clock(),maxAge=request.provider==='uniswap'?60000:30000;
@@ -47,7 +48,7 @@ export function estimateBook(request,market,book,{now=Date.now()}={}){
   check(notional>0n,'Estimate rounds to zero.');
   return {instrument:market.instrument,sizeUnits:size.toString(),sizeDecimals:market.sizeDecimals,notionalUnits:notional.toString(),notionalDecimals:6,worstPrice:worst,levelsUsed:used,fullDepth:true};
 }
-async function hyperliquidQuote(request,{fetcher=fetch,clock=Date.now}={}){
+async function hyperliquidQuote(request,{fetcher=marketFetch,clock=Date.now}={}){
   const observation=await discoverHyperliquid({fetcher,clock}),market=observation.rows.find(row=>row.id===request.marketId);
   check(market&&market.status==='listed','Perpetual market unavailable.');decimalUnits(request.amount,market.sizeDecimals);
   const book=await marketJson(MARKET_READS.hyperliquid,{type:'l2Book',coin:market.instrument},{fetcher});

@@ -89,7 +89,7 @@ export function mountNearWallet({ action, status }) {
 function walletDelivery() {
   const mode=deliveryMode($('#near-recipient').value);
   $('#near-connection').textContent=config.contract&&config.ready?(mode==='nearby'?'Nearby · connected to '+$('#near-recipient').selectedOptions[0].textContent+' · keep Lenz open':mode==='automatic'?(navigator.onLine?'Automatic delivery · keep Lenz open':'Offline · sends when connected. File sharing is still available.'):(navigator.onLine?'Ready for offline payments.':'Offline · share payments by file.')):'Test money is not available right now.';
-  $('#near-send-delivery').textContent=mode==='nearby'?'Sends directly nearby. Payment confirmation happens separately.':mode==='automatic'?'Saved payments will deliver when connected. You can also share a file from your payment history.':'Save and share the encrypted file.';
+  $('#near-send-delivery').textContent=mode==='nearby'?'Sends directly nearby. Payment confirmation happens separately.':mode==='automatic'?'Saved for delivery. You can also share it from Payments.':'Share the payment with your recipient.';
   $('#near-send-form button[type=submit]').textContent=mode!=='file'?'Send payment':'Prepare payment';
 }
 export function openNearSend(id='') { if(!config.contract){notice('The NEAR contract is not connected yet.');return;}$('#near-send-form').reset();$('#near-recipient').value=id;$('#near-send-dialog').showModal();walletDelivery(); }
@@ -109,6 +109,16 @@ export async function renderNearWallet(state) {
   await renderRheaWallet(vault,state.identity);
   const owned=ledger.available.filter(n=>n.owner===owner), total=owned.reduce((n,v)=>n+BigInt(v.amount),0n);
   walletAmount($('#near-total'),displayUnits(total));$('#near-fund').disabled=!!vault.roots.find(n=>n.owner===owner && vault.receipts[n.id]);
+  if ($('#near-confirmed')) {
+    const confirmed = owned.filter(note => vault.receipts[note.id.startsWith('root:') ? note.id : note.id.split(':')[0]])
+      .reduce((sum,note) => sum + BigInt(note.amount),0n);
+    const reserved = [...ledger.notes.values()].filter(note => note.owner===owner && ledger.reserved.has(note.id) && !ledger.consumed.has(note.id) && !ledger.blocked.has(note.id))
+      .reduce((sum,note) => sum + BigInt(note.amount),0n);
+    walletAmount($('#near-confirmed'),displayUnits(confirmed));
+    walletAmount($('#near-pending'),displayUnits(total-confirmed));
+    walletAmount($('#near-reserved'),displayUnits(reserved));
+    const details=$('#wallet-balance-detail-label');if(details)details.textContent=['Details',...(total-confirmed>0n?['Pending funds']:[]),...(reserved>0n?['Funds reserved']:[])].join(' · ');
+  }
   walletAmount($('#near-balance-caption'),total?'Saved on this device · check payment status below.':'Add test dollars or receive a payment.','Saved on this device.');
   const list=$('#near-payments');list.replaceChildren();
   for(const note of ledger.notes.values()) if(note.owner===owner&&ledger.blocked.has(note.id)&&!ledger.consumed.has(note.id)) {

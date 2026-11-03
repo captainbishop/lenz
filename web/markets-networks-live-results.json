@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-11-04T10:07:17.686Z",
+  "passed": 6,
+  "failed": 0,
+  "checks": [
+    "all seven sources return live observations; three EVM networks keep distinct rows",
+    "network filtering labels pools and credit correctly and exposes no unsupported quote form",
+    "the reviewed Base calculator still responds without amount-sharing consent",
+    "live multichain views fit desktop and phone in both themes",
+    "offline reload retains network identity and saved-data labels",
+    "market reads create no wallet database or financial request"
+  ],
+  "observations": [
+    {
+      "provider": "aave",
+      "chainId": "eip155:8453",
+      "rows": 2,
+      "block": "53498267"
+    },
+    {
+      "provider": "aave",
+      "chainId": "eip155:1",
+      "rows": 2,
+      "block": "26340672"
+    },
+    {
+      "provider": "aave",
+      "chainId": "eip155:42161",
+      "rows": 2,
+      "block": "521140079"
+    },
+    {
+      "provider": "uniswap",
+      "chainId": "eip155:1",
+      "rows": 1,
+      "block": "26340672"
+    },
+    {
+      "provider": "uniswap",
+      "chainId": "eip155:8453",
+      "rows": 1,
+      "block": "53498267"
+    },
+    {
+      "provider": "hyperliquid",
+      "chainId": "hypercore:mainnet",
+      "rows": 235
+    },
+    {
+      "provider": "uniswap",
+      "chainId": "eip155:42161",
+      "rows": 1,
+      "block": "521140079"
+    }
+  ],
+  "scope": "Actual public reads in a disposable Windows Edge profile; no wallet, signing, financial action or execution. New Ethereum/Arbitrum pools provide discovery only; quote execution remains unconnected."
+}

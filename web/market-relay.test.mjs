@@ -3,6 +3,34 @@ const {createMarketRoute}=await import(process.env.LENZ_RELAY_MODULE?pathToFileU
 const quoteInput={provider:'uniswap',marketId:'uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224',side:'usdc-to-weth',amount:'1',slippageBps:50,privacy:'public'};
 const req=(input={provider:'uniswap'},changes={})=>Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]),{url:'/api/markets/read',method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json'},...changes});
 const res=()=>({writeHead(status,headers){this.status=status;this.headers=headers;},end(body){this.data=JSON.parse(body);}});
+test('network reads reject arbitrary inputs and never reuse another network cache',async()=>{
+ const calls=[],route=createMarketRoute({discover:async(provider,options)=>{calls.push([provider,options]);return {provider,network:options.network};}});
+ for(const input of [{provider:'uniswap',network:'constructor'},{provider:'aave',network:'https://bad.test'},{provider:'hyperliquid',network:'ethereum'},{provider:'aave',network:'arbitrum',address:'private'}]){
+  const r=res();await route(req(input),r);assert.equal(r.status,400);
+ }assert.equal(calls.length,0);
+ for(const network of ['ethereum','arbitrum','base','ethereum']){const r=res();await route(req({provider:'aave',network}),r);assert.equal(r.status,200);assert.equal(r.data.network,network);}
+ assert.deepEqual(calls,[['aave',{network:'ethereum'}],['aave',{network:'arbitrum'}],['aave',{network:'base'}]]);
+});
+test('oracle route permits only fixed networks, coalesces reads and preserves cached timestamps',async()=>{
+ let calls=0,release,now=100000,defer=false;const route=createMarketRoute({oracle:request=>{calls++;if(!defer)return {network:request.network,observedAt:now};return new Promise(r=>release=()=>r({network:request.network,observedAt:now}));},clock:()=>now});
+ for(const input of [{network:'constructor'},{network:'ethereum',address:'private'},{network:'https://bad.test'},{}]){const r=res();await route(req(input,{url:'/api/markets/oracles'}),r);assert.equal(r.status,400);}assert.equal(calls,0);
+ for(const change of [{origin:'https://bad.test'},{host:'bad.test'}]){const r=res(),q=req({network:'ethereum'},{url:'/api/markets/oracles'});Object.assign(q.headers,change);await route(q,r);assert.equal(r.status,403);}assert.equal(calls,0);
+ defer=true;const a=res(),b=res(),first=route(req({network:'ethereum'},{url:'/api/markets/oracles'}),a),second=route(req({network:'ethereum'},{url:'/api/markets/oracles'}),b);await new Promise(r=>setImmediate(r));assert.equal(calls,1);release();await Promise.all([first,second]);assert.deepEqual(a.data,b.data);
+ now+=1000;const cached=res();await route(req({network:'ethereum'},{url:'/api/markets/oracles'}),cached);assert.equal(cached.data.observedAt,100000);assert.equal(calls,1);
+ now+=15000;const c=res(),third=route(req({network:'ethereum'},{url:'/api/markets/oracles'}),c);await new Promise(r=>setImmediate(r));assert.equal(calls,2);release();await third;
+});
+test('pool-price route accepts only the fixed pool, coalesces and expires its short cache',async()=>{
+ let calls=0,release,now=1000;const route=createMarketRoute({price:()=>{calls++;return new Promise(r=>release=()=>r({observedAt:now}));},clock:()=>now});
+ for(const input of [{marketId:quoteInput.marketId,amount:'1'},{marketId:'unknown'},{}]){const r=res();await route(req(input,{url:'/api/markets/price'}),r);assert.equal(r.status,400);}assert.equal(calls,0);
+ const input={marketId:quoteInput.marketId},a=res(),b=res(),one=route(req(input,{url:'/api/markets/price'}),a),two=route(req(input,{url:'/api/markets/price'}),b);await new Promise(r=>setImmediate(r));assert.equal(calls,1);release();await Promise.all([one,two]);assert.deepEqual(a.data,b.data);
+ now=2000;const cached=res();await route(req(input,{url:'/api/markets/price'}),cached);assert.equal(cached.data.observedAt,1000);assert.equal(calls,1);
+ now=4000;const next=res(),pending=route(req(input,{url:'/api/markets/price'}),next);await new Promise(r=>setImmediate(r));assert.equal(calls,2);release();await pending;
+});
+test('tape route requires public consent and coalesces bounded market reads',async()=>{
+ const input={marketId:'hyperliquid:0:ETH',interval:'1h',privacy:'public'};let calls=0,release;const route=createMarketRoute({tape:async r=>{assert(Object.isFrozen(r));calls++;await new Promise(r=>release=r);return {executable:false};}});
+ for(const change of [{privacy:'private'},{address:'reader'},{interval:'1s'}]){const response=res();await route(req({...input,...change},{url:'/api/markets/tape'}),response);assert.equal(response.status,400);}assert.equal(calls,0);
+ const a=res(),b=res(),one=route(req(input,{url:'/api/markets/tape'}),a),two=route(req(input,{url:'/api/markets/tape'}),b);await new Promise(r=>setImmediate(r));assert.equal(calls,1);release();await Promise.all([one,two]);assert.deepEqual(a.data,b.data);assert.equal(a.status,200);
+});
 test('market API coalesces simultaneous reads and retains observation time on cache hits',async()=>{
   let calls=0,release,now=1000;const route=createMarketRoute({discover:async()=>{calls++;await new Promise(r=>release=r);return {observedAt:900};},clock:()=>now});
   const a=res(),b=res(),one=route(req(),a),two=route(req(),b);await new Promise(r=>setImmediate(r));assert.equal(calls,1);release();await Promise.all([one,two]);assert.equal(a.status,200);assert.deepEqual(a.data,b.data);

@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-03T04:20:28.961Z",
-  "tests": 19,
-  "passed": 19,
+  "checkedAt": "2026-11-04T14:37:45.007Z",
+  "tests": 23,
+  "passed": 23,
   "failed": 0,
   "guardAlterations": 19,
   "results": [
@@ -102,16 +102,16 @@
     }
   ],
   "sourceHashes": {
-    "integrations/market-quotes.mjs": "9576725c1683c9863bd1dc67807d09b1d794e2311a5f4aef5ed23a45555a96ee",
+    "integrations/market-quotes.mjs": "5d7cb54e546e0fd60604de3761e941338e0036c5a54f9a7575a32768521a4d2f",
     "integrations/market-quotes.test.mjs": "9cbe997ccdc7d0c8c774a90b9352426078126e8e20bd8e727567326f5ce0ecc2",
     "web/public/market-quote.js": "a933828c2d8fa82ce5c1ef3fa49da90d6b32ba27ca62cdf5887a85b4a8b07071",
-    "web/market-relay.mjs": "fe97fd7297570fb782bc6128e5cd1e268c29cba414be0aab87e8bd2a2f629e75",
-    "web/market-relay.test.mjs": "2bd36b2eb1f9945bc6113fa4ff461685ab15244f0868b1b0294d42b728691129",
-    "aurora/market-read-codec.mjs": "01fcd90ef5812eb1382dbddd70b357f0832d0f533a50d6823135a5d3023340ba",
-    "integrations/market-discovery.mjs": "b4e7a7535b21ab4e235bc6f100793bdfff198eaa3b892d82951876d3a1d6fe61",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "web/market-relay.test.mjs": "b65073f29ba186f0fb039d294e19f985a686d615fe49fbbbe7aeac6ee8c8379c",
+    "aurora/market-read-codec.mjs": "ea36fc95971c20b55fe05354fd84efb340b3c74f5ddd7d5bffe8682a5878083d",
+    "integrations/market-discovery.mjs": "7819848708b70440138627a9f78cf6c6890e805c715dcf630d24233222f4dbc1",
     "integrations/market-quote-fixtures.mjs": "232e69b20eb339c0eadcbd76c173bcb9c871ad6ce1bd6236a355ec3995caafdb",
-    "web/public/market-quote-ui.js": "cf7cf6b2df61692b4a6a665a8ac1bed1a0bb60ab118c1b2920f3e56814f1e1e5",
-    "web/market-quote-browser.test.cjs": "44e8bab9518e2d5a55716a0486bc32b5d999298447a78b90352ecab32408e68c"
+    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/market-quote-browser.test.cjs": "ece12ff5931ef3d8678627df9f8c7ba84396b76fd025d2e7860cc69d3d58b2a6"
   },
   "scope": "Fixture quote/read-boundary tests and deliberate changes; separate browser and public live-read evidence"
 }

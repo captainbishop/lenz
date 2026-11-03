@@ -40,6 +40,20 @@ price context and a clear order area. Perpetuals need a real order book/chart,
 position and margin controls. Yield needs position/exit information and sourced
 rates. None should be a renamed copy of the swap form.
 
+The [market workspaces](trading-workspace.md) use action-specific compositions:
+opposing asset amounts joined by a swap route; sourced credit limits and position
+actions; pool assets, ranges and fees; and price/depth above a compact order rail.
+Phone perpetuals use Chart/Book/Order tabs. Reviews are editable receipts with
+inline limits. Wallet swaps use the same opposing asset alignment.
+
+Do not reuse stacked entry forms across DeFi actions. Necessary inputs belong
+inside their asset, position or reviewed transaction. Unsupported actions show
+their unavailable position data, without simulated rates or placeholder entry
+forms. This applies to liquidity, staking, farming, claims and exits as well as
+perpetuals. Use sans-serif/tabular type on financial workspaces; reserve display
+serif for appropriate homepage content. Screenshots support review; user visual
+acceptance remains pending.
+
 Conversation screens should emphasize people, readable messages and delivery.
 The wallet should distinguish spendable offline value, pending money and positions.
 An approval is a readable receipt of the exact decision, with the consequential
@@ -61,6 +75,20 @@ and data, without a marketing hero. Put technical evidence under expandable
 details; keep fees, public visibility, pending outcomes and failures visible
 where they affect the decision.
 
+Use the faint opposing-L mark and Lenz wordmark behind candle plots, with data
+and price labels above them.
+Refresh controls use the standard circular-arrow SVG with an accessible name.
+Search focus uses an underline without a heavy surrounding rectangle.
+
+Automatic price updates need no prominent start/refresh control. Keep the pause
+control under Data settings and use accessible icons for theme changes. Reference
+price screens use aligned asset/network rows with visible source age, without
+extra input forms.
+
+Open selected-market candles automatically. Put secondary market statistics and
+wallet balance breakdowns under details. Keep pending or reserved funds visible
+in the details label, and retain separate consent before sharing order amounts.
+
 Use restrained motion to show state changes and movement: typically 120–180 ms
 for controls and 200–260 ms for panels. Respect reduced motion. Avoid perpetual
 pulsing, floating shapes and animations that delay a financial decision.
@@ -74,3 +102,18 @@ Visual approval needs actual screenshots and working interactions, including
 loading, offline, empty, pending, failure and recovery. Mechanical tests support
 that review; they do not establish that a design is distinctive or superior.
 The current DEX is a first UI slice, not the completed visual redesign of Lenz.
+
+
+## Wallet interaction revision
+
+[Wallet actions](wallet-tokens.md) select a person before entering an amount,
+with scanning in the recipient step. Receive opens directly on the Lenz QR.
+Send, Receive, Add and close use accessible SVG controls. Use Lenz colours for
+recipient selection; do not restore the native blue dropdown. Token imports
+show exact network/contract data and keep watched balances separate from offline
+tUSD. Short section links aid navigation. No design acceptance is inferred from
+passing UI checks; the wallet remains under review.
+
+Apply [workflow privacy boundaries](privacy-workflows.md) to every approval and
+status. Avoid phrases implying the user's device must reconnect for all offline
+DeFi, or implying carrier storage is execution. Show the actual request state.

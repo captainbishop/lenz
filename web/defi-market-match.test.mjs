@@ -5,6 +5,13 @@ const snapshots=()=>report.results.map(r=>({...structuredClone(r.observation),ob
 const strip=a=>({chainId:a.chainId,kind:a.kind,id:a.id,decimals:a.decimals});
 function objective(){const [weth,usdc]=snapshots()[0].rows[0].assets;return {id:'market-match-test',source:{asset:strip(usdc),amount:'1000000'},destination:{marketId:'uniswap',chainId:'eip155:8453',action:'swap',outputAsset:strip(weth)},recipient:{chainId:'eip155:8453',address:'0x'+'33'.repeat(20)},limits:{deadline:now+300000,minReceive:'1',maxFees:[{asset:strip(usdc),amount:'1000'}]},privacy:'private',returnTo:null};}
 test('observed Uniswap assets narrow route candidates without creating execution authority',()=>{const plan=previewWithMarkets(objective(),snapshots(),{now});assert.equal(plan.discovery.candidates.length,1);assert.equal(plan.executable,false);assert.equal(plan.discovery.candidates[0].executable,false);assert.equal(plan.objective.privacy,'private');assert(plan.blockers.length>0);});
+test('network sources stay distinct and cannot duplicate or substitute for Base',()=>{
+ const data=snapshots();assert.equal(data.length,7);
+ const plan=previewWithMarkets(objective(),data,{now});assert.equal(plan.discovery.candidates[0].chainId,'eip155:8453');
+ assert.equal(previewWithMarkets(objective(),data.filter(s=>s.chainId!=='eip155:8453'),{now}).discovery.candidates.length,0);
+ assert.throws(()=>previewWithMarkets(objective(),[data[0],data[0]],{now}),/Duplicate/);
+ assert.throws(()=>previewWithMarkets(objective(),[...data,data[0]],{now}),/Too many/);
+});
 test('token name, wrong contract or precision cannot substitute for the route asset',()=>{for(const field of ['id','decimals']){const o=objective();o.destination.outputAsset[field]=field==='id'?'0x'+'44'.repeat(20):17;assert.equal(previewWithMarkets(o,snapshots(),{now}).discovery.candidates.length,0);}});
 test('Aave borrowing matches the received asset and requires its borrowing flag',()=>{
  const o=objective(),data=snapshots(),reserves=data.find(s=>s.provider==='aave').rows;

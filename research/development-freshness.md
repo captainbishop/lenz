@@ -1,3 +1,179 @@
+# Wallet and market revision review, November 4, 2026
+
+Selected perpetual markets load public candles on opening, with a faint opposing-L
+mark and Lenz wordmark behind the plot. Refresh controls use accessible icons.
+Search focus uses an underline. Market statistics and wallet balance breakdowns
+are expandable; pending/reserved funds stay flagged. Wallet Supply/Borrow/Liquidity
+links open the corresponding market action, whose unavailable execution remains
+visible. No simulated balances or deposit forms are shown.
+
+The terminal passed seven browser groups and a stale-reply guard alteration.
+Both themes and 320–1440px layouts were inspected. Seven live browser groups
+returned 97 candles and 20 book levels per side. Four live oracle groups read all
+18 feeds. Four automatic-price groups observed two updates taking 11,358 and
+3,116 ms in that run. These timings do not establish upstream availability.
+
+An earlier live run reached the perpetual quote/review but failed to open a swap
+because EVM market sources were unavailable. A direct sandbox read returned
+Windows EACCES; the authorized read succeeded. After restarting the preview, the
+complete live run passed. Earlier missing-market and missing-second-update
+failures remain recorded without an established cause. The transfer browser test
+now waits for restored encrypted history before checking finality status.
+
+Six original homepage examples were replayed/rendered without repeating funding
+or transactions. Composition checks, seven playback groups and decoded visual
+review passed; current provenance matches 53 recorded source files. The separate
+DeFi gallery and prominent hero placement remain. Product visual acceptance,
+Supply/LP execution, private settlement and recoverable onboarding remain open.
+
+# Offline budget rehearsal, November 4, 2026
+
+[Limited ETH budgets](../docs/offline-budgets.md) now have 16 passing local
+contract/signing/browser groups and ten detected guard alterations. Disposable
+Edge signs and encrypts offline using cached modules, preserves ciphertext across
+reload, and hands it in process to an executor for actual isolated EVM execution.
+Replay rejection, synthetic recipient output and owner remainder recovery are
+verified. Networks moved into wallet settings; cache v58 includes the modules.
+
+Surrounding network, connection and transfer checks pass at 13/eight/nine,
+12/seven/six and 25/six/nine Node/browser/alteration groups respectively. Six
+wallet and two cache-upgrade groups pass. Eight reports bind 78 current source
+hashes; 142 scoped and 678 repository document links resolve. Scope scan: 1,004
+files, zero findings; whitespace passes and index stays empty. Settings were inspected
+in light/dark desktop and phone views. No full-product visual acceptance claim.
+
+Review reproduced and fixed shared venue-caller reward theft through separate
+budget callers. Real token/proxy behavior, private settlement, actual encrypted
+carrier handoff, provider routes, production recovery and external finality remain
+unverified. No real funds, user wallet operation or deployment occurred. The global
+freshness manifest is unchanged; the earlier recording-source drift remains open.
+
+# Wallet network controls — November 4, 2026
+
+[Network controls](../docs/wallet-networks.md): 13 Node tests/eight disposable
+Edge groups/nine detected guard alterations pass. Existing connection, transfer,
+wallet and cache-upgrade checks pass: 12/seven/six, 25/six/nine, six and two
+respectively. Network reports bind final source bytes. Light/dark phone/desktop
+screenshots were inspected; no overflow at 320–1280px.
+Cache v57 includes the network modules. Scope scan: 989 files/zero findings;
+50 top-level links resolve, whitespace passes and index remains empty.
+
+Initial browser assertion failure was traced to native Edge focusing BODY at
+dialog Tab wrap; the test now permits that while rejecting outside page controls.
+Custom network tests cover consent revocation, metadata changes, failed saves,
+same-provider stale replies and preserved pending history. Syntax validation and
+matching wallet chain IDs do not authenticate custom networks. No live wallet,
+custom RPC, physical device, financial operation or publication occurred.
+
+The global freshness manifest and existing media are unchanged. Prior recording
+source drift remains open; this is scoped verification, not full-build freshness,
+visual acceptance, recoverable onboarding or complete DeFi execution.
+
+# Connected-wallet sends — November 4, 2026
+
+[Wallet transfers](../docs/wallet-transfers.md) now cover native ETH and reviewed
+USDC/WETH through explicit wallet approval. Twenty-five Node tests include actual
+isolated EthereumJS execution with recipient balance checks; six new Edge groups
+and nine deliberate guard alterations pass. Existing connection verification has
+12 tests/seven browser groups/six alterations. Six wallet and two cache-upgrade
+groups pass. Source-bound reports match final bytes; both themes and 320–1280px
+receipts were inspected. Scope scan: 981 files/zero findings; 50 top-level document
+links resolve and whitespace passes. Cache v56 includes all new transfer modules.
+
+The 8985-byte address validator includes pinned dependency hashes/licenses.
+Build failures from a virtual esbuild entry and a nested license path were fixed;
+the unchanged-chain mutation fixture was corrected. A dark-theme selected-asset
+contrast issue was fixed, and duplicate form/review content was removed.
+No production contract/dependency lock, deployed code or financial state changed.
+
+Installed-wallet/live-chain fees and finality, physical devices, replacements,
+Create/Restore/migration, custom networks and complete DeFi recovery remain open.
+No real wallet/signature/transaction was used. The prior four recording-source
+mismatches below remain unresolved. The global freshness manifest was preserved;
+component verification is not whole-build freshness or visual acceptance.
+
+# Browser wallet connection — November 4, 2026
+
+Whole-build freshness remains unverified: the final command rejects recorded
+source drift in carrier-ui.js, contact-card.js, contact-ui.js and nearby-ui.js.
+These changes predate this connection slice. The existing videos/posters still
+match their recorded hashes; affected recording source review/refresh is pending.
+The previous freshness manifest is preserved, rather than certifying this state.
+Wallet-specific reports match their current source bytes. Scope scan: 963 files,
+zero findings; 48 top-level documentation links and whitespace checks pass.
+
+[Existing-wallet connection](../docs/wallet-connection.md) adds explicit injected
+Ethereum/Arbitrum/Base account access, native balances and chain-specific Receive
+QR addresses. Eleven Node tests/seven disposable Edge groups and six guard
+alterations pass. Six existing wallet, two failed/successful cache-upgrade and
+six wallet-actions groups pass; current cache v55 includes both new modules.
+No account permission, signing or financial operation used a real user wallet.
+The connection leaves Lenz identity/history/vault unchanged in the tested scope.
+
+The initial cancelled-prompt race was reproduced and fixed by invalidating during
+cancel/click, before the deferred native close event. Its guard removal fails.
+The old wallet test asserted before recipient loading completed; it now waits
+for the hidden amount field. The upgrade test had a stale v54 cache name; it now
+binds to the worker's current cache and verifies the exact new module bytes.
+Theme screenshots now wait for colour transitions to finish before capture.
+
+Provider observations are not independent chain proofs or proof of ownership.
+Installed-wallet/device compatibility, Create/Restore migration, custom networks,
+send/signing, full DeFi execution/recovery and visual acceptance remain open.
+Prior media bytes/provenance were not changed by this slice. Wider historical
+market/oracle evidence below was not rerun by the connection checks.
+
+# Automatic markets and Chainlink prices — November 4, 2026
+
+Markets now loads and saves public data automatically. Swap Receive recalculates
+on input from the current Base pool price; separately permitted checked quotes
+follow after a short debounce. The pause control is under Data settings and the
+theme control uses an accessible icon. Cached prices retain their age offline.
+See [market workspaces](../docs/trading-workspace.md).
+
+[Chainlink reference prices](../docs/oracle-prices.md) connect 18 feeds on Ethereum,
+Arbitrum, Base and HyperEVM. The live browser run read all 18, with exact onchain
+identity/precision, round age, canonical-block and applicable sequencer checks.
+Thirty-five reader/transport/feed/relay tests and four new browser groups pass.
+Existing swap, market, draft, terminal, homepage and cache regressions also pass;
+final source-report refresh follows display and cache revisions.
+
+No user wallet, signature, funding, financial submission or deployment was used.
+Source updates follow their published conditions; polling is not a latency
+measurement. Saved calculations do not implement carrier-delivered fresh prices
+or full offline execution. Broader strategies, account positions, private
+settlement, recovery and connected execution remain active.
+
+# DeFi action surfaces — November 4, 2026
+
+UX2.2 replaces the stacked market/wallet entry layout with opposing asset amounts,
+reserve-limit and position views, a chart/depth workspace with an order rail, and
+editable receipt limits. No mandatory NEAR bridge is introduced. Unavailable
+account positions, LP ranges/fees, staking/farming and claims are explicit.
+
+Public Hyperliquid candles/depth use strict checked snapshots and fixed native
+HTTPS endpoints. Forty Node checks, six tape guard alterations, seven workspace
+groups with late-reply mutation, eleven draft UI groups/five mutations, sixteen
+wallet DeFi groups, fourteen Markets/quote groups and two cache-upgrade groups
+pass. Seven actual provider/browser groups cover perps, Base swap, credit and
+liquidity in both themes and responsive layouts. Screenshots were inspected;
+visual acceptance remains pending. Wallet guard verification is refreshed
+separately. No user identity, funding, signature, financial transaction or deployment.
+
+Chat cache v47 and the home shell include the new surface/tape modules and styles.
+Original homepage gallery/recording/media bytes are unchanged. Native HTTPS was
+selected after global-fetch EACCES/timeouts while curl and native HTTPS succeeded.
+Windows sandbox logon later failed with error 1909; final checks used approved
+normal-account execution. The failed attempts remain recorded in continuity.
+
+# Product draft controls and offline cache — November 3, 2026
+
+Markets now saves reviewed Uniswap/Hyperliquid estimates atomically with exact route terms. A separate Drafts page reads encrypted records offline and supports explicit public refresh and revision-checked deletion. The shared identity, wallet ciphertext and reservations are preserved. Quote/provider data remains unauthenticated and non-executable. No signing, financial transaction or deployment ran.
+
+Eleven product browser groups/five UI guard alterations, nine storage groups/seventeen binding and storage guard alterations, 39 Node groups, fourteen existing Markets/quote browser groups and two failed/successful wallet-cache upgrade groups pass. The home shell includes all draft dependencies; chat cache v45 includes Markets/Drafts. Original hero/gallery media bytes and recorded app sources are unchanged. Both themes and responsive modal/page screenshots were inspected locally.
+
+Legacy amount rendering and unreadable-state bugs were reproduced and fixed; viewport changes now retain visible modal focus. Initial root-route cache fixture and native browser-chrome focus assumptions were corrected. Full fees/accounts, private quotes, cross-chain execution, authorization and recovery remain open.
+
 # Route drafts and publication verification — November 3, 2026
 
 November 3: same-chain route/estimate binding and encrypted browser draft storage now pass seven fixture and seven browser groups, with 15 detected guard alterations. Precise Uniswap assets/minimums and explicitly scaled Hyperliquid sizes/limits are checked; private/public substitution and unsupported funding/return legs are rejected. The service remains non-executable, with no product draft controls, offline page cache, signed quote authentication, complete fees/accounts or execution/recovery. Docs: docs/route-drafts.md. No financial action, wallet-identity change or deployment ran.

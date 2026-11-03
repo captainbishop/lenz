@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -49,7 +50,7 @@ async function receipt(p,financial=false){await p.locator(financial?'.bubble.fin
       await a.locator('#pay-tusd').click();await idle(a);await a.locator('#chat-pay-amount').fill('4');await a.locator('#chat-pay-submit').click();await idle(a);payment=JSON.parse(await a.locator('#outgoing').inputValue());await a.locator('[data-close="handover"]').click();await receive(b,payment);
       const vault=p=>p.evaluate(async c=>{const s=await(await import('/chat-store.js')).readState();return {box:s.nearBox,vault:await(await import('/near-protocol.js')).readNearVault(s,c)};},contract);
       const beforeA=await vault(a),beforeB=await vault(b);paymentReceipt=await receipt(b,true);
-      await a.goto(base+'/money.html');await idle(a);await a.locator('#near-receive').click();await a.locator('#near-payment-file').setInputFiles(input(paymentReceipt));await idle(a);await a.locator('#near-import').click();await idle(a);
+      await a.goto(base+'/money.html');await idle(a);await a.locator('#near-receive').click();await openIncoming(a);await a.locator('#near-payment-file').setInputFiles(input(paymentReceipt));await idle(a);await a.locator('#near-import').click();await idle(a);
       assert((await a.locator('#near-payments').innerText()).includes('File received'));assert.equal(await a.locator('#near-total').innerText(),'6');assert.deepEqual(await vault(a),beforeA);assert.deepEqual(await vault(b),beforeB);assert.deepEqual(beforeB.vault.receipts,{});
     });
     await check('wallet can resend the same receipt without starting a conversation or modifying money',async()=>{

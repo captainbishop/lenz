@@ -1,3 +1,4 @@
+async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 const checks=[],errors=[],base='http://127.0.0.1:4173';
@@ -26,9 +27,22 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
    await p.goto(base+'/money.html');await ready();assert.deepEqual(await snapshot(),before);
   });
   await check('offline reload preserves the account and payment actions',async()=>{
-   await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));
+   await walletSettings(p);await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));
    const before=await snapshot();await context.setOffline(true);await p.reload();await ready();assert.deepEqual(await snapshot(),before);
-   await p.locator('#near-send').click();assert(await p.locator('#near-send-amount').isVisible());assert((await p.locator('#near-send-dialog').innerText()).includes('NEAR settlement'));await p.locator('[data-close=near-send-dialog]').click();
+   await p.locator('#near-send').click();assert(await p.locator('#wallet-scan-recipient').isVisible());await p.locator('#near-send-amount').waitFor({state:'hidden'});await p.locator('[data-close=near-send-dialog]').click();
+  });
+  await check('wallet settings work by keyboard, and payment dialogs retain focus and terms',async()=>{
+   assert(!await p.locator('#prepare-money-offline').isVisible());
+   await p.locator('.wallet-settings summary').focus();await p.keyboard.press('Enter');assert(await p.locator('#prepare-money-offline').isVisible());
+   assert(await p.locator('#carrier-open').isVisible());assert(await p.locator('#nearby-open').isVisible());
+   await p.keyboard.press('Escape');assert(!await p.locator('#prepare-money-offline').isVisible());
+   assert.equal(await p.evaluate(()=>document.activeElement.getAttribute('aria-label')),'Wallet settings');
+   await p.locator('#near-send').click();assert(await p.locator('#wallet-recipient-picker').isVisible());
+   await p.keyboard.press('Escape');assert(!await p.locator('#near-send-dialog').isVisible());assert.equal(await p.evaluate(()=>document.activeElement.id),'near-send');
+   assert(!await p.locator('.wallet-balance-details').evaluate(n=>n.open));
+   await p.locator('.wallet-balance-details summary').click();
+   for(const id of ['near-confirmed','near-pending','near-reserved'])assert.equal(await p.locator('#'+id).innerText(),'0');
+   await p.locator('.wallet-balance-details summary').click();
   });
   await check('current wallet fits desktop and phone widths in both themes',async()=>{
    await p.waitForFunction(()=>document.querySelector('#status').textContent==='');
@@ -36,7 +50,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     await p.setViewportSize({width,height});await p.evaluate(t=>document.documentElement.dataset.theme=t,theme);
     assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     assert(await p.locator('#near-send').isVisible());assert(await p.locator('#near-receive').isVisible());
-    if(theme==='light')await p.screenshot({path:path.join(__dirname,'evidence/wallet-'+label+'.png'),fullPage:true});
+    await p.screenshot({path:path.join(__dirname,'evidence/wallet-'+label+(theme==='dark'?'-dark':'')+'.png'),fullPage:true});
    }
   });
   assert.deepEqual(errors,[]);

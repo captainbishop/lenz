@@ -6,7 +6,7 @@ import qrcode from './qr-vendor/qrcode-generator.js';
 
 const $=s=>dialog.querySelector(s), button=document.createElement('button');
 button.type='button';button.className='secondary';button.id='nearby-open';button.textContent='Nearby';
-document.querySelector('header nav')?.append(button);
+(document.querySelector('#wallet-settings-actions')??document.querySelector('header nav'))?.append(button);
 const dialog=document.createElement('dialog');dialog.id='nearby-dialog';dialog.setAttribute('aria-labelledby','nearby-title');
 dialog.innerHTML=`<div class="dialog-top"><h2 id="nearby-title">Nearby</h2><button class="secondary" type="button" id="nearby-close">Close</button></div>
 <p id="nearby-status" role="status" aria-live="polite">Pair on the same Wi-Fi or hotspot.</p>

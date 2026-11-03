@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os'),net=require('node:net');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -116,7 +117,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     });
     await check('wallet send queues offline without a file dialog and delivers once after reload',async()=>{
       const before=(await read(b)).messages.length;
-      await a.locator('#near-send').click();await a.locator('#near-recipient').selectOption(profiles[1].id);
+      await a.locator('#near-send').click();await selectRecipient(a,profiles[1].id);
       await a.locator('#near-send-amount').fill('0.5');await contexts[0].setOffline(true);
       await a.locator('#near-send-form button[type=submit]').click();await idle(a);
       assert.equal(await a.locator('#near-handover').evaluate(n=>n.open),false);

@@ -1,13 +1,14 @@
 {
-  "checkedAt": "2026-11-03T05:05:41.269Z",
+  "checkedAt": "2026-11-04T15:06:02.370Z",
   "browser": "156.0.4314.58",
-  "passed": 5,
+  "passed": 6,
   "failed": 0,
   "checks": [
     "wallet starts at zero with current tUSD actions and no simulation controls",
     "receive opens the same public contact card without starting a conversation",
     "wallet and conversation share the same keys and balances without a reset",
     "offline reload preserves the account and payment actions",
+    "wallet settings work by keyboard, and payment dialogs retain focus and terms",
     "current wallet fits desktop and phone widths in both themes"
   ],
   "scope": "Disposable Windows Edge account with zero balance; APIs blocked. Funded onward-transfer tests are in near-wallet-browser.test.cjs."

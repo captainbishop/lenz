@@ -1,0 +1,1 @@
+Address/checksum validation from ethers 6.17.0 (MIT), including @noble/hashes 1.3.2 (MIT). See the adjacent license files. No signing, provider, wallet or mnemonic code is exported.

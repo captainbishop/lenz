@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-04T15:22:53.289Z",
+  "passed": 8,
+  "failed": 0,
+  "checks": [
+    "invalid RPC and failed storage leave settings unchanged; saving custom metadata makes no wallet or endpoint request and preserves Lenz state",
+    "network selection connects from an initially unsupported wallet; built-in switching requires wallet confirmation and shows the checked destination",
+    "custom RPC sharing requires consent; registration and switching are separate; exact custom balance/currency and decoded Receive QR never enable Send or alter prior history",
+    "network details and compact configuration fit both themes at 320–1280px, with keyboard containment in landscape, reduced motion and doubled root text",
+    "declined switches clear stale balances; closing during a delayed switch blocks same-event late replies and preserves the unresolved transfer",
+    "revoking custom-network consent during a pending switch prevents all subsequent balance reads and session activation",
+    "reload retains custom settings but resets consent; another tab’s settings change disconnects; removal leaves pending transfer history and its send barrier intact",
+    "offline reload preserves network settings, Lenz state and transfer journal with no eager wallet, custom RPC, signing or financial request"
+  ],
+  "sources": {
+    "web/public/evm-networks.js": "6fbf1302bfe8729e98b7b1e23776b345468e4e3d56e2055db75d67ee786105ef",
+    "web/public/evm-network-ui.js": "118dff1a4d8a59ed15a893f2680f4da74acf177bc78a5dd86ed4d5d99e15dbd5",
+    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
+    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
+    "web/public/evm-transfer-ui.js": "65652da38785dc5922b0310783d62939ab8ed858d7c5c095d07f920e1132f995",
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/money.css": "d8cbe410a71f890c90739bd0c199dba4c6aad7e04298020351a28cb1963a9ee7",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/evm-networks-browser.test.cjs": "9d7eb641ddd9ae867f4271b2e2771c6b15f6d4e29f74cd1c653e5471d7896823"
+  },
+  "scope": "Disposable Edge with injected wallet, real local persistence, decoded QR and offline cache. No installed wallet, actual network/RPC validation, device or financial operation."
+}

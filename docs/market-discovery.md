@@ -1,23 +1,26 @@
 # Market discovery
 
-The Markets page loads public mainnet data on request, with categories, search,
-market details and optional saved snapshots. Opening it performs no provider
-query. Optional [public estimates](market-quotes.md) are now available for the
+The Markets page automatically loads public mainnet data, with categories, search,
+market details and saved snapshots. Data settings can pause automatic updates.
+Optional [public estimates](market-quotes.md) are available for the
 Uniswap pool and listed perpetuals. There is no account lookup, signer or trading
 control. The homepage's separate recorded DeFi gallery remains illustrative.
+
+The [Prices view](oracle-prices.md) separately connects 18 Chainlink feeds on
+Ethereum, Arbitrum, Base and HyperEVM. The table below covers venue discovery.
 
 ## Connected reads
 
 | Source | Observed scope | Boundaries |
 | --- | --- | --- |
-| Uniswap v3, Base | WETH/USDC pool at the 500 fee tier; identity, liquidity and price state | One pool, not aggregate liquidity, a quote or LP position |
-| Aave v3, Base | WETH/USDC reserve configuration, LTV, liquidation threshold and active/frozen/paused/borrowing flags | No rates, caps, account health, debt, capacity or position proof |
+| Uniswap v3, Ethereum / Arbitrum / Base | WETH/USDC pool at the 500 fee tier; identity, liquidity and price state | One pool per network, not aggregate liquidity, a quote or LP position |
+| Aave v3, Ethereum / Arbitrum / Base | WETH/USDC reserve configuration, LTV, liquidation threshold and active/frozen/paused/borrowing flags | No rates, caps, account health, debt, capacity or position proof |
 | Hyperliquid, HyperCore | Default perpetual universe and aligned price/funding contexts; delisting, size decimals and venue leverage | No account, order book, margin tiers, precision-complete order or HIP-3 coverage |
 
-Base reads verify chain ID 8453 and pin a finalized block hash with
+EVM reads verify the selected chain ID (1, 42161 or 8453) and pin a finalized block hash with
 `requireCanonical: true`. The adapter checks code presence, token decimals,
 pool identity and reserve membership/configuration, then rechecks the canonical
-block. WETH has 18 decimals; Base USDC has six. Code hashes are observations,
+block. WETH has 18 decimals; native USDC has six on each network. Code hashes are observations,
 not approval of deployed code or independent proofs.
 
 Finalized blocks can lag the head: the reader rejects blocks older than one
@@ -27,14 +30,15 @@ its displayed time is local receipt time. Neither response is an execution quote
 
 ## Privacy and persistence
 
-`POST /api/markets/read` accepts only a provider ID from the local Lenz Host and
+`POST /api/markets/read` accepts only a reviewed provider/network pair from the local Lenz Host and
 Origin. Fixed HTTPS endpoints reject redirects; request/response sizes and read
 times are bounded. Errors are sanitized. Concurrent reads are coalesced, and
 successful responses can be reused for 15 seconds with their original timestamp.
 The browser sends no wallet address or credentials. Providers and the local
 server see these public queries; proxying does not make them private.
 
-Saving is explicit, using the separate `lenz-market-snapshots-v1` storage entry.
+Automatic discovery saves to `lenz-live-market-snapshots-v1`; paused mode retains
+explicit saving to the separate `lenz-market-snapshots-v1` storage entry.
 Stored observations display **Saved data**; live-read observations become
 **Needs refresh** after 60 seconds. Failed refreshes retain earlier rows with a
 failure label. Removal leaves unrelated identity storage untouched. The offline
@@ -63,7 +67,7 @@ caller-supplied observations are not authenticated evidence.
 ## Verification
 
 [Local verification](../integrations/market-discovery-verification.json) records
-26 tests and 20 detected guard alterations with source/test hashes, including
+33 tests and 20 detected guard alterations with source/test hashes, including
 three added quote-API checks. Checks cover
 chain/canonical-block substitution, token precision, pool/reserve identity,
 context alignment, borrowing flags, exact route assets, timestamps, immutable
@@ -76,13 +80,15 @@ responsive layouts, saved offline reload/removal, and malformed storage. Desktop
 and phone screenshots were visually inspected. The shorter homepage copy also
 passes seven gallery, five homepage and three screen-response groups.
 
-The [live browser run](../web/markets-live-results.json) passes four groups using
-real API/provider responses: one Uniswap pool, two Aave reserves and 235
-Hyperliquid entries. Both Base readers used finalized block 53443169. No wallet
-database, storage entry or financial operation was created. The earlier
-[direct live read](../integrations/market-discovery-live.json) used block 53442392;
-it retains every EVM row and the first five Hyperliquid rows with the full count.
-Browser fixtures reuse those shapes with synthetic receipt times.
+The [multichain browser run](../web/markets-networks-live-results.json) records six
+groups with three Uniswap pools, six Aave reserves and the Hyperliquid universe.
+The [direct live read](../integrations/market-discovery-live.json) records the exact
+blocks and source rows. Filters, independent caches and offline reload preserve
+each network. Browser fixtures reuse those shapes with synthetic receipt times.
+No user wallet database or financial operation was used.
+
+Quotes and immediate swap calculations remain connected only for the Base pool;
+Ethereum/Arbitrum pool and credit reads do not establish trading support.
 
 The initial ABI mock accessed an empty ethers `Result`; guarding its length
 fixed the fixture. A borrow regression reproduced collateral-reserve selection
@@ -97,6 +103,10 @@ integration work. It does not establish real-fund or physical-device readiness.
 
 ## Deployment references
 
+- [Uniswap Ethereum](https://developers.uniswap.org/docs/protocols/v3/deployments/ethereum-deployments)
+- [Uniswap Arbitrum](https://developers.uniswap.org/docs/protocols/v3/deployments/arbitrum-deployments)
+- [Aave Ethereum addresses](https://github.com/aave-dao/aave-address-book/blob/main/src/AaveV3Ethereum.sol)
+- [Aave Arbitrum addresses](https://github.com/aave-dao/aave-address-book/blob/main/src/AaveV3Arbitrum.sol)
 - [Uniswap Base](https://developers.uniswap.org/docs/protocols/v3/deployments/v3-base-deployments)
 - [Aave Base addresses](https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/src/AaveV3Base.sol)
 - [Aave reserve configuration](https://raw.githubusercontent.com/aave-dao/aave-v3-origin/main/src/contracts/protocol/libraries/configuration/ReserveConfiguration.sol)

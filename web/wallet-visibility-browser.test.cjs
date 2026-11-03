@@ -1,3 +1,5 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
+async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 // Disposable browser state and local fixture backing; no chain or financial API calls.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
@@ -50,12 +52,12 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   }
   await page.locator('[data-close=share-contact]').click();
   checks.push('share/copy/download icons retain accessible names, 48px targets, clipboard text and PNG output in both themes at 320/375/1280px');
-  await ready(page);await page.locator('#near-send').click();await page.locator('#near-recipient').selectOption({label:'Bola'});await page.locator('#near-send-amount').fill('999');
+  await ready(page);await page.locator('#near-send').click();await selectRecipient(page,{label:'Bola'});await page.locator('#near-send-amount').fill('999');
   assert.equal(await page.locator('#near-send-amount').inputValue(),'999');await page.locator('#near-send-form button[type=submit]').click();
   await page.waitForFunction(()=>document.querySelector('#status').classList.contains('error'));const error=await page.locator('#status').innerText();assert(error);
   await page.waitForTimeout(4000);assert.equal(await page.locator('#status').innerText(),error);assert.equal(await snapshot(),before);await page.locator('[data-close=near-send-dialog]').click();
   checks.push('a later payment error survives the readiness timer; entered transaction amounts stay visible and failed sends preserve the vault');
-  await page.locator('#prepare-money-offline').click();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));
+  await walletSettings(page);await page.locator('#prepare-money-offline').click();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));
   await context.setOffline(true);await page.reload();await page.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
   assert.equal(await page.locator('#near-total').innerText(),'••••');assert.equal(await snapshot(),before);
   for(const theme of ['light','dark']){

@@ -1,5 +1,12 @@
 # Aurora development setup
 
+The [offline ETH budget rehearsal](../docs/offline-budgets.md) uses this toolchain
+for source-asset authorization, isolated venue callers and owner recovery. Its
+contract is restricted to chain 31337; it is neither an Aurora deployment nor a
+connected Intents/private-settlement adapter. Run
+`node aurora/verify-offline-budget.mjs` from the repository root with the
+existing Playwright runtime on `NODE_PATH`.
+
 This folder supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and [transaction confirmation checks](engine-transactions.md) for Aurora testnet. A [durable submission journal](engine-submissions.md) validates and stores already signed calls, then recovers interrupted sends by hash. [Current access-key permissions](engine-access.md) gate each broadcast. A [direct ERC-20 receipt checker](engine-transfers.md) compares the reported token transfer with independently supplied payment terms. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
 
 The [name lookup](names.md) resolves ENS Aurora records and native NEAR accounts,

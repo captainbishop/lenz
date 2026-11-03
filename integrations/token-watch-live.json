@@ -1,0 +1,90 @@
+{
+  "checkedAt": "2026-11-04T10:35:50.807Z",
+  "scope": "Read-only public contract metadata and reference prices; no account or financial submission",
+  "results": [
+    {
+      "network": "ethereum",
+      "ok": true,
+      "data": {
+        "kind": "token-watch",
+        "request": {
+          "network": "ethereum",
+          "contract": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "account": null,
+          "publicConsent": true
+        },
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "decimals": 6,
+        "balance": null,
+        "price": {
+          "id": "ethereum:USDC",
+          "answer": "99963359",
+          "decimals": 8,
+          "updatedAt": 1793710187000,
+          "observedAt": 1793788534823
+        },
+        "blockHash": "0xde9592cd16ba355d1b03e597ffb73def99f93665a6dc51f0e4645ecec95251cf",
+        "blockNumber": "26340887",
+        "observedAt": 1793788534824,
+        "executable": false
+      }
+    },
+    {
+      "network": "arbitrum",
+      "ok": true,
+      "data": {
+        "kind": "token-watch",
+        "request": {
+          "network": "arbitrum",
+          "contract": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+          "account": null,
+          "publicConsent": true
+        },
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "decimals": 6,
+        "balance": null,
+        "price": {
+          "id": "arbitrum:USDC",
+          "answer": "99981839",
+          "decimals": 8,
+          "updatedAt": 1793788374000,
+          "observedAt": 1793788544080
+        },
+        "blockHash": "0xb71fdc07cc3a3b26a8a782fca843fd4a8cebbc1cbea2f73ea00137a5b5c2cd88",
+        "blockNumber": "521149324",
+        "observedAt": 1793788544081,
+        "executable": false
+      }
+    },
+    {
+      "network": "base",
+      "ok": true,
+      "data": {
+        "kind": "token-watch",
+        "request": {
+          "network": "base",
+          "contract": "0x4200000000000000000000000000000000000006",
+          "account": null,
+          "publicConsent": true
+        },
+        "name": "Wrapped Ether",
+        "symbol": "WETH",
+        "decimals": 18,
+        "balance": null,
+        "price": {
+          "id": "base:ETH",
+          "answer": "232884532007",
+          "decimals": 8,
+          "updatedAt": 1793788451000,
+          "observedAt": 1793788550805
+        },
+        "blockHash": "0x9b8b4ce8b1a86da10929b19d67ccefe33a61b7b8f2f0b1b98362d2cccfcc303b",
+        "blockNumber": "53499598",
+        "observedAt": 1793788550806,
+        "executable": false
+      }
+    }
+  ]
+}

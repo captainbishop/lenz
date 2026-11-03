@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 // --run uses the deployed testnet contracts and three dedicated persistent Edge
 // profiles. No mocked funding/RPC, new deployment or user's browser profile.
 const {chromium}=require('playwright');
@@ -23,7 +24,7 @@ async function sendPayment(p,contract,recipient,amount,key,fromWallet=false){
   const v=await vault(p,contract),found=v.outbox.filter(o=>o.packet.to===recipient.id&&o.amount===String(BigInt(amount)*1000000n));assert(found.length<=1,'Ambiguous saved test payment');
   if(found.length){ev.packets[key]=found[0].packet;await save();return found[0].packet;}
   let packet;
-  if(fromWallet){await wallet(p);await p.locator('#near-send').click();await p.locator('#near-recipient').selectOption(recipient.id);await p.locator('#near-send-amount').fill(amount);await p.locator('#near-send-form button[type=submit]').click();await idle(p);assert(await p.locator('#near-handover').isVisible(),'Payment not prepared');packet=(await vault(p,contract)).outbox.at(-1).packet;await p.locator('[data-close="near-handover"]').click();}
+  if(fromWallet){await wallet(p);await p.locator('#near-send').click();await selectRecipient(p,recipient.id);await p.locator('#near-send-amount').fill(amount);await p.locator('#near-send-form button[type=submit]').click();await idle(p);assert(await p.locator('#near-handover').isVisible(),'Payment not prepared');packet=(await vault(p,contract)).outbox.at(-1).packet;await p.locator('[data-close="near-handover"]').click();}
   else{await chat(p);await p.locator('#contact-list button').filter({hasText:recipient.name}).click();await idle(p);await p.locator('#pay-tusd').click();await idle(p);await p.locator('#chat-pay-amount').fill(amount);await p.locator('#chat-pay-submit').click();await idle(p);assert(await p.locator('#handover').isVisible(),'Chat payment not prepared');packet=JSON.parse(await p.locator('#outgoing').inputValue());await p.locator('[data-close="handover"]').click();}
   ev.packets[key]=packet;await save();return packet;
 }

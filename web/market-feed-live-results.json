@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-04T15:21:53.769Z",
+  "passed": 4,
+  "checks": [
+    "Automatic actual public market discovery",
+    "Repeated latest-block Base price reads without an amount or wallet address",
+    "Synchronous local receive amount with public quote consent unchecked",
+    "Icon control and both themes at desktop/phone widths"
+  ],
+  "priceUpdates": 2,
+  "firstPrice": {
+    "kind": "pool-price",
+    "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+    "source": "https://mainnet.base.org",
+    "sqrtPriceX96": "3907452958947458331067540",
+    "sourceTime": 1793805699000,
+    "observedAt": 1793805708519,
+    "blockNumber": "53508176",
+    "blockHash": "0xe7da19887d0cefa00cf0369b3be92b2d8d0f086ab2a2c24259a99837e873bfb4",
+    "executable": false
+  },
+  "lastPrice": {
+    "kind": "pool-price",
+    "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+    "source": "https://mainnet.base.org",
+    "sqrtPriceX96": "3907515795564343259289487",
+    "sourceTime": 1793805711000,
+    "observedAt": 1793805713635,
+    "blockNumber": "53508182",
+    "blockHash": "0x42449668100f7c903d21f86947995315f57aeb4eac882c73f7b8e9f566ef874d",
+    "executable": false
+  },
+  "requestLatencyMs": [
+    11358,
+    3116
+  ],
+  "display": "≈ 0.00410917",
+  "sourceFiles": {
+    "web/public/market-live.js": "c246929777a3c84ab03054b909e61903a1bed7f99271ba25d6bb514bd3ff916c",
+    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/public/pool-price.js": "9f80dd63a66c2f800e28c637e2fe93705a34fdf8f500b03dff1c85846a6360eb",
+    "web/public/pool-price-ui.js": "d0f85c4a1d04b7866bdca9973de0411cdbfb4dfd484ffbd1f2655263c97409b7",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "integrations/pool-price.mjs": "933458bcf30155c9f93a6e52ff7fc252225da2db3f6b009f5ee4642677467ddd",
+    "integrations/market-discovery.mjs": "7819848708b70440138627a9f78cf6c6890e805c715dcf630d24233222f4dbc1",
+    "web/market-feed-live.test.cjs": "c031cebff0e9374b02b8eb3bbb2581815b901a02651609df37ce2fb2f80727c4"
+  },
+  "scope": "Actual Base/Hyperliquid public reads in disposable Windows Edge. Latencies describe this run only. No quote, order, signature, carrier transport or financial submission."
+}

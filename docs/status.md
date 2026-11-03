@@ -1,3 +1,24 @@
+## Current product boundary — November 4
+
+The [offline source-budget candidate](offline-budgets.md) now has local contract
+enforcement, offline browser signing, encrypted handoff and owner recovery work.
+It is not a connected funding feature or private settlement route. The build
+priority is the complete existing-wallet journey; Networks is in wallet settings.
+
+Lenz remains a prototype. Encrypted chat, bounded testnet offline payments and
+public market reads are implemented. [Browser wallet connection](wallet-connection.md)
+now supplies explicit Ethereum/Arbitrum/Base account access, native balance
+reads and chain-specific Receive QR addresses. [Wallet transfers](wallet-transfers.md)
+add ETH and reviewed USDC/WETH sends with explicit wallet approval and encrypted
+attempt tracking. [Network controls](wallet-networks.md) add explicit switching
+and saved custom EVM networks for native balances and Receive; they do not enable
+additional transfer assets or protocols. Evidence covers an isolated local EVM and injected-provider
+browser tests. Recoverable onboarding, installed-wallet/live-network sending,
+complete mainnet DeFi execution and recovery are not verified. A Lenz ID is a public-key contact identifier, not a chain deposit
+address. The [wallet token list](wallet-tokens.md) watches assets; it grants no
+spending authority. [Privacy integrations](privacy-workflows.md) retain separate
+transport and settlement guarantees. UI work does not close these gaps.
+
 # Development status
 
 Lenz combines private conversations, offline onward payments and DeFi actions approved offline for connected execution. Privacy, offline authorization and recoverable outcomes apply to every integration. The current implementation uses disposable test assets. It is not ready for real funds.
@@ -10,9 +31,11 @@ execution on public venues.
 
 | Component | Recorded implementation and evidence | Remaining work |
 | --- | --- | --- |
-| Route drafts | [Same-chain estimate binding and encrypted browser service](route-drafts.md). Seven fixture/seven browser groups and 15 guard alterations. Explicit order precision, immutable objective IDs, revision checks and expiry. | Product draft controls, full fee/account/action validation, cross-chain legs, execution journals and recovery. No execution authority. |
-| Market discovery | [Public reads and Markets screen](market-discovery.md): Uniswap/Aave on Base, Hyperliquid perpetuals, optional offline snapshots and route matching. 26 tests/20 guard alterations, seven fixture and four live browser groups. | Additional asset/pool coverage, positions, private routing and execution. |
-| Public estimates | [Uniswap quotes and Hyperliquid book estimates](market-quotes.md), exact amounts, explicit public consent, expiry and stale-response rejection. 19 tests/19 guard changes, seven fixture/four live browser groups. | Full route-objective binding, complete fees, accounts/positions, private quotes, bounded signing and execution. |
+| Chainlink prices | [18 live reference feeds across Ethereum, Arbitrum, Base and HyperEVM](oracle-prices.md), automatic updates, source ages and separate offline snapshots. | Broader asset/network coverage, independent proof verification, connected-carrier price delivery and execution. |
+| Market workspaces | [Asset exchange, credit limits, liquidity positions and Hyperliquid price/depth/order rail](trading-workspace.md). Inline review limits, position states and phone Chart/Book/Order tabs. Explicit public consent, snapshot expiry and actual provider/browser evidence. | User visual review, account/position reads, full margin/fee checks and execution. No preliminary NEAR bridge is required by the architecture. |
+| Route drafts | [Checked-estimate review and encrypted offline Drafts page](route-drafts.md). Atomic quoted saves, separate public consent, exact order terms, revision-checked refresh/delete and expiry. Binding/service and product guard-removal checks pass. | Full fee/account/action validation, cross-chain legs, private quotes, execution journals and recovery. No execution authority. |
+| Market discovery | [Public reads and Markets screen](market-discovery.md): Uniswap/Aave on Ethereum, Arbitrum and Base, Hyperliquid perpetuals, optional offline snapshots and route matching. Provider-bound fixture and live browser evidence. | Additional asset/pool coverage, positions, private routing and execution. |
+| Public estimates | [Uniswap quotes and Hyperliquid book estimates](market-quotes.md), exact amounts, explicit public consent, expiry and stale-response rejection. 19 tests/19 guard changes, seven fixture/four live browser groups. | Additional route/asset binding, complete fees, accounts/positions, private quotes, bounded signing and execution. |
 | Shared route planning | [Provider catalogue and route objectives](route-planner.md) with exact asset/chain references, fee/privacy/recipient bounds, HyperCore-specific orders and explicit return/recovery steps. Fifteen synthetic tests and 11 guard alterations pass. Every preview remains unverified and non-executable. | Broader asset discovery, concrete quotes, action-specific authorization, durable route journals, connected execution and positions. |
 | Chat and wallet | Shared identity and encrypted storage; offline tUSD payments within chat or the standalone wallet; onward transfer and later NEAR confirmation. Encrypted file acknowledgements remain separate from settlement. Conflicted outgoing payment cards remove their download action. [Funded flow](../research/offline-social-live.md), [confirmation checks](../research/payment-status.md), [delivery receipts](delivery-receipts.md). | Safe recovery, broader failure coverage, transport between physical devices and broader browser coverage. |
 | Carrier network | Opt-in automatic delivery of encrypted messages, payment files and recipient receipts; persistent independent carrier stores, multi-hop forwarding, reconnect and bounded retries. [Setup](../carrier/README.md), [verification](../carrier/verification.md). Three-node loopback and disposable Edge evidence; no financial submission. | Independently operated remote hosts, deployed HTTPS, ingress abuse controls, metadata reduction, native offline discovery and physical-device testing. Browser work requires an open page. |

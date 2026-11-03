@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-02T18:35:35.789Z",
+  "recordedAt": "2026-11-04T13:37:43.036Z",
   "renderer": "Hyperframes 0.8.226 / FFmpeg 9.0.2",
   "sourceFiles": {
     "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
@@ -9,14 +9,14 @@
     "web/public/carrier-client.js": "8167b3dcc225a968629e9b53371c55a323ce9468de52477eae36f43d2e504dac",
     "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
-    "web/public/carrier-ui.js": "38947ba4ce139d2700773d398994709caf73ecee193ed5888b156bda328d4e19",
+    "web/public/carrier-ui.js": "97cb90e916975811f337f65934dca7d3f4ac5c7984305cdfbc22731ef3185744",
     "web/public/chat-layout.css": "06049f7f1d0db78b76bb15c3c3daf3a9f00b5f2a77080b386f72f5fb7f53ff16",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
     "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
     "web/public/chat.html": "c415db22c139ca3b5222953d5915e9637a2d9936fafc4455f01096fd3b359391",
     "web/public/chat.js": "ebb3f18c7e7bb9ce09f39cb963a7223b613dd445c4f84a3d821dbdf35d75559f",
-    "web/public/contact-card.js": "03a27e5df37f2ca57e47e8c433eadac6fee4de6bcf0b669838e43157940eda32",
-    "web/public/contact-ui.js": "210e310dfad908ba784afbe95df61561e075c07d54798c65051983ed8be2e82c",
+    "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
+    "web/public/contact-ui.js": "52b2937d3b70a001bed85330a867e0e6bc022ae3703fd61dd20a6ddbd71477c9",
     "web/public/delivery-mode.js": "117661527ec8689dbbec8bbeb243640374cc5d3e54a456f836d082b9c018cbe6",
     "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
@@ -28,7 +28,7 @@
     "web/public/nearby-client.js": "bf7530883914088dc09041a721a9806637a1c4d534dd30a4d93de709c24b4102",
     "web/public/nearby-connection.js": "ec5f6a7a73c3fc536328002b2581becb486a7d516d1e816581a5bdc67bc71e7d",
     "web/public/nearby-protocol.js": "6108d976cc1522f97a9831335c4e17b815b40ba524aebf778cd22386a02c408f",
-    "web/public/nearby-ui.js": "e173df0d952ff8aba6f370de06edb733757bd6f2a741f12283fcc1c342422030",
+    "web/public/nearby-ui.js": "552c3453f891b6bafd6fc70c594a2da42e20cf88f124c06731c73a89853437dd",
     "web/public/nearby.css": "393cee6d2f4b60f274a376a4ce2a0802ae93b5f7fb5c144d1ebde94e286f9a38",
     "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
     "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
@@ -50,7 +50,7 @@
     "web/render-preview-stories.cjs": "c77a06202bf0c8a242e276bf33e9747126ab29d7606b03ab422af9036c9013c1",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
     "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
-    "web/preview-flow-results.json": "7a26f9e73fcc11f161469cc5d7faf99d8dddbfc3746a165b9c6ec3c42a09e225",
+    "web/preview-flow-results.json": "0071471ad0904c2d4af4169cd3e5d010a101cb6b7a6946701253501358895e40",
     "web/lenz-id-browser-results.json": "a47665bf1793234ab6ec874372b9b2204bc11f86b502f146fe146e91d61b94da",
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
@@ -154,7 +154,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 168,
+      "changingFrames": 164,
       "states": [
         {
           "id": "share",
@@ -176,14 +176,14 @@
         }
       ],
       "sceneHashes": [
-        "51d3f0e485ccafac2a6f7fe250d668c68e28aa9212398b91f12921c1af224725",
-        "9ef4499937d13ae473757ed43d21244671907159951ee83e04a4c19527ef58b6",
+        "a24c0ec70bb5a6fb341b1ffcd262d461f218be1b15de01ac3022da449e0dbd20",
+        "84b4b63dfb127d60efcde33f5834e91404f3b76584f1fed8c2ef980978c822a2",
         "56e7e0a5cf982cdcaf6e77fb24c7f20ed7e9e04e810b8483fd8bc69362a997fa"
       ],
       "file": "web/public/previews/profile-light.mp4",
-      "sha256": "32762022a2eeedbaf2163dbb6112d6804324a44dbd5c3d012139bad999806440",
+      "sha256": "b1d73ca85d404b61bae71ad2d5326d1b62892939ada842ffca65f18c0e0e4db7",
       "poster": "web/public/previews/profile-light.webp",
-      "posterSha256": "938c36bed4d738824476c0cbdfdbad03664311ee35f4a52a0b3f96266c692010"
+      "posterSha256": "863530a4d9b0aa0c000b710276638661a2be3b6a12157d37afa4359fc4106492"
     },
     {
       "view": "chat",
@@ -282,7 +282,7 @@
       "fps": 30,
       "width": 1200,
       "height": 1320,
-      "changingFrames": 199,
+      "changingFrames": 194,
       "states": [
         {
           "id": "share",
@@ -304,14 +304,14 @@
         }
       ],
       "sceneHashes": [
-        "79775f171151ec0ba8117ca85a3376431e450425450d9fd1eb6480a5d8d714c1",
-        "48d2f2e20c316de353e402f46994f6bcf178d26907ee4492c92cd4dcfa2f6f2c",
-        "afdeb2683d2d3769b350227cd4c39265e58dd60f819d4d303e1d2911d791166b"
+        "ed431cfec2c34e6a8ffedcd32f55dbb23fa4050938694e3b3f4f57154eb2fdcf",
+        "7344d70d1821c3285f80135d4b7fe163a1613a88adea092dcb3f7789f5039656",
+        "bf5dbfac84234463a4d5952874dc87f987fa43b6108a2e5d48d3b7fd199b1ec6"
       ],
       "file": "web/public/previews/profile-dark.mp4",
-      "sha256": "917e345940cfca62ceb7f515c75561349b092fea09bcb1ce989d19c90e9db7d7",
+      "sha256": "e558cc245bb76b6f96fac76152794c602fe7e1fabfd139ce1f0911871447aa4b",
       "poster": "web/public/previews/profile-dark.webp",
-      "posterSha256": "ed7ebb84bb04b8e7c72cce06be80d6033d5130bbf4f8728306084bfd24e7a8e2"
+      "posterSha256": "b3f27c6961f904f3b2e5dda6ce880cc53f4220d84ec7abffba3f9ffeef4f9099"
     }
   ],
   "apiRequests": 0,

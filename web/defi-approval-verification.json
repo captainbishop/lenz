@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-03T05:04:36.308Z",
+  "checkedAt": "2026-11-04T15:24:14.880Z",
   "browserTests": 16,
   "mutations": [
     {
@@ -59,21 +59,23 @@
     }
   ],
   "sourceFiles": {
-    "web/public/defi-workspace.js": "3da509dd33e730f141d741fe504c21cc8bef183b9481f6792495f8a3880097ca",
-    "web/public/defi-wallet-ui.js": "d3d41bec06ae08c850717eddf068b9ba8a477315ba70f3af607dfda71cf89723",
+    "web/public/defi-workspace.js": "8ff2f4ccb5686dbf0b81277bc14114966b04f6c30a7dd84148aa34288d87fe0e",
+    "web/public/defi-surfaces.js": "bb90c5ac6106cf4f0423ab9de6bb5403a7eee2b88a09112fcf1e5aeeb7833ca4",
+    "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
+    "web/public/defi-wallet-ui.js": "4aa1f41055363e02179ee1ea89a90cac0ec943563828dd0b1de0a54906a1debe",
     "web/public/defi-wallet.js": "16affd6f706b16de0ffb76481522b96dd718af47b165572386860d0dde7d307a",
     "web/public/defi-delivery.js": "812fd592a9fc814338cb4a9c7ceee6762510b6aeaa47716928a923d45b8c3206",
     "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
-    "web/public/rhea-wallet.js": "46f37eac868de1e85f74af1ab32bb2e9ff0a0ff0bb4b05bf04346122627d67bb",
+    "web/public/rhea-wallet.js": "32ec19dca4f4f46492b48e85cc7a75823ee08aab0a93a36847aa44e317b00ac2",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
     "web/public/near-wallet.css": "f2776cae80f1531cf98b0e089b317c69bd2959168290d0896431088da0229150",
-    "web/public/chat-sw.js": "cdcec0414fd33caffa5db6b3e2e36c847fa9354e4da16ac77dc1498bf8be23d2",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
     "web/public/wallet-feedback.js": "f715a5d91bfef8deb6c097cec04dee2cb0e7b655e7a93fbe7d31383a687fc5b5",
-    "web/defi-approval-browser.test.cjs": "0b91eb7566034a2fd0ed0b8b0a19319fe1fc04287adffa249ef57c9bcc732e20",
+    "web/defi-approval-browser.test.cjs": "53e222059de5cf566d5c6699e2b114a00cd25ae62b59ed7832cd9a54cdb23ac2",
     "web/defi-approval-verification.cjs": "f53cf4dd432bcac09088943f333556f0232567c8a7a8d3823e37f7d6330da06f"
   },
   "scope": "Disposable Windows Edge UI, cached offline reload, IndexedDB and real local HTTP/SQLite carrier and executor intake. Synthetic backing. No chain dispatch, credit, physical device, remote host or nearby executor delivery."

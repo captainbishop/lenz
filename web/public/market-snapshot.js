@@ -1,3 +1,4 @@
+import {marketSource} from './evm-markets.js';
 import {immutable} from './defi-catalog.js';
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const boundedText=(value,max=200)=>typeof value==='string'&&value.length>0&&value.length<=max&&!/[\u0000-\u001f\u007f]/.test(value);
@@ -5,7 +6,7 @@ const decimal=x=>typeof x==='string'&&/^-?(?:0|[1-9][0-9]{0,29})(?:\.[0-9]{1,24}
 export function marketSnapshot(value,{now=Date.now()}={}){
   check(value&&value.version===1&&value.kind==='market-observation'&&value.executable===false,'Invalid market observation');
   check(['uniswap','aave','hyperliquid'].includes(value.provider),'Invalid market provider');
-  const chainId=value.provider==='hyperliquid'?'hypercore:mainnet':'eip155:8453';
+  const chainId=marketSource(value).chainId;
   check(value.chainId===chainId&&value.network==='mainnet','Market chain mismatch');
   check(Number.isSafeInteger(value.observedAt)&&value.observedAt>=0&&value.observedAt<=now+5000&&Number.isSafeInteger(value.expiresAt)&&value.expiresAt>value.observedAt&&value.expiresAt<=value.observedAt+60000,'Invalid market observation time');
   check(Array.isArray(value.rows)&&value.rows.length>0&&value.rows.length<=2000,'Invalid market collection');

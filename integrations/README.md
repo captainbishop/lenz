@@ -3,10 +3,14 @@
 [Market discovery](../docs/market-discovery.md) connects public Uniswap/Aave
 Base markets and Hyperliquid perpetual contexts to the Markets page and route
 candidate matcher. Explicit refresh and saved offline snapshots are available.
+[The perpetual workspace](../docs/trading-workspace.md) adds checked Hyperliquid
+candles/depth and a compact order ticket, with explicit public-data consent.
 [Public estimates](../docs/market-quotes.md) add Uniswap WETH/USDC quotes and
 Hyperliquid order-book previews. [Route drafts](../docs/route-drafts.md) match
-bounded swap/order objectives and persist encrypted non-executable records;
-product draft controls, account positions and execution remain open.
+bounded swap/order objectives and persist encrypted non-executable records.
+Markets provides a draft review, and Drafts supports offline reading and explicit
+estimate refresh/delete. Complete fees, account positions, cross-chain legs,
+private quotes, signing, execution and recovery remain open.
 
 The [shared route planner](../docs/route-planner.md) adds provider-independent
 catalogue discovery and validated objectives for EVM/NEAR routes, credit and
@@ -26,6 +30,7 @@ November 2: [installation checks](installation-results.json) confirm the empty-a
 | `/api/defi/intents/quote` | Request a dry exact-input quote with an explicit confidential route; validate the echoed terms and minimum output. |
 | `/api/markets/read` | Read public Uniswap, Aave or Hyperliquid data; no account, quote or transaction. |
 | `/api/markets/quote` | Explicit public Uniswap simulation or Hyperliquid book estimate; no account, signer or transaction. |
+| `/api/markets/tape` | Explicit public Hyperliquid candle/book snapshot; bound market/interval, no account or execution. |
 
 Requests require JSON and the local Lenz origin. Provider credentials, if configured, stay in the server process as `LENZ_INTENTS_API_KEY`. The server does not expose signing, deposits or spending through these routes.
 

@@ -1,0 +1,134 @@
+{
+  "checkedAt": "2026-11-04T15:21:02.534Z",
+  "marketId": "hyperliquid:1:ETH",
+  "source": "https://api.hyperliquid.xyz/info",
+  "observedAt": 1793805650446,
+  "bookTime": 1793805649383,
+  "candles": 97,
+  "levels": [
+    20,
+    20
+  ],
+  "requests": [
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "uniswap"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "aave"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "uniswap",
+        "network": "ethereum"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "aave",
+        "network": "ethereum"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "uniswap",
+        "network": "arbitrum"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "aave",
+        "network": "arbitrum"
+      }
+    },
+    {
+      "path": "/api/markets/read",
+      "input": {
+        "provider": "hyperliquid"
+      }
+    },
+    {
+      "path": "/api/markets/tape",
+      "input": {
+        "marketId": "hyperliquid:0:BTC",
+        "interval": "1h",
+        "privacy": "public"
+      }
+    },
+    {
+      "path": "/api/markets/tape",
+      "input": {
+        "marketId": "hyperliquid:1:ETH",
+        "interval": "1h",
+        "privacy": "public"
+      }
+    },
+    {
+      "path": "/api/markets/quote",
+      "input": {
+        "provider": "hyperliquid",
+        "marketId": "hyperliquid:1:ETH",
+        "side": "buy",
+        "amount": "1.5",
+        "privacy": "public"
+      }
+    },
+    {
+      "path": "/api/markets/quote",
+      "input": {
+        "provider": "hyperliquid",
+        "marketId": "hyperliquid:1:ETH",
+        "side": "buy",
+        "amount": "1.5",
+        "privacy": "public"
+      }
+    },
+    {
+      "path": "/api/markets/quote",
+      "input": {
+        "provider": "uniswap",
+        "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+        "side": "usdc-to-weth",
+        "amount": "10",
+        "privacy": "public",
+        "slippageBps": 50
+      }
+    }
+  ],
+  "passed": 7,
+  "checks": [
+    "Actual API candles/book rendered",
+    "Actual public order estimate rendered",
+    "Desktop themes and mobile order pane",
+    "Review retained unchecked consent; no draft or order submitted",
+    "Swap displays actual Base quote across asset endpoints and clears on edit",
+    "Liquidity shows pool and unavailable positions without entry forms",
+    "Credit shows actual reserve limits and position actions without entry forms"
+  ],
+  "sourceFiles": {
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/terminal.css": "ae63efef8f77188ca7b037f414469bbf97401fed5083a4e361a2df361e018df4",
+    "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
+    "web/public/defi-surfaces.js": "bb90c5ac6106cf4f0423ab9de6bb5403a7eee2b88a09112fcf1e5aeeb7833ca4",
+    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/public/perp-terminal.js": "e0c66e7fe7be3f097b966f0e2886379cf87552d89f8fa54d8f60ff21cd60f01b",
+    "web/public/market-tape.js": "aa4f36a155041fe5fa9049a9141580886b8ecc33657b3d221a420a55179892a8",
+    "web/public/route-draft-ui.js": "7626b01d12c54e8a53bf693b5284f61f74d060ae086042a57c7fb7053a3403df",
+    "web/public/routes.css": "a32468d7642d5c685ae39428a9dca3f48db8337c5a1cb0f2cb4a9eddb743b7d1",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "integrations/market-tape.mjs": "ae1f0d79bbf8069d7a11f109ac82469a5dde7c3391e1f3ed5c162011cd7ab2ab",
+    "integrations/market-http.mjs": "fa373c47bd1dbc819a88947aca903b6aa580ae215ce111543066a55852e40fa2",
+    "web/terminal-live.test.cjs": "ff56e8e6c702034b3bb459e920d6ddccf0da0f7a9540fc55bc3d500afcefd641"
+  },
+  "scope": "Actual public provider reads through the local app in disposable Windows Edge. No user profile, wallet connection, signature or financial submission."
+}

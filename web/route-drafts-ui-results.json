@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-04T15:26:44.341Z",
+  "passed": 11,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "public route consent is separate and cancel preserves wallet state",
+      "pass": true
+    },
+    {
+      "name": "saved swap uses exact terms and double clicks create one encrypted draft",
+      "pass": true
+    },
+    {
+      "name": "failed writes and expired review save neither objective nor quote",
+      "pass": true
+    },
+    {
+      "name": "Hyperliquid draft keeps order size separate from collateral and fits both themes",
+      "pass": true
+    },
+    {
+      "name": "offline reload retains drafts and expiry without network or wallet changes",
+      "pass": true
+    },
+    {
+      "name": "refresh requires consent and discards revoked, failed and mismatched replies",
+      "pass": true
+    },
+    {
+      "name": "changed market terms cannot save the still-open review",
+      "pass": true
+    },
+    {
+      "name": "another tab deleting a draft prevents a late refresh from restoring it",
+      "pass": true
+    },
+    {
+      "name": "older private drafts retain exact amounts and chain labels",
+      "pass": true
+    },
+    {
+      "name": "review reflows in both themes with large text and reduced motion",
+      "pass": true
+    },
+    {
+      "name": "unreadable storage never reports that saved drafts are absent",
+      "pass": true
+    }
+  ],
+  "sourceFiles": {
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/route-drafts-ui.test.cjs": "94ebd7d73092d4010b1f5d3bdab6a570845a57eeed355ebb89b214c90f2f3c86",
+    "web/public/markets.html": "533f0a2014c059b9c2754fafce3805abba4c590f5de546737a23b30699e039a8",
+    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/public/route-draft-form.js": "93280dbd0dba5bc0871fb2495e3b8343811825fa7e959c0e45ed3dcd3b431e4d",
+    "web/public/route-draft-ui.js": "7626b01d12c54e8a53bf693b5284f61f74d060ae086042a57c7fb7053a3403df",
+    "web/public/defi-route-drafts.js": "ea96bce102e2f50943911c3f70e2b1ca55a8f34f67934f2f713354901a95816b",
+    "web/public/routes.html": "7726d2a52d79362c9101e646839876f6b8266c9521cb71603c50034df8791130",
+    "web/public/routes.css": "a32468d7642d5c685ae39428a9dca3f48db8337c5a1cb0f2cb4a9eddb743b7d1",
+    "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
+    "web/public/routes.js": "aeabba21e1f0edad555690ce0279fd5b6d4a17ab7fc52d53e696d47f5ee64cbf",
+    "web/public/sw.js": "b2681be1d9be097e17ed6aca32db75ae04e6e646cb144bbb434e71a3ad7941f4",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867"
+  },
+  "scope": "Disposable Windows Edge with real service workers/IndexedDB/WebCrypto and fixture public APIs. No user profile, live transaction, signing, reservation or physical-device test."
+}

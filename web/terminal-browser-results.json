@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-04T15:20:28.417Z",
+  "passed": 7,
+  "checks": [
+    "opening a market loads checked public candles and depth without an extra start control",
+    "candle keyboard inspection and range controls expose real OHLC values",
+    "Long and Short controls bind the exact requested side",
+    "terminal fits desktop, tablet, phone and landscape in both themes; mobile panes switch",
+    "order review exposes compact side, size, fill, fees, collateral and account fields",
+    "changing interval discards a delayed response even when abort is ignored",
+    "failed, mismatched and offline data stay distinct from a current snapshot"
+  ],
+  "sourceFiles": {
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/terminal.css": "ae63efef8f77188ca7b037f414469bbf97401fed5083a4e361a2df361e018df4",
+    "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
+    "web/public/defi-surfaces.js": "bb90c5ac6106cf4f0423ab9de6bb5403a7eee2b88a09112fcf1e5aeeb7833ca4",
+    "web/public/perp-terminal.js": "e0c66e7fe7be3f097b966f0e2886379cf87552d89f8fa54d8f60ff21cd60f01b",
+    "web/public/market-tape.js": "aa4f36a155041fe5fa9049a9141580886b8ecc33657b3d221a420a55179892a8",
+    "web/public/routes.css": "a32468d7642d5c685ae39428a9dca3f48db8337c5a1cb0f2cb4a9eddb743b7d1",
+    "web/public/route-draft-ui.js": "7626b01d12c54e8a53bf693b5284f61f74d060ae086042a57c7fb7053a3403df",
+    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/public/markets.html": "533f0a2014c059b9c2754fafce3805abba4c590f5de546737a23b30699e039a8",
+    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/terminal-browser.test.cjs": "ae25a02ff79de955dbe4d285b23549476670c377b16e5ed480ed5cadf396875f"
+  },
+  "scope": "Synthetic public market data and disposable Edge profile. No user identity, signing, account connection or execution. Layouts do not certify visual quality or physical-device behavior."
+}

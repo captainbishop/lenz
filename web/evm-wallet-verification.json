@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-04T15:14:26.000Z",
+  "nodeTests": 12,
+  "browserGroups": 7,
+  "guardAlterations": [
+    "late-provider",
+    "account-network-recheck",
+    "provider-events",
+    "receive-chain",
+    "balance-precision",
+    "deferred-dialog-cancellation"
+  ],
+  "sources": {
+    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
+    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
+    "web/evm-wallet.test.mjs": "5766b8106c33c1b7208fac5c4982be015243f0f07181505f60b7bb574a4228ed",
+    "web/evm-wallet-browser.test.cjs": "9f283346e7eb3b1a32e822448c4280bf0a139e7fad9bc6a39c5383f81c20efa9",
+    "web/verify-evm-wallet.cjs": "9a6bcfd5e164fe2760cf28a7a34d017023b065f7b31b0f9a884b932f0a3b8ab3"
+  },
+  "scope": "Local EIP-1193 session and injected-provider Edge UI; no live wallet compatibility, cryptographic ownership proof, signing, transaction, recovery or DeFi execution."
+}

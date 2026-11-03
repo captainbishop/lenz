@@ -20,7 +20,9 @@ const browserMutations=[
  ['immutable objective ID','same(existing.objective,objective)','true','two tabs'],
  ['quote revision','row&&row.revision===expectedRevision','row','two tabs'],
  ['objective expiry before commit','Date.now()<objective.limits.deadline','true','expiry during'],
- ['quote expiry before commit','Date.now()<match.expiresAt','true','expiry during'],
+ ['quote expiry before commit',"assert(Date.now()<match.expiresAt,'Estimate expired before saving')","assert(true,'Estimate expired before saving')",'expiry during'],
+ ['atomic quote expiry','!match||Date.now()<match.expiresAt','true','quoted draft save'],
+ ['delete revision','index>=0&&rows[index].revision===expectedRevision','index>=0','deletion requires'],
  ['identity-bound encryption',"bytes(['lenz/route-drafts/v1',s.identity.profile.id])","bytes(['lenz/route-drafts/v1'])",'ciphertext corruption'],
 ];
 const directory=await mkdtemp(join(tmpdir(),'lenz-route-quote-')),results=[],hashes={};

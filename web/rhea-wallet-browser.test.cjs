@@ -1,3 +1,4 @@
+async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 const {chromium}=require('playwright');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
 const c={network:'testnet',adapter:'adapter.lenz.testnet',reserve:'reserve.lenz.testnet',exchange:'ref-finance-101.testnet',poolId:2870,tokenOut:'wrap.testnet',ready:true,recoverRedemption:true};
@@ -23,7 +24,7 @@ let base;
     await check('everyday wallet hides technical import, transaction export and experimental signer controls',async()=>{
       const text=await p.locator('body').innerText();assert(!text.includes('Carry a signed swap'));assert(!text.includes('Deposit transaction details'));assert.equal(await p.locator('#rhea-file').count(),0);assert.equal(await p.locator('#near-signer-connect').isVisible(),false);assert(await p.getByRole('button',{name:'New swap',exact:true}).isVisible());
     });
-    await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));await idle(p);
+    await walletSettings(p);await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));await idle(p);
     await check('swap screen loads offline with explicit minimum, refund account and public-terms notice',async()=>{
       await context.setOffline(true);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');
       await p.locator('#rhea-open').click();await p.locator('#rhea-dialog').waitFor();await p.locator('#rhea-privacy').selectOption('public-testnet');await p.locator('.dex-details summary').click();assert(await p.locator('#rhea-receiver').isVisible());assert(await p.getByText('The amount and receiving wallet are public on the test network.',{exact:false}).isVisible());
@@ -86,7 +87,7 @@ let base;
     await check('cached capability changes hide recovery without changing identity or reserved money',async()=>{
       await context.setOffline(false);
       for(const enabled of [false,true]){
-        c.recoverRedemption=enabled;await p.locator('#prepare-money-offline').click();await idle(p);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');
+        c.recoverRedemption=enabled;await walletSettings(p);await p.locator('#prepare-money-offline').click();await idle(p);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');
         assert.equal(await p.getByRole('button',{name:'Resume swap',exact:true}).count(),enabled?1:0);
         assert.equal(await p.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();return s.identity.profile.id;}),identity);
       }

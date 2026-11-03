@@ -1,0 +1,1 @@
+EIP-712 hashing and secp256k1 signatures from ethers 6.17.0 (MIT), including @noble/curves and @noble/hashes (MIT). See adjacent licenses and web/offline-budget-build.json for pinned source hashes. This bundle has no provider or network connection.

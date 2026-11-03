@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-04T10:20:48.357Z",
+  "tests": 17,
+  "guardAlterations": 6,
+  "results": [
+    {
+      "guard": "public consent",
+      "detected": true
+    },
+    {
+      "guard": "source identity",
+      "detected": true
+    },
+    {
+      "guard": "crossed book",
+      "detected": true
+    },
+    {
+      "guard": "expiry",
+      "detected": true
+    },
+    {
+      "guard": "candle identity",
+      "detected": true
+    },
+    {
+      "guard": "OHLC bounds",
+      "detected": true
+    }
+  ],
+  "sourceFiles": {
+    "web/public/market-tape.js": "aa4f36a155041fe5fa9049a9141580886b8ecc33657b3d221a420a55179892a8",
+    "integrations/market-tape.mjs": "ae1f0d79bbf8069d7a11f109ac82469a5dde7c3391e1f3ed5c162011cd7ab2ab",
+    "integrations/market-http.mjs": "fa373c47bd1dbc819a88947aca903b6aa580ae215ce111543066a55852e40fa2",
+    "integrations/market-http.test.mjs": "41ba0e6e73900c587d3e2c6f4d7987edc8b63bf08c2b73264f23ad2251054751",
+    "integrations/market-tape-fixtures.mjs": "9bf0f91df83cfb7cdb3044d129059b7464824908cae186143d19bdcaffd0a7b0",
+    "integrations/market-tape.test.mjs": "f3f257536d6b4373ca98d411c037a12edaade39dfc091934389cd686368f5779",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "web/market-relay.test.mjs": "b65073f29ba186f0fb039d294e19f985a686d615fe49fbbbe7aeac6ee8c8379c",
+    "integrations/verify-market-tape.mjs": "3768ff90fbab33e38db538c6abe83f59d000ad6199a848fe68e6693420dc8597"
+  },
+  "scope": "Synthetic public market data, bounded parsing and relay checks. No account access or execution authority."
+}

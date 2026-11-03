@@ -15,7 +15,7 @@ const labels={checking:'Checking your swap',ready:'Ready',redeeming:'Starting sw
 const notice=text=>{$('#rhea-feedback').textContent=text;};
 function refreshSwapConnection(){
   const online=navigator.onLine, summary=$('#rhea-queue');if(!summary)return;
-  summary.textContent=savedCount?`${savedCount} saved swap${savedCount===1?'':'s'} to review. ${online?'Review before sending.':'Reconnect to execute.'} Nothing is sent automatically.`:online?'Save offline · execute when connected.':'Offline · set your minimum and save. Reconnect to check rates and execute.';
+  summary.textContent=savedCount?`${savedCount} saved swap${savedCount===1?'':'s'} · awaiting review.`:'No saved swaps.';
   document.querySelectorAll('[data-rhea-online]').forEach(button=>{button.disabled=!online||button.dataset.rheaBusy==='true';});
   document.querySelectorAll('[data-defi-send]').forEach(button=>{button.disabled=!online||Date.now()>=Number(button.dataset.defiExpiry);});
   if($('#rhea-privacy')?.value!=='public-testnet')$('#rhea-quote').disabled=true;

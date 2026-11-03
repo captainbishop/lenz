@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -67,10 +68,10 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       assert.match(await a.locator('#chat-connection').textContent(),/Nearby.*Bola/);
       await a.locator('#pay-tusd').click();assert.match(await a.locator('#chat-pay-delivery').textContent(),/nearby/i);await a.locator('#chat-pay-close').click();
       await b.locator('#near-send').click();
-      await b.locator('#near-recipient').selectOption(profiles[2].id);
+      await selectRecipient(b,profiles[2].id);
       assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Prepare payment');
       assert.doesNotMatch(await b.locator('#near-send-delivery').textContent(),/nearby/i);
-      await b.locator('#near-recipient').selectOption(profiles[0].id);
+      await selectRecipient(b,profiles[0].id);
       assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Send payment');
       assert.match(await b.locator('#near-send-delivery').textContent(),/nearby/i);
       await b.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();await(await import('/near-wallet.js')).renderNearWallet(s);});
@@ -124,7 +125,7 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
     await check('recipient can pass received value onward while the server is unreachable',async()=>{
       for(const p of [a,b]){if(!await p.locator('#nearby-dialog').evaluate(d=>d.open))await p.locator('#nearby-open').click();await p.locator('#nearby-disconnect').click();await p.locator('#nearby-close').click();}
       await pair(b,c,profiles[1],profiles[2]);await b.locator('#nearby-close').click();await c.locator('#nearby-close').click();
-      await b.locator('#near-send').click();await b.locator('#near-recipient').selectOption(profiles[2].id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
+      await b.locator('#near-send').click();await selectRecipient(b,profiles[2].id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
       await wait(c,s=>s.messages.length===1);assert.equal(await c.locator('#near-total').textContent(),'1');assert.equal(await b.locator('#near-total').textContent(),'4');assert(requests.every(r=>r.endsWith('/chat-sw.js')),'Only blocked service-worker update checks may reach HTTP');
     });
     await check('a pairing code for another recipient is rejected before connection',async()=>{

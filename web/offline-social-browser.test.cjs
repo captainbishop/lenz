@@ -1,3 +1,4 @@
+const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -67,7 +68,7 @@ async function state(p){return p.evaluate(async contract=>{const s=await(await i
       assert((await b.locator('#rhea-queue').innerText()).includes('Nothing is sent automatically'));assert.deepEqual(await state(b),before);assert.deepEqual(requests,[]);await b.context().setOffline(true);
     });
     await check('wallet-originated payment appears in chat and can be received through the same conversation',async()=>{
-      await b.locator('#near-send').click();await b.locator('#near-recipient').selectOption(pc.id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
+      await b.locator('#near-send').click();await selectRecipient(b,pc.id);await b.locator('#near-send-amount').fill('1');await b.locator('#near-send-form button[type=submit]').click();await idle(b);
       const download=b.waitForEvent('download');await b.locator('#near-download').click();const packet=JSON.parse(await fs.readFile(await(await download).path(),'utf8'));await b.locator('[data-close="near-handover"]').click();
       await chat(b);await b.locator('#contact-list button').filter({hasText:'Chidi'}).click();await idle(b);assert.equal(await b.locator('.near-chat-card').count(),2);await receive(c,packet);await status(c,'Payment received');assert.equal(await c.locator('#chat-balance').innerText(),'3 tUSD');assert.equal(await b.locator('#chat-balance').innerText(),'2 tUSD');
     });

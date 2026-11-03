@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-03T04:20:04.606Z",
-  "tests": 26,
-  "passed": 26,
+  "checkedAt": "2026-11-04T10:20:16.032Z",
+  "tests": 33,
+  "passed": 33,
   "failed": 0,
   "guardAlterations": 20,
   "results": [
@@ -107,14 +107,14 @@
     }
   ],
   "sourceHashes": {
-    "integrations/market-discovery.mjs": "b4e7a7535b21ab4e235bc6f100793bdfff198eaa3b892d82951876d3a1d6fe61",
-    "integrations/market-discovery.test.mjs": "c77bb8d3ffd7f88a7b561bac075a1699d33b428d701e8474d786adbeca344b1f",
-    "web/public/market-snapshot.js": "0568a49be2cbf53f9796ab17597702018c633b6d92030723ed9e84e38d8dae4d",
+    "integrations/market-discovery.mjs": "7819848708b70440138627a9f78cf6c6890e805c715dcf630d24233222f4dbc1",
+    "integrations/market-discovery.test.mjs": "32604b5597111ce1530d62925beb977ac945120c044372e90026ce43e964e015",
+    "web/public/market-snapshot.js": "d6e374690aa17dfd7814f7f42c2a808dfceb3d671052b14fa58c98b88e2bf33e",
     "web/market-snapshot.test.mjs": "b35e03ccb9eea8ff58c8090e29a4193878172bfc3ab6dd8c90a170278f873132",
-    "web/public/defi-market-match.js": "c1e3be6273feb26e1e3161f4d8c316a323e30b4a688df1280e307f1ae58ba875",
-    "web/defi-market-match.test.mjs": "cfb39752238c8ec0487e7e383eea86fdf5785b478eddff9cec60b98f4d4272a0",
-    "web/market-relay.mjs": "fe97fd7297570fb782bc6128e5cd1e268c29cba414be0aab87e8bd2a2f629e75",
-    "web/market-relay.test.mjs": "2bd36b2eb1f9945bc6113fa4ff461685ab15244f0868b1b0294d42b728691129"
+    "web/public/defi-market-match.js": "fd7ee07a4d381529d61cc77f3d5c7c8710474b8bc0e82a0bd470e5a78c0ac32b",
+    "web/defi-market-match.test.mjs": "56f1fab9095c799707a2430e999826fb10bb56dae5340404d01c6c91b199f2a9",
+    "web/market-relay.mjs": "def41a9d3a4d45894aba86e7e8c3caad8ca4e61c6fde740a3332b72ae1d99998",
+    "web/market-relay.test.mjs": "b65073f29ba186f0fb039d294e19f985a686d615fe49fbbbe7aeac6ee8c8379c"
   },
   "scope": "Local fixture/HTTP-boundary checks; deliberate mutations run in temporary modules. Separate live-read and browser evidence."
 }

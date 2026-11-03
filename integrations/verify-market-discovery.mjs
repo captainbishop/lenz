@@ -13,7 +13,7 @@ const groups={
  relay:['web/market-relay.mjs','web/market-relay.test.mjs','LENZ_RELAY_MODULE'],
 };
 const mutations=[
- ['discovery','chain',"await rpc('eth_chainId',[])==='0x2105'","true"],
+ ['discovery','chain',"await rpc('eth_chainId',[])==='0x'+BigInt(market.chainId.split(':')[1]).toString(16)","true"],
  ['discovery','canonical tag','requireCanonical:true','requireCanonical:false'],
  ['discovery','finalized age','timestamp>=clock()-(recent?60000:3600000)','true'],
  ['discovery','canonical recheck','current?.hash===block.hash','true'],
@@ -24,7 +24,7 @@ const mutations=[
  ['discovery','reserve pause flag','paused:flag(60)','paused:false'],
  ['discovery','context alignment','contexts.length===universe.length','true'],
  ['discovery','read-only envelope','expiresAt:observedAt+60000,executable:false','expiresAt:observedAt+60000,executable:true'],
- ['discovery','approved destination','[MARKET_READS.baseRpc,MARKET_READS.hyperliquid].includes(url)','true'],
+ ['discovery','approved destination','[MARKET_READS.baseRpc,MARKET_READS.hyperliquid,...Object.values(ORACLE_NETWORKS).map(n=>n.rpc)].includes(url)','true'],
  ['snapshot','envelope authority',"value.kind==='market-observation'&&value.executable===false","value.kind==='market-observation'"],
  ['snapshot','maximum observation age','value.expiresAt<=value.observedAt+60000','true'],
  ['snapshot','saved-data label',"if(saved||!online)return 'Saved data';",''],
@@ -36,7 +36,7 @@ const mutations=[
 ];
 const directory=await mkdtemp(join(tmpdir(),'lenz-market-guards-'));
 const sources=new Map(),results=[],hashes={};
-const run=(test,env={})=>spawnSync(process.execPath,['--test',fileURLToPath(new URL(test,root))],{cwd:fileURLToPath(root),env:{...process.env,...env},encoding:'utf8',windowsHide:true,maxBuffer:2*1024*1024});
+const run=(test,env={})=>spawnSync(process.execPath,['--test',fileURLToPath(new URL(test,root))],{cwd:fileURLToPath(root),env:{...process.env,...env},encoding:'utf8',windowsHide:true,maxBuffer:2*1024*1024,timeout:60000});
 let tests=0;
 try{
  for(const [group,[file,test]] of Object.entries(groups)){

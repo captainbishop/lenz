@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-04T15:22:53.900Z",
+  "nodeTests": 13,
+  "browserGroups": 8,
+  "guardAlterations": [
+    "builtin-immutability",
+    "https-only",
+    "duplicate-chain",
+    "custom-consent",
+    "custom-precision",
+    "selected-rpc-binding",
+    "metadata-change",
+    "transfer-scope",
+    "synchronous-cancel"
+  ],
+  "sources": {
+    "web/public/evm-networks.js": "6fbf1302bfe8729e98b7b1e23776b345468e4e3d56e2055db75d67ee786105ef",
+    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
+    "web/public/evm-transfer.js": "8636a85b654cdc9501dd8d8c8dd559a242698f41b38986a55ef7226f6bd09990",
+    "web/public/evm-markets.js": "0bad2e26f083e4bec4dc789fee042170e1c923dd011700ef42cacae594557fec",
+    "web/public/defi-catalog.js": "28c89b96470572d795a9ff006fb384b88b03bf55a5fb089eda73dee26200ab22",
+    "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
+    "web/public/evm-network-ui.js": "118dff1a4d8a59ed15a893f2680f4da74acf177bc78a5dd86ed4d5d99e15dbd5",
+    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
+    "web/public/evm-transfer-ui.js": "65652da38785dc5922b0310783d62939ab8ed858d7c5c095d07f920e1132f995",
+    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/money.css": "d8cbe410a71f890c90739bd0c199dba4c6aad7e04298020351a28cb1963a9ee7",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/evm-networks.test.mjs": "ab575557a4281d5a5b42059b89991532db6899d978a237ffc08ccccdc428d750",
+    "web/evm-networks-browser.test.cjs": "9d7eb641ddd9ae867f4271b2e2771c6b15f6d4e29f74cd1c653e5471d7896823",
+    "web/verify-evm-networks.cjs": "a4759f7b977c618d64574ce3a0ccbd86ded1bff366063fbff599172348027a59"
+  },
+  "scope": "Custom metadata, persistence, wallet-selected chain binding, stale reply/consent checks and disposable Edge UI. No actual-network authenticity, installed-wallet compatibility, device or financial operation."
+}

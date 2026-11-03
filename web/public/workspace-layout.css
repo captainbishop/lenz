@@ -1,0 +1,136 @@
+/* The selected task owns the screen; source and account details are expandable. */
+.position-surface .position-purpose{display:block;margin:12px 0 24px;font-size:14px;line-height:1.6;color:var(--muted);max-width:55ch}
+.position-surface .position-unavailable{display:grid;gap:8px;border-left:2px solid var(--wallet-edge,var(--line));padding:4px 0 4px 16px;margin:0 0 16px}
+.position-surface .position-unavailable strong{font-size:14px;font-weight:500;color:var(--ink)}
+.position-surface .position-unavailable p{display:block!important;font-size:13px;line-height:1.6}
+.position-surface .position-help{margin:0!important;border:0;padding:0}
+.position-surface .position-help p{font-size:13px;line-height:1.6}
+.position-help summary,.credit-reserve>summary{font-size:12px;min-height:44px;padding:12px 0}
+.money-page .defi-market-state{padding:8px 0 0}
+.money-page .position-browse{display:inline-flex;border:1px solid var(--wallet-edge);padding:12px 16px;font-size:13px;margin:16px 0 0;text-decoration:none}
+.credit-surface .credit-heading{margin-bottom:24px}
+.credit-surface .credit-reserve{margin-top:24px;border-top:1px solid var(--line)}
+.credit-reserve .credit-limits{margin-top:16px}
+.market-page .market-intro{display:none}
+.market-page .market-toolbar{padding:10px 0;gap:16px;align-items:center}
+.market-page .market-toolbar nav{gap:18px}
+.market-page .market-toolbar nav button{padding:8px 0;min-height:44px}
+.market-page .search{margin-left:auto;max-width:230px;display:block;font-size:0}
+.market-page .search input{font-size:13px;min-height:44px;width:100%}
+.market-page #market-search:focus{outline:none;border-color:var(--ink)}
+.market-page #market-search:focus-visible{outline:none;box-shadow:0 2px 0 var(--ink)}
+.market-page #market-network{font-size:12px;max-width:145px;min-height:44px}
+.market-page .market-body{margin-top:12px;padding:0;gap:20px;grid-template-columns:180px minmax(0,1fr)}
+.market-page .market-list{max-height:calc(100dvh - 170px)}
+.market-page .market-row{min-height:64px;padding:10px 8px}
+.market-page .market-row .row-state{display:none}
+.market-page .list-heading{padding:0 0 8px}
+.market-page #market-status:empty{display:none}
+.market-page #market-selector{display:none}
+.market-page #data-settings{border-top:1px solid var(--line);margin:16px 0 0}
+.market-page #data-settings .source-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));padding:8px 0}
+.market-page #data-settings .source-item{display:grid;gap:4px;padding:8px 0}
+.market-page #data-settings .source-item small{text-align:left;max-width:none}
+.market-page #data-settings .read-disclosure{font-size:12px;margin:8px 0;max-width:none}
+.market-page #data-settings .snapshot-bar{margin:8px 0;border:0;padding:0}
+.market-page #live-status{margin-left:auto;font-size:12px;white-space:nowrap}
+.market-page #refresh-markets{width:44px;height:44px;min-height:44px;padding:12px;border:0;background:transparent;color:var(--ink)}
+.market-page #refresh-markets svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.chart-watermark{fill:var(--ink);opacity:.065;font-family:'Segoe UI',Arial,sans-serif;font-weight:600;pointer-events:none;user-select:none}
+.market-page #home-cache-status{font-size:11px;margin:8px 0;color:var(--muted)}
+.perp-terminal .terminal-head{padding:14px 18px;gap:12px;flex-wrap:nowrap;align-items:center}
+.perp-terminal .terminal-instrument h2{font-size:23px;line-height:1.2;margin:0}
+.perp-terminal .terminal-overline{font-size:11px;letter-spacing:0;margin:0 0 4px}
+.perp-terminal .terminal-price{font-size:24px;font-weight:500;font-variant-numeric:tabular-nums;margin-left:auto}
+.perp-terminal .terminal-grid{grid-template-columns:minmax(0,1fr) 175px}
+.perp-terminal .chart-toolbar{padding:2px 12px;min-height:48px}
+.perp-terminal .chart-intervals button{min-width:44px;min-height:44px;font-size:12px}
+.perp-terminal #load-tape{width:44px;height:44px;min-height:44px;padding:12px;margin-left:auto;border:0;background:transparent;color:var(--ink)}
+.perp-terminal #load-tape svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.perp-terminal .chart-readout{min-height:28px;padding:6px 12px;font-size:11px;line-height:1.4;margin:0}
+.perp-terminal .chart-canvas{height:clamp(280px,43dvh,440px);min-height:280px;overflow:hidden;flex:none}
+.perp-terminal .chart-canvas svg{min-width:0;width:100%;height:100%}
+.perp-terminal .chart-foot{padding:0 12px;align-items:center;min-height:44px}
+.perp-terminal .chart-foot p{font-size:11px;margin:0}
+.perp-terminal .chart-foot button{min-height:44px;font-size:11px}
+.perp-terminal .candle-data{padding:0 12px}
+.perp-terminal .candle-data summary{min-height:44px;padding:12px 0;font-size:12px}
+.market-page #market-detail :is(.terminal-details,.terminal-account){padding:0 18px;border-top:1px solid var(--line);margin:0}
+.perp-terminal :is(.terminal-details,.terminal-account)>summary{font-size:12px;min-height:44px;padding:12px 0;cursor:pointer}
+.perp-terminal .terminal-details .terminal-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));min-width:0;gap:16px;padding:4px 0 16px;margin:0}
+.perp-terminal .terminal-foot{font-size:10px;padding:10px 18px}
+.money-page .wallet-heading{padding:12px 0;min-height:64px;margin:0;border:0;gap:16px}
+.money-page .wallet-heading h1{font-size:20px;margin:0}
+.money-page .wallet-heading .person{gap:10px}
+.money-page .wallet-heading .avatar{width:32px;height:32px}
+.money-page .wallet-heading .person>div{display:flex;align-items:center;gap:8px}
+.money-page .wallet-heading h3{font-size:13px;margin:0}
+.money-page #show-profile{font-size:11px;min-height:44px;padding:8px 4px;margin:0}
+.money-page .connected-wallet{margin:0;padding:8px 0;border:0}
+.money-page .connected-wallet .section-heading{margin:0;min-height:44px;align-items:center}
+.money-page .connected-wallet .section-heading h2{font-size:13px;font-weight:400;margin:0;color:var(--muted)}
+.money-page #evm-intro{display:none}
+.money-page #evm-status:empty{display:none}
+.money-page .connected-wallet .section-heading button{font-size:13px;min-height:44px;padding:8px 12px}
+.money-page :is(#evm-connect,#wallet-add-token){background:transparent;color:var(--ink)}
+.money-page .near-balance{margin-top:12px;padding:16px 0 8px;grid-template-columns:minmax(0,1fr) 260px;column-gap:24px}
+.money-page .balance-top{justify-content:flex-start;gap:8px}
+.money-page .balance-label>span{font-size:12px}
+.money-page .near-amount{margin:2px 0 0;gap:10px}
+.money-page .near-amount strong{font-size:clamp(44px,5vw,64px)}
+.money-page .near-amount>span{font-size:18px}
+.money-page #near-balance-caption{display:none}
+.money-page .near-balance .near-token-note{grid-column:1;margin:8px 0;font-size:11px}
+.money-page .near-actions{grid-column:2;grid-row:1/4;display:flex;flex-direction:row;gap:10px;border:0;padding:0;margin:0;align-self:center}
+.money-page .near-actions button{width:80px;height:76px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 4px;border-radius:16px 4px 16px 4px}
+.money-page .near-actions button span{font-size:11px;line-height:1.2;white-space:nowrap}
+.money-page .near-actions button svg{width:24px;height:24px}
+.money-page .wallet-balance-details{grid-column:1/-1;margin-top:8px;border-top:1px solid var(--line)}
+.money-page .wallet-balance-details>summary{cursor:pointer;min-height:44px;padding:12px 0;font-size:12px;color:var(--muted)}
+.money-page .wallet-balance-details .wallet-amounts{margin:0;padding:0 0 12px;border:0}
+.money-page .wallet-balance-details .near-network{display:block;padding:0 0 12px;font-size:11px}
+.money-page .wallet-jump{margin-top:8px;padding:0;gap:24px}
+.money-page .wallet-tokens{margin:16px 0;padding-bottom:12px}
+@media(max-width:900px){
+ .market-page .market-toolbar{gap:8px 16px;flex-wrap:wrap}
+ .market-page .market-body{grid-template-columns:150px minmax(0,1fr)}
+ .perp-terminal .terminal-grid{grid-template-columns:minmax(0,1fr) 135px}
+ .money-page .near-balance{grid-template-columns:minmax(0,1fr) 230px}
+ .money-page .near-actions button{width:70px;height:70px;min-height:70px}
+}
+@media(max-width:760px){
+ .market-page .market-nav{padding:8px 12px;gap:8px}
+ .market-page .market-nav .wordmark{font-size:20px}
+ .market-page .market-nav nav{gap:20px}
+ .market-page .market-nav nav a{font-size:12px;min-height:44px;display:inline-flex;align-items:center}
+ .market-page .market-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:4px 0}
+ .market-page #market-filters{grid-column:1/-1;gap:8px;justify-content:space-between;overflow:auto}
+ .market-page #market-filters button{padding:6px 2px;font-size:12px;white-space:nowrap}
+ .market-page .search{display:block;grid-column:1/-1;grid-row:4;max-width:none;margin:0}
+ .market-page #market-network{max-width:130px}
+ .market-page #market-selector{display:block;grid-column:1/-1;grid-row:2;font-size:14px;min-height:44px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink);max-width:100%}
+ .market-page #market-network{grid-column:2;grid-row:2;font-size:11px}
+ .market-page #live-status{grid-column:1;grid-row:3;margin:0;font-size:10px}
+ .market-page #refresh-markets{grid-column:2;grid-row:3;justify-self:end;min-height:44px;font-size:12px}
+ .market-page .market-body{display:block;margin-top:8px}
+ .market-page .market-list{display:none}
+ .market-page #data-settings :is(.search,#market-network){margin-top:12px}
+ .perp-terminal .terminal-head{padding:12px;gap:8px}
+ .perp-terminal .terminal-instrument h2{font-size:20px}
+ .perp-terminal .terminal-price{font-size:20px}
+ .perp-terminal .terminal-overline{font-size:10px}
+ .perp-terminal .terminal-grid{grid-template-columns:minmax(0,1fr)}
+ .perp-terminal .terminal-mobile-nav button{min-height:44px;font-size:12px}
+ .perp-terminal .chart-canvas{height:clamp(260px,40dvh,360px);min-height:260px}
+ .perp-terminal .chart-readout{font-size:10px;min-height:28px}
+ .perp-terminal .terminal-details .terminal-metrics{grid-template-columns:1fr 1fr}
+ .money-page .near-balance{display:grid;grid-template-columns:minmax(0,1fr);padding-top:12px}
+ .money-page .near-actions{grid-column:1;grid-row:auto;justify-content:flex-start;margin:12px 0 0;gap:12px}
+ .money-page .near-actions button{width:76px;height:70px;min-height:70px;flex:none}
+ .money-page .wallet-heading .person>div{gap:4px}
+ .money-page .wallet-heading h1{font-size:18px}
+ .money-page .wallet-heading .avatar{width:28px;height:28px}
+ .money-page .wallet-amounts{gap:12px}
+ .money-page .wallet-amounts dt{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.chart-canvas *{scroll-behavior:auto}}

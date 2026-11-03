@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-04T15:25:44.492Z",
+  "tests": 16,
+  "guardAlterations": [
+    "debit-cap",
+    "fee-cap",
+    "price-floor",
+    "signer-binding",
+    "nonce",
+    "minimum-output",
+    "revocation",
+    "isolated-caller",
+    "helper-manager",
+    "deployment-safety"
+  ],
+  "sources": {
+    "aurora/contracts/OfflineBudget.sol": "4fc5cb8588829ac51377984a868b2891d477324e744018d742707447ff0bccb0",
+    "aurora/offline-budget-fixture.mjs": "13d515f6976f4978e33f2c1808ebac610b4b934a2667d2fcba886b8a70ec4c93",
+    "aurora/offline-budget.test.mjs": "fb59bc93ecd733c81007f6692150a3a4a0b0b8c3b9baf32306b92c20b6d1c412",
+    "aurora/offline-budget-browser.test.mjs": "16ac229989bb4e39e7b786773546a0d4dfcbe5b8cb5bfdf271a4c656991278e1",
+    "aurora/verify-offline-budget.mjs": "f8e988e92da676a63c5f737ca059ac40180f6e2893022d7e30d175377a52ff85",
+    "web/public/offline-budget.js": "b9eecc9105060bae477112a6eeadfb2a37ab396478da894aec718dd5bc304c8f",
+    "web/public/evm-vendor/offline-budget.js": "6e14f681077313b40e4aa1551001613122a6143cd040837334b24070d0577244",
+    "web/offline-budget.test.mjs": "49f9dad5d83a733551dcbecf1b89adfd1e29d106934b6d31668a14ce8e7d42bd",
+    "web/build-offline-budget.mjs": "cd7d10a4b6eec23796ade9e684bac6adf4b0cf0529363217640bb641066ca253",
+    "web/offline-budget-build.json": "07c5d44bc1cf25f25291647fcbded7f4d899dd99f832a0b9c69c3b27de482355",
+    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867"
+  },
+  "scope": "Local chain31337 contract execution, ephemeral browser offline signing/encryption/cache and in-process ciphertext handoff. Synthetic venue; no real funds, external chain, deployed provider adapter, mesh handoff, private settlement, general position support or product recovery."
+}

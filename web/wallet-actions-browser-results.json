@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-04T15:05:29.719Z",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "payment actions have visible labels and accessible names; recipient selection preserves contact verification",
+    "scan opens camera flow; denied camera falls back to ID/image and closing returns to Send",
+    "Receive displays a locally decodable QR first, copy works and incoming payment import stays collapsed in both themes",
+    "token lookup needs consent, saves watched balances encrypted, masks amounts and cannot credit offline tUSD",
+    "changing token network while a read is pending discards the old result",
+    "Supply, Borrow and Liquidity explain unavailable execution and link to the matching market action without changing funds",
+    "offline reload retains watched snapshots without network requests; wallet and payment dialogs fit phone and desktop"
+  ],
+  "scope": "Disposable Edge account; real local QR/cryptography, fixture token reads, declined-camera simulation. No physical camera, wallet signature, funding or financial submission."
+}

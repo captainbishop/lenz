@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-11-04T10:38:03.725Z",
+  "tests": 6,
+  "guardAlterations": 10,
+  "results": [
+    {
+      "guard": "unknown fields",
+      "detected": true
+    },
+    {
+      "guard": "proof and terms",
+      "detected": true
+    },
+    {
+      "guard": "transaction destination",
+      "detected": true
+    },
+    {
+      "guard": "new funds",
+      "detected": true
+    },
+    {
+      "guard": "pool observation",
+      "detected": true
+    },
+    {
+      "guard": "fresh state",
+      "detected": true
+    },
+    {
+      "guard": "spent note",
+      "detected": true
+    },
+    {
+      "guard": "known root",
+      "detected": true
+    },
+    {
+      "guard": "disclosure",
+      "detected": true
+    },
+    {
+      "guard": "received minimum",
+      "detected": true
+    }
+  ],
+  "sourceHashes": {
+    "integrations/tornado-withdrawal.mjs": "12c57b83efcc0144836f8d1c75816105d66dc74e75a6a5a85e775405d267820f",
+    "integrations/tornado-withdrawal.test.mjs": "ffd271856475f93f31a6dd7c925ff44b95d7f2edffd3e92e28495ddce92ba2f6",
+    "aurora/tornado-codec.mjs": "6d580d8bb6a7809fe1099180a3d5a19745f1a4de1591a92d304bc88bea9f0cbe"
+  },
+  "scope": "Synthetic calldata only. No deployed pool, Groth16 proof, RPC state, signing, funding, or withdrawal verified."
+}

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-03T03:06:42.588Z",
+  "checkedAt": "2026-11-04T10:02:17.757Z",
   "scope": "Public mainnet reads only; no wallet identity, quote, signature or transaction",
   "results": [
     {
@@ -12,8 +12,8 @@
         "chainId": "eip155:8453",
         "network": "mainnet",
         "kind": "market-observation",
-        "observedAt": 1793675202588,
-        "expiresAt": 1793675262588,
+        "observedAt": 1793786537458,
+        "expiresAt": 1793786597458,
         "executable": false,
         "rows": [
           {
@@ -41,9 +41,9 @@
               }
             ],
             "feePips": 500,
-            "liquidity": "910225397373092002",
-            "sqrtPriceX96": "3761097453767047331605743",
-            "tick": -199118,
+            "liquidity": "841391546406207746",
+            "sqrtPriceX96": "3814409620968385721588795",
+            "tick": -198836,
             "status": "liquidity-observed",
             "executable": false
           }
@@ -51,9 +51,9 @@
         "evidence": {
           "source": "https://mainnet.base.org",
           "assurance": "rpc-finalized-block",
-          "blockHash": "0x536e34b969b5cd8f8842551b1dff9496b5fb096e9b4d77aac0602bbd7eaf3a29",
-          "blockNumber": "53442392",
-          "blockTimestamp": 1793674131000,
+          "blockHash": "0x586b6e5cca933fc536d7ff3b26cc98dd705c03ead0d639bb658697cf6f5c3b3f",
+          "blockNumber": "53498084",
+          "blockTimestamp": 1793785515000,
           "codeSha256": {
             "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
             "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
@@ -75,8 +75,8 @@
         "chainId": "eip155:8453",
         "network": "mainnet",
         "kind": "market-observation",
-        "observedAt": 1793675201705,
-        "expiresAt": 1793675261705,
+        "observedAt": 1793786536271,
+        "expiresAt": 1793786596271,
         "executable": false,
         "rows": [
           {
@@ -135,13 +135,305 @@
         "evidence": {
           "source": "https://mainnet.base.org",
           "assurance": "rpc-finalized-block",
-          "blockHash": "0x536e34b969b5cd8f8842551b1dff9496b5fb096e9b4d77aac0602bbd7eaf3a29",
-          "blockNumber": "53442392",
-          "blockTimestamp": 1793674131000,
+          "blockHash": "0x586b6e5cca933fc536d7ff3b26cc98dd705c03ead0d639bb658697cf6f5c3b3f",
+          "blockNumber": "53498084",
+          "blockTimestamp": 1793785515000,
           "codeSha256": {
-            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
             "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
             "0xa238dd80c259a72e81d7e4664a9801593f98d1c5": "0ce3fd0250aff7584b77df0ac1f3de5a7a732e842d0dd8d67e73836d2c07b685"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "uniswap:ethereum",
+      "ok": true,
+      "count": 1,
+      "observation": {
+        "version": 1,
+        "provider": "uniswap",
+        "chainId": "eip155:1",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793786536763,
+        "expiresAt": 1793786596763,
+        "executable": false,
+        "rows": [
+          {
+            "id": "uniswap:ethereum:0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "marketId": "uniswap",
+            "category": "liquidity",
+            "chainId": "eip155:1",
+            "label": "WETH / USDC",
+            "address": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:1",
+                "kind": "erc20",
+                "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "symbol": "WETH",
+                "decimals": 18
+              },
+              {
+                "chainId": "eip155:1",
+                "kind": "erc20",
+                "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "feePips": 500,
+            "liquidity": "2572911936875328247",
+            "sqrtPriceX96": "1645814458472990707907473092327980",
+            "tick": 198838,
+            "status": "liquidity-observed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://ethereum-rpc.publicnode.com",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0x4d30a4985dd12ff6413b99e6b5c18c1351cc56435711a3016fd08bdad9b7e13a",
+          "blockNumber": "26340640",
+          "blockTimestamp": 1793785559000,
+          "codeSha256": {
+            "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "5566bf50796faf93c9b6f6adacd3b32c70bfe16b48ffc59db6cd144cbdc89739",
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "c1bcd4dc4f30c4dcf6c9fe462abeaf2efefc065dcb4dec74996e471f1ce219b4",
+            "0x1f98431c8ad98523631ae4a59f267346ea31f984": "fd5e0ec0633afeb92b2f6b6cac36e13a9732bd1914f8158a78f127d51d54a572",
+            "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640": "92ba07e5b9a121271e3cb6ff1984114eab00dd64f05bd5701682da1a0f3d6afb"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "aave:ethereum",
+      "ok": true,
+      "count": 2,
+      "observation": {
+        "version": 1,
+        "provider": "aave",
+        "chainId": "eip155:1",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793786535774,
+        "expiresAt": 1793786595774,
+        "executable": false,
+        "rows": [
+          {
+            "id": "aave:ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:1",
+            "label": "WETH reserve",
+            "address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:1",
+                "kind": "erc20",
+                "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "symbol": "WETH",
+                "decimals": 18
+              }
+            ],
+            "ltvBps": 8100,
+            "liquidationThresholdBps": 8400,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          },
+          {
+            "id": "aave:ethereum:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:1",
+            "label": "USDC reserve",
+            "address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:1",
+                "kind": "erc20",
+                "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "ltvBps": 0,
+            "liquidationThresholdBps": 7800,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://ethereum-rpc.publicnode.com",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0x4d30a4985dd12ff6413b99e6b5c18c1351cc56435711a3016fd08bdad9b7e13a",
+          "blockNumber": "26340640",
+          "blockTimestamp": 1793785559000,
+          "codeSha256": {
+            "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "5566bf50796faf93c9b6f6adacd3b32c70bfe16b48ffc59db6cd144cbdc89739",
+            "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "c1bcd4dc4f30c4dcf6c9fe462abeaf2efefc065dcb4dec74996e471f1ce219b4",
+            "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2": "bf8a408a1f5440c167d91fa2d972deb23bb4d809e8dd089009885ec88a826f88"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "uniswap:arbitrum",
+      "ok": true,
+      "count": 1,
+      "observation": {
+        "version": 1,
+        "provider": "uniswap",
+        "chainId": "eip155:42161",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793786537757,
+        "expiresAt": 1793786597757,
+        "executable": false,
+        "rows": [
+          {
+            "id": "uniswap:arbitrum:0xc6962004f452be9203591991d15f6b388e09e8d0",
+            "marketId": "uniswap",
+            "category": "liquidity",
+            "chainId": "eip155:42161",
+            "label": "WETH / USDC",
+            "address": "0xc6962004f452be9203591991d15f6b388e09e8d0",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:42161",
+                "kind": "erc20",
+                "id": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+                "symbol": "WETH",
+                "decimals": 18
+              },
+              {
+                "chainId": "eip155:42161",
+                "kind": "erc20",
+                "id": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "feePips": 500,
+            "liquidity": "3767844284719980530",
+            "sqrtPriceX96": "3814628446799695682994176",
+            "tick": -198835,
+            "status": "liquidity-observed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://arb1.arbitrum.io/rpc",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0xed974877c82a31b1935d88c9fc138de45625328380db37cdc50efa931aff6053",
+          "blockNumber": "521138697",
+          "blockTimestamp": 1793785436000,
+          "codeSha256": {
+            "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "cbbb906270e2b7c031e119ec2f41a8d73d3e14ab437075760adc735e38edd888",
+            "0xaf88d065e77c8cc2239327c5edb3a432268e5831": "b46445c0c96a50cd0ae6245d2ceb5058fbbcd24afad9cb878974d8f17b4655c8",
+            "0x1f98431c8ad98523631ae4a59f267346ea31f984": "fd5e0ec0633afeb92b2f6b6cac36e13a9732bd1914f8158a78f127d51d54a572",
+            "0xc6962004f452be9203591991d15f6b388e09e8d0": "a723f86636f9367338bcbcf899ab27aa8d56fe5a787f8bf57ec841c68e9952da"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "aave:arbitrum",
+      "ok": true,
+      "count": 2,
+      "observation": {
+        "version": 1,
+        "provider": "aave",
+        "chainId": "eip155:42161",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793786536413,
+        "expiresAt": 1793786596413,
+        "executable": false,
+        "rows": [
+          {
+            "id": "aave:arbitrum:0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:42161",
+            "label": "WETH reserve",
+            "address": "0x794a61358d6845594f94dc1db02a252b5b4814ad",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:42161",
+                "kind": "erc20",
+                "id": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+                "symbol": "WETH",
+                "decimals": 18
+              }
+            ],
+            "ltvBps": 8100,
+            "liquidationThresholdBps": 8400,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          },
+          {
+            "id": "aave:arbitrum:0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:42161",
+            "label": "USDC reserve",
+            "address": "0x794a61358d6845594f94dc1db02a252b5b4814ad",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:42161",
+                "kind": "erc20",
+                "id": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "ltvBps": 0,
+            "liquidationThresholdBps": 7800,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://arb1.arbitrum.io/rpc",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0xed974877c82a31b1935d88c9fc138de45625328380db37cdc50efa931aff6053",
+          "blockNumber": "521138697",
+          "blockTimestamp": 1793785436000,
+          "codeSha256": {
+            "0x82af49447d8a07e3bd95bd0d56f35241523fbab1": "cbbb906270e2b7c031e119ec2f41a8d73d3e14ab437075760adc735e38edd888",
+            "0xaf88d065e77c8cc2239327c5edb3a432268e5831": "b46445c0c96a50cd0ae6245d2ceb5058fbbcd24afad9cb878974d8f17b4655c8",
+            "0x794a61358d6845594f94dc1db02a252b5b4814ad": "7a042f7fd7d51b45273edcfe5ff9984c73410e01fd41e7f0fcef2b51e1a8f610"
           },
           "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
         },
@@ -158,8 +450,8 @@
         "chainId": "hypercore:mainnet",
         "network": "mainnet",
         "kind": "market-observation",
-        "observedAt": 1793675198126,
-        "expiresAt": 1793675258126,
+        "observedAt": 1793786531445,
+        "expiresAt": 1793786591445,
         "executable": false,
         "rows": [
           {
@@ -175,10 +467,10 @@
             "collateralToken": 0,
             "isolatedOnly": false,
             "status": "listed",
-            "markPrice": "76744.0",
-            "oraclePrice": "76754.0",
+            "markPrice": "78392.0",
+            "oraclePrice": "78412.0",
             "funding": "0.0000125",
-            "openInterest": "41099.43394",
+            "openInterest": "39370.57336",
             "executable": false
           },
           {
@@ -194,10 +486,10 @@
             "collateralToken": 0,
             "isolatedOnly": false,
             "status": "listed",
-            "markPrice": "2249.9",
-            "oraclePrice": "2250.46",
+            "markPrice": "2322.8",
+            "oraclePrice": "2322.72",
             "funding": "0.0000125",
-            "openInterest": "961906.3858000003",
+            "openInterest": "1027962.8313999998",
             "executable": false
           },
           {
@@ -213,10 +505,10 @@
             "collateralToken": 0,
             "isolatedOnly": false,
             "status": "listed",
-            "markPrice": "1.4193",
-            "oraclePrice": "1.4205",
-            "funding": "0.0000125",
-            "openInterest": "2791442.46",
+            "markPrice": "1.428",
+            "oraclePrice": "1.43",
+            "funding": "-0.0000329953",
+            "openInterest": "2826700.8400000003",
             "executable": false
           },
           {
@@ -251,10 +543,10 @@
             "collateralToken": 0,
             "isolatedOnly": false,
             "status": "listed",
-            "markPrice": "0.10037",
-            "oraclePrice": "0.10042",
+            "markPrice": "0.10399",
+            "oraclePrice": "0.104",
             "funding": "0.0000125",
-            "openInterest": "13625172.5999999996",
+            "openInterest": "13711396.4000000004",
             "executable": false
           }
         ],
@@ -265,7 +557,7 @@
           "assurance": "provider-https",
           "providerTimestamp": null,
           "statement": "The provider supplies no timestamp in this response; observation time is the local receipt time.",
-          "responseSha256": "aac228d47150110aa238a9b9a372f84f256de8945f6a3362835dfd6e202d4703"
+          "responseSha256": "823c28ee56c5ffd554d4a410d42499ed707b8ee38b90e2b2e7737e7f4994322a"
         },
         "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
       }

@@ -1,13 +1,14 @@
 import {immutable} from './defi-catalog.js';
 import {previewRoute} from './defi-route-plan.js';
 import {marketSnapshot,marketFreshness} from './market-snapshot.js';
+import {MARKET_SOURCES,marketSource} from './evm-markets.js';
 const sameAsset=(a,b)=>a.chainId===b.chainId&&a.kind===b.kind&&a.id.toLowerCase()===b.id.toLowerCase()&&a.decimals===b.decimals;
 // Discovery narrows candidates; it supplies no quote, position proof or authority.
 export function previewWithMarkets(input,observations,{now=Date.now()}={}){
-  if(!Array.isArray(observations)||observations.length>3)throw Error('Expected up to three market observations');
+  if(!Array.isArray(observations)||observations.length>MARKET_SOURCES.length)throw Error('Too many market observations');
   const plan=previewRoute(input,{now}),objective=plan.objective;
   const snapshots=observations.map(value=>marketSnapshot(value,{now}));
-  if(new Set(snapshots.map(s=>s.provider)).size!==snapshots.length)throw Error('Duplicate market source');
+  if(new Set(snapshots.map(s=>marketSource(s).key)).size!==snapshots.length)throw Error('Duplicate market source');
   const candidates=[],requirements=[];
   const snapshot=snapshots.find(s=>s.provider===objective.destination.marketId&&s.chainId===objective.destination.chainId);
   if(snapshot){

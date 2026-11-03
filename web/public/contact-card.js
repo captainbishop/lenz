@@ -21,6 +21,7 @@ export async function decodeContact(text) {
   if (typeof text !== 'string' || new TextEncoder().encode(text).length > (text.trimStart().startsWith('{') ? 32000 : 2000)) throw new Error('This contact card is too large.');
   text = text.trim();
   if (text.startsWith('lenz1_')) return decodeLenzId(text);
+  if (/^(?:ethereum:)?0x[0-9a-fA-F]{40}/.test(text)) throw Error('This is an EVM address. Ask for their Lenz ID.');
   if (/^[0-9a-f]{64}$/.test(text)) throw Error('This is a fingerprint. Ask them to share their full Lenz ID.');
   if (!text.startsWith(PREFIX)) return validateProfile(JSON.parse(text));
   const parts = JSON.parse(text.slice(PREFIX.length));

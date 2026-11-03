@@ -35,7 +35,7 @@ export async function renderProfile(profile) {
   profileKey = JSON.stringify(profile);
 }
 
-export function setupContacts({ action, status, select }) {
+export function setupContacts({ action, status, select, selectExisting = () => false }) {
   let reviewed = null, stream = null, cameraSession = 0, timer = null;
   function feedback(text, error = false) { $('#contact-feedback').textContent = text; $('#contact-feedback').className = error ? 'error' : 'quiet'; }
   function resetReview() {
@@ -50,6 +50,7 @@ export function setupContacts({ action, status, select }) {
     if (!state.identity) throw new Error('Choose your name first.');
     if (profile.id === state.identity.profile.id) throw new Error('This is your own Lenz ID.');
     const existing = state.contacts.find(p => p.id === profile.id);
+    if (existing && selectExisting()) { await select(existing.id); $('#add-contact').close(); return; }
     if (existing && existing.name === profile.name && (existing.avatar ?? 'moon') === (profile.avatar ?? 'moon') && existing.photo === profile.photo) throw new Error('This person is already in your contacts.');
     reviewed = profile; $('#contact-name').textContent = profile.name; $('#contact-label').value = profile.name;
     paintAvatar($('#contact-avatar'), profile); $('#contact-code').textContent = safetyCode(profile);
@@ -98,7 +99,7 @@ export function setupContacts({ action, status, select }) {
       const index = state.contacts.findIndex(p => p.id === profile.id);
       if (index === -1) state.contacts.push(profile); else state.contacts[index] = profile;
     });
-    select(profile.id); $('#add-contact').close(); status(`${profile.name} is ready for a conversation.`);
+    await select(profile.id); $('#add-contact').close(); status(`${profile.name} is ready for a conversation.`);
   });
   $('#scan-contact').onclick = async () => {
     stopCamera(); resetReview(); const session = cameraSession;
