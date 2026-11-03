@@ -6,6 +6,7 @@ Lenz's security checks cover browser policy, worker loading, signer messages, re
 - [Latest dependency cleanup and remaining advisories](dependency-cleanup-2026-11-02.md).
 - [Recipient-side DeFi result verification](../../carrier/defi-results.md).
 - [Atomic wallet approval, handoff and receipt checks](../../carrier/defi-wallet.md).
+- [DEX privacy choices and executor delivery boundaries](../../docs/defi-workspace.md).
 - [November 2 component review and remaining requirements](review-2026-11-02.md).
 - [November 2 dependency advisory snapshot](dependency-audit-2026-11-02.json).
 - [Proof-tooling utility remediation and compatibility](proof-dependency-refresh-2026-11-02.md).

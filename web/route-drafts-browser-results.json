@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-03T04:17:22.040Z",
+  "passed": 7,
+  "failed": 0,
+  "requests": 0,
+  "results": [
+    {
+      "name": "encrypted drafts preserve wallet state and expose no execution authority",
+      "pass": true
+    },
+    {
+      "name": "reload and offline reads retain expired estimates without approving or deleting them",
+      "pass": true
+    },
+    {
+      "name": "two tabs use revision checks and preserve one immutable objective",
+      "pass": true
+    },
+    {
+      "name": "failed IndexedDB writes return no draft or quote and preserve ciphertext",
+      "pass": true
+    },
+    {
+      "name": "expiry during encryption leaves the draft and quote unchanged",
+      "pass": true
+    },
+    {
+      "name": "caller mutations cannot change queued objective or quote terms",
+      "pass": true
+    },
+    {
+      "name": "ciphertext corruption and cross-identity copies are rejected without wallet changes",
+      "pass": true
+    }
+  ],
+  "sourceFiles": {
+    "web/public/defi-route-drafts.js": "45e6ae33e5d06ba70a298b6e4f7ba43f70d0937dad4cd071729824afbff22a5e",
+    "web/public/defi-route-quote.js": "b7f78b77d4f43abc848a16b4d49979d17152a8484371a61826950c65fd03692b",
+    "web/public/defi-route-plan.js": "cf900167b7a7b5db76e55dcaf491f93134ab23b17fc3349e19794d6a74e8c5e2",
+    "web/public/defi-catalog.js": "28c89b96470572d795a9ff006fb384b88b03bf55a5fb089eda73dee26200ab22",
+    "web/public/market-quote.js": "a933828c2d8fa82ce5c1ef3fa49da90d6b32ba27ca62cdf5887a85b4a8b07071",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/route-drafts-browser.test.cjs": "1bf92bc6701098b4234c026e847cbe76dd2e9bf00e695f1e1c0459e0f7a85430",
+    "integrations/route-quote-fixtures.mjs": "25c1d0cf14835d5815f1fdbf552db1e583ccac7930c1b8f11cd466f3cbc335c7"
+  },
+  "scope": "Disposable Edge service tests with real IndexedDB, Web Locks and WebCrypto; online reload and loaded offline reads. No product controls, user profile, financial endpoint or physical-device test."
+}

@@ -5,9 +5,10 @@ approval, its reservation and one encrypted executor request in the existing
 encrypted tUSD vault. It returns only after the shared IndexedDB transaction
 commits. A failed write returns no successful approval or handoff.
 
-This is a tested browser service, not an enabled wallet screen. Executor choice,
-human consent controls, carrier/nearby delivery and recipient result-to-credit
-integration remain open. It does not call a network endpoint or select an executor.
+The [wallet workspace](../docs/defi-workspace.md) now exposes executor choice,
+review and explicit encrypted-file/carrier delivery. Nearby executor delivery,
+automatic execution and recipient result-to-credit integration remain open.
+The approval service itself does not call a network endpoint or select an executor.
 
 ## Approval and retry
 
@@ -34,7 +35,15 @@ metadata lives on its existing order inside the encrypted vault.
 encrypted packet and direction, then returns that exact saved packet after a
 successful store commit. It refuses expired approvals, known consumed/conflicting
 inputs and already completed/refunded orders. It never creates replacement bytes.
-The caller still needs the normal explicit transport consent and delivery policy.
+With `{envelope:true}`, it persists one signed carrier envelope before returning
+it. Its packet must match the original ciphertext; retries and cached reloads
+reuse the exact envelope. With `{carrier:true}`, it also checks durable carrier
+opt-in. A failed envelope commit produces no outward handoff.
+
+`sendDefiRequest` rechecks consent, expiry and conflicts before each configured
+carrier POST. It accepts only a matching storage acknowledgement, and persists
+the storage origin after the reply. Response loss keeps the original envelope
+for retry. Storage receipt processing never invokes the executor dispatcher.
 
 ## Receipt and money boundaries
 
@@ -70,10 +79,23 @@ A later regression launch failed before starting because Windows could not start
 the sandbox account (1909). Its approved rerun passed all 63 cases.
 
 There is no physical-device, live-chain or financial-transaction result here.
-Modules were loaded before disabling network access; this does not establish
-offline installation or an offline page reload. The production cache and previews
-are unchanged because no existing app entry point imports this service yet.
-Transport metadata and public NEAR execution remain visible as previously disclosed.
+The original service tests loaded modules before disabling network access.
+The later [wallet UI checks](../web/defi-approval-browser-results.json) also cover
+a cached offline page reload with the current app worker. They use disposable
+profiles, synthetic backing and loopback HTTP/SQLite carrier/executor intake.
+Transport metadata and public NEAR execution remain visible as disclosed.
+
+The UI review freezes the displayed terms and starts with unchecked consent.
+Back and failed writes preserve funds; rapid clicks reserve only once. Private
+execution is the default and blocks quotes/signing on the current public route.
+Late replies cannot overwrite a changed privacy choice, amount or slippage;
+the returned minimum is checked against the requested tolerance. Other DeFi
+actions describe unconnected features without simulating positions or rates.
+
+The [UI alteration gate](../web/defi-approval-verification.json) tests consent,
+reviewed terms, removed contacts, privacy enforcement, quote races/minimums,
+carrier consent, envelope binding/persistence and storage-only acknowledgements.
+This remains a component review, not an external audit or private-settlement proof.
 
 With Node.js 24 and Playwright available to the test process:
 

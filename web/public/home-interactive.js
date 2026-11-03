@@ -1,4 +1,5 @@
 import { refreshPreviewVideos, setPreviewView, pausePreviewMotion } from './home-videos.js';
+import './home-defi.js';
 const $ = selector => document.querySelector(selector), root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const read = key => { try { return localStorage.getItem(key); } catch { return null; } };
@@ -10,7 +11,11 @@ function motionState() {
  if (paused) { for (const animation of document.getAnimations()) animation.finish(); for(const target of document.querySelectorAll('[data-tilt-surface]')) { target.style.setProperty('--rx','0deg'); target.style.setProperty('--ry','0deg'); } }
 }
 function theme(dark) { root.dataset.theme=dark?'dark':'light'; $('#theme-toggle').textContent=dark?'Light':'Dark'; $('#theme-toggle').setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme'); refreshPreviewVideos(); }
-theme(read('lenz-home-theme')==='dark'); motionState();
+const systemTheme = matchMedia('(prefers-color-scheme: dark)');
+const applySavedTheme = () => { const saved = read('lenz-home-theme'); theme(saved === 'dark' || (saved !== 'light' && systemTheme.matches)); };
+applySavedTheme(); motionState();
+systemTheme.addEventListener('change', applySavedTheme);
+addEventListener('storage', event => { if (event.key === 'lenz-home-theme') applySavedTheme(); });
 $('#theme-toggle').onclick=()=>{ const dark=root.dataset.theme!=='dark'; theme(dark); save('lenz-home-theme',dark?'dark':'light'); };
 $('#motion-toggle').onclick=()=>{ paused=!paused; save('lenz-home-motion',paused?'off':'on'); motionState(); };
 reduced.addEventListener('change',()=>{paused=reduced.matches||read('lenz-home-motion')==='off';motionState();});

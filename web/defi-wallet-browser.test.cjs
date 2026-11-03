@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{createHash}=require('node:crypto');
 const {securityHeaders}=require('./security-policy.mjs');
-const modules=['defi-wallet.js','chat-store.js','peer-crypto.js','profile-display.js','near-protocol.js','rhea-protocol.js','near-deposit.js','defi-request.js'];
+const modules=['defi-wallet.js','chat-store.js','peer-crypto.js','profile-display.js','near-protocol.js','rhea-protocol.js','near-deposit.js','defi-request.js','carrier-protocol.js'];
 const config={network:'testnet',ready:true,adapter:'adapter.lenz.testnet',reserve:'reserve.lenz.testnet',exchange:'ref-finance-101.testnet',poolId:2870,tokenOut:'wrap.testnet'};
 async function run({walletSource,filter,record=true}={}){
   let browser,api=0;const results=[];

@@ -1,0 +1,274 @@
+{
+  "checkedAt": "2026-11-03T03:06:42.588Z",
+  "scope": "Public mainnet reads only; no wallet identity, quote, signature or transaction",
+  "results": [
+    {
+      "provider": "uniswap",
+      "ok": true,
+      "count": 1,
+      "observation": {
+        "version": 1,
+        "provider": "uniswap",
+        "chainId": "eip155:8453",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793675202588,
+        "expiresAt": 1793675262588,
+        "executable": false,
+        "rows": [
+          {
+            "id": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+            "marketId": "uniswap",
+            "category": "liquidity",
+            "chainId": "eip155:8453",
+            "label": "WETH / USDC",
+            "address": "0xd0b53d9277642d899df5c87a3966a349a798f224",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:8453",
+                "kind": "erc20",
+                "id": "0x4200000000000000000000000000000000000006",
+                "symbol": "WETH",
+                "decimals": 18
+              },
+              {
+                "chainId": "eip155:8453",
+                "kind": "erc20",
+                "id": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "feePips": 500,
+            "liquidity": "910225397373092002",
+            "sqrtPriceX96": "3761097453767047331605743",
+            "tick": -199118,
+            "status": "liquidity-observed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://mainnet.base.org",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0x536e34b969b5cd8f8842551b1dff9496b5fb096e9b4d77aac0602bbd7eaf3a29",
+          "blockNumber": "53442392",
+          "blockTimestamp": 1793674131000,
+          "codeSha256": {
+            "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
+            "0x33128a8fc17869897dce68ed026d694621f6fdfd": "8545609892cc8d7d608dd4420ee110ab98448730570824fb029228e33846d28c",
+            "0xd0b53d9277642d899df5c87a3966a349a798f224": "0d14cff6e9be9c1cf4ff7a4856a44e5d17b8a92db7e1f41f2fb5e73ad8b5419a"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "aave",
+      "ok": true,
+      "count": 2,
+      "observation": {
+        "version": 1,
+        "provider": "aave",
+        "chainId": "eip155:8453",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793675201705,
+        "expiresAt": 1793675261705,
+        "executable": false,
+        "rows": [
+          {
+            "id": "aave:0x4200000000000000000000000000000000000006",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:8453",
+            "label": "WETH reserve",
+            "address": "0xa238dd80c259a72e81d7e4664a9801593f98d1c5",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:8453",
+                "kind": "erc20",
+                "id": "0x4200000000000000000000000000000000000006",
+                "symbol": "WETH",
+                "decimals": 18
+              }
+            ],
+            "ltvBps": 8100,
+            "liquidationThresholdBps": 8400,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          },
+          {
+            "id": "aave:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+            "marketId": "aave",
+            "category": "credit",
+            "chainId": "eip155:8453",
+            "label": "USDC reserve",
+            "address": "0xa238dd80c259a72e81d7e4664a9801593f98d1c5",
+            "version": "v3",
+            "assets": [
+              {
+                "chainId": "eip155:8453",
+                "kind": "erc20",
+                "id": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+                "symbol": "USDC",
+                "decimals": 6
+              }
+            ],
+            "ltvBps": 0,
+            "liquidationThresholdBps": 7800,
+            "active": true,
+            "frozen": false,
+            "borrowingEnabled": true,
+            "paused": false,
+            "status": "listed",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://mainnet.base.org",
+          "assurance": "rpc-finalized-block",
+          "blockHash": "0x536e34b969b5cd8f8842551b1dff9496b5fb096e9b4d77aac0602bbd7eaf3a29",
+          "blockNumber": "53442392",
+          "blockTimestamp": 1793674131000,
+          "codeSha256": {
+            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
+            "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+            "0xa238dd80c259a72e81d7e4664a9801593f98d1c5": "0ce3fd0250aff7584b77df0ac1f3de5a7a732e842d0dd8d67e73836d2c07b685"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    },
+    {
+      "provider": "hyperliquid",
+      "ok": true,
+      "count": 235,
+      "observation": {
+        "version": 1,
+        "provider": "hyperliquid",
+        "chainId": "hypercore:mainnet",
+        "network": "mainnet",
+        "kind": "market-observation",
+        "observedAt": 1793675198126,
+        "expiresAt": 1793675258126,
+        "executable": false,
+        "rows": [
+          {
+            "id": "hyperliquid:0:BTC",
+            "marketId": "hyperliquid",
+            "category": "perpetuals",
+            "chainId": "hypercore:mainnet",
+            "label": "BTC perpetual",
+            "instrument": "BTC",
+            "venueIndex": 0,
+            "sizeDecimals": 5,
+            "maxLeverage": 40,
+            "collateralToken": 0,
+            "isolatedOnly": false,
+            "status": "listed",
+            "markPrice": "76744.0",
+            "oraclePrice": "76754.0",
+            "funding": "0.0000125",
+            "openInterest": "41099.43394",
+            "executable": false
+          },
+          {
+            "id": "hyperliquid:1:ETH",
+            "marketId": "hyperliquid",
+            "category": "perpetuals",
+            "chainId": "hypercore:mainnet",
+            "label": "ETH perpetual",
+            "instrument": "ETH",
+            "venueIndex": 1,
+            "sizeDecimals": 4,
+            "maxLeverage": 25,
+            "collateralToken": 0,
+            "isolatedOnly": false,
+            "status": "listed",
+            "markPrice": "2249.9",
+            "oraclePrice": "2250.46",
+            "funding": "0.0000125",
+            "openInterest": "961906.3858000003",
+            "executable": false
+          },
+          {
+            "id": "hyperliquid:2:ATOM",
+            "marketId": "hyperliquid",
+            "category": "perpetuals",
+            "chainId": "hypercore:mainnet",
+            "label": "ATOM perpetual",
+            "instrument": "ATOM",
+            "venueIndex": 2,
+            "sizeDecimals": 2,
+            "maxLeverage": 5,
+            "collateralToken": 0,
+            "isolatedOnly": false,
+            "status": "listed",
+            "markPrice": "1.4193",
+            "oraclePrice": "1.4205",
+            "funding": "0.0000125",
+            "openInterest": "2791442.46",
+            "executable": false
+          },
+          {
+            "id": "hyperliquid:3:MATIC",
+            "marketId": "hyperliquid",
+            "category": "perpetuals",
+            "chainId": "hypercore:mainnet",
+            "label": "MATIC perpetual",
+            "instrument": "MATIC",
+            "venueIndex": 3,
+            "sizeDecimals": 1,
+            "maxLeverage": 20,
+            "collateralToken": 0,
+            "isolatedOnly": false,
+            "status": "delisted",
+            "markPrice": "0.37621",
+            "oraclePrice": "0.3754",
+            "funding": "0.0",
+            "openInterest": "0.0",
+            "executable": false
+          },
+          {
+            "id": "hyperliquid:4:DYDX",
+            "marketId": "hyperliquid",
+            "category": "perpetuals",
+            "chainId": "hypercore:mainnet",
+            "label": "DYDX perpetual",
+            "instrument": "DYDX",
+            "venueIndex": 4,
+            "sizeDecimals": 1,
+            "maxLeverage": 5,
+            "collateralToken": 0,
+            "isolatedOnly": false,
+            "status": "listed",
+            "markPrice": "0.10037",
+            "oraclePrice": "0.10042",
+            "funding": "0.0000125",
+            "openInterest": "13625172.5999999996",
+            "executable": false
+          }
+        ],
+        "evidence": {
+          "source": "https://api.hyperliquid.xyz/info",
+          "method": "metaAndAssetCtxs",
+          "dex": "",
+          "assurance": "provider-https",
+          "providerTimestamp": null,
+          "statement": "The provider supplies no timestamp in this response; observation time is the local receipt time.",
+          "responseSha256": "aac228d47150110aa238a9b9a372f84f256de8945f6a3362835dfd6e202d4703"
+        },
+        "scope": "Public read-only discovery. No quote, signing, reservation, transaction or position access."
+      }
+    }
+  ]
+}

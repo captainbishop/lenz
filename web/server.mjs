@@ -4,6 +4,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { testnetRoute } from './testnet-relay.mjs';
 import { defiRoute } from './defi-relay.mjs';
+import { marketRoute } from './market-relay.mjs';
 import { nameRoute } from './name-relay.mjs';
 import { rheaRoute } from './rhea-relay.mjs';
 import { zcashRoute } from './zcash-relay.mjs';
@@ -25,6 +26,7 @@ http.createServer(async (req, res) => {
     if (await zcashRoute(req, res)) return;
     if (await rheaRoute(req, res)) return;
     if (await defiRoute(req, res)) return;
+    if (await marketRoute(req, res)) return;
     if (await testnetRoute(req, res)) return;
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); res.end(); return; }
     const file = resolve(root, '.' + (pathname === '/' ? '/index.html' : pathname));

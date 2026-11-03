@@ -1,4 +1,101 @@
+# Route draft verification — November 3, 2026
+
+November 3: same-chain route/estimate binding and encrypted browser draft storage now pass seven fixture and seven browser groups, with 15 detected guard alterations. Precise Uniswap assets/minimums and explicitly scaled Hyperliquid sizes/limits are checked; private/public substitution and unsupported funding/return legs are rejected. The service remains non-executable, with no product draft controls, offline page cache, signed quote authentication, complete fees/accounts or execution/recovery. Docs: docs/route-drafts.md. No financial action, wallet-identity change or deployment ran.
+
+The threat boundary is untrusted estimate/storage input and concurrent browser callers. Changed tokens, chains, amounts, privacy, order precision/limits, IDs, revisions, expiry, ciphertext and identity are rejected in the recorded checks. Source hashes are in integrations/route-quotes-verification.json and web/route-drafts-browser-results.json. Same-origin compromise, full provider authenticity, complete route effects, recovery and physical-device behavior remain outside this component result. The prior broad review and dependency limits remain open.
+
 # Security verification and failures
+
+## November 3: public quote previews
+
+The [quote slice](../../docs/market-quotes.md) was reviewed against private-query
+downgrade, injected calls/recipients, chain/pool/quoter substitution, partial fills,
+malformed book depth, precision mistakes, expired data and UI request races.
+Nineteen tests and nineteen deliberate guard changes pass. The discovery/relay
+regression has 26 tests/20 guard changes; 38 surrounding regressions also pass.
+No contract, dependency, signer, wallet database or cryptographic relation changed.
+
+The API has fixed upstream destinations, bounded JSON, four in-flight quote slots,
+no completed-quote cache and sanitized failures. Only read/simulation methods are
+reachable. Browser state requires unchecked public consent, clears previous
+results on edits/offline/expiry and discards late replies. Seven browser fixture
+groups and four live API/browser groups pass. Provider honesty and full execution
+bounds remain unverified; these public previews cannot authorize spending.
+
+Failures retained in the quote document: restricted-network access, a fixture
+expiry beyond the book-age allowance, a hanging guard-removal test and an incorrect
+assumption about which live source would finish first. Corrected tests pass.
+Quote controls precede expandable statistics; data/fee limitations remain visible.
+Broader SEC2, privacy, offline authorization, recovery and device work remain open.
+
+## November 3: public market discovery
+
+[Market discovery](../../docs/market-discovery.md) was reviewed at its upstream
+response, local HTTP, stored snapshot and matching boundaries. Fixtures cover
+endpoint/chain/asset substitution, timestamps, venue alignment and false execution
+authority. Twenty-three tests and twenty deliberate guard alterations pass,
+alongside 38 existing route/quote/authentication/relay regressions. No contract,
+cryptographic relation or dependency changed in this slice.
+
+A borrow regression reproduced selection of the collateral reserve instead of
+the requested received reserve. Matching now uses the requested reserve and its
+borrowing flag. The context alignment mutation initially survived because the
+per-row guard rejected missing contexts separately; an excess-context case now
+detects it. The ABI mock and initial network failures remain recorded in the
+discovery evidence. These checks do not independently authenticate providers.
+
+Seven browser fixture and four real API/provider groups pass. The live browser
+created no wallet database or storage entry and submitted no financial action.
+The page preserves the existing CSP and renders provider labels as text nodes.
+Upstream URLs do not become browser markup or navigation. Saved observations
+are untrusted public data, not signing authority. Broader security, recovery
+and dependency limits remain open.
+
+## November 3: route objectives and homepage gallery
+
+The [route planner](../../docs/route-planner.md) was reviewed against caller
+substitution of chain/token/recipient, hidden call data, inconsistent decimals,
+privacy removal, expiry, venue confusion and false execution/return authority.
+Fifteen fixture tests and eleven deliberate guard alterations pass. The module
+has no signing, network, storage or dispatch path. Unverified observations cannot
+make a preview executable, release a reservation or create offline credit.
+This is input-boundary testing, not an audit of deployed DeFi integrations.
+
+New homepage scripts remain same-origin modules under the existing CSP. Seven
+gallery browser groups pass without script errors, external requests or financial
+submissions; cached light/dark media and navigation work offline. Five existing
+homepage and three screen-response groups pass, as do 23 authentication/quote/relay
+regressions. No signer, identity database, account or contract was changed.
+
+The decimals test initially mutated an aliased fixture asset on both sides of
+the comparison. Replacing one reference exercised the conflict. The mutation
+runner's initial Node argument was a file URL; conversion to a filesystem path
+fixed the baseline. Initial homepage checks failed because the server was stopped.
+The final runs passed after these corrections. Broader security gaps remain open.
+
+## November 2: DEX privacy, human approval and explicit delivery
+
+The [wallet workspace](../../docs/defi-workspace.md) defaults to private execution
+and blocks the current public route until explicitly selected. Sixteen actual
+Edge cases and eleven deliberate guard alterations verify quote privacy/races,
+minimum arithmetic, frozen review, unchecked consent, failed writes, removed
+contacts, exact encrypted-envelope retry and storage-only acknowledgements.
+Tests use disposable stores, fixture quotes/backing and real loopback carrier
+HTTP/SQLite intake. Cached offline reload preserves the request and liabilities.
+
+The review targets changed quotes, mutable inputs, substituted files, false
+carrier claims and interrupted writes/delivery. Deliberately removed controls
+fail assertions. No claim of a complete product audit or private settlement
+follows; nearby executor intake, automatic dispatch, verified wallet credit,
+real routes, recovery and the broader component review remain open.
+
+The initial failed-save assertion expected a raw test error; the UI correctly
+sanitized it, so the assertion now checks its human-readable failure message.
+Existing Rhea tests needed to await asynchronous contact loading. The cache test
+expected an older worker version and was updated to the actual v43 revision;
+failed and successful update cases pass. A sandbox preview refresh could not
+write the existing report; its approved normal-account rerun passed. Earlier
+Windows 1909 launch failures remain recorded, without changing account settings.
 
 ## November 2: durable wallet approval
 

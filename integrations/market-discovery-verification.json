@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-11-03T04:20:04.606Z",
+  "tests": 26,
+  "passed": 26,
+  "failed": 0,
+  "guardAlterations": 20,
+  "results": [
+    {
+      "group": "discovery",
+      "guard": "chain",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "canonical tag",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "finalized age",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "canonical recheck",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "token precision",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "pool identity",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "reserve membership",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "reserve precision",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "reserve pause flag",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "context alignment",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "read-only envelope",
+      "detected": true
+    },
+    {
+      "group": "discovery",
+      "guard": "approved destination",
+      "detected": true
+    },
+    {
+      "group": "snapshot",
+      "guard": "envelope authority",
+      "detected": true
+    },
+    {
+      "group": "snapshot",
+      "guard": "maximum observation age",
+      "detected": true
+    },
+    {
+      "group": "snapshot",
+      "guard": "saved-data label",
+      "detected": true
+    },
+    {
+      "group": "match",
+      "guard": "exact asset precision",
+      "detected": true
+    },
+    {
+      "group": "match",
+      "guard": "venue leverage",
+      "detected": true
+    },
+    {
+      "group": "match",
+      "guard": "borrow asset",
+      "detected": true
+    },
+    {
+      "group": "match",
+      "guard": "borrow enabled",
+      "detected": true
+    },
+    {
+      "group": "relay",
+      "guard": "same origin",
+      "detected": true
+    }
+  ],
+  "sourceHashes": {
+    "integrations/market-discovery.mjs": "b4e7a7535b21ab4e235bc6f100793bdfff198eaa3b892d82951876d3a1d6fe61",
+    "integrations/market-discovery.test.mjs": "c77bb8d3ffd7f88a7b561bac075a1699d33b428d701e8474d786adbeca344b1f",
+    "web/public/market-snapshot.js": "0568a49be2cbf53f9796ab17597702018c633b6d92030723ed9e84e38d8dae4d",
+    "web/market-snapshot.test.mjs": "b35e03ccb9eea8ff58c8090e29a4193878172bfc3ab6dd8c90a170278f873132",
+    "web/public/defi-market-match.js": "c1e3be6273feb26e1e3161f4d8c316a323e30b4a688df1280e307f1ae58ba875",
+    "web/defi-market-match.test.mjs": "cfb39752238c8ec0487e7e383eea86fdf5785b478eddff9cec60b98f4d4272a0",
+    "web/market-relay.mjs": "fe97fd7297570fb782bc6128e5cd1e268c29cba414be0aab87e8bd2a2f629e75",
+    "web/market-relay.test.mjs": "2bd36b2eb1f9945bc6113fa4ff461685ab15244f0868b1b0294d42b728691129"
+  },
+  "scope": "Local fixture/HTTP-boundary checks; deliberate mutations run in temporary modules. Separate live-read and browser evidence."
+}

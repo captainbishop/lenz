@@ -1,5 +1,18 @@
 # Active DeFi integration
 
+[Market discovery](../docs/market-discovery.md) connects public Uniswap/Aave
+Base markets and Hyperliquid perpetual contexts to the Markets page and route
+candidate matcher. Explicit refresh and saved offline snapshots are available.
+[Public estimates](../docs/market-quotes.md) add Uniswap WETH/USDC quotes and
+Hyperliquid order-book previews. [Route drafts](../docs/route-drafts.md) match
+bounded swap/order objectives and persist encrypted non-executable records;
+product draft controls, account positions and execution remain open.
+
+The [shared route planner](../docs/route-planner.md) adds provider-independent
+catalogue discovery and validated objectives for EVM/NEAR routes, credit and
+Hyperliquid orders. It is a pure developer module with synthetic examples;
+its previews cannot sign, dispatch, release reservations or credit a wallet.
+
 Rhea, NEAR Intents, Zcash and privacy are part of the current Lenz build alongside NEAR settlement. These modules implement the quote stage. The separate [Rhea adapter](../contracts/adapter/README.md) now has funded testnet swap/refund and browser evidence. A [native shielded Zcash transfer](../zcash/pczt.md) is confirmed, with separate [unsigned browser review and expiry checks](../zcash/payment-freshness.md). NEAR Intents execution, browser Zcash signing, the shielded DeFi route and private NEAR settlement remain incomplete. Aurora has local execution/verifier evidence; no separate Aurora Intents connection is implemented.
 
 November 2: [installation checks](installation-results.json) confirm the empty-authentication payload builder and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) retains SDK 0.1.26 and requires valid signatures on preview quotes. The latest confidential live preview still returns HTTP 401.
@@ -11,6 +24,8 @@ November 2: [installation checks](installation-results.json) confirm the empty-a
 | `/api/defi/rhea/quote` | Read a simple pool and its return at one final NEAR testnet block; calculate minimum output with integer arithmetic. |
 | `/api/defi/intents/tokens` | Fetch the supported asset list from 1Click. |
 | `/api/defi/intents/quote` | Request a dry exact-input quote with an explicit confidential route; validate the echoed terms and minimum output. |
+| `/api/markets/read` | Read public Uniswap, Aave or Hyperliquid data; no account, quote or transaction. |
+| `/api/markets/quote` | Explicit public Uniswap simulation or Hyperliquid book estimate; no account, signer or transaction. |
 
 Requests require JSON and the local Lenz origin. Provider credentials, if configured, stay in the server process as `LENZ_INTENTS_API_KEY`. The server does not expose signing, deposits or spending through these routes.
 

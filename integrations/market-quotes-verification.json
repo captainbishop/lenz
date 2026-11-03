@@ -1,0 +1,117 @@
+{
+  "checkedAt": "2026-11-03T04:20:28.961Z",
+  "tests": 19,
+  "passed": 19,
+  "failed": 0,
+  "guardAlterations": 19,
+  "results": [
+    {
+      "group": "quotes",
+      "guard": "quoter identity",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "pool identity",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "pool availability",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "complete swap fill",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "book ordering",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "book spread",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "complete book fill",
+      "detected": true
+    },
+    {
+      "group": "quotes",
+      "guard": "buy side",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "public consent",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "unknown fields",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "decimal precision",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "execution authority",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "exact quote terms",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "expiry",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "source-time age",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "received asset",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "minimum received",
+      "detected": true
+    },
+    {
+      "group": "view",
+      "guard": "full depth",
+      "detected": true
+    },
+    {
+      "group": "relay",
+      "guard": "concurrency bound",
+      "detected": true
+    }
+  ],
+  "sourceHashes": {
+    "integrations/market-quotes.mjs": "9576725c1683c9863bd1dc67807d09b1d794e2311a5f4aef5ed23a45555a96ee",
+    "integrations/market-quotes.test.mjs": "9cbe997ccdc7d0c8c774a90b9352426078126e8e20bd8e727567326f5ce0ecc2",
+    "web/public/market-quote.js": "a933828c2d8fa82ce5c1ef3fa49da90d6b32ba27ca62cdf5887a85b4a8b07071",
+    "web/market-relay.mjs": "fe97fd7297570fb782bc6128e5cd1e268c29cba414be0aab87e8bd2a2f629e75",
+    "web/market-relay.test.mjs": "2bd36b2eb1f9945bc6113fa4ff461685ab15244f0868b1b0294d42b728691129",
+    "aurora/market-read-codec.mjs": "01fcd90ef5812eb1382dbddd70b357f0832d0f533a50d6823135a5d3023340ba",
+    "integrations/market-discovery.mjs": "b4e7a7535b21ab4e235bc6f100793bdfff198eaa3b892d82951876d3a1d6fe61",
+    "integrations/market-quote-fixtures.mjs": "232e69b20eb339c0eadcbd76c173bcb9c871ad6ce1bd6236a355ec3995caafdb",
+    "web/public/market-quote-ui.js": "cf7cf6b2df61692b4a6a665a8ac1bed1a0bb60ab118c1b2920f3e56814f1e1e5",
+    "web/market-quote-browser.test.cjs": "44e8bab9518e2d5a55716a0486bc32b5d999298447a78b90352ecab32408e68c"
+  },
+  "scope": "Fixture quote/read-boundary tests and deliberate changes; separate browser and public live-read evidence"
+}

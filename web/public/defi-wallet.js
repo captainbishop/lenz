@@ -3,6 +3,7 @@ import { assert, digest, keysAre, validateProfile, openMessage } from './peer-cr
 import { readNearVault, saveNearVault, nearLedger, units } from './near-protocol.js';
 import { prepareRheaSwap, checkRheaConfig } from './rhea-protocol.js';
 import { createDefiRequest, checkDefiRequest, sealDefiRequest, openDefiReceipt, PUBLIC_TESTNET_DISCLOSURE } from './defi-request.js';
+import { wrapForCarrier, validateEnvelope } from './carrier-protocol.js';
 
 // Browser service only. Every outward result follows the shared IndexedDB commit.
 // No transport callback, chain call, wallet credit or reservation release lives here.
@@ -48,15 +49,26 @@ export async function approveDefiSwap(config,executor,swap,consent) {
   });
 }
 
-export async function defiHandoff(config,requestId) {
+export async function defiHandoff(config,requestId,{envelope=false,carrier=false}={}) {
   const c=configured(config);
   return updateState(async state=>{
     const vault=await readNearVault(state,c.reserve),order=(vault.rheaOrders??[]).find(o=>o.defi?.request.id===requestId);
     const request=await checkedOrder(state,c,order),ledger=await nearLedger(vault),input=order.packet.instruction.input;
+    if(carrier)assert(state.carrier?.enabled===true, 'Turn on internet delivery before sending through carriers');
     assert(!ledger.consumed.has(input) && !ledger.blocked.has(input), 'Reserved input has a known conflict');
     assert(!['complete','refunded'].includes(order.status?.stage), 'This swap is already resolved');
     await checkDefiRequest(c,state.identity.profile,order.defi.executor,request,Date.now());
     assert(Date.now()<request.expiresAt, 'Approval expired before handoff');
+    if(envelope) {
+      if(!order.defi.envelope) {
+        order.defi.envelope=await wrapForCarrier(state.identity,order.defi.packet,request.createdAt);
+        await saveNearVault(state,vault);
+      }
+      await validateEnvelope(order.defi.envelope);
+      assert(await digest(order.defi.envelope.packet)===await digest(order.defi.packet), 'Carrier handoff differs from the saved request');
+      assert(Date.now()<request.expiresAt, 'Approval expired while preparing its carrier envelope');
+      return structuredClone(order.defi.envelope);
+    }
     return structuredClone(order.defi.packet);
   });
 }

@@ -3,15 +3,21 @@ const videos = [...document.querySelectorAll('.video-preview')];
 const visible = new WeakSet(), held = new WeakSet(), manual = new WeakSet();
 const pendingTime = new WeakMap(), pressing = new WeakSet();
 let timelines = {};
+const defiScenes = [0, 6, 12, 18, 24].map(start => ({ start }));
 function viewFor(video) { return video.dataset.view ?? (video.id === 'hero-preview' ? 'chat' : 'wallet'); }
-function scenesFor(video) { return timelines[viewFor(video)] ?? []; }
-function sceneIndex(video) { return Math.max(0, scenesFor(video).findLastIndex(s => s.start <= video.currentTime + .05)); }
+function scenesFor(video) { return viewFor(video) === 'defi' ? defiScenes : timelines[viewFor(video)] ?? []; }
+export function previewTime(video) { return pendingTime.get(video) ?? video.currentTime; }
+export function seekPreview(video, time) {
+  if (pendingTime.has(video)) pendingTime.set(video, time); else video.currentTime = time;
+  video.dispatchEvent(new Event('previewseek'));
+}
+function sceneIndex(video) { return Math.max(0, scenesFor(video).findLastIndex(s => s.start <= previewTime(video) + .05)); }
 function label(video) {
   video.setAttribute('aria-pressed', String(!video.paused));
 }
 function update(video) {
   const motionAllowed = !root.classList.contains('motion-off') || manual.has(video);
-  if (document.hidden || !visible.has(video) || held.has(video) || pressing.has(video) || !motionAllowed) video.pause();
+  if (document.hidden || !visible.has(video) || held.has(video) || pressing.has(video) || pendingTime.has(video) || !motionAllowed) video.pause();
   else video.play().catch(() => label(video));
   label(video);
 }
@@ -24,7 +30,7 @@ function step(video, direction) {
   const scenes = scenesFor(video);
   if (!scenes.length) return;
   const next = direction < 0 ? Math.max(0, sceneIndex(video) - 1) : (sceneIndex(video) + 1) % scenes.length;
-  video.currentTime = scenes[next].start + .05;
+  seekPreview(video, scenes[next].start + .05);
   label(video);
 }
 export function refreshPreviewVideos() {
@@ -33,7 +39,7 @@ export function refreshPreviewVideos() {
     const path = `/previews/${view}-${root.dataset.theme === 'dark' ? 'dark' : 'light'}`;
     if (video.getAttribute('src') !== path + '.mp4') {
       const sameView = video.getAttribute('src')?.includes(`/previews/${view}-`);
-      pendingTime.set(video, sameView ? video.currentTime : 0);
+      pendingTime.set(video, sameView ? previewTime(video) : 0);
       video.pause(); video.src = path + '.mp4'; video.poster = path + '.webp'; video.load();
     }
     update(video);

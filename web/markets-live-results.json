@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-03T03:29:07.915Z",
+  "browser": "156.0.4314.58",
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    "Opening the page performs no market reads",
+    "Explicit load reaches all three public providers through the local API",
+    "All returned rows display without page errors",
+    "No wallet/database access, automatic saved snapshot or extra POST"
+  ],
+  "observations": [
+    {
+      "provider": "uniswap",
+      "rows": 1,
+      "observedAt": 1793676547339,
+      "blockNumber": "53443169",
+      "blockTimestamp": 1793675685000
+    },
+    {
+      "provider": "aave",
+      "rows": 2,
+      "observedAt": 1793676546503,
+      "blockNumber": "53443169",
+      "blockTimestamp": 1793675685000
+    },
+    {
+      "provider": "hyperliquid",
+      "rows": 235,
+      "observedAt": 1793676544791,
+      "blockNumber": null,
+      "blockTimestamp": null
+    }
+  ],
+  "scope": "Disposable Edge profile; real public mainnet reads only, no mocks, addresses, credentials, signing or financial operations"
+}

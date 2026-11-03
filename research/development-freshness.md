@@ -1,4 +1,116 @@
+# Route drafts and publication verification — November 3, 2026
+
+November 3: same-chain route/estimate binding and encrypted browser draft storage now pass seven fixture and seven browser groups, with 15 detected guard alterations. Precise Uniswap assets/minimums and explicitly scaled Hyperliquid sizes/limits are checked; private/public substitution and unsupported funding/return legs are rejected. The service remains non-executable, with no product draft controls, offline page cache, signed quote authentication, complete fees/accounts or execution/recovery. Docs: docs/route-drafts.md. No financial action, wallet-identity change or deployment ran.
+
+Public Markets, wallet approvals, homepage/gallery and existing protocol checks were rerun. Wallet copy now names saved swaps/approvals; v44 refreshes the app cache with the tested upgrade path. The original hero recording and existing media provenance are unchanged; the reviewed five-chapter gallery remains illustrative. The route service does not change wallet balances or reservations. All outgoing paths and both prior unpublished commits undergo separate exact-byte publication review.
+
+Retained failures: the first binding test tried to mutate a frozen fixture, corrected by cloning; the early provider guard is redundant with later chain/action/asset checks and not counted as independently detected. A media-check command used a nonexistent singular filename; the corrected plural test passed. Windows sandbox logon later failed with error 1909; authorized checks used the normal account.
+
 # Development freshness review
+
+## Public quote previews, November 3, 2026
+
+[Quote adapters and UI](../docs/market-quotes.md) add Uniswap WETH/USDC simulations
+and Hyperliquid buy/sell book estimates. New shared numeric/request validation,
+quote modules and the existing market relay retain explicit public consent,
+immutable non-executable results and expiry. The ABI adds fixed simulation/read
+methods; discovery still uses finalized blocks while quotes use recent blocks.
+
+Nineteen quote tests/19 detected guard changes, 26 discovery tests/20 guard changes
+and 38 surrounding regressions pass. Seven new and seven existing Markets browser
+groups pass, plus four live quote browser groups. Direct public reads succeeded
+for both swap directions and both perpetual sides. Both themes, phone and live
+screenshots were inspected. No wallet state, signing, funding or transaction.
+
+The estimate controls precede expandable market statistics. The service-worker
+shell adds the two quote modules; original app recording inputs and video/poster
+bytes remain unchanged. Account/position checks, full fees, private routes,
+objective binding, durable offline approval and execution remain open.
+
+## Markets and concise interface copy, November 3, 2026
+
+[Public market discovery](../docs/market-discovery.md) adds bounded read-only
+Uniswap/Aave Base and Hyperliquid readers, a local API, optional offline snapshots,
+a Markets screen and exact route candidate matching. Twenty-three tests and
+twenty detected guard alterations pass. Thirty-eight surrounding regressions
+pass. Seven Markets browser fixture groups and four real API/provider browser
+groups pass; no wallet database, financial operation or automatic saved data.
+
+Markets and the homepage DeFi section use short functional headings and fewer
+paragraphs. The promotional Markets section is removed. Both themes and phone
+screens were visually inspected; seven gallery, five home and three screen
+response groups pass. The worker refreshes the changed shell while preserving
+cached proof assets and wallet storage. Existing recorded app/video/poster
+inputs are unchanged. Full execution, privacy and recovery remain open.
+
+## Homepage gallery and shared route foundation, November 3, 2026
+
+The homepage retains the original hero and working wallet/chat/profile demos,
+with a five-chapter DeFi gallery below. Both gallery recordings are exact copies
+of the previously decoded design media; their hashes are recorded separately in
+[the media manifest](../web/defi-preview-media.json). They show illustrative
+flows, not connected markets. Existing application recording inputs are unchanged.
+The service-worker shell now includes the gallery modules, styles and both media
+themes. Only display preferences use existing homepage localStorage keys.
+
+Fresh browser evidence: seven gallery groups, five homepage groups and three
+screen-response groups pass. The gallery covers system/manual themes, preserved
+chapters, keyboard control, hold/pointer behavior, offline playback and local-only
+GET requests. Both themes and the phone gallery were visually inspected. Static
+checks resolve 62 homepage cache routes and 74 chat routes. Desktop Edge evidence
+does not establish physical-device compatibility or a completed all-screen design.
+
+The [route foundation](../docs/route-planner.md) has no wallet, storage, network,
+signing or dispatch capability. Fifteen tests and eleven removed guards verify
+the bounded synthetic scope; 23 existing authentication/quote/relay tests pass.
+Live discovery, exact provider deployment/asset/fee evidence, durable steps and
+execution/recovery remain open. No dependency or contract changed.
+
+Initial browser checks encountered a stopped app server; the restarted server
+passed. A fixture alias masked an intended decimals conflict until one reference
+was replaced. The mutation runner initially supplied a file URL to the Node CLI;
+the filesystem-path fix passed. Earlier evidence below retains its original scope.
+
+The [cross-chain architecture](../docs/crosschain-defi.md) now explicitly covers
+Hyperliquid, EVM liquidity/credit, yield and additional venue actions. This is
+active product scope and a shared routing/authorization design, not new execution
+evidence. LI.FI Composer/Earn/Perps and Relay documentation was checked; perps
+access, exact NEAR/EVM routes and route-wide privacy remain unverified in Lenz.
+The completed browser checks below are unchanged by this documentation update.
+
+## DEX privacy and explicit executor delivery, November 2, 2026
+
+The [DeFi workspace](../docs/defi-workspace.md) now requires private execution
+by default, exposes DEX amount/rate/slippage controls and offers explicit public
+testnet approval. Executor review freezes the person and terms, then saves the
+reservation and encrypted request atomically. File/carrier delivery reuses one
+saved envelope; storage receipts remain unverified for execution and cannot
+change available money. Supply, borrow, liquidity and general withdrawals remain
+unconnected, with their availability stated in the interface.
+
+Verification passes 16 new Edge cases and 11 deliberate alterations, 13 existing
+wallet-service cases and 11 alterations, 11 Rhea UI cases, five wallet cases,
+two cache-upgrade cases and 69 executor/intake/money/carrier regressions. The
+service evidence binds unchanged service sources after their carrier import.
+No live financial request or personal browser identity is used by these checks.
+
+App cache v43 includes the new modules and preserves saved identity and funds
+through failed and successful upgrades. The saved preview flow was replayed
+against the current sources without new funding or settlement. All six
+compositions were rebuilt, checked with the browser audit, visually reviewed,
+rendered and inspected as decoded frames. Seven playback checks pass. The
+existing small-text, silent-film, repeated-image and profile-container warnings
+remain visible in the external reports; no lint/runtime/contrast error is hidden.
+The new profile frames use another disposable identity; the three saved payment
+accounts remain unchanged. Public testnet boundaries and the original receipts
+remain part of the preview evidence.
+
+Provider documentation describes Rhea's broader cross-chain lending/aggregation,
+NEAR confidential/signed intents and Aurora cross-chain signing. Those are
+candidates; specific Uniswap/Aave markets, supported private asset routes,
+partner access, nearby executor intake, automatic wallet execution, verified
+wallet credit and recovery are still open. Earlier sections retain their dated
+scope and counts.
 
 ## Durable wallet approval, November 2, 2026
 

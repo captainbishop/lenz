@@ -1,0 +1,88 @@
+{
+  "checkedAt": "2026-11-03T03:58:48.265Z",
+  "browser": "156.0.4314.58",
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    "No request on opening; explicit market load",
+    "Uniswap quote reaches Base and displays minimum output",
+    "Hyperliquid estimate reaches the venue and displays book cost",
+    "Only five market POSTs; no wallet state, saved quote or financial submission"
+  ],
+  "quotes": [
+    {
+      "version": 1,
+      "kind": "market-quote-preview",
+      "request": {
+        "provider": "uniswap",
+        "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+        "side": "usdc-to-weth",
+        "amount": "1",
+        "privacy": "public",
+        "slippageBps": 50
+      },
+      "executable": false,
+      "result": {
+        "inputUnits": "1000000",
+        "inputSymbol": "USDC",
+        "inputDecimals": 6,
+        "outputUnits": "444212782761287",
+        "outputSymbol": "WETH",
+        "outputDecimals": 18,
+        "minOutputUnits": "441991718847480",
+        "feePips": 500,
+        "gasUnits": "86325"
+      },
+      "evidence": {
+        "source": "https://mainnet.base.org",
+        "assurance": "rpc-latest-block",
+        "blockHash": "0x922504e72be8e76728f4a326347d33234fb9a65499a1c4a6965155d122f3f882",
+        "blockNumber": "53444488",
+        "blockTimestamp": 1793678323000,
+        "codeSha256": {
+          "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+          "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
+          "0x3d4e44eb1374240ce5f1b871ab261cd16335b76a": "a204e355059d9c809bfc026503d49b4ecf8655f482a76040dec4bcb4618047b4",
+          "0x33128a8fc17869897dce68ed026d694621f6fdfd": "8545609892cc8d7d608dd4420ee110ab98448730570824fb029228e33846d28c",
+          "0xd0b53d9277642d899df5c87a3966a349a798f224": "0d14cff6e9be9c1cf4ff7a4856a44e5d17b8a92db7e1f41f2fb5e73ad8b5419a"
+        },
+        "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+      },
+      "sourceTime": 1793678323000,
+      "observedAt": 1793678326658,
+      "expiresAt": 1793678356658
+    },
+    {
+      "version": 1,
+      "kind": "market-quote-preview",
+      "request": {
+        "provider": "hyperliquid",
+        "marketId": "hyperliquid:1:ETH",
+        "side": "buy",
+        "amount": "0.01",
+        "privacy": "public"
+      },
+      "executable": false,
+      "result": {
+        "instrument": "ETH",
+        "sizeUnits": "100",
+        "sizeDecimals": 4,
+        "notionalUnits": "22531000",
+        "notionalDecimals": 6,
+        "worstPrice": "2253.1",
+        "levelsUsed": 1,
+        "fullDepth": true
+      },
+      "evidence": {
+        "source": "https://api.hyperliquid.xyz/info",
+        "assurance": "provider-order-book",
+        "bookSha256": "cbb1f56bf0ea4cb6b96b0a3194b5a765c41a08964cb3b9e46e617fe5b6149071",
+        "metaSha256": "f328c222647ad393b259395d704d418885b261e3473c944bc75dc9d46be13bda"
+      },
+      "sourceTime": 1793678327028,
+      "observedAt": 1793678328120,
+      "expiresAt": 1793678357028
+    }
+  ],
+  "scope": "Disposable Edge, real local API and public provider reads; no mocks, wallet, signing or transaction"
+}

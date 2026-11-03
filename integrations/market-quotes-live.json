@@ -1,0 +1,172 @@
+{
+  "checkedAt": "2026-11-03T03:47:40.637Z",
+  "scope": "Public mainnet quote simulations/order-book reads; no account, signing, funds or transaction",
+  "results": [
+    {
+      "provider": "uniswap",
+      "side": "usdc-to-weth",
+      "ok": true,
+      "quote": {
+        "version": 1,
+        "kind": "market-quote-preview",
+        "request": {
+          "provider": "uniswap",
+          "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+          "side": "usdc-to-weth",
+          "amount": "1",
+          "privacy": "public",
+          "slippageBps": 50
+        },
+        "executable": false,
+        "result": {
+          "inputUnits": "1000000",
+          "inputSymbol": "USDC",
+          "inputDecimals": 6,
+          "outputUnits": "444733937320151",
+          "outputSymbol": "WETH",
+          "outputDecimals": 18,
+          "minOutputUnits": "442510267633550",
+          "feePips": 500,
+          "gasUnits": "86295"
+        },
+        "evidence": {
+          "source": "https://mainnet.base.org",
+          "assurance": "rpc-latest-block",
+          "blockHash": "0x3bd06ddbaf64eb7e9bc8a3bdf21d9a7f0d4b7c80faee34cb39e825f156815886",
+          "blockNumber": "53444152",
+          "blockTimestamp": 1793677651000,
+          "codeSha256": {
+            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
+            "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+            "0x3d4e44eb1374240ce5f1b871ab261cd16335b76a": "a204e355059d9c809bfc026503d49b4ecf8655f482a76040dec4bcb4618047b4",
+            "0x33128a8fc17869897dce68ed026d694621f6fdfd": "8545609892cc8d7d608dd4420ee110ab98448730570824fb029228e33846d28c",
+            "0xd0b53d9277642d899df5c87a3966a349a798f224": "0d14cff6e9be9c1cf4ff7a4856a44e5d17b8a92db7e1f41f2fb5e73ad8b5419a"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "sourceTime": 1793677651000,
+        "observedAt": 1793677654813,
+        "expiresAt": 1793677684813
+      }
+    },
+    {
+      "provider": "uniswap",
+      "side": "weth-to-usdc",
+      "ok": true,
+      "quote": {
+        "version": 1,
+        "kind": "market-quote-preview",
+        "request": {
+          "provider": "uniswap",
+          "marketId": "uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224",
+          "side": "weth-to-usdc",
+          "amount": "0.001",
+          "privacy": "public",
+          "slippageBps": 50
+        },
+        "executable": false,
+        "result": {
+          "inputUnits": "1000000000000000",
+          "inputSymbol": "WETH",
+          "inputDecimals": 18,
+          "outputUnits": "2246302",
+          "outputSymbol": "USDC",
+          "outputDecimals": 6,
+          "minOutputUnits": "2235070",
+          "feePips": 500,
+          "gasUnits": "72962"
+        },
+        "evidence": {
+          "source": "https://mainnet.base.org",
+          "assurance": "rpc-latest-block",
+          "blockHash": "0x49954721f4c01af9cd0092341fc3ffa57a9b5a17454d92be4cae9c7fef240c6b",
+          "blockNumber": "53444153",
+          "blockTimestamp": 1793677653000,
+          "codeSha256": {
+            "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": "98d785fcb1bf847f287adc2310759fd94cc13e754b974bc72131382e8266f607",
+            "0x4200000000000000000000000000000000000006": "667c900c2c6da80d452501a9c6332e046384a0c438c3334ce6f71c86dd7b8735",
+            "0x3d4e44eb1374240ce5f1b871ab261cd16335b76a": "a204e355059d9c809bfc026503d49b4ecf8655f482a76040dec4bcb4618047b4",
+            "0x33128a8fc17869897dce68ed026d694621f6fdfd": "8545609892cc8d7d608dd4420ee110ab98448730570824fb029228e33846d28c",
+            "0xd0b53d9277642d899df5c87a3966a349a798f224": "0d14cff6e9be9c1cf4ff7a4856a44e5d17b8a92db7e1f41f2fb5e73ad8b5419a"
+          },
+          "statement": "RPC-authenticated chain and code observations, not independent light-client verification or a code audit."
+        },
+        "sourceTime": 1793677653000,
+        "observedAt": 1793677657621,
+        "expiresAt": 1793677687621
+      }
+    },
+    {
+      "provider": "hyperliquid",
+      "side": "buy",
+      "ok": true,
+      "quote": {
+        "version": 1,
+        "kind": "market-quote-preview",
+        "request": {
+          "provider": "hyperliquid",
+          "marketId": "hyperliquid:1:ETH",
+          "side": "buy",
+          "amount": "0.001",
+          "privacy": "public"
+        },
+        "executable": false,
+        "result": {
+          "instrument": "ETH",
+          "sizeUnits": "10",
+          "sizeDecimals": 4,
+          "notionalUnits": "2251100",
+          "notionalDecimals": 6,
+          "worstPrice": "2251.1",
+          "levelsUsed": 1,
+          "fullDepth": true
+        },
+        "evidence": {
+          "source": "https://api.hyperliquid.xyz/info",
+          "assurance": "provider-order-book",
+          "bookSha256": "01bb35d166841e84703d188310dba53c806a089b101edfc2ccfd43a61033ba4d",
+          "metaSha256": "eed979eb59d647e7620701a7ec5bf13c6f3509e57d88dd5317eb467a2c94cd7d"
+        },
+        "sourceTime": 1793677658032,
+        "observedAt": 1793677659109,
+        "expiresAt": 1793677688032
+      }
+    },
+    {
+      "provider": "hyperliquid",
+      "side": "sell",
+      "ok": true,
+      "quote": {
+        "version": 1,
+        "kind": "market-quote-preview",
+        "request": {
+          "provider": "hyperliquid",
+          "marketId": "hyperliquid:1:ETH",
+          "side": "sell",
+          "amount": "0.001",
+          "privacy": "public"
+        },
+        "executable": false,
+        "result": {
+          "instrument": "ETH",
+          "sizeUnits": "10",
+          "sizeDecimals": 4,
+          "notionalUnits": "2251400",
+          "notionalDecimals": 6,
+          "worstPrice": "2251.4",
+          "levelsUsed": 1,
+          "fullDepth": true
+        },
+        "evidence": {
+          "source": "https://api.hyperliquid.xyz/info",
+          "assurance": "provider-order-book",
+          "bookSha256": "7a90f9e092dad854db5687ac2a14100813f0e2dbbf9cb96bcdd5a9fa84803911",
+          "metaSha256": "256a62c28de122158d37a149b620f4084e8311ceb89ec2d1ff65db3b2f4c4f55"
+        },
+        "sourceTime": 1793677659633,
+        "observedAt": 1793677660636,
+        "expiresAt": 1793677689633
+      }
+    }
+  ]
+}

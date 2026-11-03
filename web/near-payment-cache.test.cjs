@@ -42,7 +42,7 @@ const server=http.createServer(async(req,res)=>{try{
     assert.equal(await snapshot(),before);console.log('PASS failed wallet cache update preserves old offline chat, identity and reservation');
     await context.setOffline(false);fail=false;assert.equal(await update(),'activated');
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
-    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v41-relay-cancellation');return key?await(await(await caches.open(key)).match('/nostr-socket.js')).text():null;});
+    const cached=await p.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k==='proof-u-chat-v44-defi-copy');return key?await(await(await caches.open(key)).match('/nostr-socket.js')).text():null;});
     assert.equal(cached,await fs.readFile(path.join(__dirname,'public/nostr-socket.js'),'utf8'));assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
     console.log('PASS successful cache update loads relay cancellation protection offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');

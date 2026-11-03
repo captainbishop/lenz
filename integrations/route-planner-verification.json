@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-11-03T04:19:47.258Z",
+  "tests": 15,
+  "passed": 15,
+  "guardAlterations": 11,
+  "results": [
+    {
+      "guard": "network separation",
+      "detected": true
+    },
+    {
+      "guard": "venue environment",
+      "detected": true
+    },
+    {
+      "guard": "explicit privacy",
+      "detected": true
+    },
+    {
+      "guard": "unknown fields",
+      "detected": true
+    },
+    {
+      "guard": "expiry",
+      "detected": true
+    },
+    {
+      "guard": "consistent decimals",
+      "detected": true
+    },
+    {
+      "guard": "position exit",
+      "detected": true
+    },
+    {
+      "guard": "reduce only",
+      "detected": true
+    },
+    {
+      "guard": "minimum received",
+      "detected": true
+    },
+    {
+      "guard": "no execution authority",
+      "detected": true
+    },
+    {
+      "guard": "no reservation release",
+      "detected": true
+    }
+  ],
+  "scope": "Synthetic local route objectives; no wallet, network, live signing or execution"
+}

@@ -1,0 +1,41 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{pathToFileURL}=require('node:url');
+(async()=>{
+ const {quoteMarket}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quotes.mjs'))),{quoteMock,NOW}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quote-fixtures.mjs')));
+ const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[];
+ try{
+  const context=await browser.newContext({viewport:{width:1360,height:1100},colorScheme:'light'}),page=await context.newPage();let requests=[],mode='normal',release;
+  const templates=JSON.parse(fs.readFileSync(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results.map(r=>r.observation);
+  const hl=templates.find(s=>s.provider==='hyperliquid'),eth=hl.rows.find(r=>r.instrument==='ETH');eth.id='hyperliquid:0:ETH';eth.venueIndex=0;eth.sizeDecimals=3;hl.rows=[eth];
+  await page.route('**/api/markets/read',async route=>{const value=structuredClone(templates.find(s=>s.provider===route.request().postDataJSON().provider));value.observedAt=Date.now();value.expiresAt=value.observedAt+60000;await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});});
+  await page.route('**/api/markets/quote',async route=>{
+   const request=route.request().postDataJSON();requests.push(request);const thisMode=mode;
+   if(thisMode==='defer')await new Promise(r=>release=r);
+   if(thisMode==='fail'){await route.fulfill({status:503,body:'unavailable'});return;}
+   const quote=structuredClone(await quoteMarket(request,quoteMock()));quote.observedAt=Date.now();quote.sourceTime=quote.observedAt-1000;quote.expiresAt=quote.observedAt+(thisMode==='expire'?500:29000);
+   if(thisMode==='tamper')quote.request.amount='999';
+   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(quote)}).catch(()=>{});
+  });
+  page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:4173/markets.html');await page.waitForFunction(()=>document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
+  await page.locator('#refresh-markets').click();await page.waitForFunction(()=>!document.querySelector('#refresh-markets').disabled);assert.equal(requests.length,0);
+  await page.locator('#quote-amount').fill('2');assert(await page.locator('#quote-submit').isDisabled());assert.equal(await page.locator('#quote-public').isChecked(),false);
+  await page.evaluate(()=>localStorage.setItem('unrelated-identity-marker','preserve'));
+  await page.locator('#quote-public').check();await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-result').textContent.includes('Minimum'));
+  assert((await page.locator('#quote-result').innerText()).includes('0.000000000773888888 WETH'));assert.equal(requests.length,1);assert.equal(requests[0].privacy,'public');checks.push('public consent is unchecked initially; explicit quote shows exact output/minimum without an execution control');
+  await page.locator('#quote-amount').fill('3');assert.equal(await page.locator('#quote-result').innerText(),'');
+  mode='defer';await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-status').textContent.includes('Reading'));while(!release)await new Promise(r=>setTimeout(r,10));await page.locator('#quote-amount').fill('4');release();release=null;await page.waitForTimeout(100);assert.equal(await page.locator('#quote-result').innerText(),'');
+  mode='normal';await page.locator('#quote-amount').fill('1.0000001');const count=requests.length;await page.locator('#quote-submit').click();assert.equal(requests.length,count);assert((await page.locator('#quote-status').innerText()).includes('6 decimal'));checks.push('changed inputs clear results, late responses stay discarded and excessive USDC precision fails before any request');
+  await page.locator('#quote-amount').fill('2');mode='tamper';await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-status').textContent.includes('unavailable'));assert.equal(await page.locator('#quote-result').innerText(),'');
+  mode='expire';await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-result').textContent.includes('Minimum'));await page.waitForFunction(()=>document.querySelector('#quote-status').textContent.includes('expired'));assert.equal(await page.locator('#quote-result').innerText(),'');checks.push('changed quote terms are rejected and expired results disappear');
+  mode='normal';await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-result').textContent.includes('Minimum'));await context.setOffline(true);await page.waitForFunction(()=>document.querySelector('#quote-result').textContent==='');assert(await page.locator('#quote-submit').isDisabled());await context.setOffline(false);await page.locator('#quote-public').uncheck();assert.equal(await page.locator('#quote-result').innerText(),'');checks.push('offline state and revoked public consent clear the estimate');
+  await page.locator('[data-category="perpetuals"]').click();assert.equal(await page.locator('#quote-public').isChecked(),false);await page.locator('#quote-amount').fill('1.5');await page.locator('#quote-side').selectOption('sell');await page.locator('#quote-public').check();await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-result').textContent.includes('USDC')||document.querySelector('#quote-status').textContent.includes('unavailable'));assert.match(await page.locator('#quote-result').innerText(),/1500\.1 USDC/,JSON.stringify({status:await page.locator('#quote-status').innerText(),request:requests.at(-1),errors}));assert.equal(requests.at(-1).side,'sell');checks.push('Hyperliquid sell estimate uses the chosen instrument and retains fee/margin limits');
+  for(const theme of ['light','dark']){
+   if(theme==='dark')await page.locator('#theme-toggle').click();
+   for(const [width,height] of [[320,740],[390,844],[844,390],[1024,768],[1360,1100]]){await page.setViewportSize({width,height});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),theme+' overflow '+width);}
+   await page.screenshot({path:path.join(__dirname,`evidence/market-quote-${theme}.png`),fullPage:true});
+  }
+  await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(__dirname,'evidence/market-quote-phone.png'),fullPage:true});checks.push('both quote themes fit phone, landscape, tablet and desktop');
+  mode='fail';await page.locator('#quote-submit').click();await page.waitForFunction(()=>document.querySelector('#quote-status').textContent.includes('unavailable'));assert.equal(await page.locator('#quote-result').innerText(),'');
+  await context.setOffline(true);await page.reload();await page.waitForFunction(()=>document.querySelector('#market-status').textContent.includes('No saved markets'));assert.equal(await page.locator('#quote-result').count(),0);assert.equal(await page.evaluate(()=>localStorage.getItem('unrelated-identity-marker')),'preserve');assert.equal(await page.evaluate(()=>localStorage.getItem('lenz-market-snapshots-v1')),null);assert.deepEqual(await page.evaluate(async()=>(await indexedDB.databases()).map(x=>x.name)),[]);assert.deepEqual(errors,[]);checks.push('failed requests and offline reload retain no quote or wallet state; unrelated storage is preserved');
+  fs.writeFileSync(path.join(__dirname,'market-quote-browser-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),browser:await browser.version(),passed:checks.length,failed:0,checks,scope:'Disposable Edge; market/quote responses are fixtures; no wallet/signing/spending'},null,2)+'\n');console.log(checks.map(c=>'PASS '+c).join('\n'));
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

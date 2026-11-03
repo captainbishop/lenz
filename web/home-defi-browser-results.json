@@ -1,0 +1,14 @@
+{
+  "browser": "156.0.4314.58",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "hero placement preserved; five-scene DeFi gallery loads in system dark theme",
+    "all five chapter controls seek and update selected context immediately",
+    "keyboard wrapping/clamping and theme changes preserve the chapter and reduced-motion pause",
+    "both themes share page/gallery background and fit phone, landscape, tablet and desktop; targets remain at least 44px",
+    "gallery responds to pointer tilt and hold-to-pause, then resumes on release",
+    "cached offline reload, chapter selection and both media themes work while an uncached request fails",
+    "no script errors, external requests or financial submissions"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T05:05:30.250Z",
+  "browser": "156.0.4314.58",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "initial view performs no provider reads or account access; shell cache is checked",
+    "explicit load sends only provider IDs, displays validated markets, and does not save snapshots automatically",
+    "category/search filters, keyboard selection and empty results work without trading controls",
+    "a failed provider refresh preserves earlier rows with a visible failure label",
+    "both themes fit phone, landscape, tablet and desktop; saved snapshots require explicit action",
+    "offline reload labels cached data as saved, blocks refresh and preserves unrelated identity storage",
+    "malformed saved snapshots are rejected without script errors"
+  ],
+  "scope": "Disposable Edge profiles; provider responses are fixtures shaped from the separate live read"
+}

@@ -198,7 +198,7 @@
     "web/public/receive-packet.js": "0cef5917c79297ddd3384b5c597868352c137f27b94cfbc9a2036b3c43965ff6",
     "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
-    "web/public/wallet-feedback.js": "55cf85c4c634f6a800cbc6e3d7a324aa1b425fe9489d2077e4df1709b65ff3de",
+    "web/public/wallet-feedback.js": "f715a5d91bfef8deb6c097cec04dee2cb0e7b655e7a93fbe7d31383a687fc5b5",
     "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221"
   },
   "complete": true,
@@ -300,6 +300,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-02T10:21:34.062Z",
+  "reframedAt": "2026-11-02T18:28:54.635Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

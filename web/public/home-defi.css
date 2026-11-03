@@ -1,0 +1,51 @@
+/* Shared paper/green surfaces preserve the approved gallery composition. */
+:root { --surface: #edf1e5; --screen-shell: #e5ebd8; --hover: #e5ebd8; --accent-text: #173f35; }
+[data-theme=dark] { --paper: #14291f; --forest: #edf3e9; --muted: #b5c7b8; --line: #496153; --surface: #20382b; --screen-shell: #20382b; --hover: #2b4432; --accent-text: #e1efa6; }
+[data-theme=dark] .app-preview, [data-theme=dark] .product-screen { background: var(--screen-shell); border-color: var(--line); }
+.defi-gallery { padding: 36px 0 28px; color: var(--forest); background: var(--paper); }
+.gallery-label { display: flex; justify-content: space-between; gap: 24px; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 18px; font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
+.gallery-label span:first-child { color: var(--accent-text); }
+.gallery-heading { display: flex; justify-content: space-between; align-items: center; gap: 40px; }
+.gallery-heading h2 { font-size: clamp(32px,3.6vw,50px); letter-spacing: -1.3px; line-height: 1.1; margin: 24px 0 30px; }
+.gallery-heading p { font-size: 13px; color: var(--muted); max-width: 235px; margin: 0 0 6px; }
+.gallery-stage { display: grid; grid-template-columns: minmax(150px,.8fr) minmax(260px,376px) minmax(250px,1fr); grid-template-areas: 'summary film chapters'; gap: clamp(28px,4vw,56px); align-items: center; }
+.gallery-summary { grid-area: summary; }
+.chapter-number { font: 56px/1 Georgia,serif; color: var(--accent-text); }
+.chapter-number small { font: 12px 'Segoe UI',sans-serif; color: var(--muted); margin-left: 12px; }
+.gallery-summary h3 { font: 28px/1.15 Georgia,serif; margin: 22px 0 16px; }
+.gallery-summary p { font-size: 14px; color: var(--muted); }
+.chapter-context { font-size: 11px; color: var(--accent-text); line-height: 1.8; margin-top: 24px; }
+.defi-gallery .recording { grid-area: film; width: 100%; margin: 0; perspective: 1200px; }
+.recorded-frame { padding: 8px; background: var(--screen-shell); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 24px 60px -28px #173f3560; transform: perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition: transform 160ms ease-out; touch-action: pan-y pinch-zoom; user-select: none; cursor: pointer; }
+.recorded-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 14px; font-size: 9px; color: var(--muted); }
+.recorded-top b { font-size: 12px; letter-spacing: 3px; color: var(--accent-text); }
+.defi-gallery figcaption { font-size: 12px; margin: 16px 4px 0; }
+.defi-gallery figcaption small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.chapter-rail { grid-area: chapters; }
+.rail-heading { margin-bottom: 18px; font-size: 11px; color: var(--muted); }
+.chapters { border-top: 1px solid var(--line); }
+.chapters button { display: flex; align-items: center; gap: 18px; width: 100%; min-height: 64px; border: 0; border-bottom: 1px solid var(--line); padding: 18px 12px; background: transparent; color: var(--forest); text-align: left; font: 12px 'Segoe UI',sans-serif; transition: background 160ms; }
+.chapters strong { font-size: 16px; font-weight: 500; }
+.chapters button>span { margin-left: auto; }
+.chapters button:hover { background: var(--hover); }
+.chapters button[aria-current=true] { background: var(--lime); color: #173f35; }
+.gallery-foot { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line); margin-top: 32px; padding-top: 18px; font-size: 11px; color: var(--muted); }
+.gallery-foot span:first-child { color: var(--accent-text); }
+.programmability, [data-theme=dark] .programmability { background: var(--paper); color: var(--forest); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; margin: 0; padding: 56px 0; }
+.programmability:before { content: none; }
+.programmability .eyebrow, .program-copy>p, .program-example small { color: var(--muted); }
+.programmability summary, [data-theme=dark] .programmability summary { color: var(--forest); }
+.program-example span { color: var(--accent-text); }
+[data-theme=dark] :is(button,summary,[tabindex],a):focus-visible { outline-color: var(--lime); }
+@media(max-width:1100px) { .gallery-stage { grid-template-columns: minmax(260px,1fr) minmax(250px,1fr); grid-template-areas: 'film chapters'; gap: 32px; } .gallery-summary { display: none; } }
+@media(max-width:760px) {
+ .gallery-label { font-size: 10px; gap: 16px; }
+ .gallery-heading { display: block; } .gallery-heading h2 { margin: 24px 0 16px; } .gallery-heading p { margin-bottom: 24px; }
+ .gallery-stage { grid-template-columns: minmax(0,1fr); grid-template-areas: 'film' 'chapters'; gap: 28px; }
+ .defi-gallery .recording { max-width: 480px; justify-self: center; }
+ .chapters { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+ .chapters button { gap: 10px; padding: 14px 10px; } .chapters button:last-child { grid-column: 1/-1; }
+ .chapters strong { font-size: 14px; } .chapters button>span { display: none; }
+ .gallery-foot { display: block; line-height: 1.6; margin-top: 24px; } .gallery-foot span { display: block; } .gallery-foot span+span { margin-top: 8px; }
+ .programmability { padding: 40px 0; }
+}

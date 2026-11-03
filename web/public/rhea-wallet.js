@@ -1,13 +1,15 @@
 import { readState, updateState } from './chat-store.js';
 import { walletAmount } from './wallet-visibility.js';
-import { readNearVault, saveNearVault, displayUnits, units, compressed } from './near-protocol.js';
+import { readNearVault, saveNearVault, displayUnits, units, compressed, nearLedger } from './near-protocol.js';
 import { prepareRefundReturn, acceptDepositResult } from './near-deposit.js';
 import { prepareRheaSwap, checkRheaConfig } from './rhea-protocol.js';
 import { connectedNearAccount, connectNearWallet, disconnectNearWallet, signRefundDeposit } from './near-signer.js';
 import { walletError } from './wallet-feedback.js';
+import { mountDefiApproval } from './defi-wallet-ui.js';
+import { mountDefiWorkspace, requirePublicSwap } from './defi-workspace.js';
 const $=s=>document.querySelector(s), el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const walletLab=document.body.dataset.walletTools==='true';
-let config=null, run, returnId=null, savedCount=0;
+let config=null, run, returnId=null, savedCount=0, defi, dex;
 const terminal=new Set(['complete','refunded','rejected','attention']);
 const labels={checking:'Checking your swap',ready:'Ready',redeeming:'Starting swap',funded:'Swap in progress',depositing:'Swap in progress',deposited:'Ready to swap',swapping:'Swapping',output_on_dex:'Getting your funds ready',refund_on_dex:'Getting your refund ready',withdrawing_output:'Getting your funds ready',withdrawing_refund:'Getting your refund ready',output_available:'Ready to send',refund_available:'Refund ready to send',paying_output:'Sending to your wallet',paying_refund:'Sending your refund',complete:'Swap complete',refunded:'Refund available',rejected:'Swap could not start',attention:'Swap needs checking'};
 const notice=text=>{$('#rhea-feedback').textContent=text;};
@@ -15,6 +17,8 @@ function refreshSwapConnection(){
   const online=navigator.onLine, summary=$('#rhea-queue');if(!summary)return;
   summary.textContent=savedCount?`${savedCount} saved swap${savedCount===1?'':'s'} to review. ${online?'Review before sending.':'Reconnect to execute.'} Nothing is sent automatically.`:online?'Save offline · execute when connected.':'Offline · set your minimum and save. Reconnect to check rates and execute.';
   document.querySelectorAll('[data-rhea-online]').forEach(button=>{button.disabled=!online||button.dataset.rheaBusy==='true';});
+  document.querySelectorAll('[data-defi-send]').forEach(button=>{button.disabled=!online||Date.now()>=Number(button.dataset.defiExpiry);});
+  if($('#rhea-privacy')?.value!=='public-testnet')$('#rhea-quote').disabled=true;
 }
 function needsConnection(button){button.dataset.rheaOnline='';button.disabled=!navigator.onLine;return button;}
 function wrapped(n){const v=BigInt(n),part=(v%10n**24n).toString().padStart(24,'0').replace(/0+$/,'');return `${v/10n**24n}${part?'.'+part:''}`;}
@@ -42,23 +46,32 @@ export function mountRheaWallet({action}){
     catch(e){notice(`Return not confirmed. ${walletError(e)} Your request is saved. Check the refund before trying again.`);}
   });
   const panel=el('dialog');panel.id='rhea-dialog';panel.setAttribute('aria-labelledby','rhea-title');panel.innerHTML=`<div class="dialog-top"><h2 id="rhea-title">New swap</h2><button type="button" id="rhea-close" class="secondary">Close</button></div><form id="rhea-form"><label for="rhea-amount">Amount in tUSD</label><input id="rhea-amount" inputmode="decimal" value="1" required><button id="rhea-quote" type="button" class="secondary">Check rate</button><p id="rhea-estimate" class="quiet" role="status">Check the rate while online, then choose the least you want to receive.</p><label for="rhea-minimum">Minimum wrapped NEAR to receive</label><input id="rhea-minimum" inputmode="decimal" placeholder="0.00" required><label for="rhea-receiver">Receive in this test wallet</label><input id="rhea-receiver" placeholder="your-account.testnet" autocomplete="off" required><label for="rhea-duration">Start within</label><select id="rhea-duration"><option value="3600000">1 hour</option><option value="86400000">24 hours</option></select><p class="quiet">The swap or refund goes to this wallet. It needs to support the chosen token. The amount and receiving wallet are public on the test network. You can return a refund to Lenz after it arrives.</p><p class="quiet">Saving sets this money aside until the swap is resolved. The time limit does not make it available again.</p><button type="submit">Save swap</button></form><p class="wallet-feedback error" role="status"></p>`;document.body.append(panel);
-  $('#rhea-close').onclick=()=>panel.close();$('#rhea-open').onclick=()=>panel.showModal();
+  dex=mountDefiWorkspace(section,panel);
+  defi=mountDefiApproval({config:()=>config,run,notice,wrapped});
+  $('#rhea-close').onclick=()=>panel.close();$('#rhea-open').onclick=()=>run(async()=>{await defi.open();dex.reset();panel.showModal();});
   const useAccount=el('button','Use my connected wallet','secondary');useAccount.type='button';useAccount.id='rhea-use-account';useAccount.hidden=!walletLab;$('#rhea-receiver').after(useAccount);
   useAccount.onclick=()=>run(async()=>{const id=await connectedNearAccount();if(!id)throw new Error('Connect Meteor first.');$('#rhea-receiver').value=id;});
   $('#rhea-amount').oninput=()=>{$('#rhea-estimate').textContent='Amount changed. Get a new estimate or choose your own minimum.';};
   $('#rhea-quote').onclick=()=>run(async()=>{
+    requirePublicSwap();
     $('#rhea-estimate').textContent='Getting a Rhea estimate…';
-    const amountIn=units($('#rhea-amount').value);
-    const q=await request('/api/defi/rhea/quote',{network:'testnet',contract:config.exchange,poolId:config.poolId,tokenIn:config.reserve,tokenOut:config.tokenOut,amountIn,slippageBps:100});
+    const amountIn=units($('#rhea-amount').value),slippageBps=Number($('#rhea-slippage').value);
+    if(![50,100,200].includes(slippageBps))throw Error('Invalid slippage tolerance');
+    const q=await request('/api/defi/rhea/quote',{network:'testnet',contract:config.exchange,poolId:config.poolId,tokenIn:config.reserve,tokenOut:config.tokenOut,amountIn,slippageBps});
+    requirePublicSwap();
     if(q.request?.amountIn!==amountIn||q.request?.poolId!==config.poolId||q.request?.tokenIn!==config.reserve||q.request?.tokenOut!==config.tokenOut)throw new Error('The quote does not match this swap');
-    if(units($('#rhea-amount').value)!==amountIn)throw new Error('Amount changed while getting the estimate');
-    $('#rhea-minimum').value=wrapped(q.minAmountOut);$('#rhea-estimate').textContent=`Estimate: ${wrapped(q.amountOut)} wrapped test NEAR. Minimum allows 1% price movement.`;
+    if(units($('#rhea-amount').value)!==amountIn||Number($('#rhea-slippage').value)!==slippageBps)throw new Error('Amount or slippage changed while getting the estimate');
+    if(q.request.slippageBps!==slippageBps||!/^[1-9][0-9]{0,38}$/.test(q.amountOut)||BigInt(q.minAmountOut)!==BigInt(q.amountOut)*BigInt(10000-slippageBps)/10000n)throw Error('Invalid quote minimum');
+    $('#rhea-output').textContent=wrapped(q.amountOut);$('#rhea-rate').textContent=`1 tUSD ≈ ${wrapped(BigInt(q.amountOut)*1000000n/BigInt(amountIn))} wNEAR`;
+    $('#rhea-minimum').value=wrapped(q.minAmountOut);$('#rhea-estimate').textContent=`Rate checked now. Minimum allows ${slippageBps/100}% price movement. Execution checks the rate again.`;
   });
   $('#rhea-form').onsubmit=event=>{event.preventDefault();run(async()=>{
+    requirePublicSwap();
     const text=$('#rhea-amount').value, minimum=$('#rhea-minimum').value;
     if(!/^(0|[1-9][0-9]*)(\.[0-9]{1,24})?$/.test(minimum))throw new Error('Use up to 24 decimal places for wrapped NEAR');
     const [whole,part='']=minimum.split('.'),minOutput=String(BigInt(whole)*10n**24n+BigInt(part.padEnd(24,'0')));
     const options={text,minOutput,receiver:$('#rhea-receiver').value.trim(),deadlineMs:Date.now()+Number($('#rhea-duration').value)};
+    if(defi.review(options))return;
     await updateState(async state=>{const result=await prepareRheaSwap(await readNearVault(state,config.reserve),state.identity,config,options);await saveNearVault(state,result.vault);});
     panel.close();notice('Swap saved. This money is set aside. Start the swap when you are online.');
   });};
@@ -93,6 +106,7 @@ export async function renderRheaWallet(vault,identity){
   const selected=await connectedNearAccount();$('#near-signer-connect').disabled=!enabled;$('#near-signer-connect').hidden=!!selected;$('#near-signer-disconnect').hidden=!selected;
   $('#near-signer-account').textContent=selected?`Selected on testnet: ${selected}`:'Connect a test wallet to receive swaps and return refunds.';$('#rhea-use-account').disabled=!selected;
   if(!enabled){notice('Swaps are not available right now.');return;}
+  dex.balance((await nearLedger(vault)).available.reduce((sum,n)=>sum+BigInt(n.amount),0n).toString());
   const list=$('#rhea-orders');list.replaceChildren();
   savedCount=(vault.rheaOrders??[]).filter(o=>!['complete','refunded'].includes(o.status?.stage)).length;
   for(const o of [...(vault.rheaOrders??[])].reverse()){
@@ -101,6 +115,7 @@ export async function renderRheaWallet(vault,identity){
     amount.append(walletAmount(el('span'),displayUnits(i.amount)),document.createTextNode(' tUSD → wrapped NEAR'));
     minimum.append(document.createTextNode(`Receiving wallet: ${i.receiver_id}. Receive at least: `),walletAmount(el('span'),wrapped(i.min_output)),document.createTextNode(' wrapped test NEAR.'));
     row.append(amount,el('span',labels[o.status?.stage]??'Saved · money set aside','near-state'),minimum);
+    if(o.defi){defi.render(row,o);list.append(row);continue;}
 
     if(o.returnReceipt)row.append(el('small','Refund returned to Lenz.'));
     const save=el('button','Share swap request','secondary');save.onclick=()=>download(o.packet);row.append(save);

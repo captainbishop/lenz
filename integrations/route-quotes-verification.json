@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-11-03T04:17:35.140Z",
+  "tests": 7,
+  "browserTests": 7,
+  "guardAlterations": 15,
+  "results": [
+    {
+      "guard": "private policy",
+      "detected": true
+    },
+    {
+      "guard": "funding/return boundary",
+      "detected": true
+    },
+    {
+      "guard": "asset binding",
+      "detected": true
+    },
+    {
+      "guard": "amount binding",
+      "detected": true
+    },
+    {
+      "guard": "minimum output",
+      "detected": true
+    },
+    {
+      "guard": "order precision",
+      "detected": true
+    },
+    {
+      "guard": "order terms",
+      "detected": true
+    },
+    {
+      "guard": "order price limit",
+      "detected": true
+    },
+    {
+      "guard": "future observation",
+      "detected": true
+    },
+    {
+      "guard": "quote size bound",
+      "detected": true
+    },
+    {
+      "guard": "immutable objective ID",
+      "detected": true
+    },
+    {
+      "guard": "quote revision",
+      "detected": true
+    },
+    {
+      "guard": "objective expiry before commit",
+      "detected": true
+    },
+    {
+      "guard": "quote expiry before commit",
+      "detected": true
+    },
+    {
+      "guard": "identity-bound encryption",
+      "detected": true
+    }
+  ],
+  "overlappingGuard": {
+    "guard": "provider binding",
+    "independentlyDetected": false,
+    "reason": "Removing the early provider guard still rejects the mismatch at the provider-specific chain/action and asset/order guards."
+  },
+  "sourceHashes": {
+    "web/public/defi-route-quote.js": "b7f78b77d4f43abc848a16b4d49979d17152a8484371a61826950c65fd03692b",
+    "integrations/route-quotes.test.mjs": "7bd54f2fb57d67177c28713452efd2aace16e3f7e2328b946e3cf55a00a7144e",
+    "web/public/defi-route-drafts.js": "45e6ae33e5d06ba70a298b6e4f7ba43f70d0937dad4cd071729824afbff22a5e",
+    "integrations/route-quote-fixtures.mjs": "25c1d0cf14835d5815f1fdbf552db1e583ccac7930c1b8f11cd466f3cbc335c7",
+    "web/public/defi-route-plan.js": "cf900167b7a7b5db76e55dcaf491f93134ab23b17fc3349e19794d6a74e8c5e2",
+    "web/route-drafts-browser.test.cjs": "1bf92bc6701098b4234c026e847cbe76dd2e9bf00e695f1e1c0459e0f7a85430",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/market-quote.js": "a933828c2d8fa82ce5c1ef3fa49da90d6b32ba27ca62cdf5887a85b4a8b07071"
+  },
+  "scope": "Fixture binding and disposable encrypted browser-service checks. No signed quote authentication, product draft control, financial action or production readiness claim."
+}

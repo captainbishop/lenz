@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-03T02:56:02.877Z",
+  "scope": "Five illustrative design scenes, not connected markets or executed orders",
+  "provenance": "Exact copies of the previously decoded and visually reviewed design recordings",
+  "scenes": [
+    "Markets",
+    "EVM/NEAR route",
+    "Hyperliquid and margin",
+    "Yield and positions",
+    "Offline approval"
+  ],
+  "files": [
+    {
+      "file": "web/public/previews/defi-light.mp4",
+      "bytes": 1314691,
+      "sha256": "ad2b9f6b23f514181c87e848c8379144e5ef9aaa6c5261f89410796b81fb51be"
+    },
+    {
+      "file": "web/public/previews/defi-light.webp",
+      "bytes": 59380,
+      "sha256": "c6a9898ea582e2e7e063250f5f54fdfaf0fe425e954c8bb4d8f935bd9a71cf83"
+    },
+    {
+      "file": "web/public/previews/defi-dark.mp4",
+      "bytes": 1409208,
+      "sha256": "6d9b326a3bf9f9198b5041dfb1a8c49477ab354b48feed24b9977922f5ef245b"
+    },
+    {
+      "file": "web/public/previews/defi-dark.webp",
+      "bytes": 56976,
+      "sha256": "aee8006c92d1ca915f8da5d512ca165f134f43b4aaf7ddfb81e3b4e241600e30"
+    }
+  ]
+}

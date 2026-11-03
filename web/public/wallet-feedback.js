@@ -5,6 +5,12 @@ export function walletError(error) {
   if(error?.errors) for(const cause of error.errors) console.warn('Lenz payment diagnostic:',cause?.message??String(cause));
   if(error?.cause) console.warn('Lenz payment diagnostic:',error.cause?.message??String(error.cause));
   if(/Confirmation is uncertain/.test(text)) return text;
+  if(/Turn on internet delivery/.test(text))return 'Turn on internet delivery to use carriers, or save the encrypted request to share.';
+  if(/No carriers are configured/.test(text))return 'No carriers are configured. Save the encrypted request to share with your contact.';
+  if(/contact was removed/.test(text))return 'This contact was removed. Go back and choose again.';
+  if(/DeFi request expired|Approval expired|Carrier envelope expired/i.test(text))return 'The approval window has ended. Your money stays set aside until the swap is resolved.';
+  if(/Private execution is required/.test(text))return 'Private execution is required. This test route is public; your preference has not been changed.';
+  if(/Carrier unavailable|Carrier configuration unavailable/.test(text))return 'The carrier could not be reached. Your request is saved; retry sends the same request.';
   if (/Allow popups/i.test(text)) return 'Allow popups for Lenz, then open your wallet again.';
   if(/cancel|User closed|Wallet closed|User rejected/i.test(text))return 'Approval was cancelled. Your request is still saved.';
   if(/Connect .+ before|another wallet|another Lenz|original Lenz owner/i.test(text))return 'Connect the wallet that received this refund, then try again.';

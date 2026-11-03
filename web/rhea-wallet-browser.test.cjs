@@ -26,7 +26,7 @@ let base;
     await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));await idle(p);
     await check('swap screen loads offline with explicit minimum, refund account and public-terms notice',async()=>{
       await context.setOffline(true);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');
-      await p.locator('#rhea-open').click();assert(await p.locator('#rhea-receiver').isVisible());assert(await p.getByText('The amount and receiving wallet are public on the test network.',{exact:false}).isVisible());
+      await p.locator('#rhea-open').click();await p.locator('#rhea-dialog').waitFor();await p.locator('#rhea-privacy').selectOption('public-testnet');await p.locator('.dex-details summary').click();assert(await p.locator('#rhea-receiver').isVisible());assert(await p.getByText('The amount and receiving wallet are public on the test network.',{exact:false}).isVisible());
       await p.locator('#rhea-minimum').fill('0.0001');await p.locator('#rhea-receiver').fill('alice.testnet');
     });
     await check('failed encrypted-vault commit exposes no signed swap and leaves full balance available',async()=>{

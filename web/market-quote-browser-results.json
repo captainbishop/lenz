@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T05:05:24.046Z",
+  "browser": "156.0.4314.58",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "public consent is unchecked initially; explicit quote shows exact output/minimum without an execution control",
+    "changed inputs clear results, late responses stay discarded and excessive USDC precision fails before any request",
+    "changed quote terms are rejected and expired results disappear",
+    "offline state and revoked public consent clear the estimate",
+    "Hyperliquid sell estimate uses the chosen instrument and retains fee/margin limits",
+    "both quote themes fit phone, landscape, tablet and desktop",
+    "failed requests and offline reload retain no quote or wallet state; unrelated storage is preserved"
+  ],
+  "scope": "Disposable Edge; market/quote responses are fixtures; no wallet/signing/spending"
+}
