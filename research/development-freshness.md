@@ -1,3 +1,17 @@
+# Identity/chat recovery verification, November 4, 2026
+
+New identities derive separate signing/encryption keys from a 24-word phrase.
+Encrypted archives accept profile, contacts and authenticated text chat only;
+restoration produces staged data without overwriting an active account. Monetary
+records and payment messages are rejected. This does not recover legacy keys,
+restore funds or connect the product Create/Restore flow.
+
+Seven Node groups, one browser group restoring into two fresh offline contexts,
+and seven detected guard alterations passed. Independent HKDF/OpenSSL comparison
+checks derivation; each restored context preserves its existing account. Source
+hashes and pinned bundle provenance accompany the reports. Device exclusivity,
+financial recovery, legacy migration and external cryptographic audit remain open.
+
 # Wallet and market revision review, November 4, 2026
 
 Selected perpetual markets load public candles on opening, with a faint opposing-L

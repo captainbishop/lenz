@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-04T15:24:55.019Z",
+  "passed": 1,
+  "sources": {
+    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
+    "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/identity-recovery-browser.test.cjs": "cb3bcfda06fc4631ab378a12aced3168ea174d8996171db9c0572bad04e33e61"
+  },
+  "evidence": {
+    "freshBrowserRestore": true,
+    "twoOfflineCopies": true,
+    "historicalDecryption": true,
+    "existingIdentityUnchanged": true,
+    "noRestoreNetworkRequests": true,
+    "activeKeysNonextractable": true
+  },
+  "scope": "Disposable Edge contexts; original source context closed before restoration. Staged chat-only recovery, no active restore, financial state, production onboarding or device migration."
+}

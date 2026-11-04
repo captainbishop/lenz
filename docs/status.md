@@ -5,6 +5,11 @@ enforcement, offline browser signing, encrypted handoff and owner recovery work.
 It is not a connected funding feature or private settlement route. The build
 priority is the complete existing-wallet journey; Networks is in wallet settings.
 
+[Identity/chat recovery](identity-recovery.md) now has a separate module for new
+phrase-derived identities and encrypted text-chat archives. Restore returns staged
+data without changing an active account. Existing accounts, money and product
+Create/Restore remain unconnected.
+
 Lenz remains a prototype. Encrypted chat, bounded testnet offline payments and
 public market reads are implemented. [Browser wallet connection](wallet-connection.md)
 now supplies explicit Ethereum/Arbitrum/Base account access, native balance
