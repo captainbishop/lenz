@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-04T17:33:17.250Z",
+  "nodeTests": 9,
+  "browserGroups": 7,
+  "guardAlterations": [
+    "trusted-old-id",
+    "old-link-signature",
+    "new-link-signature",
+    "archive-signature",
+    "message-signature",
+    "phrase-successor-binding",
+    "financial-payloads",
+    "financial-fields",
+    "duplicate-messages",
+    "caller-snapshot",
+    "encryption-key-pair",
+    "per-message-key"
+  ],
+  "sources": {
+    "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
+    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
+    "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
+    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/legacy-recovery.test.mjs": "ec69c12fe4d1100224ddf05ce5428e5720cacd5a2e6abc36da30beb6f0c5f6e0",
+    "web/legacy-recovery-browser.test.cjs": "66754bcb7b8be4aea691ced2efda4695cb33afbfe7ac320707bb3419d7a25927",
+    "web/verify-legacy-recovery.mjs": "f33a632e775400260ec6ce1974ab88b995b889ad8ac27ed049424f413770a294"
+  },
+  "scope": "Existing-account chat archives and read-only recovery UI. Independent OpenSSL archive edits, later-message confidentiality, successor signatures and old-key financial authority checked. No funds restoration, active migration or external cryptographic audit."
+}

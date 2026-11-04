@@ -38,19 +38,19 @@
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "da77e618ebea2a87eb7c54582fe4871ce72ad1df8013db35aa2652e3324cdd18",
+    "web/public/profile-panels.js": "861cf5d533d19da0e664789ca0967794706baaa57f2da57b379ba4b0f2fb7963",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
     "web/public/receive-packet.js": "0cef5917c79297ddd3384b5c597868352c137f27b94cfbc9a2036b3c43965ff6",
-    "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
+    "web/public/save-offline.js": "1f60b89e509a65b0699227c19fbcc2609b674301b5b96a91e8779d8c6c29ea15",
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
     "web/public/wallet-feedback.js": "f715a5d91bfef8deb6c097cec04dee2cb0e7b655e7a93fbe7d31383a687fc5b5",
     "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221",
     "web/render-preview-stories.cjs": "c77a06202bf0c8a242e276bf33e9747126ab29d7606b03ab422af9036c9013c1",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
     "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
-    "web/preview-flow-results.json": "2b1d1a2ba7a4d8e3f000ec35e44906c11b4c2aed9e498d609ec25801d0bfd385",
+    "web/preview-flow-results.json": "3c1291723535d6424d096c813ab9edaff92b66e8548c0d6f7bce1d9839405ecf",
     "web/lenz-id-browser-results.json": "a47665bf1793234ab6ec874372b9b2204bc11f86b502f146fe146e91d61b94da",
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
@@ -135,7 +135,7 @@
           "id": "settled",
           "start": 13.5,
           "duration": 4.5,
-          "title": "Now it’s confirmed."
+          "title": "Now it\u2019s confirmed."
         }
       ],
       "sceneHashes": [
@@ -174,7 +174,7 @@
           "id": "connected",
           "start": 9,
           "duration": 4.5,
-          "title": "You’re ready to talk."
+          "title": "You\u2019re ready to talk."
         }
       ],
       "sceneHashes": [
@@ -263,7 +263,7 @@
           "id": "settled",
           "start": 13.5,
           "duration": 4.5,
-          "title": "Now it’s confirmed."
+          "title": "Now it\u2019s confirmed."
         }
       ],
       "sceneHashes": [
@@ -302,7 +302,7 @@
           "id": "connected",
           "start": 9,
           "duration": 4.5,
-          "title": "You’re ready to talk."
+          "title": "You\u2019re ready to talk."
         }
       ],
       "sceneHashes": [
@@ -319,5 +319,5 @@
   "apiRequests": 0,
   "errors": [],
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
-  "sourceReview": "web/preview-control-review.json"
+  "sourceReview": "web/preview-recovery-review.json"
 }

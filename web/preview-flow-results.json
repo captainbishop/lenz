@@ -193,12 +193,12 @@
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "da77e618ebea2a87eb7c54582fe4871ce72ad1df8013db35aa2652e3324cdd18",
+    "web/public/profile-panels.js": "861cf5d533d19da0e664789ca0967794706baaa57f2da57b379ba4b0f2fb7963",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
     "web/public/receive-packet.js": "0cef5917c79297ddd3384b5c597868352c137f27b94cfbc9a2036b3c43965ff6",
-    "web/public/save-offline.js": "81e20694272689acecc0e67e0f6f83e83a7f2f2332c65165cec5a4d4b7dc8c20",
+    "web/public/save-offline.js": "1f60b89e509a65b0699227c19fbcc2609b674301b5b96a91e8779d8c6c29ea15",
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
     "web/public/wallet-feedback.js": "f715a5d91bfef8deb6c097cec04dee2cb0e7b655e7a93fbe7d31383a687fc5b5",
     "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221"
@@ -302,6 +302,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-04T17:00:39.391Z",
+  "reframedAt": "2026-11-04T17:29:07.254Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

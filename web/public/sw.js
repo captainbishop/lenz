@@ -1,4 +1,4 @@
-// Preview recording revision: 35d97a9da10dcaf3e1777b803242b39f6167b735af10a19db83cf6587cbf325d
+// Preview recording revision: ec2fece668f679835f9124be16c09300ae6d422c87295bb60f94326ac9d00667
 // Market shell revision: form-controls-20261104-2
 importScripts('/media-range.js');
 const CACHE = 'proof-u-web-demo-v1';
@@ -7,6 +7,8 @@ const PATHS = ['/workspace-layout.css', './previews/timelines.json', './media-ra
 // assets and wallet storage; the explicit prepare action still loads the full demo.
 const BRAND_SHELL = ['./previews/timelines.json', './media-range.js', './', './index.html', './home.css', './home.js', './home-interactive.js', './home-videos.js', './home-defi.js', './home-defi.css', './routes.html', './routes.css', './routes.js', './route-draft-ui.js', './route-draft-form.js', './defi-route-drafts.js', './defi-route-quote.js', './defi-route-plan.js', './chat-store.js', './peer-crypto.js', './profile-display.js', './markets.html', './markets.css', './markets.js', './oracle-feeds.js', './oracle-prices-ui.js', './oracle-prices.css', './market-live.js', './pool-price.js', './pool-price-ui.js', './theme-icon.js', './perp-terminal.js', './market-tape.js', './terminal.css', './defi-surfaces.css', './defi-surfaces.js', './evm-markets.js', './market-snapshot.js', './market-quote.js', './market-quote-ui.js', './defi-catalog.js', './app-theme.js', './previews/defi-light.mp4', './previews/defi-light.webp', './previews/defi-dark.mp4', './previews/defi-dark.webp', './previews/chat-light.mp4', './previews/chat-light.webp', './previews/chat-dark.mp4', './previews/chat-dark.webp', './previews/wallet-light.mp4', './previews/wallet-light.webp', './previews/wallet-dark.mp4', './previews/wallet-dark.webp', './previews/profile-light.mp4', './previews/profile-light.webp', './previews/profile-dark.mp4', './previews/profile-dark.webp', './payment-demo.html', './manifest.webmanifest', './brand/mark.svg', './brand/mark-reverse.svg', './brand/mark-black.svg', './brand/mark-white.svg', './brand/icon.svg', './brand/icon-32.png', './brand/icon-180.png', './brand/icon-192.png', './brand/icon-512.png', './brand/icon-1024.png', './brand/logo.svg', './brand/logo-reverse.svg', './brand/logo.png', './brand/brand-card.svg', './brand/brand-card.png', './brand/index.html', './brand/preview.css'];
 PATHS.push('./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
+const RECOVERY_PATHS=['./recovery.html','./recovery.css','./recovery-ui.js','./recovery-service.js','./identity-recovery.js','./legacy-recovery.js','./evm-vendor/identity-recovery.js','./save-offline.js'];
+PATHS.push(...RECOVERY_PATHS);BRAND_SHELL.push(...RECOVERY_PATHS);
 BRAND_SHELL.push('./workspace-layout.css','./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
 self.addEventListener('install', event => event.waitUntil((async () => {
   // Refresh cached document/worker policies while retaining already prepared proof assets.

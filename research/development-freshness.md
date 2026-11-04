@@ -1,3 +1,24 @@
+# Existing-account chat backup verification, November 4, 2026
+
+[Chat backups](../docs/legacy-chat-backups.md) prepare encrypted text history
+from existing nonextractable identities and open it in a separate read-only
+view. Backup creation checks saved phrase words; opening the downloaded file
+verifies its contents. Per-message keys preserve original signed ciphertext
+without granting access to later messages in the same old conversation.
+
+Nine Node tests, seven browser groups and twelve altered guards pass. Two fresh
+offline Edge contexts restore after closing the source context. Tests preserve
+existing keys and financial records, reject invalid archives, discard stale
+file reads and clear visible secrets on dismissal. Light/dark phone and desktop
+layouts were inspected. The wallet passes six browser groups, wallet actions
+seven, form controls six and cache upgrades two.
+
+The first confidentiality regression reproduced decryption of a later message
+using an archived static shared secret. Packet-specific keys close that path.
+The view does not install successor keys, change contacts or restore funds.
+Multiple copies can derive the same successor; old-key revocation, financial
+reconciliation and physical-device compatibility are outside these checks.
+
 # Form controls and market picker verification, November 4, 2026
 
 Themed choice menus retain native values and validation across Markets, Drafts,

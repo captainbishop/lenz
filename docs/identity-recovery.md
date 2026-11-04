@@ -55,10 +55,11 @@ liability reconciliation and spending epochs before installing these keys.
 Two restored copies can both sign chat messages. No single-device exclusivity
 or safe payment recovery is claimed.
 
-Existing identities cannot be made recoverable with a newly generated phrase.
-Migration still needs authorization by the old key, old-message re-encryption,
-contact continuity and treatment of outstanding financial obligations. The module
-rejects an archive whose keys differ from those derived from the supplied phrase.
+A new phrase cannot recreate an existing identity's nonextractable keys. The
+separate [existing-account backup](legacy-chat-backups.md) preserves signed text
+history with per-message keys and an old-key-authorized successor link. Its
+viewer reads history without installing that successor. This identity module
+rejects an archive whose keys differ from the supplied phrase's derived keys.
 
 ## Verification
 

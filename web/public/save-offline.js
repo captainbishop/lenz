@@ -1,7 +1,7 @@
 export async function saveOffline() {
   if (!('serviceWorker' in navigator)) throw new Error('Offline saving needs a browser with service-worker support.');
   let worker;
-  const scopes=['/chat.html','/money.html','/swap-tools.html'];
+  const scopes=['/chat.html','/money.html','/swap-tools.html','/recovery.html'];
   if(location.pathname==='/wallet-lab.html')scopes.push('/wallet-lab.html');
   for (const scope of scopes) {
     const registration = await navigator.serviceWorker.register('/chat-sw.js', { scope });
