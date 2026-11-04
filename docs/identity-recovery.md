@@ -1,10 +1,11 @@
 # Identity and chat recovery
 
-New identity recovery has a staged implementation. A generated 24-word Lenz
-phrase recreates the same P-256 signing and encryption keys. An encrypted archive
-can carry the profile, contacts and authenticated text messages. Neither operation
-installs an account or changes browser storage. The existing onboarding flow and
-existing nonextractable identities are unchanged.
+A generated 24-word Lenz phrase recreates the same P-256 signing and encryption
+keys. An encrypted archive can carry the profile, contacts and authenticated text
+messages. The derivation module stages these results without writing to storage.
+The [chat restore flow](legacy-chat-backups.md) can install a signed successor
+from an existing-account backup into an empty browser. Ordinary name-based
+onboarding continues to create device-bound identities.
 
 The phrase is a Lenz recovery secret. Never enter an existing wallet's seed phrase
 into Lenz. Wallet connection keeps that wallet's signing keys with its provider.
@@ -50,15 +51,16 @@ interface. The caller receives a staged result marked `chat-only` and
 Payment messages, vaults, balances, reservations and other financial fields are
 rejected. The module does not silently drop them. Restored signing keys still
 have cryptographic authority wherever that identity was previously authorized;
-the return marker is not a spending lock. Product restoration must enforce
-liability reconciliation and spending epochs before installing these keys.
+the return marker is not a cryptographic spending lock. Product installation
+accepts only the separate signed successor format and applies chat-only access
+checks. It does not install a standalone archive as a financial account.
 Two restored copies can both sign chat messages. No single-device exclusivity
 or safe payment recovery is claimed.
 
 A new phrase cannot recreate an existing identity's nonextractable keys. The
 separate [existing-account backup](legacy-chat-backups.md) preserves signed text
 history with per-message keys and an old-key-authorized successor link. Its
-viewer reads history without installing that successor. This identity module
+restore flow installs that successor only into an empty account. This identity module
 rejects an archive whose keys differ from the supplied phrase's derived keys.
 
 ## Verification
@@ -75,5 +77,5 @@ The [implementation](../web/public/identity-recovery.js) uses the
 version was installed. Review covers malformed archives, altered identities,
 wrong secrets, signatures, duplicated messages, field substitution and caller
 mutation. It does not constitute an external cryptographic audit or iPhone test.
-Product Create/Restore, backup confirmation, encrypted financial vault recovery,
-legacy migration and revocation remain active requirements.
+The product restores chat with backup confirmation and signed contact updates.
+Encrypted financial-vault recovery and identity revocation are outside this format.

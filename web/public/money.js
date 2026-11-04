@@ -1,5 +1,6 @@
 import { createIdentity } from './peer-crypto.js';
 import { readState, updateState } from './chat-store.js';
+import { isRecoveredChat,isRecoveredContact } from './chat-access.js';
 import { mountProfilePanels } from './profile-panels.js';
 import { setupProfile } from './profile-ui.js';
 import { renderProfile, setupContacts } from './contact-ui.js';
@@ -38,7 +39,7 @@ async function render() {
   for (const contact of state.contacts) {
     const row = document.createElement('div'), avatar = document.createElement('span'), button = document.createElement('button');
     row.className = 'person'; avatar.className = 'avatar'; paintAvatar(avatar, contact);
-    button.textContent = contact.name; button.type = 'button'; button.onclick = () => openNearSend(contact.id);
+    button.textContent = contact.name; button.type = 'button'; button.disabled=isRecoveredChat(state.identity)||isRecoveredContact(state,contact.id); button.onclick = () => openNearSend(contact.id);
     row.append(avatar, button); people.append(row);
   }
 }

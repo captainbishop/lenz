@@ -4,7 +4,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{execFileSync}=require('node:child_process');
 const {securityHeaders}=require('./security-policy.mjs');
 const previous='3b683eea721b8e3f899b9f41c74eb417d5aef322';
-const old=new Map(['nostr-socket.js','rhea-wallet.js','profile-panels.js','chat.css','money.css','near-wallet.css','carrier-client.js','delivery-mode.js','carrier-ui.js','chat.html','money.html','money.js','chat-sw.js','chat.js','receive-packet.js','near-payment-status.js','near-chat.js','near-wallet.js','wallet-feedback.js','chat-layout.css'].map(f=>['/'+f,execFileSync('git',['show',previous+':web/public/'+f],{windowsHide:true})]));
+const old=new Map(['peer-crypto.js','near-protocol.js','near-payment-service.js','contact-ui.js','nostr-socket.js','rhea-wallet.js','profile-panels.js','chat.css','money.css','near-wallet.css','carrier-client.js','delivery-mode.js','carrier-ui.js','chat.html','money.html','money.js','chat-sw.js','chat.js','receive-packet.js','near-payment-status.js','near-chat.js','near-wallet.js','wallet-feedback.js','chat-layout.css'].map(f=>['/'+f,execFileSync('git',['show',previous+':web/public/'+f],{windowsHide:true})]));
 let modern=false,fail=false,api=0;
 const server=http.createServer(async(req,res)=>{try{
   const file=new URL(req.url,'http://localhost').pathname;
@@ -45,7 +45,7 @@ const server=http.createServer(async(req,res)=>{try{
     await context.setOffline(true);assert((await p.reload()).fromServiceWorker());await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
     const expectedCache=(await fs.readFile(path.join(__dirname,'public/chat-sw.js'),'utf8')).match(/const CACHE = '([^']+)'/)[1];
     const cached=await p.evaluate(async key=>{const match=await(await caches.open(key)).match('/nostr-socket.js');return match?await match.text():null;},expectedCache);
-    for(const file of ['evm-wallet.js','evm-wallet-ui.js'])assert.equal(await p.evaluate(async({key,file})=>{const match=await(await caches.open(key)).match('/'+file);return match?await match.text():null;},{key:expectedCache,file}),await fs.readFile(path.join(__dirname,'public',file),'utf8'));
+    for(const file of ['evm-wallet.js','evm-wallet-ui.js','chat-access.js','chat-restore.js','contact-recovery.js'])assert.equal(await p.evaluate(async({key,file})=>{const match=await(await caches.open(key)).match('/'+file);return match?await match.text():null;},{key:expectedCache,file}),await fs.readFile(path.join(__dirname,'public',file),'utf8'));
     assert.equal(cached,await fs.readFile(path.join(__dirname,'public/nostr-socket.js'),'utf8'));assert.equal(await snapshot(),before);assert.equal(await p.locator('#chat-balance').innerText(),'0 tUSD');assert.equal(api,0);
     console.log('PASS successful cache update loads relay cancellation protection offline and preserves identity, encrypted vault and reservation');
     await fs.writeFile(path.join(__dirname,'near-payment-cache-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:2,failed:0,previous,apiRequests:api,scope:'Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request.'},null,2)+'\n');

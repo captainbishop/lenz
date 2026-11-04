@@ -1,4 +1,4 @@
-// Preview recording revision: ec2fece668f679835f9124be16c09300ae6d422c87295bb60f94326ac9d00667
+// Preview recording revision: 2e49f610af32932c6ecbf3da2cd0104b5e4605b817167a17cd1afaa8f8193f54
 // Market shell revision: form-controls-20261104-2
 importScripts('/media-range.js');
 const CACHE = 'proof-u-web-demo-v1';
@@ -9,6 +9,7 @@ const BRAND_SHELL = ['./previews/timelines.json', './media-range.js', './', './i
 PATHS.push('./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
 const RECOVERY_PATHS=['./recovery.html','./recovery.css','./recovery-ui.js','./recovery-service.js','./identity-recovery.js','./legacy-recovery.js','./evm-vendor/identity-recovery.js','./save-offline.js'];
 PATHS.push(...RECOVERY_PATHS);BRAND_SHELL.push(...RECOVERY_PATHS);
+PATHS.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');BRAND_SHELL.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');
 BRAND_SHELL.push('./workspace-layout.css','./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
 self.addEventListener('install', event => event.waitUntil((async () => {
   // Refresh cached document/worker policies while retaining already prepared proof assets.

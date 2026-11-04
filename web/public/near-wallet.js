@@ -9,11 +9,12 @@ import { deliveryMode, requestAutomaticDelivery } from './delivery-mode.js';
 import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, deliveryAcknowledged, prepareDeliveryReceipt } from './delivery-receipts.js';
 import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits, transferTerms } from './near-protocol.js';
+import {isRecoveredChat,isRecoveredContact} from './chat-access.js';
 
 const $ = selector => document.querySelector(selector);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if(text !== undefined) n.textContent = text; if(cls) n.className = cls; return n; };
 function amountLabel(value, suffix = '') { const label=el('strong'); label.append(walletAmount(el('span'),displayUnits(value)),document.createTextNode(' tUSD'+suffix)); return label; }
-let config = { contract: null, ready: false }, currentPacket = null, selectedFile = null, run;
+let config = { contract: null, ready: false }, currentPacket = null, selectedFile = null, run, paymentRestricted=false;
 async function api(route, data) {
   const response = await fetch('/api/testnet/' + route, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: AbortSignal.timeout(90000) });
   const result = await response.json(); if (!response.ok) throw new Error(result.error ?? 'NEAR could not be reached. Your signed payment is still saved.'); return result;
@@ -24,7 +25,7 @@ function download(packet, name = 'payment') {
 }
 function notice(text) { $('#near-feedback').textContent = text; }
 function paymentConnection() {
-  document.querySelectorAll('[data-near-online]').forEach(button => { button.disabled = !navigator.onLine || button.dataset.nearBusy === 'true' || !config.ready; });
+  document.querySelectorAll('[data-near-online]').forEach(button => { button.disabled = paymentRestricted || !navigator.onLine || button.dataset.nearBusy === 'true' || !config.ready; });
 }
 function linkReceipt(hash) {
   const a = el('a','View confirmation ↗'); a.href = 'https://testnet.nearblocks.io/txns/' + encodeURIComponent(hash); a.target='_blank'; a.rel='noopener noreferrer'; return a;
@@ -87,23 +88,31 @@ export function mountNearWallet({ action, status }) {
   addEventListener('online',connection);addEventListener('offline',connection);
 }
 function walletDelivery() {
+  if(paymentRestricted){$('#near-connection').textContent='Chat restored · Offline funds not restored.';return;}
   const mode=deliveryMode($('#near-recipient').value);
   $('#near-connection').textContent=config.contract&&config.ready?(mode==='nearby'?'Nearby · connected to '+$('#near-recipient').selectedOptions[0].textContent+' · keep Lenz open':mode==='automatic'?(navigator.onLine?'Automatic delivery · keep Lenz open':'Offline · sends when connected. File sharing is still available.'):(navigator.onLine?'Ready for offline payments.':'Offline · share payments by file.')):'Test money is not available right now.';
   $('#near-send-delivery').textContent=mode==='nearby'?'Sends directly nearby. Payment confirmation happens separately.':mode==='automatic'?'Saved for delivery. You can also share it from Payments.':'Share the payment with your recipient.';
   $('#near-send-form button[type=submit]').textContent=mode!=='file'?'Send payment':'Prepare payment';
 }
-export function openNearSend(id='') { if(!config.contract){notice('The NEAR contract is not connected yet.');return;}$('#near-send-form').reset();$('#near-recipient').value=id;$('#near-send-dialog').showModal();walletDelivery(); }
+export function openNearSend(id='') { if(paymentRestricted){notice('Your recovered account is open for chat.');return;}if(!config.contract){notice('The NEAR contract is not connected yet.');return;}$('#near-send-form').reset();$('#near-recipient').value=id;$('#near-send-dialog').showModal();walletDelivery(); }
 export async function loadNearConfig() {
   const response=await fetch('/near-config.json'); if(!response.ok)throw new Error('Testnet configuration is unavailable.');config=await response.json();
   await loadRheaConfig();
 }
 export async function renderNearWallet(state) {
+  paymentRestricted=isRecoveredChat(state.identity);
   const enabled=!!config.contract && config.ready;
   const recipient=$('#near-recipient').value;
   $('#near-fund').disabled=!enabled;$('#near-send').disabled=!enabled;$('#near-refresh').disabled=!enabled||!navigator.onLine;
-  $('#near-recipient').replaceChildren(new Option('Choose a person',''));for(const c of state.contacts)$('#near-recipient').append(new Option(c.name,c.id));
+  $('#near-recipient').replaceChildren(new Option('Choose a person',''));for(const c of state.contacts){const option=new Option(c.name,c.id);option.disabled=isRecoveredContact(state,c.id);$('#near-recipient').append(option);}
   if(state.contacts.some(c=>c.id===recipient))$('#near-recipient').value=recipient;
   walletDelivery();
+  if(isRecoveredChat(state.identity)){
+    for(const id of ['near-fund','near-send','near-receive','near-refresh'])$('#'+id).disabled=true;
+    for(const id of ['near-total','near-confirmed','near-pending','near-reserved'])if($('#'+id))walletAmount($('#'+id),'—');
+    $('#near-payments').replaceChildren();$('#near-empty').hidden=false;$('#near-empty').textContent='Payment records stay on the original device.';
+    walletAmount($('#near-balance-caption'),'Chat restored · Offline funds not restored.');return;
+  }
   if(!state.identity || !enabled)return;
   const vault=await readNearVault(state,config.contract), ledger=await nearLedger(vault), owner=compressed(state.identity.profile.signingPublic);
   await renderRheaWallet(vault,state.identity);

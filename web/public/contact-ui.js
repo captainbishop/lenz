@@ -36,22 +36,24 @@ export async function renderProfile(profile) {
 }
 
 export function setupContacts({ action, status, select, selectExisting = () => false }) {
-  let reviewed = null, stream = null, cameraSession = 0, timer = null;
+  let reviewed = null, reviewedRecovery=null, revision=0, stream = null, cameraSession = 0, timer = null;
   function feedback(text, error = false) { $('#contact-feedback').textContent = text; $('#contact-feedback').className = error ? 'error' : 'quiet'; }
   function resetReview() {
+    revision++;reviewedRecovery=null;$('#contact-label').disabled=false;
     reviewed = null; $('#contact-review').hidden = true; $('#verified').checked = false; $('#confirm-contact').disabled = true;
   }
   function stopCamera() {
     cameraSession++; clearTimeout(timer); stream?.getTracks().forEach(track => track.stop()); stream = null;
     $('#contact-camera').srcObject = null; $('#camera-panel').hidden = true; $('#scan-contact').disabled = false;
   }
-  async function review(profile) {
+  async function review(profile,update=false,expectedRevision=revision) {
     const state = await readState();
+    if(expectedRevision!==revision)return false;
     if (!state.identity) throw new Error('Choose your name first.');
     if (profile.id === state.identity.profile.id) throw new Error('This is your own Lenz ID.');
     const existing = state.contacts.find(p => p.id === profile.id);
-    if (existing && selectExisting()) { await select(existing.id); $('#add-contact').close(); return; }
-    if (existing && existing.name === profile.name && (existing.avatar ?? 'moon') === (profile.avatar ?? 'moon') && existing.photo === profile.photo) throw new Error('This person is already in your contacts.');
+    if (existing && selectExisting()&&!update) { await select(existing.id); $('#add-contact').close(); return; }
+    if (existing && !update && existing.name === profile.name && (existing.avatar ?? 'moon') === (profile.avatar ?? 'moon') && existing.photo === profile.photo) throw new Error('This person is already in your contacts.');
     reviewed = profile; $('#contact-name').textContent = profile.name; $('#contact-label').value = profile.name;
     paintAvatar($('#contact-avatar'), profile); $('#contact-code').textContent = safetyCode(profile);
     $('#confirm-contact').textContent = existing ? 'Update contact' : 'Add contact';
@@ -60,8 +62,23 @@ export function setupContacts({ action, status, select, selectExisting = () => f
       ? 'You already have someone with this name. Confirm who shared this new ID.'
       : 'Confirm this ID with the person before adding them.');
     $('#verified').focus();
+    return true;
   }
-  $('#show-card').onclick = () => { $('#share-feedback').textContent = ''; $('#share-contact').showModal(); $('#share-contact').scrollTop = 0; };
+  async function reviewText(text,own){
+    let link;try{if(text.trimStart().startsWith('{')){const value=JSON.parse(text);if(value.type==='lenz/chat-recovery-link/v1')link=value;}}catch{}
+    if(link){const result=await(await import('./contact-recovery.js')).reviewContactRecovery(link);if(own!==revision)return;
+      if(!await review(result.link.to,true,own))return;
+      reviewedRecovery=result.link;$('#contact-label').value=result.previousName;$('#contact-label').disabled=true;$('#confirm-contact').textContent='Use updated ID';
+      feedback(`Signed update for ${result.previousName}. Confirm it with them. This enables chat; the earlier ID and payment records stay saved.`);
+    }else{const profile=await decodeContact(text);if(own===revision)await review(profile,false,own);}
+  }
+  const shareUpdate=document.createElement('button');shareUpdate.id='share-recovery-link';shareUpdate.type='button';shareUpdate.className='secondary';shareUpdate.textContent='Save updated ID';shareUpdate.hidden=true;$('#share-contact .dialog-actions').after(shareUpdate);
+  $('#show-card').onclick = () => action(async()=>{const state=await readState();shareUpdate.hidden=!state.recoveredChat;$('#share-feedback').textContent=state.recoveredChat?'Share the signed update with contacts who know your earlier ID.':'';$('#share-contact').showModal();$('#share-contact').scrollTop=0;});
+  shareUpdate.onclick=()=>action(async()=>{const state=await readState();if(!state.recoveredChat)return;
+    const link=await(await import('./legacy-recovery.js')).validateRecoveryLink(state.recoveredChat.link,state.recoveredChat.sourceId);
+    if(link.to.id!==state.identity.profile.id)throw Error('The saved update does not match this account.');
+    download(new Blob([JSON.stringify(link)],{type:'application/json'}),'lenz-updated-id.json');$('#share-feedback').textContent='Signed ID update downloaded.';
+  });
   $('#save-qr').onclick = () => { if (cardFile) download(cardFile, cardFile.name); };
   async function copyId() {
     try { await navigator.clipboard.writeText($('#my-lenz-id').value); $('#share-feedback').textContent = 'Lenz ID copied.'; }
@@ -83,17 +100,19 @@ export function setupContacts({ action, status, select, selectExisting = () => f
   };
   for (const button of document.querySelectorAll('[data-close]')) button.onclick = () => document.getElementById(button.dataset.close).close();
   $('#add-contact').addEventListener('close', () => { stopCamera(); resetReview(); });
-  $('#contact-file').onchange = () => action(async () => {
-    stopCamera(); resetReview(); const file = $('#contact-file').files[0]; if (!file) return;
-    feedback('Reading this card on your device…'); await review(await readContactFile(file));
-  });
+  $('#contact-file').onchange = () => {stopCamera();resetReview();const own=revision,file=$('#contact-file').files[0];return action(async () => {
+    if(!file)return;feedback('Reading this card on your device…');
+    if(!file.type.startsWith('image/')){if(file.size>65536)throw Error('This ID file is too large.');await reviewText(await file.text(),own);}
+    else{const profile=await readContactFile(file);if(own===revision)await review(profile,false,own);}
+  });};
   $('#review-contact').onclick = () => action(async () => {
-    stopCamera(); resetReview(); await review(await decodeContact($('#contact-card').value));
+    stopCamera(); resetReview(); await reviewText($('#contact-card').value,revision);
   });
   $('#contact-card').oninput = resetReview;
   $('#verified').onchange = () => { $('#confirm-contact').disabled = !reviewed || !$('#verified').checked; };
   $('#confirm-contact').onclick = () => action(async () => {
     if (!reviewed || !$('#verified').checked) throw new Error('Confirm who shared this ID first.');
+    if(reviewedRecovery){const id=await(await import('./contact-recovery.js')).acceptContactRecovery(reviewedRecovery);await select(id);$('#add-contact').close();status('Updated chat ID saved. Earlier messages and payments are unchanged.');return;}
     const profile = {...structuredClone(reviewed),name:$('#contact-label').value.trim() || reviewed.name};
     await updateState(state => {
       const index = state.contacts.findIndex(p => p.id === profile.id);

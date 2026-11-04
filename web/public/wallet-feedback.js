@@ -5,6 +5,7 @@ export function walletError(error) {
   if(error?.errors) for(const cause of error.errors) console.warn('Lenz payment diagnostic:',cause?.message??String(cause));
   if(error?.cause) console.warn('Lenz payment diagnostic:',error.cause?.message??String(error.cause));
   if(/Confirmation is uncertain/.test(text)) return text;
+  if(/recovered account|contact is available for chat/i.test(text))return text;
   if(/Turn on internet delivery/.test(text))return 'Turn on internet delivery to use carriers, or save the encrypted request to share.';
   if(/No carriers are configured/.test(text))return 'No carriers are configured. Save the encrypted request to share with your contact.';
   if(/contact was removed/.test(text))return 'This contact was removed. Go back and choose again.';

@@ -6,6 +6,7 @@ import { confirmNearPayment, refreshNearPayments } from './near-payment-status.j
 import { deliveryMode } from './delivery-mode.js';
 import { walletError } from './wallet-feedback.js';
 import { deliveryAcknowledged } from './delivery-receipts.js';
+import {isRecoveredChat,isRecoveredContact} from './chat-access.js';
 const $ = s => document.querySelector(s);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; };
 let config = null;
@@ -56,7 +57,8 @@ export function mountChatMoney({ action, status, selected, expose }) {
 export async function renderChatMoney(state, contact) {
   updateChatDelivery();
   $('#chat-wallet').hidden = !state.identity;
-  $('#pay-tusd').disabled = !state.identity || !contact || !chatNearContract();
+  $('#pay-tusd').disabled = !state.identity || !contact || !chatNearContract() || isRecoveredChat(state.identity) || isRecoveredContact(state,contact?.id);
+  if(isRecoveredChat(state.identity)){$('#chat-balance').textContent='Funds not restored';$('#chat-wallet-note').textContent='Your recovered account is open for chat.';return null;}
   if (!state.identity || !chatNearContract()) { $('#chat-balance').textContent = 'Open wallet'; return null; }
   const vault = await readNearVault(state, config.contract), ledger = await nearLedger(vault);
   const owner = compressed(state.identity.profile.signingPublic);

@@ -6,11 +6,32 @@ words and download the encrypted file. Open that file with its phrase to verify
 and read the saved conversations. Saving the page offline permits later offline
 opening and reload. Wallet's Save offline also includes this page.
 
-The viewer does not install an identity, replace current contacts or messages,
-or restore funds. Closing history, switching actions, pressing Escape or hiding
-the page clears its visible phrase and history. Nothing from the archive is
-written to IndexedDB or local storage. Theme preference is stored separately.
+Opening history does not change the account. In an empty browser, **Restore chat**
+installs the authenticated successor after explicit confirmation. An existing
+account can view history but cannot be replaced. Closing history, switching
+actions, pressing Escape or hiding the page clears visible secrets and cancels
+an unconfirmed review. Once a confirmed save starts, it runs to completion.
 JavaScript cannot guarantee erasure of strings or garbage-collected memory.
+
+Restored conversations open in Conversations. Original messages are labelled
+**From backup**, with no delivery receipts or payment actions. A separate AES-GCM
+device key encrypts their text at rest; newer messages use the regular encrypted
+chat store. Installation checks for an empty account inside the same Web Lock
+as the IndexedDB write. Existing identities, contacts, messages and additional
+stored fields all block installation. A failed write leaves the previous state.
+
+Use **Share contact → Save updated ID** to download the dual-signed public update.
+A contact opens it through **Add someone**, reviews it and confirms **Use updated
+ID**. Verification requires their saved earlier contact. Its locally chosen name,
+earlier ID, messages and payment records remain saved. Different successors for
+the same earlier ID are rejected; timestamps do not choose a winner.
+
+A restored account uses its saved phrase for subsequent backups. The file keeps
+the original encrypted archive plus an encrypted snapshot of newer chats. Opening
+both verifies the same successor ID. The combined limit is 500 contacts and 1,000
+text messages, within a 16 MB file. Saving more messages than that does not silently
+truncate a backup: preparation fails. Accepted contact-update records and delivery
+receipts are not included; saved contact profiles and text history are included.
 
 Only contacts and authenticated text messages are included. The preparation
 screen counts excluded payment/trade messages. Financial vaults, reservations,
@@ -46,12 +67,18 @@ File size remains visible. Someone holding the file and phrase can read its
 contents and derive its successor signing/encryption keys. Protect both.
 
 The successor has different signing keys and cannot spend notes owned by the old
-key. A continuity link grants no payment authority. The viewer discards the
-staged successor keys and shows history only. The link does not revoke the old
-identity, choose between competing successor links, automatically update
-contacts, or prove exclusive device ownership. Multiple restored copies can
-use the same successor keys. A prepared backup covers only its captured history;
-it does not recover later messages or an already lost legacy key.
+key. A continuity link grants no payment authority. Installed successors carry a
+chat-only access marker. Application checks reject financial signing, incoming
+payments and encrypted payment-vault access/writes. The payment service also
+rejects recipients learned through chat updates. The wallet displays unavailable
+offline funds and disables their actions; external wallets retain separate keys.
+
+These are application restrictions, not cryptographic revocation. Hostile
+same-origin code can remove metadata or invoke unlocked CryptoKeys directly.
+Neither the marker nor the signed update revokes an old identity or establishes
+exclusive device ownership. Multiple restored copies can use the same successor
+keys. A prepared backup covers only its captured history; it does not recover
+later messages, an already lost legacy key or financial obligations.
 
 ## Verification
 
@@ -67,3 +94,13 @@ closing the source, unchanged existing keys and financial records, stale file
 reads, invalid input, safe text, secret clearing and offline app dependencies. Both themes, phone,
 landscape and enlarged text were inspected. These checks do not establish
 physical-device compatibility or an external cryptographic audit.
+
+Run `node web/verify-chat-restore.mjs` and `node web/chat-restore-browser.test.cjs`
+for installation. [Nine Node tests and thirteen detected guard alterations](../web/chat-restore-verification.json)
+cover empty-state/cancellation races, history tampering, signing policy, valid
+payment rejection, vault access and trusted contact updates. The history AAD
+and signed-link identity checks overlap; neither is claimed as an independently
+necessary guard. [Ten browser groups](../web/chat-restore-browser-results.json)
+exercise offline installation, composer/file exchange, signed contact updates,
+repeat backups, failed writes, real cross-tab locks, stale reviews and a forced
+funding submission. The server receives no financial submissions.

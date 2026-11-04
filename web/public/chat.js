@@ -44,6 +44,7 @@ async function action(operation) {
 }
 async function render() {
   const state = await readState();
+  const recovered=state.recoveredChat?await(await import('./chat-restore.js')).readRecoveredHistory(state):null;
   $('#identity-form').hidden = !!state.identity; $('#my-profile').hidden = !state.identity;
   await renderProfile(state.identity?.profile);
   const list = $('#contact-list'); list.replaceChildren();
@@ -56,11 +57,13 @@ async function render() {
     const copy = element('span', undefined, 'contact-copy'); copy.append(element('strong', contact.name));
     const latest = state.messages.findLast(record => [record.packet.from, record.packet.to].includes(contact.id));
     let preview = 'Start a conversation';
+    if(!latest&&recovered){const earlier=recovered.history.findLast(r=>[r.packet.from,r.packet.to].includes(contact.id));if(earlier)preview=earlier.payload.text;}
     if (latest) {
       const payload = await openMessage(state.identity, contact, latest.packet);
       preview = isNearPayment(payload) ? 'tUSD payment' : isTrade(payload) ? payload.kind === 'trade-payment' ? 'Demo payment card' : 'Demo trade card' : payload.text;
     }
-    copy.append(element('small', preview)); button.append(avatar, copy);
+    const earlier=(state.contactRecoveries??[]).some(link=>link.from.id===contact.id);
+    copy.append(element('small', earlier?'Earlier ID · '+preview:preview)); button.append(avatar, copy);
     button.onclick = () => action(async () => { active = contact.id; showThread = true; }); list.append(button);
   }
   $('#people-empty').hidden = !!list.children.length;
@@ -81,7 +84,12 @@ async function render() {
     messages.append(empty); return;
   }
   const history = state.messages.filter(record => [record.packet.from, record.packet.to].includes(contact.id));
-  if (!history.length) messages.append(element('p', 'Your first message starts here.', 'empty'));
+  const archived=recovered?.history.filter(r=>[r.packet.from,r.packet.to].includes(contact.id))??[];
+  for(const row of archived.slice(-100)){
+    const bubble=element('div',row.payload.text,`bubble${row.packet.from===recovered.sourceProfile.id?' outgoing':''}`);
+    bubble.append(element('small','From backup'));messages.append(bubble);
+  }
+  if (!history.length&&!archived.length) messages.append(element('p', 'Your first message starts here.', 'empty'));
   for (const record of history.slice(-100)) {
     const payload = await openMessage(state.identity, contact, record.packet);
     const outgoing = record.packet.from === state.identity.profile.id;

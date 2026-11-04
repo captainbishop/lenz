@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T17:33:05.254Z",
+  "checkedAt": "2026-11-04T18:17:56.743Z",
   "passed": 7,
   "tests": [
     "backup downloads after phrase checks, excludes payment records and preserves the source account",
@@ -12,17 +12,19 @@
   ],
   "sources": {
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
-    "web/public/recovery-service.js": "1e62dbd20a13d76970fae8891e692d8396a098231cb3eb13b039f4dd6d0f3b5b",
-    "web/public/recovery-ui.js": "f1503da78d305c9315e533341fee11365752fdaf7e2c08dc48eb60c261b1baf2",
-    "web/public/recovery.html": "327b658d7cdac580bb93824c6f8ca58633adf62608d6e439b16c6c2a58695da0",
-    "web/public/recovery.css": "5fa2324c5991c663857f80419812a3bcda36b7519b1eb1b15060d32fe1da94aa",
+    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
+    "web/public/recovery-ui.js": "e52c7ee10f12e86efed6dcc6a39e28a774ef66673977a318bd3941df1181e21f",
+    "web/public/recovery.html": "0f673393108ea0a22598966937f11a674f295d55f8a9f90aa7b165dfa1d6585e",
+    "web/public/recovery.css": "e2c904f91d5a2045aee181662087c12e7662cafb17c1c8faa4a34e5ec2cb0227",
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
-    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/chat-sw.js": "b0cba185303798750b28f1368247b7b8c5860ef839e2052087d4812d1a5bff9d",
-    "web/public/sw.js": "5d8b03c614cb3e68eb5daa4b0cd5495185ffe372c26b899242758aacc850d2cb",
+    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
+    "web/public/chat-sw.js": "2995b68d9965a22a16b479680581ff3e8b3a779236fc14ca90c5b342e0c838c8",
+    "web/public/sw.js": "9b80aa21ce986f919dc91af67e1fc0c564dc8d2a7ee9a6586077090710dcaa40",
     "web/public/save-offline.js": "1f60b89e509a65b0699227c19fbcc2609b674301b5b96a91e8779d8c6c29ea15",
-    "web/legacy-recovery-browser.test.cjs": "66754bcb7b8be4aea691ced2efda4695cb33afbfe7ac320707bb3419d7a25927"
+    "web/legacy-recovery-browser.test.cjs": "d44be4d5b49ff6f584f62b575418feda8557ff7f93797e2e863312e1632c9583"
   },
   "evidence": {
     "sourceContextClosed": true,

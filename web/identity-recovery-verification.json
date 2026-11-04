@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:24:59.856Z",
+  "checkedAt": "2026-11-04T18:12:10.097Z",
   "nodeTests": 7,
   "browserGroups": 1,
   "guardAlterations": [
@@ -14,7 +14,7 @@
   "sources": {
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
-    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
     "web/identity-recovery.test.mjs": "c816ecbdc8a8a3652ae4b8ddb43e0a40baaa2a767c46c599077205f6b7e97fde",
     "web/identity-recovery-browser.test.cjs": "cb3bcfda06fc4631ab378a12aced3168ea174d8996171db9c0572bad04e33e61",
     "web/build-identity-recovery.mjs": "649e432afe8236f85cf5d47e347db0a702615ad647cd335f5ba10746151e7169",

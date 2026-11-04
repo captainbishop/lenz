@@ -1,4 +1,5 @@
 import { assert, bytes, digest, hex, unhex, signValue, randomId, keysAre } from './peer-crypto.js';
+import {requirePaymentAccess} from './chat-access.js';
 
 export const FUND = 'lenz/near-fund/v1', TRANSFER = 'lenz/near-transfer/v1';
 export const emptyNearVault = contract => ({ contract, roots: [], spends: [], outbox: [], receipts: {}, funding: null });
@@ -88,6 +89,7 @@ export async function makeNearPayment(vault, identity, contact, text) {
   return { vault: next, payload: { kind: 'lenz-near-payment-v1', contract: next.contract, root, path } };
 }
 export async function acceptNearPayment(vault, identity, contact, payload) {
+  requirePaymentAccess(identity);
   assert(keysAre(payload, ['kind', 'contract', 'root', 'path']) && payload.kind === 'lenz-near-payment-v1' && payload.contract === vault.contract, 'This payment belongs to another network or contract.');
   assert(Array.isArray(payload.path) && payload.path.length > 0 && payload.path.length <= 16, 'Invalid payment history');
   await checkRoot(payload.root);
@@ -106,11 +108,13 @@ export async function acceptNearPayment(vault, identity, contact, payload) {
 }
 export async function readNearVault(state, contract) {
   if (!state.nearBox) return emptyNearVault(contract);
+  requirePaymentAccess(state.identity);
   const aad = bytes(['lenz/near-vault/v1', state.identity.profile.id]);
   const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unhex(state.nearBox.iv), additionalData: aad }, state.nearKey, unhex(state.nearBox.ciphertext));
   const vault = JSON.parse(new TextDecoder().decode(plain)); assert(vault.contract === contract, 'This wallet belongs to a different testnet contract.'); return vault;
 }
 export async function saveNearVault(state, vault) {
+  requirePaymentAccess(state.identity);
   state.nearKey ??= await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
   const iv = crypto.getRandomValues(new Uint8Array(12)), additionalData = bytes(['lenz/near-vault/v1', state.identity.profile.id]);
   const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData }, state.nearKey, bytes(vault));

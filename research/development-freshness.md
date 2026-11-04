@@ -1,3 +1,35 @@
+# Chat installation and contact continuity, November 4, 2026
+
+[Chat restoration](../docs/legacy-chat-backups.md) installs the signed successor
+and encrypted original history into an empty browser. Normal Conversations can
+exchange new messages; subsequent backups preserve both histories and the same
+successor ID. A signed contact update requires a trusted earlier contact and
+keeps earlier contacts, messages and financial records.
+
+Nine Node tests and thirteen detected guard alterations cover atomic empty-state
+checks, cancellation, encrypted history, trusted updates and application payment
+restrictions. Ten disposable Edge browser groups exercise offline installation,
+file exchange through the composer, repeated backups, actual Web Locks, failed
+IndexedDB writes, occupied-account races, delayed reviews and forced funding.
+Light/dark mobile screenshots were inspected. No financial submission occurred.
+
+The browser pass exposed a text-field rule stretching the consent checkbox and
+a recovery error falling through to the network-error message. Both are corrected.
+Wallet recovery status is visible in the existing connection line; reconnecting
+does not re-enable the payment refresh control. History encryption's identity
+binding overlaps signed-link validation, so the surviving AAD alteration is
+not counted as an independently detected guard.
+
+Contact sharing retains dark text on its white QR card in both themes. The
+wallet's general heading rule had overridden that colour; the existing contrast
+assertion and visual inspection exposed it. The card rule now takes precedence.
+The cache-upgrade fixture loads the historical crypto/payment dependencies
+together, then verifies all three new recovery modules in the replacement cache.
+
+The access marker is application policy. It does not prevent hostile same-origin
+code from using unlocked keys, revoke earlier keys, reconcile financial liabilities
+or establish one-device ownership. Device and external-audit coverage are unchanged.
+
 # Existing-account chat backup verification, November 4, 2026
 
 [Chat backups](../docs/legacy-chat-backups.md) prepare encrypted text history

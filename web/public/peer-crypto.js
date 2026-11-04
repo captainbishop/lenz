@@ -1,6 +1,7 @@
 // Research protocol, version 1. WebCrypto only; no network access or dependencies.
 // Static ECDH does not provide forward secrecy. Routing identities remain visible.
 import { AVATARS, validPhoto } from './profile-display.js';
+import {checkSigningAccess} from './chat-access.js';
 export const CHAT_DOMAIN = 'proof-u/private-conversation/v1';
 const enc = new TextEncoder();
 const dec = new TextDecoder('utf-8', { fatal: true });
@@ -45,6 +46,7 @@ export async function validateProfile(profile) {
 }
 
 export async function signValue(identity, value) {
+  checkSigningAccess(identity,value);
   return hex(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, identity.signingPrivate, bytes(value)));
 }
 export async function verifyValue(publicKey, value, signature) {
