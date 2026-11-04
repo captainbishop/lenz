@@ -19,6 +19,7 @@
 .market-page .search input{font-size:13px;min-height:44px;width:100%}
 .market-page #market-search:focus{outline:none;border-color:var(--ink)}
 .market-page #market-search:focus-visible{outline:none;box-shadow:0 2px 0 var(--ink)}
+.market-page input[inputmode=decimal]:focus,.money-page input[inputmode=decimal]:focus{outline:none;box-shadow:inset 0 -2px 0 var(--ink);border-color:transparent}
 .market-page #market-network{font-size:12px;max-width:145px;min-height:44px}
 .market-page .market-body{margin-top:12px;padding:0;gap:20px;grid-template-columns:180px minmax(0,1fr)}
 .market-page .market-list{max-height:calc(100dvh - 170px)}

@@ -25,7 +25,7 @@ export function mountMarketQuote(panel,row,snapshot){
   const command=el('div',null,'quote-command');
   if(swap){for(const [value,label] of [[50,'0.5%'],[100,'1%'],[300,'3%']]){const option=el('option',label);option.value=String(value);slippage.append(option);}command.append(field('Max price change',slippage));}
   const consent=el('input');consent.type='checkbox';consent.id='quote-public';const disclosure=el('label',null,'quote-consent');disclosure.append(consent,el('span',swap?'Share amount to check price':'Share market to check price'));
-  const submit=el('button','Get estimate ↗','primary');submit.type='submit';submit.id='quote-submit';submit.hidden=swap;
+  const submit=el('button','Check price','primary');submit.type='submit';submit.id='quote-submit';submit.hidden=swap;
   const status=el('p',null,'quote-status');status.id='quote-status';status.setAttribute('role','status');const result=el('div',null,'quote-result');result.id='quote-result';
   command.append(disclosure,submit);form.append(command,status,result);panel.append(form);
   let controller=null,generation=0,current=null,busy=false,estimateTimer=null,nextEstimateAt=0;

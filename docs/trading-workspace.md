@@ -56,7 +56,8 @@ off. **Data settings** holds the pause control; Refresh and Save offline are hid
 while automatic updates are enabled. These intervals add network request time.
 
 The selected price and chart lead the perpetual view. Market statistics and
-unavailable account reads are expandable. Phones use a market selector; search
+unavailable account reads are expandable. Phones use a searchable market picker
+with themed rows, keyboard selection and offline saved-market access; search
 and network filters sit under Data settings. The wallet opens with its offline
 balance and labelled Send/Receive/Add tUSD actions. Confirmed, pending and reserved
 amounts are under Details, whose label flags pending or reserved funds.

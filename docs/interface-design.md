@@ -78,7 +78,12 @@ where they affect the decision.
 Use the faint opposing-L mark and Lenz wordmark behind candle plots, with data
 and price labels above them.
 Refresh controls use the standard circular-arrow SVG with an accessible name.
-Search focus uses an underline without a heavy surrounding rectangle.
+Search and amount-field focus use an underline without a heavy surrounding
+rectangle. The phone market picker uses a searchable dialog in the page theme;
+retain keyboard selection, Escape, focus return and saved-market access offline.
+Small choice menus use the same page colours, a selection tick and underlined
+trigger. Keep checkbox marks plain and keyboard focus visible in ink. Avoid
+native blue option menus and heavy lime focus borders across forms and reviews.
 
 Automatic price updates need no prominent start/refresh control. Keep the pause
 control under Data settings and use accessible icons for theme changes. Reference

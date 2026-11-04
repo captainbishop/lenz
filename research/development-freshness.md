@@ -1,3 +1,21 @@
+# Form controls and market picker verification, November 4, 2026
+
+Themed choice menus retain native values and validation across Markets, Drafts,
+Wallet and Conversations. Searchable phone market selection, underlined fields,
+ink keyboard focus and plain checkbox ticks share the existing page colours.
+
+Six form-control groups and six market-picker groups pass, including keyboard
+navigation, disabled choices, safe labels, responsive positioning, 150% CSS zoom
+and offline reload. The terminal passes seven groups and one stale-reply guard
+alteration; route drafts eleven, DeFi approvals sixteen, market feed lifecycle
+eight, wallet six, wallet actions seven and cache upgrade two. Light/dark
+screenshots were inspected. Physical devices and screen readers were not tested.
+
+The saved preview states were replayed through current sources. All ten cropped
+frames match the previous replay byte for byte; payment receipts and video/poster
+bytes are unchanged. Videos were not rerendered. The source review and hashes are
+in [preview-control-review.json](../web/preview-control-review.json).
+
 # Identity/chat recovery verification, November 4, 2026
 
 New identities derive separate signing/encryption keys from a 24-word phrase.

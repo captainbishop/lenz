@@ -8,6 +8,7 @@ import {creditSurface,poolSurface} from './defi-surfaces.js';
 import {themeIcon} from './theme-icon.js';
 import {liveRead} from './market-live.js';
 import {mountOraclePrices} from './oracle-prices-ui.js';
+import {mountMarketPicker} from './market-picker.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
 const entry=new URLSearchParams(location.search),entryView=entry.get('view'),entryAction=entry.get('action');
 const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
@@ -15,13 +16,13 @@ const liveStorageKey='lenz-live-market-snapshots-v1';
 const oraclePrices=mountOraclePrices($('#oracle-prices'));
 const shape=row=>JSON.stringify([row.id,row.status,row.assets,row.feePips,row.sizeDecimals,row.maxLeverage]);
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
-const selector=el('select');selector.id='market-selector';selector.setAttribute('aria-label','Select market');$('.market-toolbar').insertBefore(selector,$('#market-network'));
+const selector=el('button');selector.id='market-selector';$('.market-toolbar').insertBefore(selector,$('#market-network'));
+const picker=mountMarketPicker(selector,id=>{selected=id;render();});
 $('.market-toolbar').append($('#live-status'),$('#refresh-markets'));$('#data-settings').append($('.read-disclosure'),$('#market-sources'),$('.snapshot-bar'));
 const phoneLayout=matchMedia('(max-width:760px)');
-function placeFilters(){const parent=phoneLayout.matches?$('#data-settings'):$('.market-toolbar');parent.append($('#market-network'),$('.search'));}
+function placeFilters(){const parent=phoneLayout.matches?$('#data-settings'):$('.market-toolbar');parent.append($('#market-network').closest('.lenz-choice')??$('#market-network'),$('.search'));}
 phoneLayout.addEventListener('change',placeFilters);placeFilters();
 $('.market-body').before($('#market-status'));
-selector.onchange=()=>{selected=selector.value;render();};
 const money=value=>'$'+Number(value).toLocaleString(undefined,{maximumFractionDigits:6});
 const age=time=>new Date(time).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
 const state=snapshot=>marketFreshness(snapshot,{saved:saved.has(marketSource(snapshot).key),online:navigator.onLine});
@@ -86,7 +87,7 @@ function render(preserve=false){
   const prices=category==='prices';oraclePrices.show(prices);oraclePrices.filter($('#market-search').value);
   selector.hidden=prices;
   $('#market-network').hidden=prices;$('.market-body').hidden=prices;$('#market-sources').hidden=prices;$('.snapshot-bar').hidden=prices;
-  if(prices){clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
+  if(prices){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
   const before=selected,focused=document.activeElement?.dataset.marketId;
   sourceStatus();const query=$('#market-search').value.trim().toLowerCase();
   const rows=[...data.values()].flatMap(snapshot=>snapshot.rows.map(row=>({row,snapshot}))).filter(({row})=>(category==='all'||row.category===category)&&(!$('#market-network').value||row.chainId===$('#market-network').value)&&`${row.label} ${marketSource({provider:row.marketId,chainId:row.chainId}).name} ${row.category}`.toLowerCase().includes(query));
@@ -94,12 +95,12 @@ function render(preserve=false){
   if(!data.size)$('#market-status').textContent=busy?'Loading…':!navigator.onLine?'No saved markets. Connect to load data.':failures.size?'Could not load markets. Try refreshing.':'Load markets to see prices and pool settings.';
   else $('#market-status').textContent=rows.length?'':'No markets match this search.';
   if(!rows.some(({row})=>row.id===selected))selected=rows[0]?.row.id??null;
-  const listKey=rows.map(({row})=>row.id).join('|');if(selector.dataset.list!==listKey){selector.replaceChildren(...rows.map(({row,snapshot})=>{const option=el('option',row.category==='perpetuals'?row.instrument+' / USD':row.label+' · '+CHAINS[snapshot.chainId].name);option.value=row.id;return option;}));selector.dataset.list=listKey;}selector.value=selected??'';
+  const choices=rows.map(({row,snapshot})=>({id:row.id,label:row.category==='perpetuals'?row.instrument+' / USD':row.label,detail:marketSource(snapshot).name}));picker.update(choices,selected);
   $('#market-rows').replaceChildren(...rows.map(({row,snapshot})=>{
     const button=el('button',undefined,'market-row');button.type='button';button.dataset.marketId=row.id;button.setAttribute('aria-pressed',String(row.id===selected));
     const name=el('span');name.append(el('strong',row.label),el('small',marketSource(snapshot).name));const value=el('span',metric(row),'metric'),rowState=el('span',`${row.status} · ${state(snapshot)}`,'row-state');rowState.dataset.observationProvider=marketSource(snapshot).key;rowState.dataset.rowStatus=row.status;value.append(rowState);
     const arrow=el('span','↗','arrow');arrow.setAttribute('aria-hidden','true');button.append(name,value,arrow);
-    button.onclick=()=>{selected=row.id;selector.value=row.id;for(const sibling of $('#market-rows').children)sibling.setAttribute('aria-pressed',String(sibling===button));details(row,snapshot);if(matchMedia('(max-width:680px)').matches)$('#market-detail').scrollIntoView({block:'start',behavior:'auto'});};return button;
+    button.onclick=()=>{selected=row.id;picker.update(choices,selected);for(const sibling of $('#market-rows').children)sibling.setAttribute('aria-pressed',String(sibling===button));details(row,snapshot);if(matchMedia('(max-width:680px)').matches)$('#market-detail').scrollIntoView({block:'start',behavior:'auto'});};return button;
   }));
   const item=rows.find(({row})=>row.id===selected);if(item){if(preserve&&before===selected&&detailShape===shape(item.row))refreshDetails(item.row,item.snapshot);else details(item.row,item.snapshot);}
   else {clearPerpTerminal();clearMarketQuote();$('#market-detail').classList.remove('perp-terminal');$('#market-detail').replaceChildren(el('h2','Market details'),el('p','Select a market.'));}

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:26:08.613Z",
+  "checkedAt": "2026-11-04T16:22:12.230Z",
   "passed": 5,
   "checks": [
     "fresh page loads markets and current pool prices without a refresh click",
@@ -9,13 +9,13 @@
     "offline reload restores public markets and price arithmetic while checked execution quotes remain unavailable"
   ],
   "synchronousDisplay": {
-    "elapsedMs": 1.2999999523162842,
+    "elapsedMs": 0.9000000953674316,
     "output": "≈ 0.00431208"
   },
   "sourceFiles": {
     "web/public/market-live.js": "c246929777a3c84ab03054b909e61903a1bed7f99271ba25d6bb514bd3ff916c",
-    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
-    "web/public/market-quote-ui.js": "ff466f94089dd61e5da02a8ae92e723c866e6687ee7549ad20ed88d78411657d",
+    "web/public/markets.js": "bf2e9016d358ab71de84c85c44634b4f6a99afae303ce7fb0edaf1bb7dafc0f4",
+    "web/public/market-quote-ui.js": "2b8c4de80440b785fa093889394542233c18412c7e178c715cea063465936226",
     "web/public/pool-price.js": "9f80dd63a66c2f800e28c637e2fe93705a34fdf8f500b03dff1c85846a6360eb",
     "web/public/pool-price-ui.js": "d0f85c4a1d04b7866bdca9973de0411cdbfb4dfd484ffbd1f2655263c97409b7",
     "web/instant-swap-browser.test.cjs": "5a63f42d43394e525fc8252af37f40cd54321bf12f97bf8a791ada07de3eae54"

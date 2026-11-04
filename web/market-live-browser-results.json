@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:25:56.421Z",
+  "checkedAt": "2026-11-04T17:05:40.637Z",
   "passed": 8,
   "checks": [
     "automatic updates retain order inputs while public chart data loads",
@@ -12,11 +12,11 @@
     "hidden pages suspend reads and visible pages resume them"
   ],
   "sourceFiles": {
-    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
+    "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
     "web/public/market-live.js": "c246929777a3c84ab03054b909e61903a1bed7f99271ba25d6bb514bd3ff916c",
-    "web/public/markets.js": "b3ac00d125918a66a2e6d8ec4488b028b3f587b90536f0bbdf0f68e75c0d524e",
+    "web/public/markets.js": "bf2e9016d358ab71de84c85c44634b4f6a99afae303ce7fb0edaf1bb7dafc0f4",
     "web/public/perp-terminal.js": "e0c66e7fe7be3f097b966f0e2886379cf87552d89f8fa54d8f60ff21cd60f01b",
-    "web/public/markets.html": "533f0a2014c059b9c2754fafce3805abba4c590f5de546737a23b30699e039a8",
+    "web/public/markets.html": "d8f0b0458f11cc060f82bf82a6f6f31178750f9e8eb2035097b1a90f347aecfe",
     "web/public/theme-icon.js": "d3b7507e42060ea7e695c4b19439abe3b1ded6cdaba5de3c9fbe449adab2b030",
     "web/market-live-browser.test.cjs": "05332b04cd3ed5c4a5caae59114e5353352717aefd55c9706a1d6e3e01a43256"
   },

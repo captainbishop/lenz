@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:23:33.205Z",
+  "checkedAt": "2026-11-04T17:05:28.397Z",
   "passed": 16,
   "checks": [
     "private preference blocks quotes and both approval paths without a public fallback",
@@ -30,7 +30,7 @@
     "web/public/rhea-wallet.js": "32ec19dca4f4f46492b48e85cc7a75823ee08aab0a93a36847aa44e317b00ac2",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
     "web/public/near-wallet.css": "f2776cae80f1531cf98b0e089b317c69bd2959168290d0896431088da0229150",
-    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/public/chat-sw.js": "2196ff6a6f37e4ff94f2afd45576f91afc9cfd2171377f394eebe51393d1acf6",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
     "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
     "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
