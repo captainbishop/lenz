@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-11-04T21:07:43.952Z",
+  "passed": 22,
+  "checks": [
+    "Cross-provider grouping and candles at 1360px",
+    "Chain filter is usable at 1360px",
+    "Watchlist survives reload at 1360px",
+    "Keyboard candle inspection at 1360px",
+    "Both themes without page overflow at 1360px",
+    "Source failure retains earlier rows at 1360px",
+    "Offline watchlist at 1360px",
+    "Repeated market category changes yield at 1360px",
+    "Out-of-order searches cannot restore old results at 1360px",
+    "Untrusted token metadata never creates HTML at 1360px",
+    "Invalid pasted link leaves previous search usable at 1360px",
+    "Cross-provider grouping and candles at 390px",
+    "Chain filter is usable at 390px",
+    "Watchlist survives reload at 390px",
+    "Keyboard candle inspection at 390px",
+    "Both themes without page overflow at 390px",
+    "Source failure retains earlier rows at 390px",
+    "Offline watchlist at 390px",
+    "Repeated market category changes yield at 390px",
+    "Out-of-order searches cannot restore old results at 390px",
+    "Untrusted token metadata never creates HTML at 390px",
+    "Invalid pasted link leaves previous search usable at 390px"
+  ],
+  "sources": {
+    "web/public/degen-ui.js": "99d56fcbee234fa98c319f8c8e564702dd6f04eb934eddf9aaa081955362c876",
+    "web/public/degen-model.js": "5022e1814f9f31832a630d1685234e7234e73c3dedb620e49545a31f7ef27f14",
+    "web/public/degen-chart.js": "6b5f464f61ead81d6efc01103671fbf65b4124bcbb876ef3a0f37250b25d3961",
+    "web/public/degen.css": "4ea8d680de5f6cce3f97d690487786fabca86849cf1a23cae888dae03d96a7eb",
+    "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
+    "web/public/markets.html": "06605ee91ec962ece2ba3345d23bdd9b20fcd696057953783056595eb8be8a03",
+    "web/public/sw.js": "23277c39276d0e474e4a5b3b9d536fa99a183ef6cd94cef1aab11726b22a993d",
+    "web/public/chat-sw.js": "0fbe5c17021cca1c1e1602af8f588aef7d8b36b6273616895c9e86b81b7f5a59",
+    "web/degen-browser.test.cjs": "86bb42a9d53b923443f5b35167f4a2621a3de0e38e3afae046010caf22f4436d",
+    "integrations/degen-fixtures.mjs": "6b230a4a7820b175e7fbc1d819d97539049bdb5ef8c88a12caaa50b632e97fb2",
+    "integrations/degen-discovery.mjs": "aa9bb1d8e937b061b523b0857a0f5e22ba6b9338cc1939a3c5b5b830cad39298"
+  },
+  "scope": "Disposable Edge fixtures, 1360/390px, light/dark, no user identity or financial requests. Live provider coverage is separate."
+}

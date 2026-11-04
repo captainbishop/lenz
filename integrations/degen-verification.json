@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-11-04T20:43:39.411Z",
+  "tests": 12,
+  "passed": 12,
+  "failed": 0,
+  "guardAlterations": 6,
+  "results": [
+    {
+      "guard": "chain identity",
+      "detected": true
+    },
+    {
+      "guard": "read-only observations",
+      "detected": true
+    },
+    {
+      "guard": "request fields",
+      "detected": true
+    },
+    {
+      "guard": "positive candle prices",
+      "detected": true
+    },
+    {
+      "guard": "candle token identity",
+      "detected": true
+    },
+    {
+      "guard": "same-origin access",
+      "detected": true
+    }
+  ],
+  "sourceHashes": {
+    "web/public/degen-model.js": "5022e1814f9f31832a630d1685234e7234e73c3dedb620e49545a31f7ef27f14",
+    "integrations/degen-discovery.mjs": "aa9bb1d8e937b061b523b0857a0f5e22ba6b9338cc1939a3c5b5b830cad39298",
+    "web/degen-relay.mjs": "2c9ad6b4dcd7e52b3502ef478d4c618545a2e98fd62940ca309fc12630bc2d82",
+    "integrations/degen-discovery.test.mjs": "0856b5edda51c7030fb2a30c4cff1bcaf3398d0fe028ff8f337672b91ef6ceba",
+    "integrations/degen-fixtures.mjs": "6b230a4a7820b175e7fbc1d819d97539049bdb5ef8c88a12caaa50b632e97fb2",
+    "integrations/verify-degen.mjs": "2ffd92e998513cace9e1370e22f2fe79bf8ec6a35f0d73391d7d5bb1516b5998"
+  },
+  "scope": "Synthetic discovery, pool identity, request boundaries and real local HTTP. No financial execution or user account access."
+}

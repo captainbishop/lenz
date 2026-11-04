@@ -12,6 +12,7 @@ PATHS.push(...RECOVERY_PATHS);BRAND_SHELL.push(...RECOVERY_PATHS);
 PATHS.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');BRAND_SHELL.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');
 BRAND_SHELL.push('./workspace-layout.css','./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
 PATHS.push('./account.html','./account.css','./account-ui.js','./account-keys.js','./account-backup.js','./account-sync.js');BRAND_SHELL.push('./account.html','./account.css','./account-ui.js','./account-keys.js','./account-backup.js','./account-sync.js');
+PATHS.push('./degen-model.js','./degen-ui.js','./degen-chart.js','./degen.css');BRAND_SHELL.push('./degen-model.js','./degen-ui.js','./degen-chart.js','./degen.css');
 self.addEventListener('install', event => event.waitUntil((async () => {
   // Refresh cached document/worker policies while retaining already prepared proof assets.
   await (await caches.open(CACHE)).addAll([...BRAND_SHELL, './tests.html', './prover.js', './vendor/ffjavascript.js', './vendor/ffjavascript-worker.js'].map(path => new Request(path, { cache: 'reload' })));
@@ -54,7 +55,7 @@ self.addEventListener('message', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith((async () => {
-    const cached = await (await caches.open(CACHE)).match(event.request);
+    const cached = await (await caches.open(CACHE)).match(event.request, { ignoreSearch: event.request.mode === 'navigate' && new URL(event.request.url).pathname === '/markets.html' });
     return cached ? cachedMediaResponse(event.request, cached) : fetch(event.request);
   })());
 });

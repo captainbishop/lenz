@@ -9,11 +9,13 @@ import {themeIcon} from './theme-icon.js';
 import {liveRead} from './market-live.js';
 import {mountOraclePrices} from './oracle-prices-ui.js';
 import {mountMarketPicker} from './market-picker.js';
+import {mountDegen} from './degen-ui.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
 const entry=new URLSearchParams(location.search),entryView=entry.get('view'),entryAction=entry.get('action');
-const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
+const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity','degen'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
 const liveStorageKey='lenz-live-market-snapshots-v1';
 const oraclePrices=mountOraclePrices($('#oracle-prices'));
+const degen=mountDegen($('#degen-workspace'));
 const shape=row=>JSON.stringify([row.id,row.status,row.assets,row.feePips,row.sizeDecimals,row.maxLeverage]);
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
 const selector=el('button');selector.id='market-selector';$('.market-toolbar').insertBefore(selector,$('#market-network'));
@@ -40,7 +42,7 @@ function sourceStatus(){
   }));
   $('#refresh-markets').disabled=busy||liveState==='updating'||!navigator.onLine;$('#save-markets').disabled=busy||!data.size;
   $('#market-live').disabled=busy;
-  $('#refresh-markets').hidden=$('#market-live').checked||category==='prices';
+  $('#refresh-markets').hidden=$('#market-live').checked||['prices','degen'].includes(category);
   $('#save-markets').hidden=$('#market-live').checked;
   if(!data.size)$('#market-status').textContent=busy||liveState==='updating'?'Loading markets…':!navigator.onLine?'No saved markets.':failures.size?'Markets unavailable. Try refreshing.':'Load markets to see prices.';
   const stale=[...data.values()].some(s=>state(s)!=='Recently read');
@@ -85,9 +87,10 @@ function refreshDetails(row,snapshot){
 }
 function render(preserve=false){
   const prices=category==='prices';oraclePrices.show(prices);oraclePrices.filter($('#market-search').value);
-  selector.hidden=prices;
-  $('#market-network').hidden=prices;$('.market-body').hidden=prices;$('#market-sources').hidden=prices;$('.snapshot-bar').hidden=prices;
-  if(prices){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
+  const isDegen=category==='degen',special=prices||isDegen;degen.show(isDegen);
+  selector.hidden=special;$('.search').hidden=isDegen;$('#market-status').hidden=isDegen;$('#live-status').hidden=isDegen;
+  $('#market-network').hidden=special;$('.market-body').hidden=special;$('#market-sources').hidden=special;$('.snapshot-bar').hidden=special;
+  if(special){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
   const before=selected,focused=document.activeElement?.dataset.marketId;
   sourceStatus();const query=$('#market-search').value.trim().toLowerCase();
   const rows=[...data.values()].flatMap(snapshot=>snapshot.rows.map(row=>({row,snapshot}))).filter(({row})=>(category==='all'||row.category===category)&&(!$('#market-network').value||row.chainId===$('#market-network').value)&&`${row.label} ${marketSource({provider:row.marketId,chainId:row.chainId}).name} ${row.category}`.toLowerCase().includes(query));
@@ -130,7 +133,7 @@ function acceptMarkets(results){
   if(failures.size)throw Error('Some market feeds unavailable');
 }
 const live=liveRead({period:2000,read:readMarkets,accept:acceptMarkets,status:value=>{liveState=value;sourceStatus();}});
-$('#market-live').onchange=()=>{try{localStorage.setItem('lenz-market-live-mode',$('#market-live').checked?'on':'off');}catch{}live.setEnabled($('#market-live').checked);dispatchEvent(new Event('market-live-change'));};
+$('#market-live').onchange=()=>{try{localStorage.setItem('lenz-market-live-mode',$('#market-live').checked?'on':'off');}catch{}live.setEnabled($('#market-live').checked&&category!=='degen');dispatchEvent(new Event('market-live-change'));};
 $('#refresh-markets').onclick=async()=>{
   if(busy||!navigator.onLine)return;if($('#market-live').checked){live.wake();return;}
   const ticket=++manualGeneration;manualController=new AbortController();busy=true;failures.clear();sourceStatus();
@@ -138,7 +141,7 @@ $('#refresh-markets').onclick=async()=>{
 };
 $('#market-search').addEventListener('input',render);
 $('#market-network').addEventListener('change',()=>render());
-for(const button of $('#market-filters').children){button.setAttribute('aria-pressed',String(button.dataset.category===category));button.onclick=()=>{category=button.dataset.category;for(const sibling of button.parentNode.children)sibling.setAttribute('aria-pressed',String(sibling===button));render();};}
+for(const button of $('#market-filters').children){button.setAttribute('aria-pressed',String(button.dataset.category===category));button.onclick=()=>{category=button.dataset.category;for(const sibling of button.parentNode.children)sibling.setAttribute('aria-pressed',String(sibling===button));render();live.setEnabled($('#market-live').checked&&category!=='degen');};}
 $('#save-markets').onclick=()=>{
   try{localStorage.setItem(storageKey,JSON.stringify([...data.values()]));$('#snapshot-status').textContent=`Saved ${data.size} sources on this device.`;}
   catch{$('#snapshot-status').textContent='Could not save data. Try again.';}
@@ -153,7 +156,8 @@ new MutationObserver(theme).observe(document.documentElement,{attributes:true,at
 function connectionChanged(){if(!navigator.onLine){manualGeneration++;manualController?.abort();manualController=null;busy=false;}live.wake();data.size?readStates():render();}
 addEventListener('online',connectionChanged);addEventListener('offline',connectionChanged);document.addEventListener('visibilitychange',()=>live.wake());addEventListener('pagehide',()=>{live.stop();manualGeneration++;manualController?.abort();});setInterval(()=>{if(!document.hidden)readStates();},10000);render();
 try{$('#market-live').checked=localStorage.getItem('lenz-market-live-mode')!=='off';}catch{$('#market-live').checked=true;}
-live.setEnabled($('#market-live').checked);
+live.setEnabled($('#market-live').checked&&category!=='degen');
+dispatchEvent(new Event('market-live-change'));
 if('serviceWorker' in navigator){
   try{
     const registration=await navigator.serviceWorker.register('/sw.js'),worker=registration.installing??registration.waiting??registration.active;

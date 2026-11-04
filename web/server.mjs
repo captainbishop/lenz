@@ -5,6 +5,7 @@ import { resolve, extname, sep } from 'node:path';
 import { testnetRoute } from './testnet-relay.mjs';
 import { defiRoute } from './defi-relay.mjs';
 import { marketRoute } from './market-relay.mjs';
+import { degenRoute } from './degen-relay.mjs';
 import { tokenRoute } from './token-relay.mjs';
 import { nameRoute } from './name-relay.mjs';
 import { rheaRoute } from './rhea-relay.mjs';
@@ -32,6 +33,7 @@ http.createServer(async (req, res) => {
     if (await zcashRoute(req, res)) return;
     if (await rheaRoute(req, res)) return;
     if (await defiRoute(req, res)) return;
+    if (await degenRoute(req, res)) return;
     if (await marketRoute(req, res)) return;
     if (await tokenRoute(req, res)) return;
     if (await testnetRoute(req, res)) return;

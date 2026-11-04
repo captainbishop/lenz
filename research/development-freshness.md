@@ -1,3 +1,22 @@
+# Degen discovery, November 4, 2026
+
+Markets now includes cross-source token search, GeckoTerminal trending/new pools,
+exact-pool candles and device-local watchlists. Observations stay read-only and
+are grouped by chain/address. The new relay bounds public requests, rejects
+redirects and validates pool/token identity. Root and chat caches include the
+new screen; query-bearing market navigation uses the cached market document.
+
+Twelve Node checks and six detected guard alterations pass. Twenty-two browser
+checks cover 1360/390px, both themes, filters, keyboard candles, watchlists,
+source failure, stale replies, safe metadata and category navigation. Live
+provider reads and a disposable-browser offline reload pass. Existing six
+navigation and six form-control groups pass; presentation sources, receipts,
+frames, videos and posters remain unchanged. See [Degen discovery](../docs/degen-discovery.md).
+
+Discovery does not grant execution authority or provide a private trading
+route. Saved observations and watchlists use local storage; they are not part
+of encrypted account backup. No user wallet or financial operation ran.
+
 # Automatic account backup, November 4, 2026
 
 Passkey account creation and sign-in support encrypted profile, contact and text

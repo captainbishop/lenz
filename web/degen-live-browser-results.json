@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-04T21:07:39.627Z",
+  "sources": {
+    "web/public/degen-ui.js": "99d56fcbee234fa98c319f8c8e564702dd6f04eb934eddf9aaa081955362c876",
+    "web/public/degen-model.js": "5022e1814f9f31832a630d1685234e7234e73c3dedb620e49545a31f7ef27f14",
+    "web/public/degen-chart.js": "6b5f464f61ead81d6efc01103671fbf65b4124bcbb876ef3a0f37250b25d3961",
+    "web/public/degen.css": "4ea8d680de5f6cce3f97d690487786fabca86849cf1a23cae888dae03d96a7eb",
+    "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
+    "web/public/markets.html": "06605ee91ec962ece2ba3345d23bdd9b20fcd696057953783056595eb8be8a03",
+    "web/public/sw.js": "23277c39276d0e474e4a5b3b9d536fa99a183ef6cd94cef1aab11726b22a993d",
+    "web/degen-relay.mjs": "2c9ad6b4dcd7e52b3502ef478d4c618545a2e98fd62940ca309fc12630bc2d82",
+    "integrations/degen-discovery.mjs": "aa9bb1d8e937b061b523b0857a0f5e22ba6b9338cc1939a3c5b5b830cad39298",
+    "web/degen-live.test.cjs": "ef506b3efd9e81e0575c7e9df0141dd9375c59b32efc86185aa3eca5033eef92"
+  },
+  "live": {
+    "tokens": 20,
+    "candles": 96,
+    "state": "20 tokens · 22s ago",
+    "token": "GTA6"
+  },
+  "offlineReload": true,
+  "scope": "Disposable Edge with public provider data and actual root service-worker offline reload; no user account or financial requests."
+}
