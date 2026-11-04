@@ -15,7 +15,7 @@ function mount(select){
   const options=()=>[...select.options];
   const allowed=option=>!option.disabled&&!option.hidden&&!option.parentElement.disabled;
   function sync(){
-    text.textContent=select.selectedOptions[0]?.label??'Choose';button.disabled=select.matches(':disabled');wrap.hidden=select.hidden;
+    text.textContent=select.selectedOptions[0]?.label??'Choose';button.disabled=select.matches(':disabled');if(wrap.hidden!==select.hidden)wrap.hidden=select.hidden;
     button.setAttribute('aria-required',String(select.required));
     for(const attr of ['aria-describedby','aria-invalid']){const value=attr==='aria-invalid'&&invalid&&!select.validity.valid?'true':select.getAttribute(attr);if(value===null)button.removeAttribute(attr);else button.setAttribute(attr,value);}
     if(opened===api&&(button.disabled||wrap.hidden||!button.getClientRects().length))close();

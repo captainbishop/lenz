@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-04T19:34:51.229Z",
+  "method": "Visibility-only form-control correction. All ten saved light/dark replay crops and receipt data are unchanged; six category-navigation checks pass.",
+  "source": "web/public/form-controls.js",
+  "before": "55d71acdaa560623855f9e2d5e8caeb40321463cb9ef97cc8502a0964f0cf6f7",
+  "after": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+  "evidence": "web/market-navigation-browser-results.json",
+  "scope": "Repeated market category changes and hidden control restoration; no account writes or financial requests."
+}

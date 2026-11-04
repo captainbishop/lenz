@@ -1,3 +1,16 @@
+# Market navigation, November 4, 2026
+
+Hiding the network picker for Prices previously repeated a visibility mutation
+inside the shared form observer and prevented the page from processing clicks.
+The wrapper now changes visibility only when its state changes.
+
+The regression fails on the previous implementation and passes with the fix.
+Six browser checks cover repeated Prices/Perpetuals/Liquidity/Credit/All markets
+switching and hidden/disabled control restoration at three widths. Existing
+form-control and live-feed checks pass. The saved presentation replay retains
+all ten frame hashes and receipts. Both offline shells refresh the corrected
+control. No account or financial state changes are part of this correction.
+
 # Chat installation and contact continuity, November 4, 2026
 
 [Chat restoration](../docs/legacy-chat-backups.md) installs the signed successor

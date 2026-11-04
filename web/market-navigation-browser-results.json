@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-04T19:29:42.551Z",
+  "passed": 6,
+  "checks": [
+    "Repeated Prices, Perpetuals, Liquidity, Credit and All markets navigation stays responsive at 1280px with unavailable price feeds",
+    "Hidden and disabled network controls restore without loops at 1280px",
+    "Repeated Prices, Perpetuals, Liquidity, Credit and All markets navigation stays responsive at 680px with unavailable price feeds",
+    "Hidden and disabled network controls restore without loops at 680px",
+    "Repeated Prices, Perpetuals, Liquidity, Credit and All markets navigation stays responsive at 390px with unavailable price feeds",
+    "Hidden and disabled network controls restore without loops at 390px"
+  ],
+  "sources": {
+    "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+    "web/public/markets.js": "bf2e9016d358ab71de84c85c44634b4f6a99afae303ce7fb0edaf1bb7dafc0f4",
+    "web/public/markets.html": "d8f0b0458f11cc060f82bf82a6f6f31178750f9e8eb2035097b1a90f347aecfe",
+    "web/public/oracle-prices-ui.js": "a278d689415a5cfdccd4e3c02daec3e68bc65b9bdd445524f9dcfa3765ca30ec",
+    "web/public/market-picker.js": "40f98aec2f36c3b93f37f4b7672dd627b87a2ad3f933dcf69a5a57858f679f72",
+    "web/market-navigation-browser.test.cjs": "a234e41496dac55eec2e73eda7e1c595950094992abd38a51d64952a3914c1fb"
+  },
+  "scope": "Disposable Edge, saved fixture markets, failed price feeds, real event-loop yields and repeated category changes. Runaway-observer tripwire fails assertions. No user storage changes or financial requests."
+}
