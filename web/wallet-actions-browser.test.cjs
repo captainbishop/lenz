@@ -13,7 +13,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
    await route.fulfill({contentType:'application/json',body:JSON.stringify(result)});
   });
   const ready=()=>page.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-  await page.goto('http://127.0.0.1:4173/money.html');await ready();await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();
+  await page.goto('http://127.0.0.1:4173/money.html');await ready();await page.locator('#device-profile > summary').click();await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();
   const contact=await page.evaluate(async()=>{const p=await(await import('/peer-crypto.js')).createIdentity('Bola');await(await import('/chat-store.js')).updateState(s=>s.contacts.push(p.profile));return p.profile;});
   await page.reload();await ready();
   for(const width of [320,390,768,900,1280]){await page.setViewportSize({width,height:900});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));const tops=await page.locator('.near-actions button').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().top));assert(tops.every(y=>y===tops[0]),'Action icons must stay in one row');}

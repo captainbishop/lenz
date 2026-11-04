@@ -50,7 +50,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true});try{
       });</script>`});
   });
   await p.goto(base+'/wallet-lab.html');await p.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-  await p.locator('#wallet-name').fill('External signer test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
+  await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('External signer test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
   const identityId=await p.evaluate(async c=>{const {updateState}=await import('/chat-store.js'),n=await import('/near-protocol.js'),r=await import('/rhea-protocol.js');return updateState(async s=>{const v=n.emptyNearVault(c.reserve),f=await n.fundingRequest(s.identity,c.reserve,'1');v.roots.push({id:f.id,owner:f.owner,amount:f.amount});const x=await r.prepareRheaSwap(v,s.identity,c,{text:'1',minOutput:'1',receiver:'receiver.testnet',deadlineMs:Date.now()+3600000});x.vault.rheaOrders[0].status={id:x.packet.id,stage:'refunded',instruction:x.packet.instruction};await n.saveNearVault(s,x.vault);return s.identity.profile.id;});},c);
   order=await p.evaluate(async c=>{const s=await(await import('/chat-store.js')).readState();return (await(await import('/near-protocol.js')).readNearVault(s,c.reserve)).rheaOrders[0].status;},c);
   await p.reload();await p.getByRole('button',{name:'Return to Lenz',exact:true}).waitFor();

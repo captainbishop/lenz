@@ -10,7 +10,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
   p.on('pageerror',e=>errors.push(e.message));
   await p.route('**/api/**',r=>r.abort());
   const ready=()=>p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));
-  await p.goto(base+'/money.html');await ready();await p.locator('#wallet-name').fill('Amina');await p.locator('#wallet-identity-form button[type=submit]').click();await p.locator('#wallet-content').waitFor();
+  await p.goto(base+'/money.html');await ready();await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Amina');await p.locator('#wallet-identity-form button[type=submit]').click();await p.locator('#wallet-content').waitFor();
   const snapshot=()=>p.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();return {profile:s.identity.profile,nearBox:s.nearBox,messages:s.messages,contacts:s.contacts};});
   await check('wallet starts at zero with current tUSD actions and no simulation controls',async()=>{
    assert.equal(await p.locator('#near-total').innerText(),'0');

@@ -24,7 +24,7 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
     for(const context of contexts)await context.addInitScript(()=>{const RTC=RTCPeerConnection;globalThis.testPeers=[];globalThis.RTCPeerConnection=class extends RTC{constructor(config){super(config);testPeers.push(this);}};});
     const pages=await Promise.all(contexts.map(c=>c.newPage())),[a,b,c]=pages,profiles=[];
     for(const [i,p]of pages.entries()){
-      p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.locator('#wallet-name').fill(['Amina','Bola','Chidi'][i]);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push((await read(p)).identity.profile);
+      p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill(['Amina','Bola','Chidi'][i]);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push((await read(p)).identity.profile);
     }
     for(const p of pages)await p.evaluate(async profiles=>{await(await import('/chat-store.js')).updateState(s=>{s.contacts=profiles.filter(p=>p.id!==s.identity.profile.id);});},profiles);
     await a.evaluate(async({contract,to})=>{

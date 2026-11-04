@@ -130,7 +130,7 @@ const card = p => p.locator('.near-chat-card').filter({ has: p.getByText('0.01 t
     const { a, b, c, d } = pages;
     await step('contacts', async () => {
       if (!await read(d, contract)) {
-        await d.locator('#name').fill('Dara'); await d.locator('#identity-form button[type=submit]').click(); await idle(d);
+        await d.locator('#device-profile > summary').click();await d.locator('#name').fill('Dara'); await d.locator('#identity-form button[type=submit]').click(); await idle(d);
       }
       const dp = (await read(d, contract)).profile; journal.profiles = { ...previous.profiles, d: dp };
       assert.equal((await read(d, contract)).total, '0');

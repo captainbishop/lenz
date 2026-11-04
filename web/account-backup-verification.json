@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-04T19:30:04.122Z",
+  "nodeTests": 12,
+  "guardAlterations": [
+    "separate-account-authority",
+    "passkey-secret-length",
+    "encrypted-revision-binding",
+    "returned-archive-digest",
+    "request-origin",
+    "request-signature",
+    "single-use-nonce",
+    "revision-compare-and-swap",
+    "durable-retry-candidate",
+    "acknowledgement-binding",
+    "idle-device-sync",
+    "pending-newer-edits"
+  ],
+  "sources": {
+    "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
+    "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
+    "web/public/account-sync.js": "79ba1b3bcd1cda0b30bae74b87e22c818e0da12dd508b3b7e66e5226f46232f7",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
+    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
+    "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
+    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
+    "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
+    "web/account-store.mjs": "ab68aa9024470e12d239935c79a62542189816be47b9ad64ea0b032659ac20a1",
+    "web/account-relay.mjs": "68d9fb3b0198e4a75609e38e2f6d7e2529e1e2d4992dc96dbc84b9b5974ac6bc",
+    "web/account-backup.test.mjs": "2db3792da4acc52b493f5829db53d5356d5aa9d02425b67e0087442246f1e92b",
+    "web/verify-account-backup.mjs": "fa2761fc66c954577688fb52f85a0f11909e1d3e39d8cb0427fa2b79c22b8592"
+  },
+  "scope": "Passkey-derived encryption and authorization, local HTTP/SQLite persistence, replay/revision checks, lost acknowledgements and concurrent chat merge. Application key custody and recovery policy; no external audit, physical-device passkey sync or funds recovery."
+}

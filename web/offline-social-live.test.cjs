@@ -59,7 +59,7 @@ async function sendPayment(p,contract,recipient,amount,key,fromWallet=false){
       p.on('response',response=>{if(!response.url().includes('/api/'))return;const task=(async()=>{try{ev.responses.push({role,route:new URL(response.url()).pathname,status:response.status(),body:await response.json(),at:new Date().toISOString()});await save();}catch(e){ev.failures.push({step:'response recorder',error:e.message});}})();responseTasks.push(task);});
       await wallet(p);let s=await state(p);
       if(ev.profiles?.[role])assert.equal(s.profile?.id,ev.profiles[role].id,'Saved live profile is missing; do not create another funded identity');
-      if(!s.profile){await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);s=await state(p);}
+      if(!s.profile){await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);s=await state(p);}
       ev.profiles??={};ev.profiles[role]=s.profile;await save();
     }
     const [a,b,c]=pages,{a:pa,b:pb,c:pc}=ev.profiles;

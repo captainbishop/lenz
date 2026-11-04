@@ -11,7 +11,7 @@ const base = 'http://127.0.0.1:4173';
     const context = await browser.newContext({ viewport: { width: 1280, height: 960 }, reducedMotion: 'reduce' });
     context.on('request', r => { if (new URL(r.url()).pathname.startsWith('/api/')) api.push(r.url()); });
     const account = await context.newPage(); await account.goto(base + '/money.html');
-    await account.locator('#wallet-private').click(); await account.locator('#wallet-content').waitFor();
+    await account.locator('#device-profile > summary').click();await account.locator('#wallet-private').click(); await account.locator('#wallet-content').waitFor();
     const snapshot = () => account.evaluate(async () => JSON.stringify(await (await import('/chat-store.js')).readState()));
     const before = await snapshot();
     const page = await context.newPage(); page.on('pageerror', e => errors.push(e.message));

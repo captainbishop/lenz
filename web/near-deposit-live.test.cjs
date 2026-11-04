@@ -8,7 +8,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true});try{
   const ctx=await browser.newContext({viewport:{width:1280,height:900}}),p=await ctx.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
   p.on('response',async r=>{if(r.url().includes('/api/'))try{const x=await r.json();if(x.txHash)transactions.push({action:r.url().split('/').at(-1),txHash:x.txHash,stage:x.order?.stage});}catch{}});
   await p.goto('http://127.0.0.1:4173/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-  await p.locator('#wallet-name').fill('Reentry live');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
+  await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Reentry live');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
   let depositRequest,before,after,onward,swapId;
   await check('actual failed Rhea swap refunds one tUSD to its signed receiving account',async()=>{
     await p.locator('#near-fund').click();await p.locator('#near-fund-amount').fill('3');await p.locator('#near-fund-form button[type=submit]').click();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='3',null,{timeout:180000});await idle(p);

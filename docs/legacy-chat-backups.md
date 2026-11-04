@@ -1,5 +1,8 @@
 # Existing-account chat backups
 
+[Automatic backup and sign-in](automatic-backup.md) is the normal account path.
+The file workflow below remains an optional recovery method.
+
 **Chat backups** is available from Wallet → Account recovery and the profile's
 storage settings. Prepare a backup, save its 24-word Lenz phrase, check three
 words and download the encrypted file. Open that file with its phrase to verify

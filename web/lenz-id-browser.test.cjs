@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[],base='http://127.0.0.1:4173';
  try{
   const ca=await browser.newContext({permissions:['clipboard-read','clipboard-write']}),cb=await browser.newContext(),a=await ca.newPage(),b=await cb.newPage();
-  for(const [p,name]of [[a,'Amina'],[b,'Bola']]){p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await p.locator('#wallet-content').waitFor();}
+  for(const [p,name]of [[a,'Amina'],[b,'Bola']]){p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await p.locator('#wallet-content').waitFor();}
   const read=p=>p.evaluate(async()=>await(await import('/chat-store.js')).readState());
   const before=await read(a);await a.bringToFront();await a.locator('#show-card').click();
   assert.equal(await a.locator('#share-title').innerText(),'Your Lenz ID');

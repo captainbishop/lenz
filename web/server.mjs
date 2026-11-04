@@ -12,6 +12,10 @@ import { zcashRoute } from './zcash-relay.mjs';
 import { securityHeaders } from './security-policy.mjs';
 import { carrierConfig } from './public/carrier-protocol.js';
 import { nostrConfig } from './public/nostr-protocol.js';
+import {AccountStore} from './account-store.mjs';
+import {createAccountRoute} from './account-relay.mjs';
+const accountOrigin=process.env.LENZ_ACCOUNT_ORIGIN??'http://localhost:4173';
+let accountRoute;
 const carriers = carrierConfig({version:1,carriers:JSON.parse(process.env.LENZ_CARRIERS ?? '[]')});
 const relays = nostrConfig(JSON.parse(await readFile(new URL('./public/nostr-config.json', import.meta.url), 'utf8')));
 const root = resolve('public');
@@ -21,7 +25,8 @@ http.createServer(async (req, res) => {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     for (const [name, value] of Object.entries(securityHeaders(pathname, carriers, relays))) res.setHeader(name, value);
     // Keep the local sponsor and browser identity on the documented loopback origin.
-    if (req.headers.host !== '127.0.0.1:4173') { res.writeHead(403); res.end('Use http://127.0.0.1:4173'); return; }
+    if (!['127.0.0.1:4173',new URL(accountOrigin).host].includes(req.headers.host)) { res.writeHead(403); res.end('Use the Lenz app address'); return; }
+    if(pathname.startsWith('/api/accounts/')){accountRoute??=createAccountRoute({origin:accountOrigin,store:new AccountStore(resolve(process.env.LENZ_ACCOUNT_DATA??'.account-data'))});await accountRoute(req,res);return;}
     if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
     if (await nameRoute(req, res)) return;
     if (await zcashRoute(req, res)) return;

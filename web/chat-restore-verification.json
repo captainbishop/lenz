@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T18:13:50.512Z",
+  "checkedAt": "2026-11-04T19:26:28.780Z",
   "nodeTests": 9,
   "guardAlterations": [
     "restore-state-check",
@@ -24,7 +24,7 @@
     "web/public/near-payment-service.js": "95969b0e47f90a5a5c11903086e7d22f79f234a316789503d10b1f76006c7d64",
     "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
-    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/chat-restore.test.mjs": "b2ff9bde76e34fd051fb6253715c7c1a41dfc9db6b571e56efab1fd9eb8158a6",

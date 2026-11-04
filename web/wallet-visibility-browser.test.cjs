@@ -10,7 +10,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   const ready=async p=>{await p.goto(base+'/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');};
   await ready(page);await page.waitForFunction(()=>document.querySelector('#status').textContent==='');assert(!await page.locator('#status').isVisible());
   checks.push('startup readiness disappears and its empty space collapses');
-  await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();
+  await page.locator('#device-profile > summary').click();await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();
   await page.evaluate(async()=>{
    const {updateState}=await import('/chat-store.js'),n=await import('/near-protocol.js'),config=await(await fetch('/near-config.json')).json(),rhea=await(await fetch('/rhea-config.json')).json(),peer=await import('/peer-crypto.js');
    const contact=await peer.createIdentity('Bola');

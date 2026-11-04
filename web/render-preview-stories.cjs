@@ -40,7 +40,7 @@ const palettes={light:{bg:'#f5f5ef',ink:'#173f35',muted:'#53685d',line:'#c7d1c2'
  const browser=await chromium.launch({channel:'msedge',headless:true}),api=[],errors=[];
  try{
   const context=await browser.newContext({serviceWorkers:'block'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));context.on('request',r=>{if(new URL(r.url()).pathname.startsWith('/api/'))api.push(r.url());});
-  await p.goto('http://127.0.0.1:4173/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));await p.locator('#wallet-private').click();await p.locator('#wallet-content').waitFor();
+  await p.goto('http://127.0.0.1:4173/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Your wallet is ready'));await p.locator('#device-profile > summary').click();await p.locator('#wallet-private').click();await p.locator('#wallet-content').waitFor();
   const product=await p.evaluate(async fragments=>{
    const box=document.createElement('div');box.innerHTML=fragments['private-read'];const bubble=box.querySelector('.bubble').cloneNode(true);bubble.querySelectorAll('small,button').forEach(n=>n.remove());
    for(const key of ['payment-received','payment-onward']){box.innerHTML=fragments[key];if(!box.textContent.includes('awaiting online confirmation'))throw Error('Missing pending evidence');}

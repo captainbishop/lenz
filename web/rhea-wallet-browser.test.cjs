@@ -18,7 +18,7 @@ let base;
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{
     const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));await open(p);
-    await p.locator('#wallet-name').fill('Rhea disposable');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
+    await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Rhea disposable');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
     const identity=await p.evaluate(async c=>{const {updateState}=await import('/chat-store.js');const n=await import('/near-protocol.js');return updateState(async s=>{const v=n.emptyNearVault(c.reserve),r=await n.fundingRequest(s.identity,c.reserve,'10');v.roots.push({id:r.id,owner:r.owner,amount:r.amount});await n.saveNearVault(s,v);return s.identity.profile.id;});},c);
     await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');
     await check('everyday wallet hides technical import, transaction export and experimental signer controls',async()=>{

@@ -32,10 +32,10 @@ async function snapshot(page) {
     for (const page of [a, b]) { page.on('pageerror', error => errors.push(error.message)); await page.goto(base + '/chat.html'); await status(page, 'Private chat is ready'); }
     let original, before, photoProfile;
     await check('private onboarding creates a readable alias and default avatar without personal input', async () => {
-      await a.locator('#continue-private').click(); await status(a, 'Identity saved'); original = await profile(a);
+      await a.locator('#device-profile > summary').click();await a.locator('#continue-private').click(); await status(a, 'Identity saved'); original = await profile(a);
       assert.match(original.name, /^[A-Z][a-z]+ [A-Z][a-z]+$/); assert.equal(original.avatar, 'moon');
       assert(await a.locator('#my-avatar img').evaluate(img => img.complete && img.naturalWidth > 0));
-      await b.locator('#name').fill('Bola'); await b.locator('#identity-form button[type=submit]').click(); await status(b, 'Identity saved');
+      await b.locator('#device-profile > summary').click();await b.locator('#name').fill('Bola'); await b.locator('#identity-form button[type=submit]').click(); await status(b, 'Identity saved');
       await importCard(a, await profile(b)); await importCard(b, original);
       await a.evaluate(async () => { const { updateState } = await import('/chat-store.js'); const { enableDemoMoney } = await import('/trade-service.js'); await updateState(enableDemoMoney); });
       await a.locator('#message').fill('Keep this conversation through my profile change.');
@@ -71,7 +71,7 @@ async function snapshot(page) {
       assert.deepEqual(await snapshot(a), before);
     });
     await check('contact file carries the photo and an existing contact update requires confirmation', async () => {
-      await a.locator('#show-card').click(); assert(await a.locator('#photo-sharing-note').isVisible());
+      await a.locator('#show-card').click(); await a.locator('#share-contact[open]').waitFor(); assert(await a.locator('#photo-sharing-note').isVisible());
       await a.locator('#share-contact details').evaluate(n=>n.open=true); const pending = a.waitForEvent('download'); await a.locator('#save-card').click();
       assert.deepEqual(JSON.parse(await readFile(await (await pending).path(), 'utf8')), photoProfile);
       const qr = await a.evaluate(async p => (await import('/contact-card.js')).decodeContact(await (await import('/contact-card.js')).encodeContact(p)), photoProfile);

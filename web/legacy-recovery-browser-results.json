@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T18:17:56.743Z",
+  "checkedAt": "2026-11-04T19:37:56.840Z",
   "passed": 7,
   "tests": [
     "backup downloads after phrase checks, excludes payment records and preserves the source account",
@@ -18,12 +18,12 @@
     "web/public/recovery.css": "e2c904f91d5a2045aee181662087c12e7662cafb17c1c8faa4a34e5ec2cb0227",
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
-    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
     "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
     "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
-    "web/public/chat-sw.js": "2995b68d9965a22a16b479680581ff3e8b3a779236fc14ca90c5b342e0c838c8",
-    "web/public/sw.js": "9b80aa21ce986f919dc91af67e1fc0c564dc8d2a7ee9a6586077090710dcaa40",
-    "web/public/save-offline.js": "1f60b89e509a65b0699227c19fbcc2609b674301b5b96a91e8779d8c6c29ea15",
+    "web/public/chat-sw.js": "c46a0a96de23d480126d114ca5956f40c967607385ba1ac45b517b96358b50a5",
+    "web/public/sw.js": "aaef6a2bc236f5e9d36ef54c04ba2da8839798da3384bc2320d44d4e9bff9fdc",
+    "web/public/save-offline.js": "434eceaed11c3d6aae664d96c9e4125158e7d7be69f4966186ed811fd57ace45",
     "web/legacy-recovery-browser.test.cjs": "d44be4d5b49ff6f584f62b575418feda8557ff7f93797e2e863312e1632c9583"
   },
   "evidence": {

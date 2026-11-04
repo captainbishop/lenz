@@ -12,7 +12,7 @@ async function check(name,fn){await fn();checks.push(name);console.log('PASS '+n
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({channel:'msedge',headless:true});try{
   const ctx=await browser.newContext(),p=await ctx.newPage();await p.goto(base+'/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-  await p.locator('#wallet-name').fill('Refund test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
+  await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Refund test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
   const identityId=await p.evaluate(async c=>{const {updateState}=await import('/chat-store.js'),n=await import('/near-protocol.js'),r=await import('/rhea-protocol.js');return updateState(async s=>{const v=n.emptyNearVault(c.reserve),f=await n.fundingRequest(s.identity,c.reserve,'3');v.roots.push({id:f.id,owner:f.owner,amount:f.amount});const x=await r.prepareRheaSwap(v,s.identity,c,{text:'3',minOutput:'1',receiver:c.refundPayer,deadlineMs:Date.now()+3600000});x.vault.rheaOrders[0].status={id:x.packet.id,stage:'refunded',instruction:x.packet.instruction};await n.saveNearVault(s,x.vault);return s.identity.profile.id;});},c);
   await p.reload();await p.getByRole('button',{name:'Return to Lenz',exact:true}).waitFor();
   await check('failed local commit sends no deposit request and exposes no balance',async()=>{

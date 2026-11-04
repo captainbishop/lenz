@@ -30,7 +30,7 @@ const path = require('node:path');
     await page.getByText('Do I need to chat before I pay?',{exact:true}).click(); assert((await page.locator('#questions').innerText()).includes('Open Wallet to send and receive directly'));
     checks.push('sections respond to interaction throughout the page');
     await page.getByRole('link', { name: 'Try Lenz' }).click();
-    await page.locator('#wallet-name').waitFor({ state: 'visible' });
+    await page.locator('.account-entry').waitFor({ state: 'visible' });
     await page.locator('.identity').click(); assert.equal(new URL(page.url()).pathname, '/');
     await page.getByRole('link', { name: 'Proof experiment', exact: true }).click();
     assert.equal(new URL(page.url()).pathname, '/payment-demo.html');

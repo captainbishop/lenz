@@ -1,11 +1,11 @@
 {
-  "checkedAt": "2026-11-04T18:12:04.087Z",
+  "checkedAt": "2026-11-04T19:27:13.140Z",
   "passed": 1,
   "sources": {
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
-    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
     "web/identity-recovery-browser.test.cjs": "cb3bcfda06fc4631ab378a12aced3168ea174d8996171db9c0572bad04e33e61"
   },
   "evidence": {

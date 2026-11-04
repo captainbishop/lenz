@@ -15,7 +15,7 @@ async function status(page, text) {
 async function create(page, name) {
   await page.goto('http://127.0.0.1:4173/chat.html');
   await status(page, 'Private chat is ready');
-  await page.locator('#name').fill(name); await page.locator('#identity-form button[type=submit]').click();
+  await page.locator('#device-profile > summary').click();await page.locator('#name').fill(name); await page.locator('#identity-form button[type=submit]').click();
   await status(page, 'Identity saved');
   return JSON.parse(await page.locator('#my-card').inputValue());
 }

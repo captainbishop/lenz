@@ -13,7 +13,7 @@ const checks=[];
     page.on('pageerror',e=>errors.push(e.message));
     await page.goto(`http://127.0.0.1:${attacker.address().port}`);
     if(baseline){
-      await page.frameLocator('iframe').locator('#wallet-private').click();
+      await page.frameLocator('iframe').locator('#device-profile > summary').click();await page.frameLocator('iframe').locator('#wallet-private').click();
       await page.frameLocator('iframe').locator('#wallet-content').waitFor();
       checks.push('baseline: foreign-origin frame can display wallet and activate disposable profile creation');
     }else{
@@ -28,7 +28,7 @@ const checks=[];
       assert(policy.includes('wss://nos.lol')&&policy.includes('wss://relay.primal.net'));
       const homePolicy=(await page.request.get(base+'/')).headers()['content-security-policy'];assert(!homePolicy.includes('wss://'));}
 
-    if(await page.locator('#wallet-private').count())await page.locator('#wallet-private').click();
+    if(await page.locator('#wallet-private').count()){await page.locator('#device-profile > summary').click();await page.locator('#wallet-private').click();}
     await page.locator('#wallet-content').waitFor();
     const injection=await page.evaluate(async()=>{
       const violations=[];document.addEventListener('securitypolicyviolation',e=>violations.push(e.violatedDirective));

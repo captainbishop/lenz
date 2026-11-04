@@ -27,6 +27,7 @@ keys.toml
 *.db
 *.db-*
 carrier/.data/
+web/.account-data/
 
 # Logs, caches and intermediate recordings.
 *.log

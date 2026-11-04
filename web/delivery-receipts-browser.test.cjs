@@ -22,7 +22,7 @@ async function receipt(p,financial=false){await p.locator(financial?'.bubble.fin
     const contexts=await Promise.all([0,1].map(()=>browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'})));
     const [a,b]=await Promise.all(contexts.map(c=>c.newPage()));for(const p of[a,b])p.on('pageerror',e=>errors.push(e.message));
     const profiles=[];
-    for(const[p,name]of[[a,'Amina'],[b,'Bola']]){await p.goto(base+'/money.html');await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push(JSON.parse(await p.locator('#my-card').inputValue()));}
+    for(const[p,name]of[[a,'Amina'],[b,'Bola']]){await p.goto(base+'/money.html');await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill(name);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push(JSON.parse(await p.locator('#my-card').inputValue()));}
     for(const[p,peer]of[[a,profiles[1]],[b,profiles[0]]])await p.evaluate(async peer=>{await(await import('/chat-store.js')).updateState(s=>s.contacts.push(peer));},peer);
     // Fixture backing only; receipt behavior must not call any funding or settlement API.
     await a.evaluate(async c=>{const n=await import('/near-protocol.js');await(await import('/chat-store.js')).updateState(async s=>{const request=await n.fundingRequest(s.identity,c,'10'),v=n.emptyNearVault(c);v.roots.push({id:request.id,owner:request.owner,amount:request.amount});await n.saveNearVault(s,v);});},contract);

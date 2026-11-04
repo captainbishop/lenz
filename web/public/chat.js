@@ -1,4 +1,5 @@
 import { createIdentity, sealMessage, openMessage, bytes, digest } from './peer-crypto.js';
+import {startAccountSync} from './account-sync.js';
 import { transferTerms } from './near-protocol.js';
 import { readState, updateState } from './chat-store.js';
 import { renderProfile, setupContacts } from './contact-ui.js';
@@ -14,6 +15,7 @@ import { isNearPayment } from './near-payment-service.js';
 import { loadChatMoney, mountChatMoney, renderChatMoney, renderNearPaymentCard, chatNearContract } from './near-chat.js';
 const $ = selector => document.querySelector(selector);
 mountProfilePanels();
+startAccountSync();
 let active = null, lastPacket = null, busy = false, showThread = null;
 const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
 function status(text, error = false) { $('#status').textContent = text; $('#status').className = error ? 'status error' : 'status'; }

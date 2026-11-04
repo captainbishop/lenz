@@ -13,7 +13,7 @@ async function check(name,fn){await fn();checks.push(name);console.log('PASS '+n
     const ctx=await browser.newContext({viewport:{width:1280,height:900}}),p=await ctx.newPage();p.on('pageerror',e=>errors.push(e.message));
     p.on('response',async response=>{if(response.url().includes('/api/rhea/'))try{const r=await response.json();if(r.txHash)transactions.push({txHash:r.txHash,stage:r.order?.stage,failedReceipts:r.failedReceipts});}catch{}});
     await p.goto('http://127.0.0.1:4173/money.html');await p.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-    await p.locator('#wallet-name').fill('Live Rhea test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
+    await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Live Rhea test');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
     await check('disposable browser funds three actual testnet tUSD and gets a live quote',async()=>{
       await p.locator('#near-fund').click();await p.locator('#near-fund-amount').fill('3');await p.locator('#near-fund-form button[type=submit]').click();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='3',null,{timeout:180000});await idle(p);
       await p.locator('#rhea-open').click();await p.locator('#rhea-quote').click();await p.waitForFunction(()=>document.querySelector('#rhea-estimate').textContent.startsWith('Estimate:'),null,{timeout:90000});await idle(p);

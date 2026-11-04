@@ -20,7 +20,7 @@ const server=http.createServer(async(req,res)=>{try{
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{
     const context=await browser.newContext(),p=await context.newPage();
-    await p.goto(base+'/money.html');await p.locator('#wallet-private').click();await p.locator('#wallet-content').waitFor();
+    await p.goto(base+'/money.html');if(await p.locator('#device-profile').count())await p.locator('#device-profile > summary').click();await p.locator('#wallet-private').click();await p.locator('#wallet-content').waitFor();
     await p.evaluate(async()=>{
       const {updateState}=await import('/chat-store.js'),n=await import('/near-protocol.js'),config=await(await fetch('/near-config.json')).json(),rhea=await(await fetch('/rhea-config.json')).json();
       await updateState(async s=>{

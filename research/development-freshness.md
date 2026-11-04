@@ -1,3 +1,32 @@
+# Automatic account backup, November 4, 2026
+
+Passkey account creation and sign-in support encrypted profile, contact and text
+chat backup. Local changes upload after reconnection; separate sessions check
+for newer chats and reconcile verified content. A matching SQLite commit and
+ciphertext acknowledgement establish backup status. Pending financial state
+stays on its original device. Legacy enrollment preserves source keys and uses
+a signed chat successor for restoration.
+
+Twelve Node tests, twelve browser groups and twelve detected guard alterations
+cover separated keys, encrypted archives, HTTP authorization, durable retries,
+revision conflicts, quotas, setup races, real Web Locks and three isolated
+browser sessions. Multi-session tests seed the same disposable PRF input; native
+passkey tests use a virtual synced authenticator. Physical-device cloud passkey
+synchronization, hosted durability and funds reconciliation are separate checks.
+
+Recovery, wallet, contact, profile, homepage, form controls and offline-cache
+regressions pass. The account service responds on localhost with the preview
+carrier configuration retained. Only a challenge was requested from that service.
+All ten saved presentation crops and receipt data match the preceding replay;
+existing videos and posters remain unchanged. New account and wallet layouts
+were inspected in light and dark themes at narrow widths.
+
+The service stores only encrypted archives, a separate backup identity and
+revision metadata. Fresh-device rollback against a malicious host and public
+service availability require independent protection. Synced chat keys and
+application access markers do not revoke older keys or establish exclusive
+financial authority. See [account backup](../docs/automatic-backup.md).
+
 # Market navigation, November 4, 2026
 
 Hiding the network picker for Prices previously repeated a visibility mutation

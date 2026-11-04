@@ -40,7 +40,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   for(let i=0;i<5;i++){await page.keyboard.press('Tab');assert(await page.evaluate(()=>{const n=document.activeElement;if(n===document.body)return true;const r=n.getBoundingClientRect();return !!n.closest('#evm-receive-dialog')&&r.top>=0&&r.bottom<=innerHeight;}));}
   await page.keyboard.press('Escape');
   checks.push('Receive QR decodes to the exact chain and address; clipboard, Escape, keyboard focus and both themes fit 320–1280px');
-  await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();const before=await state();
+  await page.locator('#device-profile > summary').click();await page.locator('#wallet-private').click();await page.locator('#wallet-content').waitFor();const before=await state();
   await page.locator('#toggle-balances').click();assert.equal(await page.locator('#evm-balance').getAttribute('aria-label'),'Amount hidden');await page.locator('#toggle-balances').click();
   await page.locator('#evm-refresh').click();await page.locator('#evm-account').waitFor();assert.equal(await state(),before);
   assert.equal(await page.evaluate(()=>walletFixture.calls.filter(c=>c.method==='eth_requestAccounts').length),1);

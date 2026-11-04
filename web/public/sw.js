@@ -1,4 +1,4 @@
-// Preview recording revision: a8aba75c5334f6a8f010225a8f38d4adcc4ad1be27a34df18567bcb5a95c703c
+// Preview recording revision: 73e673bab22a965323e0a90166f834dced5ea0e49f276e0ad6ec086e705512d8
 // Market shell revision: form-controls-20261104-3
 importScripts('/media-range.js');
 const CACHE = 'proof-u-web-demo-v1';
@@ -11,6 +11,7 @@ const RECOVERY_PATHS=['./recovery.html','./recovery.css','./recovery-ui.js','./r
 PATHS.push(...RECOVERY_PATHS);BRAND_SHELL.push(...RECOVERY_PATHS);
 PATHS.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');BRAND_SHELL.push('./chat-access.js','./chat-restore.js','./contact-recovery.js');
 BRAND_SHELL.push('./workspace-layout.css','./market-picker.js','./market-picker.css','./form-controls.js','./form-controls.css');
+PATHS.push('./account.html','./account.css','./account-ui.js','./account-keys.js','./account-backup.js','./account-sync.js');BRAND_SHELL.push('./account.html','./account.css','./account-ui.js','./account-keys.js','./account-backup.js','./account-sync.js');
 self.addEventListener('install', event => event.waitUntil((async () => {
   // Refresh cached document/worker policies while retaining already prepared proof assets.
   await (await caches.open(CACHE)).addAll([...BRAND_SHELL, './tests.html', './prover.js', './vendor/ffjavascript.js', './vendor/ffjavascript-worker.js'].map(path => new Request(path, { cache: 'reload' })));

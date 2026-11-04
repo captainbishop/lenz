@@ -1,5 +1,6 @@
 const DB = 'proof-u-private-chat-v1';
 const KEY = 'workspace';
+const backupContent=state=>JSON.stringify([state.identity?.profile,state.contacts,state.messages?.map(record=>record.packet),state.recoveredChat?.archive,state.contactRecoveries??[]]);
 function database() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB, 1);
@@ -30,12 +31,16 @@ async function saveState(state) {
     });
   } finally { db.close(); }
 }
-export async function updateState(operation) {
+export async function updateState(operation,{markBackup=true}={}) {
   if (!navigator.locks) throw new Error('This browser needs Web Locks to save messages safely across tabs.');
   return navigator.locks.request(DB, async () => {
     const state = await readState();
+    const before=state.accountSync?backupContent(state):null;
     const result = await operation(state);
+    const changed=markBackup&&state.accountSync&&before!==backupContent(state);
+    if(changed){state.accountSync.version++;if(state.accountSync.status!=='conflict')state.accountSync.status='pending';}
     await saveState(state);
+    if(changed){globalThis.dispatchEvent?.(new Event('lenz-account-changed'));if(typeof BroadcastChannel==='function'){const channel=new BroadcastChannel('lenz-account-sync');channel.postMessage('changed');channel.close();}}
     return result;
   });
 }

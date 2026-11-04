@@ -1,4 +1,5 @@
 import { createIdentity } from './peer-crypto.js';
+import {startAccountSync} from './account-sync.js';
 import { readState, updateState } from './chat-store.js';
 import { isRecoveredChat,isRecoveredContact } from './chat-access.js';
 import { mountProfilePanels } from './profile-panels.js';
@@ -12,6 +13,7 @@ import {mountWalletTokens,renderWalletTokens} from './wallet-tokens.js';
 import { mountEvmWallet } from './evm-wallet-ui.js';
 import { mountNearWallet, loadNearConfig, renderNearWallet, openNearSend } from './near-wallet.js';
 mountProfilePanels();
+startAccountSync();
 const $ = selector => document.querySelector(selector);
 const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
 let busy = false, statusTimer, sendAfterContact=false;

@@ -27,7 +27,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     const contexts=await Promise.all([0,1,2].map(()=>browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'})));
     const pages=await Promise.all(contexts.map(c=>c.newPage())),[a,b,c]=pages,profiles=[];
     for(const [i,p]of pages.entries()){
-      p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.locator('#wallet-name').fill(['Amina','Bola','Chidi'][i]);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push((await read(p)).identity.profile);
+      p.on('pageerror',e=>errors.push(e.message));await p.goto(base+'/money.html');await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill(['Amina','Bola','Chidi'][i]);await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);profiles.push((await read(p)).identity.profile);
     }
     for(const p of pages)await p.evaluate(async peers=>{await(await import('/chat-store.js')).updateState(s=>{s.contacts=peers.filter(p=>p.id!==s.identity.profile.id);});},profiles);
     await a.evaluate(async({contract,to})=>{const n=await import('/near-protocol.js'),crypto=await import('/peer-crypto.js');await(await import('/chat-store.js')).updateState(async s=>{

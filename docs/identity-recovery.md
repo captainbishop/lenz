@@ -4,8 +4,9 @@ A generated 24-word Lenz phrase recreates the same P-256 signing and encryption
 keys. An encrypted archive can carry the profile, contacts and authenticated text
 messages. The derivation module stages these results without writing to storage.
 The [chat restore flow](legacy-chat-backups.md) can install a signed successor
-from an existing-account backup into an empty browser. Ordinary name-based
-onboarding continues to create device-bound identities.
+from an existing-account backup into an empty browser. The [automatic backup flow](automatic-backup.md) derives the same identity
+from a passkey without a phrase screen. Optional device-only profiles retain
+the earlier name-based onboarding.
 
 The phrase is a Lenz recovery secret. Never enter an existing wallet's seed phrase
 into Lenz. Wallet connection keeps that wallet's signing keys with its provider.
@@ -51,9 +52,9 @@ interface. The caller receives a staged result marked `chat-only` and
 Payment messages, vaults, balances, reservations and other financial fields are
 rejected. The module does not silently drop them. Restored signing keys still
 have cryptographic authority wherever that identity was previously authorized;
-the return marker is not a cryptographic spending lock. Product installation
-accepts only the separate signed successor format and applies chat-only access
-checks. It does not install a standalone archive as a financial account.
+the return marker is not a cryptographic spending lock. Manual product installation accepts the signed successor format. Passkey
+sign-in can install its authenticated same-identity archive; both apply
+chat-only access checks. Neither restores an archive as a financial account.
 Two restored copies can both sign chat messages. No single-device exclusivity
 or safe payment recovery is claimed.
 
