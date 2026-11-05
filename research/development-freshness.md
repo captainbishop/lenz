@@ -1,3 +1,24 @@
+# Wallet receiving instructions, November 5, 2026
+
+Receive preserves the external wallet address while selecting ETH, USDC or WETH
+updates the network-qualified QR. Optional wallet payment links bind a Lenz
+identity, wallet signature, exact asset, network and expiry. Only the link
+expires; existing addresses and transferred funds are unaffected. Link sharing
+discloses the identity/address association and remains under a collapsed section.
+
+Send accepts supported EIP-681 links, verified Lenz receiving links or ordinary
+wallet addresses with an explicit receiving network. Changed signatures,
+addresses, assets, networks and expired instructions stop before wallet dispatch.
+Existing durable transfer recovery, consent and finality checks are retained.
+
+Sixty-nine Node tests and thirty browser groups pass. Four isolated guard removals
+fail their named tests. Both themes were visually reviewed on phone and desktop.
+The existing recording source/video/poster hashes still match. These checks use
+disposable accounts and synthetic wallet responses; no live wallet operation,
+deposit, financial transaction or confidential settlement was performed.
+Automatic Lenz ID lookup, confidential funding and cross-chain execution are
+separate integrations. See [wallet receiving links](../docs/wallet-receiving-links.md).
+
 # Receiving and NEAR AI integration preparation, November 5, 2026
 
 The Intents client validates the asset catalogue and dry same-asset confidential

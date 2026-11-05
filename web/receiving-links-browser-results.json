@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-05T06:02:49.513Z",
+  "passed": 8,
+  "failed": 0,
+  "scope": "Disposable Windows Edge accounts and synthetic wallet provider with independently signed EIP-712 messages. No live wallet, deposit, transaction or confidential settlement.",
+  "checks": [
+    "Receive creates a dual-signed ETH link with a 15-minute expiry without changing the Lenz account or requesting a transfer",
+    "selecting USDC updates the QR and signed asset, clears the earlier link and preserves the stable wallet address",
+    "closing Receive rejects a late wallet signature and clears the shareable link",
+    "a recipient link opens without an account, clears the URL fragment and resolves exact address/network before a consented review",
+    "a link expiring after review blocks before another wallet request; the receiving account is unchanged",
+    "bare addresses require the receiving network; cross-chain destinations stop before wallet reads or transfers",
+    "standard EIP-681 wallet links resolve without a Lenz ID or registration",
+    "substituted receiving addresses fail before balance, fee or signing requests"
+  ],
+  "sourceHashes": {
+    "web/public/receiving-instructions.js": "0e8e6271c652ad086b634b8e5a9aa68c68461e939c1f08dbafab20788a2cce96",
+    "web/public/payment-recipient.js": "560632ec9746bf221f9c3311f83da45f9cf59576eed9ef8bed333ca3bac635ea",
+    "web/public/receiving-link-ui.js": "204cc221f47376e054e3e6b9f2946f0a2b8cacddda91a7e64a9e38ab1823dd56",
+    "web/public/evm-wallet.js": "834f6b7460b020604d67db3726f334214788c1c5d670515796c0c35bff7aa21a",
+    "web/public/evm-wallet-ui.js": "4cc8c5675f47c15c03f61bd41ec7821e8cf115eed3550b36fdea122c5b8353f3",
+    "web/public/evm-transfer.js": "578fde4c60da92dad9d517ab515e3252dbe3ccb4c14b15c3c0e47feddd6c8e29",
+    "web/public/evm-transfer-ui.js": "b5aba4a4537377e097ff38fa3480695dd911f744fc4ba3baf319b71cb4232e0f",
+    "web/public/money.css": "c7a94c512b5367b0572f4b4acc39d9eb2979407f508b21841c70736f65acee7d",
+    "web/receiving-links-browser.test.cjs": "710d36e38e3d7b669d2a7688dd2190c05a14a34984cf86553a4c407d1a00bd60"
+  }
+}

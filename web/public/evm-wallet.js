@@ -1,5 +1,6 @@
 // EIP-1193 session. Keys remain in the selected wallet; no account storage here.
 import { WALLET_NETWORKS, networkId, walletNetworkParameters } from './evm-networks.js';
+import {receivingWalletData,verifyReceivingWallet} from './receiving-instructions.js';
 export { WALLET_NETWORKS } from './evm-networks.js';
 const assert = (ok, message) => { if (!ok) throw Error(message); };
 const quantity = value => typeof value === 'string' && /^0x(?:0|[1-9a-f][0-9a-f]*)$/i.test(value) && value.length <= 66;
@@ -104,6 +105,20 @@ export function createWalletSession({ changed = () => {}, timeoutMs = 30000, net
           // Keep the eventual hash even if the account changes after wallet dispatch.
           // The transfer service durably records this attempt before invoking us.
           return current.request({method:'eth_sendTransaction',params:[structuredClone(transaction)]});
+        },
+        async signReceiving(terms) {
+          assertCurrent();
+          const data=receivingWalletData(terms);
+          assert(terms.address===identity.address&&terms.chainId===identity.chainId,'Receiving wallet changed.');
+          assert(account(await request('eth_accounts',null,current,ticket))===identity.address&&chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId,'Receiving wallet changed.');
+          const code=await request('eth_getCode',[identity.address,'latest'],current,ticket);
+          assert(code==='0x','Receiving links currently require an externally owned wallet.');
+          assertCurrent();receivingWalletData(terms);
+          const typed={...data,types:{EIP712Domain:[{name:'name',type:'string'},{name:'version',type:'string'},{name:'chainId',type:'uint256'}],...data.types}};
+          const signature=await request('eth_signTypedData_v4',[identity.address,JSON.stringify(typed)],current,ticket);
+          assertCurrent();
+          assert(account(await request('eth_accounts',null,current,ticket))===identity.address&&chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId,'Receiving wallet changed.');
+          verifyReceivingWallet(terms,signature);return signature;
         },
       });
     },

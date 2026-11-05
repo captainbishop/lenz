@@ -3,7 +3,9 @@ import { iconButton } from './wallet-actions.js';
 import { walletAmount } from './wallet-visibility.js';
 import qrcode from './qr-vendor/qrcode-generator.js';
 import {mountEvmTransfers} from './evm-transfer-ui.js';
-import {createNetworkStore} from './evm-networks.js';
+import {mountReceivingLinks} from './receiving-link-ui.js';
+import {transferAssets} from './evm-transfer.js';
+import {createNetworkStore,WALLET_NETWORKS} from './evm-networks.js';
 import {mountNetworkControls} from './evm-network-ui.js';
 
 const el = (tag, text) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; return node; };
@@ -45,6 +47,7 @@ export function mountEvmWallet() {
     dialog.close();
   }});
   mountEvmTransfers(session);
+  mountReceivingLinks(session);
   mountNetworkControls(session, networks, next => { selection = next; openConnect(); });
   const providers = [];
   function add(provider, name) {
@@ -81,18 +84,22 @@ export function mountEvmWallet() {
   dialog.addEventListener('close', () => { if (!dialog.open) cancelConnection(); });
   $('evm-disconnect').onclick = () => session.disconnect('Disconnected here. Site permissions remain in your wallet.');
   $('evm-refresh').onclick = async () => { try { await session.refresh(); } catch {} };
-  $('evm-receive').onclick = () => {
+  function renderReceiving(asset='native') {
     const snapshot = session.snapshot; if (!snapshot) return;
+    const token=Object.hasOwn(WALLET_NETWORKS,snapshot.chainId)?transferAssets(snapshot.chainId).find(t=>t.id===asset):{id:'native',symbol:snapshot.network.symbol};if(!token)return;
     $('evm-receive-title').textContent = 'Receive on ' + snapshot.network.name;
-    $('evm-receive-network').textContent = snapshot.network.name + ' · Chain ' + snapshot.network.id;
+    $('evm-receive-network').textContent = token.symbol+' · '+snapshot.network.name;
+    receive.querySelector(':scope>p.quiet').textContent='Public transfer. Use '+snapshot.network.name+' in the sending wallet.';
     $('evm-receive-address').textContent = snapshot.address; $('evm-receive-status').textContent = '';
-    const qr = qrcode(0, 'M'); qr.addData(snapshot.receiveUri); qr.make();
+    const uri=token.id==='native'?snapshot.receiveUri:`ethereum:${token.id}@${snapshot.network.id}/transfer?address=${snapshot.address}`;
+    const qr = qrcode(0, 'M'); qr.addData(uri); qr.make();
     const canvas = $('evm-receive-qr'), count = qr.getModuleCount(), cell = 8, size = (count + 8) * cell;
     canvas.width = canvas.height = size;
     const ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size); ctx.fillStyle = '#173f35';
     for (let row = 0; row < count; row++) for (let col = 0; col < count; col++) if (qr.isDark(row, col)) ctx.fillRect((col + 4) * cell, (row + 4) * cell, cell, cell);
-    receive.showModal();
-  };
+  }
+  $('evm-receive').onclick=()=>{if(!session.snapshot)return;renderReceiving();receive.showModal();};
+  addEventListener('lenz-receiving-asset',event=>{if(receive.open)renderReceiving(event.detail);});
   $('evm-copy').onclick = async () => {
     const snapshot = session.snapshot; if (!snapshot || !receive.open) return;
     try { await navigator.clipboard.writeText(snapshot.address); if (session.snapshot === snapshot && receive.open) $('evm-receive-status').textContent = 'Address copied. Select ' + snapshot.network.name + ' when sending.'; }

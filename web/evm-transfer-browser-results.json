@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:22:25.072Z",
+  "checkedAt": "2026-11-05T06:03:04.100Z",
   "passed": 6,
   "failed": 0,
   "checks": [
@@ -11,17 +11,17 @@
     "network changes invalidate review; offline reload preserves encrypted history without prompting or sending"
   ],
   "sources": {
-    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
-    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
-    "web/public/evm-transfer.js": "8636a85b654cdc9501dd8d8c8dd559a242698f41b38986a55ef7226f6bd09990",
+    "web/public/evm-wallet.js": "834f6b7460b020604d67db3726f334214788c1c5d670515796c0c35bff7aa21a",
+    "web/public/evm-wallet-ui.js": "4cc8c5675f47c15c03f61bd41ec7821e8cf115eed3550b36fdea122c5b8353f3",
+    "web/public/evm-transfer.js": "578fde4c60da92dad9d517ab515e3252dbe3ccb4c14b15c3c0e47feddd6c8e29",
     "web/public/evm-transfer-store.js": "783e76119d7f316807ebbbe645c8db62be0d5c19cbf7d4dbb816e2c3f3458abb",
     "web/public/evm-transfer-service.js": "155179a9092779b3ca8c086fcb6025680b5c9af7e2ebea42d79fee8b5aa00412",
-    "web/public/evm-transfer-ui.js": "65652da38785dc5922b0310783d62939ab8ed858d7c5c095d07f920e1132f995",
-    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
-    "web/public/money.css": "d8cbe410a71f890c90739bd0c199dba4c6aad7e04298020351a28cb1963a9ee7",
-    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
+    "web/public/evm-transfer-ui.js": "b5aba4a4537377e097ff38fa3480695dd911f744fc4ba3baf319b71cb4232e0f",
+    "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
+    "web/public/money.css": "c7a94c512b5367b0572f4b4acc39d9eb2979407f508b21841c70736f65acee7d",
+    "web/public/chat-sw.js": "b46c046dc686799220123df8b01d417f5645559d73b79027378d14301604f337",
     "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
-    "web/evm-transfer-browser.test.cjs": "d9be9685b2e1b9f5188134df1192c887d59bb2f08c23ceec4e63edb0376e8df1"
+    "web/evm-transfer-browser.test.cjs": "decc779a4565a03d8e64ab018f75e42c2a77084805836cdaf0459269e11d6181"
   },
   "scope": "Disposable Edge with injected wallet/chain fixture and actual IndexedDB, QR/cache and UI. No installed wallet, live chain, funds, signature or external transaction."
 }

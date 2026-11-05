@@ -1,4 +1,4 @@
-import {WALLET_NETWORKS} from './evm-wallet.js';
+import {WALLET_NETWORKS} from './evm-networks.js';
 import {EVM_MARKETS} from './evm-markets.js';
 import {getAddress} from './evm-vendor/address.js';
 export const check=(ok,message)=>{if(!ok)throw Error(message);};

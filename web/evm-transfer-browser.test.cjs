@@ -31,7 +31,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   });
   const connect=async()=>{await page.locator('#evm-connect').click();await page.getByRole('button',{name:'Transfer fixture',exact:true}).click();await page.locator('#evm-account').waitFor();};
   await page.goto('http://127.0.0.1:4173/money.html');await connect();
-  const review=async(asset='ETH')=>{await page.locator('#evm-send').click();await page.locator('#evm-send-assets').getByRole('button',{name:asset,exact:true}).click();await page.locator('#evm-send-recipient').fill(to);await page.locator('#evm-send-amount').fill(asset==='ETH'?'1.25':'2.500001');await page.locator('#evm-send-consent').check();await page.locator('#evm-send-review').click();await page.locator('#evm-send-approve').waitFor();};
+  const review=async(asset='ETH')=>{await page.locator('#evm-send').click();await page.locator('#evm-send-assets').getByRole('button',{name:asset,exact:true}).click();await page.locator('#evm-send-recipient').fill(to);await page.getByRole('combobox',{name:'Receiving network',exact:true}).click();await page.getByRole('option',{name:'Ethereum',exact:true}).click();await page.locator('#evm-send-amount').fill(asset==='ETH'?'1.25':'2.500001');await page.locator('#evm-send-consent').check();await page.locator('#evm-send-review').click();await page.locator('#evm-send-approve').waitFor();};
   return {context,page,state,calls,connect,review,transactions,receipts};
  }
  try{
