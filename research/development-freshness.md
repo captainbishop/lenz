@@ -1,3 +1,20 @@
+# Degen chart and trade recovery, November 5, 2026
+
+Selected-token candles use one provider request with response identity checks.
+Trade sides and quantities follow that token, including quote-side listings.
+Saved trades retain their original timestamps during failures. Chart retries
+survive feed refreshes and unrelated saved-data updates between tabs.
+
+The exact staged sources passed 42 Node tests, 24 general browser groups,
+four loading groups, two recovery groups and two cache-upgrade checks. The
+new same-tab regression first observed four requests inside a 30-second retry
+window; the corrected code makes one while an interval change starts its own
+request. Disposable contexts covered phone and desktop, hostile metadata,
+stale responses and preserved fixture identity/vault/reservation state.
+No live-provider latency test or financial request ran in this checkpoint.
+Provider quota and coverage still bound availability. Recorded homepage app
+sources, videos and posters are unchanged.
+
 # Mobile conversation layout, November 5, 2026
 
 An existing profile now opens the message interface on phones, including before

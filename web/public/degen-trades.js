@@ -16,8 +16,11 @@ export function mountDegenTrades(target,row,{allowed=()=>true}={}){
     if(!active||document.hidden||!navigator.onLine||(!allowed()&&!manual)){state.textContent=!navigator.onLine?'Offline · Saved trades':'Updates paused';return;}
     const ticket=++generation;controller?.abort();controller=new AbortController();
     try{
-      const data=checkedTrades(await degenPost(request,controller.signal),request);if(!active||ticket!==generation||document.hidden||!navigator.onLine||(!allowed()&&!manual))return;
-      previous=data;render(data,`${Date.now()-data.observedAt>30000?'Delayed · ':''}Updated ${new Date(data.observedAt).toLocaleTimeString()}`);
+      const raw=await degenPost(request,controller.signal),stale=raw.stale===true;let data=checkedTrades(raw,request,{saved:stale});if(!active||ticket!==generation||document.hidden||!navigator.onLine||(!allowed()&&!manual))return;
+      if(previous&&previous.observedAt>data.observedAt)data=previous;
+      previous=data;
+      if(stale){const delay=Number.isFinite(raw.retryAfterMs)?Math.max(1000,Math.min(300000,raw.retryAfterMs)):60000;render(data,`Saved ${new Date(data.observedAt).toLocaleString()} · Retrying in ${Math.ceil(delay/1000)}s`);timer=setTimeout(()=>load(manual),delay);}
+      else render(data,`${Date.now()-data.observedAt>30000?'Delayed · ':''}Updated ${new Date(data.observedAt).toLocaleTimeString()}`);
       saved.delete(key);saved.set(key,data);while(saved.size>8)saved.delete(saved.keys().next().value);try{localStorage.setItem(storage,JSON.stringify([...saved.values()]));}catch{state.textContent+=' · Not saved';}
     }catch(error){if(active&&ticket===generation){state.textContent=error.message+(previous?' · Earlier trades':'');if(error.retryAfterMs)timer=setTimeout(()=>load(manual),error.retryAfterMs);}}
     finally{if(active&&ticket===generation&&!timer&&allowed())timer=setTimeout(load,15000);}

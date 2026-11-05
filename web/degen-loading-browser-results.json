@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-05T15:42:31.973Z",
+  "checks": [
+    "snapshot-only updates preserve chart instance and retry window",
+    "two visible tabs do not create storage/request loops",
+    "slow chart request survives unrelated saved-data update",
+    "same-page feed retries preserve chart backoff while interval changes load immediately"
+  ],
+  "scope": "Disposable Edge fixtures; live provider availability is separate."
+}

@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-11-05T15:42:34.159Z",
+  "checks": [
+    "a failed network request and then a 502 automatically recover the chart",
+    "saved trade responses remain visible with their original timestamp and refresh after backoff"
+  ],
+  "scope": "Disposable Edge, public API fixtures; no financial requests."
+}

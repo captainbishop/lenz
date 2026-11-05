@@ -51,7 +51,10 @@ export function normalizeTrades(raw,request,now=Date.now()){
   degenRequest(request);requireData(Array.isArray(raw?.data)&&raw.data.length<=300);const rows=[],events=new Map();
   for(const event of raw.data){
     requireData(event?.type==='trade');const t=event.attributes,to=addressKey(t.to_token_address),from=addressKey(t.from_token_address),address=addressKey(request.address);
-    requireData((to===address)!==(from===address),'Trade token changed');const side=to===address?'buy':'sell';requireData(t.kind===side,'Trade direction changed');
+    requireData((to===address)!==(from===address),'Trade token changed');requireData(['buy','sell'].includes(t.kind),'Invalid trade direction');
+    // Provider kind describes its base token. The selected token may be the
+    // quote, so its direction and quantity come from its own transfer leg.
+    const side=to===address?'buy':'sell';
     const row={id:event.id,hash:t.tx_hash,time:Date.parse(t.block_timestamp),side,address:request.address,amount:side==='buy'?t.to_token_amount:t.from_token_amount,price:side==='buy'?t.price_to_in_usd:t.price_from_in_usd,usd:t.volume_in_usd};
     if(events.has(row.id)){requireData(JSON.stringify(events.get(row.id))===JSON.stringify(row),'Conflicting trade event');continue;}events.set(row.id,row);rows.push(row);
   }
@@ -59,12 +62,14 @@ export function normalizeTrades(raw,request,now=Date.now()){
 }
 export async function readDegenCandles(input,{fetchImpl=fetch,clock=Date.now}={}){
   const request=degenRequest(input);requireData(request.kind==='candles');
-  const raw=await jsonRead(discoveryURL({provider:'geckoterminal',kind:'pool',network:request.network,pool:request.pool}).href,fetchImpl);
-  const rows=normalizeDiscovery('geckoterminal',raw);requireData(rows.length===1&&rows[0].network===request.network&&addressKey(rows[0].pool)===addressKey(request.pool)&&addressKey(rows[0].address)===addressKey(request.address),'Pool token changed');
   const [frame,aggregate]={'1m':['minute',1],'5m':['minute',5],'15m':['minute',15],'30m':['minute',15],'1h':['hour',1],'4h':['hour',4],'1d':['day',1],'1w':['day',1]}[request.interval];
   const url=new URL(`${bases.geckoterminal}/networks/${request.network}/pools/${request.pool}/ohlcv/${frame}`);
-  for(const [key,value]of Object.entries({aggregate,limit:request.interval==='1w'?1000:request.interval==='30m'?600:300,currency:'usd',token:'base',include_empty_intervals:'false'}))url.searchParams.set(key,String(value));
-  const result=await jsonRead(url.href,fetchImpl),list=result.data?.attributes?.ohlcv_list;requireData(Array.isArray(list)&&list.length<=1000);
+  for(const [key,value]of Object.entries({aggregate,limit:request.interval==='1w'?1000:request.interval==='30m'?600:300,currency:'usd',token:request.address,include_empty_intervals:'false'}))url.searchParams.set(key,String(value));
+  const result=await jsonRead(url.href,fetchImpl),list=result.data?.attributes?.ohlcv_list;
+  // The fixed pool endpoint returns token identities alongside its candles. Bind
+  // those to the requested address without a second quota-consuming pool read.
+  const base=addressKey(result.meta?.base?.address),quote=addressKey(result.meta?.quote?.address),selected=addressKey(request.address);
+  requireData((base===selected)!==(quote===selected),'Pool token changed');requireData(Array.isArray(list)&&list.length<=1000);
   const candles=list.map(c=>{requireData(Array.isArray(c)&&c.length===6);return {time:c[0]*1000,open:c[1],high:c[2],low:c[3],close:c[4],volume:c[5]};}).reverse();
   const sourceInterval=request.interval==='30m'?'15m':request.interval==='1w'?'1d':request.interval;
   for(let start=0;start<candles.length;start+=300)checkedCandles({request:{...request,interval:sourceInterval},observedAt:clock(),candles:candles.slice(start,start+300),executable:false},{...request,interval:sourceInterval},{now:clock()});
