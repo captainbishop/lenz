@@ -1,3 +1,20 @@
+# Degen request pacing, November 5, 2026
+
+Public data reads are paced instead of exhausting a minute budget in one burst.
+Cold charts have queue priority; bounded fairness prevents trade/history starvation.
+Queued reads return retry instructions within ten seconds, and long provider
+cooldowns return immediately. Foreground reads cancel when their final viewer
+leaves. Saved data returns before its bounded background refresh, retaining its
+original timestamp. The native Lenz chart and external-frame restriction remain.
+
+The isolated staged snapshot passed 53 Node tests, 24 general Degen browser
+groups, four loading groups, two recovery groups and two offline cache upgrade
+checks. Independent reviews reproduced and verified the queue timeout, capacity
+and fairness corrections. Browser and Node evidence uses fixtures and disposable
+contexts. It does not establish millisecond delivery or unrestricted provider
+availability. No paid access, financial action, private record or new media is
+included. Recorded homepage source/video/poster bytes are unchanged.
+
 # Degen chart and trade recovery, November 5, 2026
 
 Selected-token candles use one provider request with response identity checks.

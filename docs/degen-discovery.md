@@ -54,9 +54,14 @@ rendered as text. Remote token icons and arbitrary website links are not loaded.
 
 Reads are coalesced and cached with their original timestamps: ten seconds for
 trades, sixty seconds for market discovery/candles and one hour for networks.
-The relay permits at most four distinct concurrent reads, 24 GeckoTerminal
-request units and forty DEX Screener request units per minute. A candle request
-uses one unit, including token validation. The free provider limits can
+The relay permits at most four distinct concurrent reads and starts reads at
+least 2.5 seconds apart for GeckoTerminal and 1.5 seconds for DEX Screener.
+Selected cold charts take priority over background refreshes, with bounded
+fairness and a ten-second maximum queue wait. Long provider cooldowns return
+retry instructions immediately. Leaving the last foreground viewer cancels its
+pending read. Saved responses return immediately with their original timestamps
+while one bounded background refresh continues. A candle request uses one unit,
+including token validation. The free provider limits can
 still produce unavailable responses; no streaming or trading-latency guarantee
 is made. Automatic refresh runs approximately every 65 seconds only while the
 workspace is visible and automatic data updates are enabled. Trades poll about
@@ -93,6 +98,8 @@ feed updates, slow reads and separate tabs during chart backoff. The
 [recovery checks](../web/degen-recovery-browser-results.json) exercise network
 failure, a temporary server failure and saved trade recovery. These use
 disposable browser contexts and controlled API responses, not live availability.
+Scheduler tests cover queue deadlines, priority, fairness, cancellation and
+provider retry instructions. These do not measure live stream latency.
 
 ## Provider references
 

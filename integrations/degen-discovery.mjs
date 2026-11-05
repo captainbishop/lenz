@@ -11,9 +11,9 @@ export function discoveryURL(input){
   if(r.provider==='geckoterminal'&&!['networks','trades'].includes(r.kind))url.searchParams.set('include','base_token,quote_token,dex,network');
   return url;
 }
-async function jsonRead(url,fetchImpl){
-  const response=await fetchImpl(url,{method:'GET',headers:{accept:'application/json'},redirect:'error',credentials:'omit',signal:AbortSignal.timeout(12000)});
-  if(response.status===429){const error=Error('Source rate limit');const seconds=Number(response.headers.get('Retry-After'));error.retryAfterMs=Number.isFinite(seconds)&&seconds>0?Math.max(1000,Math.min(300000,seconds*1000)):60000;throw error;}
+async function jsonRead(url,fetchImpl,signal){
+  const response=await fetchImpl(url,{method:'GET',headers:{accept:'application/json'},redirect:'error',credentials:'omit',signal:AbortSignal.any([AbortSignal.timeout(12000),...(signal?[signal]:[])])});
+  if(response.status===429){const error=Error('Source rate limit'),header=response.headers.get('Retry-After'),seconds=Number(header),date=Date.parse(header);error.providerRetryAfter=Boolean(header)&&(Number.isFinite(seconds)&&seconds>0||Number.isFinite(date)&&date>Date.now());error.retryAfterMs=error.providerRetryAfter?Math.max(1000,Math.min(300000,Number.isFinite(seconds)&&seconds>0?seconds*1000:date-Date.now())):5000;throw error;}
   requireData(response.ok,'Source unavailable');
   const reader=response.body.getReader();let length=0;const chunks=[];
   try{while(true){const {done,value}=await reader.read();if(done)break;length+=value.byteLength;requireData(length<=1500000,'Source response too large');chunks.push(value);}}finally{await reader.cancel();}
@@ -38,10 +38,10 @@ export function normalizeDiscovery(provider,raw){
   }
   requireData(!candidates.length||rows.length,'No usable source data');return rows;
 }
-export async function readDegen(input,{fetchImpl=fetch,clock=Date.now}={}){
+export async function readDegen(input,{fetchImpl=fetch,clock=Date.now,signal}={}){
   const request=degenRequest(input);
   requireData(request.kind!=='candles');
-  const raw=await jsonRead(discoveryURL(request).href,fetchImpl);
+  const raw=await jsonRead(discoveryURL(request).href,fetchImpl,signal);
   if(request.kind==='networks'){requireData(Array.isArray(raw.data)&&raw.data.length<=100);return checkedNetworks({request,networks:raw.data.map(n=>({id:n.id,name:n.attributes?.name})),hasMore:raw.data.length===100,executable:false},request);}
   if(request.kind==='trades')return normalizeTrades(raw,request,clock());
   const rows=normalizeDiscovery(request.provider,raw);
@@ -60,12 +60,12 @@ export function normalizeTrades(raw,request,now=Date.now()){
   }
   rows.sort((a,b)=>b.time-a.time);return checkedTrades({version:1,request,observedAt:now,trades:rows.slice(0,100),executable:false},request,{now});
 }
-export async function readDegenCandles(input,{fetchImpl=fetch,clock=Date.now}={}){
+export async function readDegenCandles(input,{fetchImpl=fetch,clock=Date.now,signal}={}){
   const request=degenRequest(input);requireData(request.kind==='candles');
   const [frame,aggregate]={'1m':['minute',1],'5m':['minute',5],'15m':['minute',15],'30m':['minute',15],'1h':['hour',1],'4h':['hour',4],'1d':['day',1],'1w':['day',1]}[request.interval];
   const url=new URL(`${bases.geckoterminal}/networks/${request.network}/pools/${request.pool}/ohlcv/${frame}`);
   for(const [key,value]of Object.entries({aggregate,limit:request.interval==='1w'?1000:request.interval==='30m'?600:300,currency:'usd',token:request.address,include_empty_intervals:'false'}))url.searchParams.set(key,String(value));
-  const result=await jsonRead(url.href,fetchImpl),list=result.data?.attributes?.ohlcv_list;
+  const result=await jsonRead(url.href,fetchImpl,signal),list=result.data?.attributes?.ohlcv_list;
   // The fixed pool endpoint returns token identities alongside its candles. Bind
   // those to the requested address without a second quota-consuming pool read.
   const base=addressKey(result.meta?.base?.address),quote=addressKey(result.meta?.quote?.address),selected=addressKey(request.address);

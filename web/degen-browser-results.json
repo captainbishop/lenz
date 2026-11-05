@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T15:42:26.886Z",
+  "checkedAt": "2026-11-05T16:54:56.265Z",
   "passed": 24,
   "checks": [
     "Cross-provider grouping and candles at 1360px",
@@ -38,11 +38,11 @@
     "web/public/degen.css": "8a3f001ebf79d779b83d047dbb6bead787a85ddfd03460b4771d5774c126f436",
     "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
     "web/public/markets.html": "44695a278a3c954f63a60bfb4d4d224b1854415a9b1e0d71dc05b4e6f1480ef3",
-    "web/public/sw.js": "34c6fec5b0b15eec8deff75890b8ca7a1d7c287c06c3c855018977c3a9b3f328",
-    "web/public/chat-sw.js": "ce1311438ced234f1542926b84cfb88d85d9d98843e39d0b6be1f771f0c71cac",
+    "web/public/sw.js": "d677a749e510640da0e69f1ccc9dc719fa4b602e926f64ee41c058b5e7b92a84",
+    "web/public/chat-sw.js": "bf7de91c081407c43c527f6e6602a145812c2058aa05c5f91f3e816bc7c83cf6",
     "web/degen-browser.test.cjs": "6acea0eb3fabd48c09877a186d2b2def5ce9ac12f5188f903c5917ba72fc0ad6",
     "integrations/degen-fixtures.mjs": "9740d963383401455c07e3dd3ec3e74850288b8356830b04c17819cc41a70efd",
-    "integrations/degen-discovery.mjs": "0ee3edcf25925a034842afb4e1f90e93bc8e885857d3aad7f83117d7fa277790"
+    "integrations/degen-discovery.mjs": "cf60363c0aa552804044c6c60e2e68db827338ab9ecae624620e931c090d4181"
   },
   "scope": "Disposable Edge fixtures, 1360/390px, light/dark, no user identity or financial requests. Live provider coverage is separate."
 }
