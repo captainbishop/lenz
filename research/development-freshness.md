@@ -1,3 +1,22 @@
+# Market charts and trade history, November 5, 2026
+
+Degen and perpetuals share a locally bundled candlestick renderer with eight
+intervals, MA7/25/99, separate volume, UTC readouts and keyboard/pointer chart
+navigation. Degen offers scoped chain discovery and a colored trade table.
+Duplicate reads share relay responses; provider cooldowns schedule retries,
+and validated public candle history survives server restarts with saved dates.
+
+Forty-six local checks and eleven detected guard alterations cover discovery,
+interval construction, persistent history, moving averages and the prepared
+NEAR AI adapter. Twenty Hyperliquid tape checks and six guard alterations
+pass. Browser coverage includes responsive charts, navigation, stale responses,
+trade polling and offline caches. See [market charts](../docs/market-charts.md)
+for source-bound reports and the distinction between current and saved data.
+
+The NEAR AI adapter has fixture evidence only. No live inference or financial
+operation ran. Provider capacity, AI access and physical-device behavior retain
+the documented boundaries. Presentation recordings remain unchanged.
+
 # Degen discovery, November 4, 2026
 
 Markets now includes cross-source token search, GeckoTerminal trending/new pools,

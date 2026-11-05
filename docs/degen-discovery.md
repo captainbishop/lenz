@@ -2,7 +2,8 @@
 
 Open **Markets → Degen** to browse trending and newly indexed pools, search a
 token or address, or open a DEX Screener or GeckoTerminal pool link. Search reads
-both providers. Trending and New pools use GeckoTerminal's first result page;
+both providers. The chain selector requests the selected chain directly.
+Trending and New pools use GeckoTerminal's first result page;
 they are not a complete feed of token launches or an organic-volume ranking.
 
 Select a token to inspect its pools, liquidity, reported price, volume and market
@@ -11,7 +12,7 @@ observations remain separate: liquidity and volume are never added across feeds.
 Missing market cap is shown as unavailable, with FDV separately in Token details.
 DEX Screener boosts are labelled where reported. Listing is not endorsement.
 
-Candles use GeckoTerminal's pool OHLCV at 5 minutes, 1 hour or 1 day. The reader
+Candles offer eight periods from 1 minute to 1 week using GeckoTerminal's pool OHLCV. The reader
 checks that the pool's base token matches the selected address before requesting
 USD candles. No candles are fabricated when an interval or pool is unavailable.
 Arrow keys inspect individual candles. The last candle time and read time remain
@@ -33,7 +34,8 @@ remain case-sensitive; hexadecimal addresses are normalized for comparison.
 
 Discovery does not register a chain RPC, request a wallet, grant spending
 authority, or make a venue executable. Every observation carries
-`executable: false`. This screen provides no buy/sell, position management,
+`executable: false`. Recent buys/sells are displayed as reported observations.
+This screen provides no order submission, position management,
 launch-curve migration verification or private settlement. Those require the
 actual venue interfaces and independently verified authorization and outcomes.
 Adding a source is independent of implementing an execution adapter.
@@ -46,13 +48,15 @@ references and are never fetched directly. Redirects, excess fields, oversized
 responses and substituted pool/token data are rejected. Source metadata is
 rendered as text. Remote token icons and arbitrary website links are not loaded.
 
-Reads are coalesced and cached for 60 seconds with their original timestamps.
-The relay permits at most four distinct concurrent reads, eight GeckoTerminal
+Reads are coalesced and cached with their original timestamps: ten seconds for
+trades, sixty seconds for market discovery/candles and one hour for networks.
+The relay permits at most four distinct concurrent reads, 24 GeckoTerminal
 request units and forty DEX Screener request units per minute. A candle request
 uses two units for pool validation and history. The free provider limits can
 still produce unavailable responses; no streaming or trading-latency guarantee
 is made. Automatic refresh runs approximately every 65 seconds only while the
-workspace is visible and automatic data updates are enabled. Search and refresh
+workspace is visible and automatic data updates are enabled. Trades poll about
+every 15 seconds, with bounded retries after throttling. Search and refresh
 remain explicit actions when automatic updates are paused.
 
 The providers and local server can see public token queries. Watchlists, public
@@ -63,21 +67,10 @@ superseded or hidden-page responses cannot replace the current view.
 
 ## Verification
 
-- [Discovery checks](../integrations/degen-verification.json): twelve Node tests
-  and six detected guard alterations, including real local HTTP boundaries.
-- [Browser checks](../web/degen-browser-results.json): twenty-two disposable Edge
-  checks at 1360px and 390px, including chain filtering, keyboard candles, saved
-  watchlists, stale responses, failed sources and repeated category changes.
-- [Public reads](../integrations/degen-live-results.json): trending/new pools,
-  both search sources and exact-pool candles through the app's local HTTP route.
-- [Live browser](../web/degen-live-browser-results.json): real token data and
-  candles, followed by watchlist and candle reload through the offline cache.
-
-Both themes were visually inspected. These checks use disposable browser
-contexts, do not operate user accounts and do not submit financial transactions.
-They do not establish complete chain/launchpad coverage or physical-device
-behavior. Existing navigation, form-control and presentation-provenance checks
-also pass.
+The current [market chart and trade checks](market-charts.md#verification) cover
+chain discovery, trade direction, exact-pool candles, throttling, chart controls,
+visibility, offline retention and public provider reads. Earlier discovery reads
+remain recorded in [public reads](../integrations/degen-live-results.json).
 
 ## Provider references
 

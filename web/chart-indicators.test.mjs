@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {movingAverage,MA_PERIODS} from './public/chart-indicators.js';
+test('moving averages use only the completed lookback and keep source timestamps',()=>{const candles=[2,4,9,13,22].map((close,i)=>({time:10+i*7,close}));assert.deepEqual(movingAverage(candles,3),[{time:24,value:5},{time:31,value:26/3},{time:38,value:44/3}]);assert.deepEqual(movingAverage(candles.slice(0,2),3),[]);});
+test('all three overlays match independent slice means without changing input',()=>{const candles=Array.from({length:130},(_,i)=>({time:i+1,close:(i%11)+1})),original=structuredClone(candles);for(const period of MA_PERIODS){const actual=movingAverage(candles,period);assert.equal(actual.length,candles.length-period+1);for(const point of actual){const index=point.time-1;assert.equal(point.value,candles.slice(index-period+1,index+1).reduce((sum,c)=>sum+c.close,0)/period);}}assert.deepEqual(candles,original);});
+test('invalid prices and averaging periods are rejected',()=>{for(const close of [0,-1,NaN,Infinity])assert.throws(()=>movingAverage([{time:1,close}],7));for(const period of [0,-1,1.5,NaN])assert.throws(()=>movingAverage([],period));});

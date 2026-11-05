@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T20:43:44.767Z",
+  "checkedAt": "2026-11-05T03:20:21.861Z",
   "passed": 6,
   "checks": [
     "themed menus bind exact swap direction and tolerance without consenting or requesting a quote",
@@ -12,13 +12,13 @@
   "sources": {
     "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
     "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",
-    "web/public/markets.html": "06605ee91ec962ece2ba3345d23bdd9b20fcd696057953783056595eb8be8a03",
+    "web/public/markets.html": "44695a278a3c954f63a60bfb4d4d224b1854415a9b1e0d71dc05b4e6f1480ef3",
     "web/public/money.html": "dff06eefcb8e25d5c0e7b63368203593467ca02f59764d90880e178787fb5126",
     "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
     "web/public/routes.html": "164a4bb87cdff757a06a1770b7f0116e987db3e62b847190316ec470f375cef0",
-    "web/public/sw.js": "23277c39276d0e474e4a5b3b9d536fa99a183ef6cd94cef1aab11726b22a993d",
-    "web/public/chat-sw.js": "0fbe5c17021cca1c1e1602af8f588aef7d8b36b6273616895c9e86b81b7f5a59",
-    "web/form-controls-browser.test.cjs": "1b3abbb143f8f9803af91843dd5bc17af3bd445b4c2a5232c2b2c37c2ee3fabd"
+    "web/public/sw.js": "2bcc396a60f022983df57a28a3989d900d4800ab79b919c4b963e670606d23b7",
+    "web/public/chat-sw.js": "ea2b8c85e0fc0b0c7d88f4b6b8cef0e47bbf8b6bf89a542c01cedab953a8013a",
+    "web/form-controls-browser.test.cjs": "ac9a7a0593e052d344ec729145c94ee27c2365e877489a05a72e53a6c3886c1b"
   },
   "scope": "Disposable Edge with fixture market data and synthetic form; emulated viewport checks, no physical-device or screen-reader certification, wallet operation or financial transaction."
 }

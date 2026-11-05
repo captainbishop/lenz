@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-11-04T20:43:39.411Z",
-  "tests": 12,
-  "passed": 12,
+  "checkedAt": "2026-11-05T03:20:33.544Z",
+  "tests": 46,
+  "passed": 46,
   "failed": 0,
-  "guardAlterations": 6,
+  "guardAlterations": 11,
   "results": [
     {
       "guard": "chain identity",
@@ -28,15 +28,45 @@
     {
       "guard": "same-origin access",
       "detected": true
+    },
+    {
+      "guard": "trade token",
+      "detected": true
+    },
+    {
+      "guard": "trade direction",
+      "detected": true
+    },
+    {
+      "guard": "conflicting trade events",
+      "detected": true
+    },
+    {
+      "guard": "trade amount",
+      "detected": true
+    },
+    {
+      "guard": "provider rate budget",
+      "detected": true
     }
   ],
   "sourceHashes": {
-    "web/public/degen-model.js": "5022e1814f9f31832a630d1685234e7234e73c3dedb620e49545a31f7ef27f14",
-    "integrations/degen-discovery.mjs": "aa9bb1d8e937b061b523b0857a0f5e22ba6b9338cc1939a3c5b5b830cad39298",
-    "web/degen-relay.mjs": "2c9ad6b4dcd7e52b3502ef478d4c618545a2e98fd62940ca309fc12630bc2d82",
-    "integrations/degen-discovery.test.mjs": "0856b5edda51c7030fb2a30c4cff1bcaf3398d0fe028ff8f337672b91ef6ceba",
-    "integrations/degen-fixtures.mjs": "6b230a4a7820b175e7fbc1d819d97539049bdb5ef8c88a12caaa50b632e97fb2",
-    "integrations/verify-degen.mjs": "2ffd92e998513cace9e1370e22f2fe79bf8ec6a35f0d73391d7d5bb1516b5998"
+    "web/public/degen-model.js": "45b50b6bfab6014b0b21344a57fffc635faaadd5dc85ae29db37a7c093842c63",
+    "integrations/degen-discovery.mjs": "3918600194b7ea0b57728df729aaad813ed70ba530f24893168f995c965d9c1f",
+    "web/degen-relay.mjs": "f278dfe37fce61a49b671d900a64b13b9b7624134a4e58420b29100494802652",
+    "integrations/degen-discovery.test.mjs": "4b71537076c0c1ed86ae19c472de557684d3390506c91025f32488db63a238d3",
+    "integrations/degen-fixtures.mjs": "9740d963383401455c07e3dd3ec3e74850288b8356830b04c17819cc41a70efd",
+    "integrations/verify-degen.mjs": "4906e12a2e53cd0bf6aec74db36111a32758ac8a9fce8afa8bf7fde40dc538ec",
+    "integrations/chart-intervals.test.mjs": "dc73806e5c6c6ef5a2370579fc30e59cc7014d5f0e730f9d7f872dda85d6bc71",
+    "integrations/market-tape.mjs": "c64f7a592bbcf7d1046f71f6fb1195f43a0d9adc4b8bb1251a3f026e2beccd5e",
+    "web/public/market-tape.js": "474a61d3e778e907443b546e295b8e9fb0eb01808e398e2b638ce320e83ee9a6",
+    "integrations/market-tape-fixtures.mjs": "9bf0f91df83cfb7cdb3044d129059b7464824908cae186143d19bdcaffd0a7b0",
+    "web/degen-history.mjs": "d08d4fcbe44e0449d2c275b0aaad00313d1ca0659eeb290da293ed06b1e67ac7",
+    "web/degen-history.test.mjs": "3695ad01337ac296f18e5a29bd64e9e294cebadf95d5c24c2b9392fc56a739e9",
+    "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
+    "web/chart-indicators.test.mjs": "4ebdf8431ab49cb041df4b64b95e08005a72deca05b06382bf76af5488e21606",
+    "integrations/chart-analysis.mjs": "b813e534db696ec9e1e18b2a2bed7d5a2a63359cca50c5ff10d20611aef1c9ff",
+    "integrations/chart-analysis.test.mjs": "d644ea5c8cdd09925b65386995da95b5cb25a4321b3cb36c137dd25b03d043d1"
   },
-  "scope": "Synthetic discovery, pool identity, request boundaries and real local HTTP. No financial execution or user account access."
+  "scope": "Synthetic discovery, intervals, public history in SQLite, indicator math, AI adapter boundaries and real local HTTP. NEAR AI uses an injected SDK fixture; no live inference, financial execution or user account access."
 }

@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-11-05T03:20:14.538Z",
+  "sources": {
+    "web/public/degen-ui.js": "6efd4e3cebedb85ecbe3785f654892361eb834576490f86b444d52296c54c7b8",
+    "web/public/degen-model.js": "45b50b6bfab6014b0b21344a57fffc635faaadd5dc85ae29db37a7c093842c63",
+    "web/public/degen-chart.js": "1f3d5949e759d3b0df905c0aea9e6fe1cbfcd83669ae9775e305a5917dcd5487",
+    "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
+    "web/degen-switch-browser.test.cjs": "1e75d84b348c74778e395f80da2b06ecb386829b0ccfe8202f23243445a810c3"
+  },
+  "results": [
+    {
+      "width": 1360,
+      "feed": "new",
+      "ms": 52.69999980926514,
+      "symbol": "NEW"
+    },
+    {
+      "width": 1360,
+      "feed": "trending",
+      "ms": 28.700000047683716,
+      "symbol": "TREND"
+    },
+    {
+      "width": 1360,
+      "feed": "new",
+      "ms": 26.299999952316284,
+      "symbol": "NEW"
+    },
+    {
+      "width": 1360,
+      "feed": "trending",
+      "ms": 28.700000047683716,
+      "symbol": "TREND"
+    },
+    {
+      "width": 390,
+      "feed": "new",
+      "ms": 33.60000014305115,
+      "symbol": "NEW"
+    },
+    {
+      "width": 390,
+      "feed": "trending",
+      "ms": 27.40000009536743,
+      "symbol": "TREND"
+    },
+    {
+      "width": 390,
+      "feed": "new",
+      "ms": 24.5,
+      "symbol": "NEW"
+    },
+    {
+      "width": 390,
+      "feed": "trending",
+      "ms": 28.5,
+      "symbol": "TREND"
+    }
+  ],
+  "errors": [],
+  "scope": "Disposable Edge with synthetic feeds. Warm-cache click-to-next-frame timings, not public-provider latency or physical-device measurements."
+}

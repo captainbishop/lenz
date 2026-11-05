@@ -1,10 +1,12 @@
 {
-  "checkedAt": "2026-11-04T17:04:07.934Z",
-  "passed": 7,
+  "checkedAt": "2026-11-05T03:25:10.748Z",
+  "passed": 9,
   "checks": [
     "opening a market loads checked public candles and depth without an extra start control",
     "candle keyboard inspection and range controls expose real OHLC values",
     "Long and Short controls bind the exact requested side",
+    "all eight perpetual intervals load checked candles",
+    "cached perpetual interval paints before the delayed refresh (27 ms); closed candle table is not rebuilt",
     "terminal fits desktop, tablet, phone and landscape in both themes; mobile panes switch",
     "order review exposes compact side, size, fill, fees, collateral and account fields",
     "changing interval discards a delayed response even when abort is ignored",
@@ -15,14 +17,19 @@
     "web/public/terminal.css": "ae63efef8f77188ca7b037f414469bbf97401fed5083a4e361a2df361e018df4",
     "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
     "web/public/defi-surfaces.js": "bb90c5ac6106cf4f0423ab9de6bb5403a7eee2b88a09112fcf1e5aeeb7833ca4",
-    "web/public/perp-terminal.js": "e0c66e7fe7be3f097b966f0e2886379cf87552d89f8fa54d8f60ff21cd60f01b",
-    "web/public/market-tape.js": "aa4f36a155041fe5fa9049a9141580886b8ecc33657b3d221a420a55179892a8",
+    "web/public/perp-terminal.js": "e2fbe4762220f880bf304c4792f218dea49d2853c778ae9edfdaaee34715ead1",
+    "web/public/market-tape.js": "474a61d3e778e907443b546e295b8e9fb0eb01808e398e2b638ce320e83ee9a6",
+    "web/public/market-tape-cache.js": "b76e605971d8f195e725a28c87eb7823d7433ca1b72b7caea3a68ac1bb986da1",
+    "web/public/degen-chart.js": "1f3d5949e759d3b0df905c0aea9e6fe1cbfcd83669ae9775e305a5917dcd5487",
+    "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
+    "web/public/chart-vendor/lightweight-charts.js": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+    "web/public/degen.css": "8a3f001ebf79d779b83d047dbb6bead787a85ddfd03460b4771d5774c126f436",
     "web/public/routes.css": "a32468d7642d5c685ae39428a9dca3f48db8337c5a1cb0f2cb4a9eddb743b7d1",
     "web/public/route-draft-ui.js": "7626b01d12c54e8a53bf693b5284f61f74d060ae086042a57c7fb7053a3403df",
     "web/public/market-quote-ui.js": "2b8c4de80440b785fa093889394542233c18412c7e178c715cea063465936226",
-    "web/public/markets.html": "d8f0b0458f11cc060f82bf82a6f6f31178750f9e8eb2035097b1a90f347aecfe",
-    "web/public/markets.js": "bf2e9016d358ab71de84c85c44634b4f6a99afae303ce7fb0edaf1bb7dafc0f4",
-    "web/terminal-browser.test.cjs": "ae25a02ff79de955dbe4d285b23549476670c377b16e5ed480ed5cadf396875f"
+    "web/public/markets.html": "44695a278a3c954f63a60bfb4d4d224b1854415a9b1e0d71dc05b4e6f1480ef3",
+    "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
+    "web/terminal-browser.test.cjs": "d6a9932a36de996a8955e2f2cc9dbcd9e4442475a8e526b646d3cf26aacbddd0"
   },
   "scope": "Synthetic public market data and disposable Edge profile. No user identity, signing, account connection or execution. Layouts do not certify visual quality or physical-device behavior."
 }

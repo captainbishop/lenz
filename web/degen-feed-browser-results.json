@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-05T03:25:29.513Z",
+  "passed": 10,
+  "checks": [
+    "Throttled chart retries, labels server history Saved, and replaces it with current data",
+    "Six aligned columns, distinct buy/sell colors and three trade-value markers",
+    "Solana discovery and trades load when absent from the global sample",
+    "Eight intervals request the selected period",
+    "Zoom, pan and keyboard reset inspect different saved candles",
+    "Provider catalogue adds new discovery chains without a wallet adapter",
+    "Timed polling installs newly reported trades",
+    "Pause stops polling and explicit refresh still updates trades",
+    "Offline tape retains observations and stops requests",
+    "Hidden page rejects late trade replies even when abort is ignored"
+  ],
+  "sources": {
+    "web/public/degen-ui.js": "6efd4e3cebedb85ecbe3785f654892361eb834576490f86b444d52296c54c7b8",
+    "web/public/degen-http.js": "87a4abc281f8f28016628cff350554a06431952e433c94f182ad32188abe670c",
+    "web/public/degen-trades.js": "1e5a9f4bdb76827d0d7e923f51e6a709a6a070542ff7eff451179b49048f96e3",
+    "web/public/degen-chart.js": "1f3d5949e759d3b0df905c0aea9e6fe1cbfcd83669ae9775e305a5917dcd5487",
+    "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
+    "web/public/chart-vendor/lightweight-charts.js": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+    "web/public/degen-model.js": "45b50b6bfab6014b0b21344a57fffc635faaadd5dc85ae29db37a7c093842c63",
+    "web/public/degen.css": "8a3f001ebf79d779b83d047dbb6bead787a85ddfd03460b4771d5774c126f436",
+    "web/degen-feed-browser.test.cjs": "63744c23e782206026bc7857db379d1ff044c3a3da778510de15ff073f6e60c6",
+    "integrations/degen-fixtures.mjs": "9740d963383401455c07e3dd3ec3e74850288b8356830b04c17819cc41a70efd"
+  },
+  "scope": "Disposable Edge with synthetic public feeds, simulated visibility and accelerated timers. No user accounts or financial actions."
+}

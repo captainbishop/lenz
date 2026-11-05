@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T20:38:49.874Z",
+  "checkedAt": "2026-11-05T03:22:39.362Z",
   "passed": 6,
   "checks": [
     "Repeated Prices, Perpetuals, Liquidity, Credit and All markets navigation stays responsive at 1280px with unavailable price feeds",
@@ -12,10 +12,13 @@
   "sources": {
     "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
     "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
-    "web/public/markets.html": "06605ee91ec962ece2ba3345d23bdd9b20fcd696057953783056595eb8be8a03",
+    "web/public/markets.html": "44695a278a3c954f63a60bfb4d4d224b1854415a9b1e0d71dc05b4e6f1480ef3",
     "web/public/oracle-prices-ui.js": "a278d689415a5cfdccd4e3c02daec3e68bc65b9bdd445524f9dcfa3765ca30ec",
     "web/public/market-picker.js": "40f98aec2f36c3b93f37f4b7672dd627b87a2ad3f933dcf69a5a57858f679f72",
-    "web/market-navigation-browser.test.cjs": "a234e41496dac55eec2e73eda7e1c595950094992abd38a51d64952a3914c1fb"
+    "web/public/degen-chart.js": "1f3d5949e759d3b0df905c0aea9e6fe1cbfcd83669ae9775e305a5917dcd5487",
+    "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
+    "web/public/chart-vendor/lightweight-charts.js": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
+    "web/market-navigation-browser.test.cjs": "809bfcf17d1798f858f861b482166098139e5837ba96e52ae16bd5be45599f5d"
   },
   "scope": "Disposable Edge, saved fixture markets, failed price feeds, real event-loop yields and repeated category changes. Runaway-observer tripwire fails assertions. No user storage changes or financial requests."
 }
