@@ -16,7 +16,19 @@ import { loadChatMoney, mountChatMoney, renderChatMoney, renderNearPaymentCard, 
 const $ = selector => document.querySelector(selector);
 mountProfilePanels();
 startAccountSync();
-let active = null, lastPacket = null, busy = false, showThread = null;
+let active = null, lastPacket = null, busy = false, showThread = true;
+const phone = matchMedia('(max-width:760px), (max-width:1000px) and (max-height:500px)'), appNav = $('#chat-app-nav');
+function updateNavigation() {
+  if (phone.matches) appNav.setAttribute('popover', 'auto');
+  else { if (appNav.matches(':popover-open')) appNav.hidePopover(); appNav.removeAttribute('popover'); }
+}
+updateNavigation(); phone.addEventListener('change', updateNavigation);
+appNav.addEventListener('toggle', () => $('#chat-options').setAttribute('aria-expanded', String(appNav.matches(':popover-open'))));
+appNav.addEventListener('click', event => {
+  if (event.target.closest('button,a') && appNav.matches(':popover-open')) {
+    appNav.hidePopover(); $('#chat-options').focus();
+  }
+}, {capture:true});
 const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
 function status(text, error = false) { $('#status').textContent = text; $('#status').className = error ? 'status error' : 'status'; }
 function element(tag, text, className) { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; }
@@ -71,8 +83,8 @@ async function render() {
   $('#people-empty').hidden = !!list.children.length;
   $('#people-empty').textContent = state.contacts.length ? 'No one matches that name.' : 'Your conversations will appear here.';
   const contact = state.contacts.find(p => p.id === active);
-  if (showThread === null) showThread = !!contact;
-  $('main').classList.toggle('has-conversation', !!contact && showThread);
+  $('main').classList.toggle('has-conversation', !!state.identity && showThread);
+  $('#close-people').hidden = !state.identity;
   $('#conversation-name').textContent = contact ? contact.name : 'Your conversations';
   paintAvatar($('#conversation-avatar'), contact ?? {});
   $('#conversation-subtitle').textContent = contact ? `Encrypted between you and ${contact.name}.` : 'Private messages, saved on this device.';
@@ -81,7 +93,7 @@ async function render() {
   const messages = $('#messages'); messages.replaceChildren();
   if (!contact) {
     const empty = element('div', undefined, 'empty-conversation'), mark = element('img'); mark.src = '/brand/mark.svg'; mark.alt = '';
-    empty.append(mark, element('h3', 'Talk privately. Use DeFi without internet.'), element('p', state.identity ? 'Add someone using their contact card. Your messages and financial agreements will live in the same conversation.' : 'Use a name you choose, or start with a private profile.'));
+    empty.append(mark, element('h3', 'Start a conversation'), element('p', state.identity ? 'Add someone to exchange messages.' : 'Create an account or use this device only.'));
     if (state.identity) { const add = element('button', 'Add someone'); add.type = 'button'; add.onclick = () => $('#show-add-contact').click(); empty.append(add); }
     messages.append(empty); return;
   }
@@ -140,7 +152,8 @@ $('#continue-private').onclick = () => startIdentity(alias, true);
 setupProfile({ action, status });
 setupContacts({ action, status, select: id => { active = id; showThread = true; } });
 $('#contact-search').oninput = () => action(async () => {});
-$('#back-people').onclick = () => { showThread = false; $('main').classList.remove('has-conversation'); };
+$('#back-people').onclick = () => { showThread = false; $('main').classList.remove('has-conversation'); $('.people-heading h2').focus(); };
+$('#close-people').onclick = () => { showThread = true; $('main').classList.add('has-conversation'); $('#back-people').focus(); };
 $('#open-about').onclick = () => $('#about-lenz').showModal();
 $('#receive-message').onclick = () => { $('#handover-feedback').textContent = ''; $('#handover').showModal(); };
 async function expose(packet, kind = 'message') {

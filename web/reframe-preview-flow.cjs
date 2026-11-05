@@ -3,7 +3,7 @@
 const { chromium } = require('playwright'), assert = require('node:assert/strict');
 const fs = require('node:fs/promises'), path = require('node:path'), { createHash } = require('node:crypto');
 const root = path.resolve(__dirname,'..'), base='http://127.0.0.1:4173';
-const privateRoot=path.join(root,'contracts/.testnet/offline-social-live-2026-10-31');
+const privateRoot=process.env.LENZ_PREVIEW_PROFILES??path.join(root,'contracts/.testnet/offline-social-live-2026-10-31');
 const sha=b=>createHash('sha256').update(b).digest('hex');
 (async()=>{
   const capture=JSON.parse(await fs.readFile(path.join(privateRoot,'preview-capture.json')));
@@ -20,6 +20,12 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
       await network.send('Network.setBypassServiceWorker',{bypass:true});
       await network.send('Network.setCacheDisabled',{cacheDisabled:true});
       await p.route('**/api/**',r=>r.abort());
+      if(process.env.LENZ_PREVIEW_PUBLIC)await p.route(base+'/**',async route=>{
+        const publicRoot=path.resolve(process.env.LENZ_PREVIEW_PUBLIC),pathname=new URL(route.request().url()).pathname;
+        const file=path.resolve(publicRoot,'.'+decodeURIComponent(pathname));
+        if(pathname.startsWith('/api/')||!file.startsWith(publicRoot+path.sep))return route.abort();
+        try{await route.fulfill({body:await fs.readFile(file),contentType:({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml','.png':'image/png'})[path.extname(file)]??'application/octet-stream'});}catch{await route.abort();}
+      });
       ctx.on('request',r=>{const u=new URL(r.url());if(u.origin===base&&/\.(js|css|html|json|svg)$/.test(u.pathname))sources.add('web/public'+u.pathname);});
       await p.goto(base+'/chat.html');await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Private chat is ready'));
       const snapshot=()=>p.evaluate(async()=>JSON.stringify(await(await import('/chat-store.js')).readState()));

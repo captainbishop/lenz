@@ -1,4 +1,4 @@
-// Preview recording revision: 73e673bab22a965323e0a90166f834dced5ea0e49f276e0ad6ec086e705512d8
+// Preview recording revision: f163cd3a4cba36be88b3dadd938a578c5aa7d9e42a67a5aa6909808dc8ff21da
 // Market shell revision: trading-charts-20261105-2
 importScripts('/media-range.js');
 const CACHE = 'proof-u-web-demo-v1';

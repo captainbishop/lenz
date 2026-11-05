@@ -122,3 +122,11 @@ passing UI checks; the wallet remains under review.
 Apply [workflow privacy boundaries](privacy-workflows.md) to every approval and
 status. Avoid phrases implying the user's device must reconnect for all offline
 DeFi, or implying carrier storage is execution. Show the actual request state.
+
+## Mobile conversations
+
+An existing profile opens the message area on phones, including before the first
+contact is added. The composer stays disabled until a recipient exists. Your
+people opens a separate list; returning preserves the selected conversation and
+its draft. Wallet, offline saving and delivery controls remain available in the
+compact options menu. Desktop retains the people list beside the conversation.

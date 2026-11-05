@@ -1,3 +1,16 @@
+# Mobile conversation layout, November 5, 2026
+
+An existing profile now opens the message interface on phones, including before
+the first contact. People navigation keeps the selected conversation and draft.
+The compact options menu restores focus after its dialogs close. Desktop keeps
+both panels. Five disposable-browser groups and two cache-upgrade checks pass;
+profile regression checks also pass on the working application. No external
+message delivery or financial action ran. Physical-device checks remain open.
+
+Ten replayed desktop crops and the original receipt chain match their saved
+versions. Videos and posters remain unchanged. The source review records only
+the affected code hashes and the unchanged-frame comparison.
+
 # Wallet connection wording, November 5, 2026
 
 The connection prompt uses one short sentence. Wallet account permission,
