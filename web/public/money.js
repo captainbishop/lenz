@@ -11,6 +11,7 @@ import { themeIcon } from './theme-icon.js';
 import {mountWalletActions} from './wallet-actions.js';
 import {mountWalletTokens,renderWalletTokens} from './wallet-tokens.js';
 import { mountEvmWallet } from './evm-wallet-ui.js';
+import { mountWalletPortfolio } from './wallet-portfolio.js';
 import { mountNearWallet, loadNearConfig, renderNearWallet, openNearSend } from './near-wallet.js';
 mountProfilePanels();
 startAccountSync();
@@ -34,6 +35,7 @@ async function action(operation) {
 async function render() {
   const state = await readState(), hasIdentity = !!state.identity;
   $('#wallet-onboarding').hidden = hasIdentity; $('#wallet-content').hidden = $('#my-profile').hidden = !hasIdentity;
+  portfolio.render(hasIdentity);
   await renderProfile(state.identity?.profile); await renderNearWallet(state); if (!hasIdentity) return;
   await renderWalletTokens();
   const people = $('#wallet-people'); people.replaceChildren();
@@ -92,6 +94,7 @@ mountWalletActions({addRecipient:scan=>{
 for(const id of ['near-send','near-receive','near-fund']){const button=$('#'+id),label=document.createElement('span');label.textContent=button.getAttribute('aria-label');button.append(label);}
 if($('#wallet-content'))mountWalletTokens({action});
 mountEvmWallet();
+const portfolio=mountWalletPortfolio();
 $('#add-contact').addEventListener('close',()=>{
   if(sendAfterContact){sendAfterContact=false;openNearSend();}
   $('#add-title').textContent='Add a person';

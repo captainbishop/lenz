@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T15:22:07.686Z",
+  "checkedAt": "2026-11-05T04:11:49.874Z",
   "passed": 7,
   "failed": 0,
   "checks": [
@@ -14,11 +14,11 @@
   "sources": {
     "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
     "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
-    "web/public/money.js": "bfede56a847787271818458737a64733892934224f99d0657de939d65b6d8c9a",
-    "web/public/workspace-layout.css": "559a444de454d9a092b30a9e8c81c7c77550c87edb84f510d329bdd5b5d1ad0c",
-    "web/public/money.css": "d8cbe410a71f890c90739bd0c199dba4c6aad7e04298020351a28cb1963a9ee7",
-    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867",
-    "web/evm-wallet-browser.test.cjs": "9f283346e7eb3b1a32e822448c4280bf0a139e7fad9bc6a39c5383f81c20efa9"
+    "web/public/money.js": "821bebcba3b376a8cc91300677140a85bb4b9a7b87dfcdbaa943f1d2a413e210",
+    "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
+    "web/public/money.css": "2876089491ec51a72fbe1fd8c7f530e46f1d6b89674d204a5d397ee18f9c6c91",
+    "web/public/chat-sw.js": "9b6d02066e731ab2812908047883a4809f94154c3de881c99094ad0b12e85ea6",
+    "web/evm-wallet-browser.test.cjs": "8f11966041afbcd79a05558791cae3be9c6ae138cbd165046f8100e36fd0e5d9"
   },
   "scope": "Disposable desktop Edge, injected EIP-1193/EIP-6963 fixtures and real local QR/cache/IndexedDB. No installed-wallet compatibility, physical phone, mainnet balance verification, signature or financial transaction."
 }

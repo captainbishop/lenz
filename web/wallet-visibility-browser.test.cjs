@@ -1,3 +1,4 @@
+const {openWalletSection}=require('./wallet-test-ui.cjs');
 const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 // Disposable browser state and local fixture backing; no chain or financial API calls.
@@ -37,7 +38,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await page.evaluate(()=>{const c=new BroadcastChannel('proof-u-chat-refresh');c.postMessage('changed');c.close();});
   await page.waitForTimeout(200);assert.equal(await page.locator('#near-total').innerText(),'••••');assert.equal(await snapshot(),before);
   checks.push('keyboard toggle masks available, payment and saved-swap amounts; tabs and rerenders preserve the preference and vault');
-  await page.locator('#show-card').click();const id=await page.locator('#my-lenz-id').inputValue();
+  await openWalletSection(page,'people');await page.locator('#show-card').click();const id=await page.locator('#my-lenz-id').inputValue();
   await page.locator('#copy-lenz-id').click();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),id);
   await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async data=>{window.sharedId=data;}}));await page.locator('#share-card').click();
   assert.deepEqual(await page.evaluate(()=>window.sharedId),{title:'My Lenz ID',text:id});

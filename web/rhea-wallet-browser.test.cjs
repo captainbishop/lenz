@@ -1,3 +1,4 @@
+const {openWalletSection}=require('./wallet-test-ui.cjs');
 async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
 const {chromium}=require('playwright');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
@@ -20,14 +21,14 @@ let base;
     const context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'}),p=await context.newPage();p.on('pageerror',e=>errors.push(e.message));await open(p);
     await p.locator('#device-profile > summary').click();await p.locator('#wallet-name').fill('Rhea disposable');await p.locator('#wallet-identity-form button[type=submit]').click();await idle(p);
     const identity=await p.evaluate(async c=>{const {updateState}=await import('/chat-store.js');const n=await import('/near-protocol.js');return updateState(async s=>{const v=n.emptyNearVault(c.reserve),r=await n.fundingRequest(s.identity,c.reserve,'10');v.roots.push({id:r.id,owner:r.owner,amount:r.amount});await n.saveNearVault(s,v);return s.identity.profile.id;});},c);
-    await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');
+    await p.reload();await openWalletSection(p,'defi');await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');await openWalletSection(p,'defi');
     await check('everyday wallet hides technical import, transaction export and experimental signer controls',async()=>{
       const text=await p.locator('body').innerText();assert(!text.includes('Carry a signed swap'));assert(!text.includes('Deposit transaction details'));assert.equal(await p.locator('#rhea-file').count(),0);assert.equal(await p.locator('#near-signer-connect').isVisible(),false);assert(await p.getByRole('button',{name:'New swap',exact:true}).isVisible());
     });
     await walletSettings(p);await p.locator('#prepare-money-offline').click();await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));await idle(p);
     await check('swap screen loads offline with explicit minimum, refund account and public-terms notice',async()=>{
-      await context.setOffline(true);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');
-      await p.locator('#rhea-open').click();await p.locator('#rhea-dialog').waitFor();await p.locator('#rhea-privacy').selectOption('public-testnet');await p.locator('.dex-details summary').click();assert(await p.locator('#rhea-receiver').isVisible());assert(await p.getByText('The amount and receiving wallet are public on the test network.',{exact:false}).isVisible());
+      await context.setOffline(true);await p.reload();await openWalletSection(p,'defi');await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='10');await openWalletSection(p,'defi');
+      await openWalletSection(p,'defi');await p.locator('#rhea-open').click();await p.locator('#rhea-dialog').waitFor();await p.locator('#rhea-privacy').selectOption('public-testnet');await p.locator('.dex-details summary').click();assert(await p.locator('#rhea-receiver').isVisible());assert(await p.getByText('The amount and receiving wallet are public on the test network.',{exact:false}).isVisible());
       await p.locator('#rhea-minimum').fill('0.0001');await p.locator('#rhea-receiver').fill('alice.testnet');
     });
     await check('failed encrypted-vault commit exposes no signed swap and leaves full balance available',async()=>{
@@ -39,13 +40,13 @@ let base;
       await p.locator('#rhea-form button[type=submit]').click();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');await idle(p);
       const download=p.waitForEvent('download');await p.getByRole('button',{name:'Share swap request',exact:true}).click();const packet=JSON.parse(await fs.readFile(await(await download).path(),'utf8'));
       const result=await p.evaluate(async({c,packet})=>({id:await(await import('/rhea-protocol.js')).checkRheaPacket(c,packet),now:Date.now()}),{c,packet});assert.equal(result.id,packet.id);fixture={...result,packet};
-      await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');assert(await p.getByText('Saved · money set aside',{exact:true}).isVisible());
+      await p.reload();await openWalletSection(p,'defi');await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');assert(await p.getByText('Saved · money set aside',{exact:true}).isVisible());
     });
     await check('receipt checking preserves reservations and identity across failure, reload and forged responses',async()=>{
       await context.setOffline(false);let reply={finality:'FINAL',order:{id:fixture.packet.id,instruction:fixture.packet.instruction,stage:'attention'},reconciliation:{state:'needs_review',finality:'FINAL',txHash:'1'.repeat(32),failedReceipts:[{failure:'RAW_CALLBACK_FAILURE'}]}};
       await p.route('**/api/rhea/order',route=>route.fulfill({json:reply}));
       await p.getByRole('button',{name:'Check status',exact:true}).click();await idle(p);assert((await p.locator('#rhea-feedback').innerText()).includes('money is still set aside'));assert.equal(await p.locator('#near-total').innerText(),'9');assert(!(await p.locator('body').innerText()).includes('RAW_CALLBACK_FAILURE'));
-      await p.reload();await p.getByText('Swap needs checking',{exact:true}).waitFor();
+      await p.reload();await openWalletSection(p,'defi');await p.getByText('Swap needs checking',{exact:true}).waitFor();
       const saved=await p.evaluate(async c=>{const s=await(await import('/chat-store.js')).readState(),v=await(await import('/near-protocol.js')).readNearVault(s,c.reserve);return {id:s.identity.profile.id,o:v.rheaOrders[0]};},c);assert.equal(saved.id,identity);assert.equal(saved.o.reconciliation.state,'needs_review');assert.equal(saved.o.txHash,'1'.repeat(32));
       reply={...reply,reconciliation:{state:'unavailable'}};await p.getByRole('button',{name:'Check status',exact:true}).click();await idle(p);assert((await p.locator('#rhea-feedback').innerText()).includes('could not be verified'));assert.equal(await p.locator('#near-total').innerText(),'9');
       reply={...reply,order:{...reply.order,instruction:{...reply.order.instruction,amount:'9999999'}}};await p.getByRole('button',{name:'Check status',exact:true}).click();await idle(p);assert((await p.locator('#rhea-feedback').innerText()).includes('could not verify'));assert.equal(await p.locator('#near-total').innerText(),'9');await p.unroute('**/api/rhea/order');await context.setOffline(true);
@@ -81,13 +82,13 @@ let base;
         const saved=await p.evaluate(async c=>{const s=await(await import('/chat-store.js')).readState(),v=await(await import('/near-protocol.js')).readNearVault(s,c.reserve);return {id:s.identity.profile.id,o:v.rheaOrders[0]};},c);
         assert.equal(saved.id,identity);assert.deepEqual(saved.o.packet,fixture.packet);assert.equal(saved.o.status.stage,'redeeming');assert.equal(saved.o.status.instruction.receiver_id,'alice.testnet');
       }
-      assert.equal(count,3);await p.reload();await p.getByRole('button',{name:'Resume swap',exact:true}).waitFor();assert.equal(await p.locator('#near-total').innerText(),'9');
+      assert.equal(count,3);await p.reload();await openWalletSection(p,'defi');await p.getByRole('button',{name:'Resume swap',exact:true}).waitFor();assert.equal(await p.locator('#near-total').innerText(),'9');
       await p.unroute('**/api/rhea/order');await p.unroute('**/api/rhea/recover');await context.setOffline(true);
     });
     await check('cached capability changes hide recovery without changing identity or reserved money',async()=>{
       await context.setOffline(false);
       for(const enabled of [false,true]){
-        c.recoverRedemption=enabled;await walletSettings(p);await p.locator('#prepare-money-offline').click();await idle(p);await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');
+        c.recoverRedemption=enabled;await walletSettings(p);await p.locator('#prepare-money-offline').click();await idle(p);await p.reload();await openWalletSection(p,'defi');await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='9');
         assert.equal(await p.getByRole('button',{name:'Resume swap',exact:true}).count(),enabled?1:0);
         assert.equal(await p.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();return s.identity.profile.id;}),identity);
       }
@@ -102,12 +103,12 @@ let base;
       const second=await context.newPage();await open(second);
       const attempt=page=>page.evaluate(async c=>{const {updateState}=await import('/chat-store.js'),n=await import('/near-protocol.js'),r=await import('/rhea-protocol.js');try{await updateState(async s=>{const value=await r.prepareRheaSwap(await n.readNearVault(s,c.reserve),s.identity,c,{text:'9',minOutput:'1',receiver:'alice.testnet',deadlineMs:Date.now()+3600000});await n.saveNearVault(s,value.vault);});return 'saved';}catch(e){return e.message;}},c);
       const results=await Promise.all([attempt(p),attempt(second)]);assert.equal(results.filter(r=>r==='saved').length,1);assert(results.some(r=>r.includes('No single available')));await second.close();
-      await p.reload();await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='0');
+      await p.reload();await openWalletSection(p,'defi');await p.waitForFunction(()=>document.querySelector('#near-total').textContent==='0');
       assert.equal(await p.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState();return s.identity.profile.id;}),identity);
     });
     await check('swap controls reflow at desktop, portrait, landscape and enlarged text',async()=>{
       for(const [width,height] of [[1280,900],[375,812],[812,375]]){await p.setViewportSize({width,height});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
-      await p.setViewportSize({width:375,height:812});await p.locator('#rhea-open').click();await p.addStyleTag({content:'html{font-size:125%}'});
+      await p.setViewportSize({width:375,height:812});await openWalletSection(p,'defi');await p.locator('#rhea-open').click();await p.addStyleTag({content:'html{font-size:125%}'});
       assert(await p.evaluate(()=>document.querySelector('#rhea-dialog').scrollWidth<=document.querySelector('#rhea-dialog').clientWidth));
       await p.screenshot({path:path.join(__dirname,'evidence/rhea-swap-narrow.png'),fullPage:true});
     });

@@ -1,0 +1,64 @@
+/* Account and actions stay in place while the portfolio view changes. */
+.money-page main{max-width:1120px}
+.wallet-tab-bar{display:flex;gap:32px;border-bottom:1px solid var(--line);margin-top:24px}
+.money-page .wallet-tab-bar button{position:relative;min-width:44px;min-height:52px;padding:12px 0;border:0;border-radius:0;background:transparent;color:var(--muted);font-size:18px;font-weight:500}
+.money-page .wallet-tab-bar button[aria-selected=true]{color:var(--ink)}
+.wallet-tab-bar button[aria-selected=true]::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--ink)}
+.money-page .wallet-tab-bar button:hover{color:var(--ink);background:transparent}
+#wallet-portfolio [role=tabpanel]{min-height:224px;padding:8px 0 0;scroll-margin-top:24px}
+.money-page #wallet-panel-tokens .connected-wallet{padding:16px 0;border-bottom:1px solid var(--line)}
+.money-page #wallet-panel-tokens .connected-wallet .section-heading h2{font-size:14px;color:var(--ink);font-weight:500}
+.money-page #wallet-panel-tokens .wallet-tokens{margin:16px 0 0;padding-bottom:24px;border:0}
+.money-page #wallet-tokens h2{font-size:14px;font-weight:500}
+.money-page #wallet-token-empty{margin:16px 0;font-size:14px}
+.money-page #wallet-panel-tokens #evm-account{padding-bottom:0}
+.wallet-offline-token{display:flex;gap:24px;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line)}
+.wallet-offline-token>div:first-child{display:grid;gap:4px;min-width:0}
+.wallet-offline-token strong{font-size:16px;font-weight:500}
+.wallet-offline-token small{font-size:12px;color:var(--muted)}
+#wallet-offline-controls{display:flex;gap:8px;flex:none}
+.money-page #wallet-offline-controls button{display:flex;align-items:center;gap:8px;background:transparent;color:var(--ink);border:0;padding:8px}
+#wallet-offline-controls svg{width:18px;height:18px}
+.money-page #wallet-asset-dialog{max-width:460px}
+#wallet-asset-options{display:grid;gap:12px}
+.money-page #wallet-asset-options button{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:64px;border:1px solid var(--wallet-edge);border-radius:4px;padding:16px;text-align:left;background:transparent;color:var(--ink)}
+#wallet-asset-options button>span{display:grid;gap:6px;min-width:0}
+#wallet-asset-options button>svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#wallet-asset-options strong{font-size:20px;font-weight:500}
+#wallet-asset-options small{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.money-page #wallet-asset-options button:hover:not(:disabled){border-color:var(--ink);box-shadow:inset 0 -2px var(--ink)}
+.wallet-markets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px;padding:8px 0 24px}
+.wallet-markets a{display:flex;gap:16px;align-items:center;min-height:88px;padding:16px 0;border-bottom:1px solid var(--line);text-decoration:none;transition:border-color 140ms}
+.wallet-markets a:hover{border-bottom-color:var(--ink)}
+.wallet-markets a>svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.wallet-markets a>svg:last-child{width:18px;height:18px;color:var(--muted)}
+.wallet-markets a>span{display:grid;gap:4px;flex:1;min-width:0}
+.wallet-markets strong{font-size:16px;font-weight:500;overflow-wrap:anywhere}
+.wallet-markets small{font-size:12px;color:var(--muted)}
+.money-page .wallet-lower{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;margin:24px 0 0;border-top:1px solid var(--line)}
+.wallet-fold{min-width:0;border-bottom:1px solid var(--line)}
+.wallet-fold>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;list-style:none;min-height:56px;padding:12px 0;font-size:14px;cursor:pointer;color:var(--ink)}
+.wallet-fold>summary::-webkit-details-marker{display:none}
+.wallet-fold>summary::after{content:'';width:7px;height:7px;flex:none;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 4px 4px}
+.wallet-fold[open]>summary::after{transform:rotate(225deg);margin-top:6px}
+.money-page .wallet-fold .wallet-people{padding:0 0 16px;border:0}
+.wallet-fold .section-heading h2{display:none}
+.wallet-fold .section-heading{justify-content:flex-end;margin:0}
+.money-page #wallet-defi-positions .rhea-wallet{margin:0;padding:0 0 16px;border:0}
+.money-page .defi-tabs button[aria-pressed=true]{background:transparent;box-shadow:inset 0 -2px var(--ink)}
+.money-page :is(#near-refresh,#evm-refresh){width:44px;padding:10px}
+.money-page :is(#near-refresh,#evm-refresh) svg{width:22px;height:22px}
+.wallet-nft-state{display:flex;gap:24px;align-items:flex-start;padding:40px 0 32px}
+.wallet-nft-state>svg{width:48px;height:48px;flex:none;fill:none;stroke:var(--muted);stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+.money-page .wallet-nft-state h2{font-size:18px;font-weight:500;margin:0 0 16px}
+.money-page .wallet-nft-state p{font-size:14px;margin:8px 0;line-height:1.5}
+@media(max-width:640px){
+ .wallet-tab-bar{margin-top:16px;gap:32px}
+ .money-page .wallet-tab-bar button{font-size:17px}
+ .wallet-markets{grid-template-columns:minmax(0,1fr);padding-bottom:16px}
+ .wallet-markets a{min-height:76px}
+ .money-page .wallet-lower{grid-template-columns:minmax(0,1fr);gap:0;margin-top:16px}
+ .wallet-nft-state{gap:16px;padding-top:32px}
+ .wallet-nft-state>svg{width:36px;height:36px}
+ .wallet-offline-token{gap:12px;flex-wrap:wrap}
+}

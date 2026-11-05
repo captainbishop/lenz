@@ -8,4 +8,10 @@ async function openIncoming(page) {
  const details=page.locator('.wallet-incoming');
  if (await details.count() && !await details.evaluate(n=>n.open)) await details.locator('summary').click();
 }
-module.exports={selectRecipient,openIncoming};
+async function openWalletSection(page,section){
+ const ids={people:'wallet-contacts',payments:'wallet-payment-history',defi:'wallet-defi-positions'},id=ids[section];
+ if(!id||!await page.locator('#'+id).count())return;
+ if(section==='defi')await page.getByRole('tab',{name:'DeFi',exact:true}).click();
+ if(!await page.locator('#'+id).evaluate(n=>n.open))await page.locator('#'+id+' > summary').click();
+}
+module.exports={selectRecipient,openIncoming,openWalletSection};

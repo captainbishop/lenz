@@ -1,3 +1,4 @@
+const {openWalletSection}=require('./wallet-test-ui.cjs');
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
  const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[];
@@ -47,6 +48,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await page.locator('#near-send').click();await page.locator('.wallet-person').click();await page.locator('#near-send-amount').fill('2.5');
   for(const theme of ['light','dark'])for(const width of [390,1280]){await page.setViewportSize({width,height:900});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:path.join(__dirname,`evidence/wallet-send-${theme}-${width}.png`),fullPage:false});}
   await page.keyboard.press('Escape');for(const theme of ['light','dark']){await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);await page.screenshot({path:path.join(__dirname,'evidence/wallet-current-'+theme+'.png'),fullPage:false});}await page.locator('.wallet-settings summary').click();await page.locator('#prepare-money-offline').click();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));await context.setOffline(true);await page.reload();await ready();assert.equal(await page.locator('.wallet-token-row').count(),1);assert((await page.locator('.wallet-token-row').innerText()).includes('Saved'));assert.equal(reads,2);
+  await openWalletSection(page,'defi');
   assert(!((await page.locator('#rhea-queue').innerText()).includes('execute when connected')));assert.deepEqual(errors,[]);
   for(const [name,url]of [['Supply','/markets.html?view=credit&action=supply'],['Borrow','/markets.html?view=credit&action=borrow'],['Liquidity','/markets.html?view=liquidity&action=liquidity']]){
     await page.locator('.defi-tabs').getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('.position-browse').getAttribute('href'),url);assert.equal(await page.locator('.position-track').count(),0);assert((await page.locator('.position-unavailable').innerText()).includes('not connected'));assert.equal(await page.locator('#rhea-open').isVisible(),false);

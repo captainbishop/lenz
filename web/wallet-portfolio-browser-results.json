@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-11-05T04:11:52.882Z",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "Receive chooses tUSD/Lenz ID or the connected asset/network before showing a destination; account changes remove the stale asset option",
+    "Tokens, DeFi and NFTs use one keyboard tab stop, arrows/Home/End, labelled panels and persistent payment actions",
+    "DeFi links to the existing market categories; offline approval opens with its private-execution guard intact",
+    "reload and browser Back/Forward retain the selected view; earlier payment, people and DeFi links still open their content",
+    "view changes, NFT availability and Lenz ID access preserve the entire stored account and make no API requests",
+    "all three panels fit phone, landscape, tablet and desktop in both themes; tab targets are at least 44px",
+    "the new modules load and tabs work after an actual offline service-worker reload without changing stored account data"
+  ],
+  "sourceFiles": {
+    "web/public/money.html": "44c123fedbb730f0108cfca0b505fadbacfe5777b15f6bc4aad15af91a2234dd",
+    "web/public/money.js": "821bebcba3b376a8cc91300677140a85bb4b9a7b87dfcdbaa943f1d2a413e210",
+    "web/public/wallet-portfolio.js": "fc0fb4f4dfd332a70f6d5a584b0cefbaae3e2d0187fdbda6c5ddd890458fe7a2",
+    "web/public/wallet-portfolio.css": "cb750d7d4569eb51937a5bd37592763db3bfe4e37aac4c1a4fcec1536c5d924f",
+    "web/public/wallet-tokens.js": "dc601ac291fdbc7d96a8083c8d62133085ac94e9e1bc1c8871020dc62b4437f2",
+    "web/public/wallet-actions.js": "8c4d284fbddc027e95c6b527c8668bfa961d278244f39512fdabd3e2c1b93cf6",
+    "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
+    "web/public/near-wallet.js": "d0c693e96ef981bce13bd10dd2921f946b6294fbee1ab5a1979b9e76ae5128e5",
+    "web/public/chat-sw.js": "9b6d02066e731ab2812908047883a4809f94154c3de881c99094ad0b12e85ea6"
+  },
+  "scope": "Disposable Edge account, blocked APIs, reduced motion, offline worker. No user wallet, funds, signatures, NFT reads or physical devices."
+}

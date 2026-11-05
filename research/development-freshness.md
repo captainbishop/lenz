@@ -1,3 +1,19 @@
+# Wallet navigation and receiving assets, November 5, 2026
+
+The wallet groups Tokens, DeFi and NFTs beneath the account and actions. Send
+and Receive choose tUSD/Lenz ID or the connected native asset/network first.
+Account changes invalidate the external asset choice. Payment history, people
+and existing offline approvals remain available through expandable sections.
+NFT ownership is not connected; the view reports availability without balances.
+
+Seven browser groups cover asset selection, navigation, source-bound account
+preservation, invalid fragments, responsive themes and offline cache use.
+Existing wallet, connection, balance-visibility, ID, payment, swap, approval and
+cache-upgrade suites pass. See [wallet flows](../docs/wallet-tokens.md). These
+checks use disposable browser accounts, provider/RPC fixtures and local carriers;
+no user funds or financial transactions were used. The tUSD payment asset and
+external-wallet authority are unchanged. Presentation recordings are unchanged.
+
 # Market charts and trade history, November 5, 2026
 
 Degen and perpetuals share a locally bundled candlestick renderer with eight
