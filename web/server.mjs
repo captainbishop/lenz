@@ -15,8 +15,15 @@ import { carrierConfig } from './public/carrier-protocol.js';
 import { nostrConfig } from './public/nostr-protocol.js';
 import {AccountStore} from './account-store.mjs';
 import {createAccountRoute} from './account-relay.mjs';
+import {createAIRoute} from './ai-relay.mjs';
+import {AIUsageStore,aiConfigured,runAIWorker} from './ai-service.mjs';
+import {receiveRoute} from './receive-relay.mjs';
 const accountOrigin=process.env.LENZ_ACCOUNT_ORIGIN??'http://localhost:4173';
 let accountRoute;
+const aiConfig={apiKey:process.env.NEARAI_API_KEY,model:process.env.LENZ_AI_MODEL};
+const aiIds=(process.env.LENZ_AI_ACCOUNTS??'').split(',').filter(Boolean);
+let aiStore;
+const aiRoute=createAIRoute({enabled:aiConfigured(aiConfig,aiIds),allowedIds:aiIds,consume:(id,now)=>{aiStore??=new AIUsageStore(resolve('ai-usage.sqlite'));aiStore.consume(id,now);},ask:(input,options)=>runAIWorker(aiConfig,input,options)});
 const carriers = carrierConfig({version:1,carriers:JSON.parse(process.env.LENZ_CARRIERS ?? '[]')});
 const relays = nostrConfig(JSON.parse(await readFile(new URL('./public/nostr-config.json', import.meta.url), 'utf8')));
 const root = resolve('public');
@@ -30,6 +37,8 @@ http.createServer(async (req, res) => {
     if(pathname.startsWith('/api/accounts/')){accountRoute??=createAccountRoute({origin:accountOrigin,store:new AccountStore(resolve(process.env.LENZ_ACCOUNT_DATA??'.account-data'))});await accountRoute(req,res);return;}
     if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
     if (await nameRoute(req, res)) return;
+    if (await aiRoute(req, res)) return;
+    if (await receiveRoute(req, res)) return;
     if (await zcashRoute(req, res)) return;
     if (await rheaRoute(req, res)) return;
     if (await defiRoute(req, res)) return;

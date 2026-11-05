@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T04:11:52.882Z",
+  "checkedAt": "2026-11-05T05:13:16.992Z",
   "passed": 7,
   "failed": 0,
   "checks": [
@@ -20,7 +20,7 @@
     "web/public/wallet-actions.js": "8c4d284fbddc027e95c6b527c8668bfa961d278244f39512fdabd3e2c1b93cf6",
     "web/public/evm-wallet-ui.js": "8f200610c015104b596d2c31cdaa684cfc5525bb567ad591f1c818987f1b9c42",
     "web/public/near-wallet.js": "d0c693e96ef981bce13bd10dd2921f946b6294fbee1ab5a1979b9e76ae5128e5",
-    "web/public/chat-sw.js": "9b6d02066e731ab2812908047883a4809f94154c3de881c99094ad0b12e85ea6"
+    "web/public/chat-sw.js": "e36fe36d56cb5a6e9c40729e1d09d9e613b13f6268477c39e8dad0f362c14ebe"
   },
   "scope": "Disposable Edge account, blocked APIs, reduced motion, offline worker. No user wallet, funds, signatures, NFT reads or physical devices."
 }

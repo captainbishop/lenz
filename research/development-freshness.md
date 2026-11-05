@@ -1,3 +1,25 @@
+# Receiving and NEAR AI integration preparation, November 5, 2026
+
+The Intents client validates the asset catalogue and dry same-asset confidential
+funding requests. Requests bind the selected asset, integer amount, destination
+account, refund address and deadline. Catalogue browsing is not presented as a
+working Receive action. No deposit or spendable balance is created.
+
+The prepared NEAR AI component has explicit sharing, signed requests, durable
+usage limits and a worker timeout. The pinned Node SDK requests model encryption
+and verifies matching model-signed response bytes before returning text. The Lenz
+server can read AI text; personal chats and wallet data are excluded. The component
+is not mounted on the product chat page before access and useful context are
+connected. Browser tests load it explicitly.
+
+Fifty-six Node checks and fifteen browser groups pass, including existing
+account-recovery, wallet and cache-preservation regressions. Actual public token
+lookup returned 215 assets across 38 networks. The SDK imports locally; audit
+reports three low entries from one transitive cryptography advisory. No live
+inference, deposit, signing or settlement was performed. See
+[receiving](../docs/receiving-assets.md) and [AI preparation](../docs/near-ai-chat.md).
+Existing presentation recordings and receipt evidence are preserved.
+
 # Wallet navigation and receiving assets, November 5, 2026
 
 The wallet groups Tokens, DeFi and NFTs beneath the account and actions. Send

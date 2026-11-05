@@ -166,7 +166,7 @@
     "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
     "web/public/carrier-ui.js": "97cb90e916975811f337f65934dca7d3f4ac5c7984305cdfbc22731ef3185744",
-    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/chat-layout.css": "adbc42f2eabcb030f6204be39c8b0babe05b704efaa5689ac1557d002f1b923f",
     "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
     "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
@@ -311,6 +311,6 @@
     "web/public/wallet-feedback.js": "0a197910e6252a10a215945ba43109433ec828667d5b6650d297e79ef7f5aea1",
     "web/public/wallet-lab.html": "79ffe84179b40f0cbe91ddb12c2c46b8ad0bb7e0e8c82be5162bf8a32c3f5c56"
   },
-  "reframedAt": "2026-11-04T19:30:26.976Z",
+  "reframedAt": "2026-11-05T05:14:26.101Z",
   "presentation": "Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls."
 }

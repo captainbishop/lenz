@@ -1,0 +1,12 @@
+import {spawnSync} from 'node:child_process';
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const tests=['web/ai-chat.test.mjs','integrations/intents-receive.test.mjs','integrations/chart-analysis.test.mjs','web/account-backup.test.mjs','web/chat-restore.test.mjs','web/identity-recovery.test.mjs','web/legacy-recovery.test.mjs'];
+const sources=[...tests,'integrations/ai-chat.mjs','integrations/intents-receive.mjs','integrations/chart-analysis.mjs','integrations/near-ai/client.mjs','integrations/near-ai/package.json','integrations/near-ai/package-lock.json','web/ai-relay.mjs','web/ai-service.mjs','web/ai-worker.mjs','web/receive-relay.mjs','web/public/ai-conversation.js','web/public/receive-assets.js','web/public/peer-crypto.js','web/public/chat-access.js','web/public/evm-vendor/address.js','web/public/evm-networks.js','integrations/verify-receiving-ai.mjs'];
+const hashes=async()=>Object.fromEntries(await Promise.all(sources.map(async file=>[file,createHash('sha256').update(await readFile(file)).digest('hex')])));
+const before=await hashes(),result=spawnSync(process.execPath,['--test','--test-reporter=tap',...tests],{encoding:'utf8',windowsHide:true,maxBuffer:8*1024*1024});
+assert.equal(result.status,0,result.stdout+result.stderr);assert.deepEqual(await hashes(),before,'Sources changed during verification.');
+const passed=Number(result.stdout.match(/^# pass (\d+)$/m)?.[1]);assert.equal(passed,56);assert.match(result.stdout,/^# fail 0$/m);
+await writeFile('integrations/receiving-ai-results.json',JSON.stringify({checkedAt:new Date().toISOString(),runtime:process.version,passed,failed:0,scope:'Local unit and loopback HTTP tests; synthetic Intents quotes and AI SDK, disposable identities and SQLite. No live deposit, inference, attestation or financial transaction.',sourceHashes:before},null,2)+'\n');
+console.log(JSON.stringify({passed,failed:0,sourceFiles:sources.length}));

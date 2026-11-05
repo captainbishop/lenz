@@ -1,0 +1,193 @@
+{
+  "checkedAt": "2026-11-05T05:15:37.078Z",
+  "method": "Replayed saved signed chat and payment states through current sources. All ten cropped light/dark frames and original receipts match the preceding replay. Existing video and poster bytes retained without rerendering.",
+  "previousSources": {
+    "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
+    "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/brand/chat-pattern.svg": "f9fe47bf66ca966de4e76eb1c3cb8f53d1fb13c1722738691dc817626468b9d7",
+    "web/public/brand/mark.svg": "d5afb1e7caa61dbd488543ca07c2d63f35b6699855027bb4c4a4f217bea2fc41",
+    "web/public/carrier-client.js": "8167b3dcc225a968629e9b53371c55a323ce9468de52477eae36f43d2e504dac",
+    "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
+    "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
+    "web/public/carrier-ui.js": "97cb90e916975811f337f65934dca7d3f4ac5c7984305cdfbc22731ef3185744",
+    "web/public/chat-layout.css": "adbc42f2eabcb030f6204be39c8b0babe05b704efaa5689ac1557d002f1b923f",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
+    "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
+    "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
+    "web/public/chat.js": "a20a3e74157f7672dd04bd7c4b88cc8fc20080d2df1a80d67c4725f5a798ef44",
+    "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
+    "web/public/contact-ui.js": "cbc1023ffb3c268871489bd78aabb5b248f758a1f7e302a7dcb40208723698c3",
+    "web/public/delivery-mode.js": "117661527ec8689dbbec8bbeb243640374cc5d3e54a456f836d082b9c018cbe6",
+    "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
+    "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
+    "web/public/near-chat.js": "048732ddddb2cff8026b689d8bec1f660cd56753a4c973d4a99836e68d72bf9e",
+    "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
+    "web/public/near-payment-service.js": "95969b0e47f90a5a5c11903086e7d22f79f234a316789503d10b1f76006c7d64",
+    "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
+    "web/public/near-protocol.js": "729c1ecc6badac347d7b308874b5d774b3389c33e1dd3cee663f67631c3ffd20",
+    "web/public/nearby-client.js": "bf7530883914088dc09041a721a9806637a1c4d534dd30a4d93de709c24b4102",
+    "web/public/nearby-connection.js": "ec5f6a7a73c3fc536328002b2581becb486a7d516d1e816581a5bdc67bc71e7d",
+    "web/public/nearby-protocol.js": "6108d976cc1522f97a9831335c4e17b815b40ba524aebf778cd22386a02c408f",
+    "web/public/nearby-ui.js": "552c3453f891b6bafd6fc70c594a2da42e20cf88f124c06731c73a89853437dd",
+    "web/public/nearby.css": "393cee6d2f4b60f274a376a4ce2a0802ae93b5f7fb5c144d1ebde94e286f9a38",
+    "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
+    "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
+    "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
+    "web/public/nostr-socket.js": "594e4939319eaca0555261e4f0aaea9bffc3062dff6f41569f7465c7b94effb2",
+    "web/public/nostr-vendor/nostr.js": "19d16a5d3c86c851c895e8e9f9e19656423a46f70b79bac4dfef4ccca76b63df",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/profile-panels.js": "dd1bc762605a93d87749714b2eff1be8cf034b34020451b624e6dfcdbd98c1dc",
+    "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
+    "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
+    "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
+    "web/public/receive-packet.js": "0cef5917c79297ddd3384b5c597868352c137f27b94cfbc9a2036b3c43965ff6",
+    "web/public/save-offline.js": "434eceaed11c3d6aae664d96c9e4125158e7d7be69f4966186ed811fd57ace45",
+    "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
+    "web/public/wallet-feedback.js": "9e02a4c41cf613a7adb29351e66e65788fd6a4d33bf4d79deb5d8976aa08af5d",
+    "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221",
+    "web/render-preview-stories.cjs": "9cf1fe4e8b291ce15f806e9cf1ae21a0a32357270dfee6f446a700c101283de9",
+    "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
+    "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
+    "web/preview-flow-results.json": "2ddf11ebe8a602d4f19e2ca79189f18523c46b0377bcbf52010b22c0e7fc7d70",
+    "web/lenz-id-browser-results.json": "8fbcf17b77db067e3f35b42e7aade06c8e124b4332782108eadfc1359fe5b425",
+    "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
+    "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
+    "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23",
+    "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",
+    "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
+    "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
+    "web/public/account-sync.js": "79ba1b3bcd1cda0b30bae74b87e22c818e0da12dd508b3b7e66e5226f46232f7",
+    "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
+    "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
+    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
+    "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
+    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03"
+  },
+  "currentSources": {
+    "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
+    "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/brand/chat-pattern.svg": "f9fe47bf66ca966de4e76eb1c3cb8f53d1fb13c1722738691dc817626468b9d7",
+    "web/public/brand/mark.svg": "d5afb1e7caa61dbd488543ca07c2d63f35b6699855027bb4c4a4f217bea2fc41",
+    "web/public/carrier-client.js": "8167b3dcc225a968629e9b53371c55a323ce9468de52477eae36f43d2e504dac",
+    "web/public/carrier-config.json": "c29c7c24a063366eaea5248790eaad1b93de25234d160f1023d363f2cd82068f",
+    "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
+    "web/public/carrier-ui.js": "97cb90e916975811f337f65934dca7d3f4ac5c7984305cdfbc22731ef3185744",
+    "web/public/chat-layout.css": "adbc42f2eabcb030f6204be39c8b0babe05b704efaa5689ac1557d002f1b923f",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
+    "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
+    "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
+    "web/public/chat.js": "a20a3e74157f7672dd04bd7c4b88cc8fc20080d2df1a80d67c4725f5a798ef44",
+    "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
+    "web/public/contact-ui.js": "cbc1023ffb3c268871489bd78aabb5b248f758a1f7e302a7dcb40208723698c3",
+    "web/public/delivery-mode.js": "117661527ec8689dbbec8bbeb243640374cc5d3e54a456f836d082b9c018cbe6",
+    "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
+    "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
+    "web/public/near-chat.js": "048732ddddb2cff8026b689d8bec1f660cd56753a4c973d4a99836e68d72bf9e",
+    "web/public/near-config.json": "719bcd176c6d8aad4f4b7caedb5c97471e42c2968112471c758878ec27eb310a",
+    "web/public/near-payment-service.js": "95969b0e47f90a5a5c11903086e7d22f79f234a316789503d10b1f76006c7d64",
+    "web/public/near-payment-status.js": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e",
+    "web/public/near-protocol.js": "729c1ecc6badac347d7b308874b5d774b3389c33e1dd3cee663f67631c3ffd20",
+    "web/public/nearby-client.js": "bf7530883914088dc09041a721a9806637a1c4d534dd30a4d93de709c24b4102",
+    "web/public/nearby-connection.js": "ec5f6a7a73c3fc536328002b2581becb486a7d516d1e816581a5bdc67bc71e7d",
+    "web/public/nearby-protocol.js": "6108d976cc1522f97a9831335c4e17b815b40ba524aebf778cd22386a02c408f",
+    "web/public/nearby-ui.js": "552c3453f891b6bafd6fc70c594a2da42e20cf88f124c06731c73a89853437dd",
+    "web/public/nearby.css": "393cee6d2f4b60f274a376a4ce2a0802ae93b5f7fb5c144d1ebde94e286f9a38",
+    "web/public/nostr-client.js": "c06522d37ce5f7bd5e33c616719782558b494d6ed7c38a3c33675a8135a42a9f",
+    "web/public/nostr-config.json": "5e0fd60a164b582875feaf498b63135627243ead5967022645b41642e88de746",
+    "web/public/nostr-protocol.js": "f55e16e24d239df3d9e2e015ef13a39c27ac5732f5e753e8d39162c11df1a021",
+    "web/public/nostr-socket.js": "594e4939319eaca0555261e4f0aaea9bffc3062dff6f41569f7465c7b94effb2",
+    "web/public/nostr-vendor/nostr.js": "19d16a5d3c86c851c895e8e9f9e19656423a46f70b79bac4dfef4ccca76b63df",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
+    "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
+    "web/public/profile-panels.js": "dd1bc762605a93d87749714b2eff1be8cf034b34020451b624e6dfcdbd98c1dc",
+    "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
+    "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
+    "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
+    "web/public/receive-packet.js": "0cef5917c79297ddd3384b5c597868352c137f27b94cfbc9a2036b3c43965ff6",
+    "web/public/save-offline.js": "434eceaed11c3d6aae664d96c9e4125158e7d7be69f4966186ed811fd57ace45",
+    "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
+    "web/public/wallet-feedback.js": "9e02a4c41cf613a7adb29351e66e65788fd6a4d33bf4d79deb5d8976aa08af5d",
+    "web/reframe-preview-flow.cjs": "cabc92e1afb375df1349aeb35dd75adbe601df9654cf78d928807d8d83187221",
+    "web/render-preview-stories.cjs": "9cf1fe4e8b291ce15f806e9cf1ae21a0a32357270dfee6f446a700c101283de9",
+    "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
+    "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
+    "web/preview-flow-results.json": "44b637f556f1043a9b68250f82f51e4882214f45741616a37597340ef2459c03",
+    "web/lenz-id-browser-results.json": "8fbcf17b77db067e3f35b42e7aade06c8e124b4332782108eadfc1359fe5b425",
+    "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
+    "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
+    "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23",
+    "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",
+    "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
+    "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
+    "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
+    "web/public/account-sync.js": "79ba1b3bcd1cda0b30bae74b87e22c818e0da12dd508b3b7e66e5226f46232f7",
+    "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
+    "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
+    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
+    "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
+    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03"
+  },
+  "captures": {
+    "private-send": {
+      "light": {
+        "file": "web/evidence/preview-replay/private-send-light.png",
+        "sha256": "8676a0c0cb549cb7adb581cd8b91cd2419e1d37ab2738fae49307f7183ffa354"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/private-send-dark.png",
+        "sha256": "b846de1e78debc374bcb704f829435bc5b136239342c51e5a3666901834c4032"
+      }
+    },
+    "private-read": {
+      "light": {
+        "file": "web/evidence/preview-replay/private-read-light.png",
+        "sha256": "56b1b4b3aa649530875d819ff1fb71056b476940cccc536d1f8cb2e781aeb17c"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/private-read-dark.png",
+        "sha256": "2849930602e8004cc0322d9981cf98cf58fd85cb81c615f02f1cb646a3963b8f"
+      }
+    },
+    "payment-received": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-received-light.png",
+        "sha256": "7a338614bead583a28e91846806cbc908f3ab271a7e8ecc3a52d4c4ab4c21ef6"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-received-dark.png",
+        "sha256": "2e78bc94ac9eccbe162780ec39ae8b153320240a5f339ad908d094115a0e1698"
+      }
+    },
+    "payment-onward": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-onward-light.png",
+        "sha256": "b8b90bf5ebf5e67582fcd0aa7d74d96c57d97e3003cb30999c8a0b0bbaf5b2d0"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-onward-dark.png",
+        "sha256": "7e415954cf6761c11624a0ae58ddf2604c790d126e30447d90c08840ee28c04c"
+      }
+    },
+    "payment-confirmed": {
+      "light": {
+        "file": "web/evidence/preview-replay/payment-confirmed-light.png",
+        "sha256": "9a328b1f84a33286b2c0079f515b60654dd37d840e35f626ab34be3ba4f20243"
+      },
+      "dark": {
+        "file": "web/evidence/preview-replay/payment-confirmed-dark.png",
+        "sha256": "7de0cfab47a9d689c38852447e373a488996be53518c2ca8d57fc8fba2e3d5a3"
+      }
+    }
+  },
+  "changedSources": [
+    "web/preview-flow-results.json",
+    "web/public/chat-access.js"
+  ],
+  "scope": "Additional AI-only signing domain for recovered chat identities. Existing chat and financial replay frames are unchanged. The AI component is not mounted on product chat. No account writes or financial submissions during replay."
+}

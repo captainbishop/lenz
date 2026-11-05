@@ -6,7 +6,7 @@ export function requirePaymentAccess(identity){
 }
 export function checkSigningAccess(identity,value){
   if(identity?.access===undefined)return;
-  const domains=['proof-u/private-conversation/v1','lenz/carrier/v1','lenz/nostr-envelope/v1','lenz/nearby/v1','lenz/chat-recovery-link/v1'];
+  const domains=['proof-u/private-conversation/v1','lenz/carrier/v1','lenz/nostr-envelope/v1','lenz/nearby/v1','lenz/chat-recovery-link/v1','lenz/ai-request/v1'];
   const archiveDigest=typeof value==='string'&&/^[0-9a-f]{64}$/.test(value);
   if(!isRecoveredChat(identity)||(!archiveDigest&&(!Array.isArray(value)||!domains.includes(value[0]))))requirePaymentAccess(identity);
 }

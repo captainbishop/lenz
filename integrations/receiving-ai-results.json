@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-05T05:26:40.688Z",
+  "runtime": "v24.21.0",
+  "passed": 56,
+  "failed": 0,
+  "scope": "Local unit and loopback HTTP tests; synthetic Intents quotes and AI SDK, disposable identities and SQLite. No live deposit, inference, attestation or financial transaction.",
+  "sourceHashes": {
+    "web/ai-chat.test.mjs": "66d36f95a73b34fe1e767d541a2ad66f9d08dedef845dbd51a477594d4b82088",
+    "integrations/intents-receive.test.mjs": "7db146bde11ecbf4a0206460a883def1b79c512a6ca7700aa50fa4adc71b2e50",
+    "integrations/chart-analysis.test.mjs": "d644ea5c8cdd09925b65386995da95b5cb25a4321b3cb36c137dd25b03d043d1",
+    "web/account-backup.test.mjs": "2db3792da4acc52b493f5829db53d5356d5aa9d02425b67e0087442246f1e92b",
+    "web/chat-restore.test.mjs": "b2ff9bde76e34fd051fb6253715c7c1a41dfc9db6b571e56efab1fd9eb8158a6",
+    "web/identity-recovery.test.mjs": "c816ecbdc8a8a3652ae4b8ddb43e0a40baaa2a767c46c599077205f6b7e97fde",
+    "web/legacy-recovery.test.mjs": "ec69c12fe4d1100224ddf05ce5428e5720cacd5a2e6abc36da30beb6f0c5f6e0",
+    "integrations/ai-chat.mjs": "77170621fb7da10530cd3cacc510fe95c9ce3691e0381df58631eafa0a51f8e3",
+    "integrations/intents-receive.mjs": "b01e08945d5ffaa1aa03390f7f45ecaf0b0c010be695972a613dd134caf27201",
+    "integrations/chart-analysis.mjs": "b813e534db696ec9e1e18b2a2bed7d5a2a63359cca50c5ff10d20611aef1c9ff",
+    "integrations/near-ai/client.mjs": "bd39337283c34256b3c498e1f6fa540e26d3c1bb36dfe469d81880cd3f590883",
+    "integrations/near-ai/package.json": "ed09a3f0a5589d13b991be0a90362b8486b71261ed3a435b9b068b45d401a6ef",
+    "integrations/near-ai/package-lock.json": "b0082ba3a1a65514daf693f3b67125eae2e339cc0bdaea4b463157fb96549f1a",
+    "web/ai-relay.mjs": "03dd2f788b8114deadfc3ad75368e23a50e8ce1b86c060b04d96b6bcac5872ec",
+    "web/ai-service.mjs": "570a257338c3e142e1afa446e90ef909316a8aab076014ebe725369ada240c7f",
+    "web/ai-worker.mjs": "8796fdd710841a32cce18a73fda00fdf6f189508934895ac9e5c0f9cddd529cd",
+    "web/receive-relay.mjs": "6080ff903a98f662ed1cfb5811f34ae1f941dbec6c20e81f1c6518b5b8fcba4b",
+    "web/public/ai-conversation.js": "1005c18e099d67479fcfde76430d49638ac10b4d08fc096cdf41ff1c4c4822fa",
+    "web/public/receive-assets.js": "96a8f44e13122fadd1c7c8887f7d4208a28e1132b889273b1fccea59a8ddab64",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
+    "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
+    "web/public/evm-networks.js": "6fbf1302bfe8729e98b7b1e23776b345468e4e3d56e2055db75d67ee786105ef",
+    "integrations/verify-receiving-ai.mjs": "072ab0c0af79a520b4e544b9bfad0aa6dc39b8de0d480ce27e03ab3b5b8f5798"
+  }
+}

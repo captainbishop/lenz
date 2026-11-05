@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-05T05:13:07.979Z",
+  "scope": "Disposable Edge; prepared AI component explicitly mounted by the test and absent from normal chat; synthetic AI access/responses. No live inference, deposits or user account operations.",
+  "checks": [
+    "unconfigured AI accepts a local draft but cannot send, sign or copy personal chat context",
+    "only explicitly typed AI text and minimal signed identity leave the browser; replies render as text and stored account bytes are unchanged",
+    "stop aborts the local request, keeps the draft and rejects a late reply without retrying",
+    "unverified responses cannot appear in the conversation",
+    "AI close clears its session and restores keyboard focus; both themes fit desktop and phone",
+    "Receive retains its working destinations and does not offer a catalogue as a receiving address"
+  ],
+  "sourceHashes": {
+    "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
+    "web/public/ai-chat-ui.js": "4246c835f08d448b585de66ab817b998db506fbf0261365b0b17df6fb61395ef",
+    "web/public/ai-chat.css": "7bb1bd8a92414774b1dd8eb217ddd792aa9c83cbebadb7e2a3515c1d832f8d7a",
+    "web/public/ai-conversation.js": "1005c18e099d67479fcfde76430d49638ac10b4d08fc096cdf41ff1c4c4822fa",
+    "web/public/receive-assets.js": "96a8f44e13122fadd1c7c8887f7d4208a28e1132b889273b1fccea59a8ddab64",
+    "web/public/wallet-portfolio.js": "fc0fb4f4dfd332a70f6d5a584b0cefbaae3e2d0187fdbda6c5ddd890458fe7a2",
+    "web/public/wallet-portfolio.css": "cb750d7d4569eb51937a5bd37592763db3bfe4e37aac4c1a4fcec1536c5d924f",
+    "web/receive-ai-browser.test.cjs": "c73af05f6be9ebed2a2db3886daf96414650cb2365b3b1b95ab6e38890e52199"
+  }
+}

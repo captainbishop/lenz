@@ -50,14 +50,14 @@
     "web/render-preview-stories.cjs": "9cf1fe4e8b291ce15f806e9cf1ae21a0a32357270dfee6f446a700c101283de9",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
     "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
-    "web/preview-flow-results.json": "2ddf11ebe8a602d4f19e2ca79189f18523c46b0377bcbf52010b22c0e7fc7d70",
+    "web/preview-flow-results.json": "44b637f556f1043a9b68250f82f51e4882214f45741616a37597340ef2459c03",
     "web/lenz-id-browser-results.json": "8fbcf17b77db067e3f35b42e7aade06c8e124b4332782108eadfc1359fe5b425",
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
     "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23",
     "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",
     "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
-    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
     "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
     "web/public/account-sync.js": "79ba1b3bcd1cda0b30bae74b87e22c818e0da12dd508b3b7e66e5226f46232f7",
@@ -328,5 +328,5 @@
   "apiRequests": 0,
   "errors": [],
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
-  "sourceReview": "web/preview-account-review.json"
+  "sourceReview": "web/preview-ai-request-review.json"
 }
