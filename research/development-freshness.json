@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-05T06:06:26.721Z",
+  "reviewedAt": "2026-11-05T14:59:15.612Z",
   "review": "research/development-freshness.md",
   "files": {
     ".gitignore": "58a135928336f74cfa9fe6754abdc8128fa6c74e68c9ce6f08c70ab330f95ae1",
@@ -354,7 +354,7 @@
     "research/crypto-step/step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
     "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
     "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
-    "research/development-freshness.md": "d4b9ad5e13c9882e35789204b16ad11670914f399e3a9b63553d24939cc16a51",
+    "research/development-freshness.md": "bfd506477bdaf48e0a8e6513cd7810a7d127124f38a8c9a54c29a6b798ca9bd8",
     "research/mobile-handover/CapsuleCrypto.swift": "ed0c84e7418b9294dbf94d4e9ce9e5dc70b6b3bf097803a8b2e518c49034e25c",
     "research/mobile-handover/CapsuleVectors.swift": "58f5ba0fe4d240d4eef40ac966087a1310492cd0df1408d210b86803fa9d4d8f",
     "research/mobile-handover/README.md": "9f010170efd2f0a35b4ff184e4f309bd2002c411dbba762cb20ae80ac211e236",
@@ -766,7 +766,7 @@
     "web/public/chat-layout.css": "adbc42f2eabcb030f6204be39c8b0babe05b704efaa5689ac1557d002f1b923f",
     "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
     "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
-    "web/public/chat-sw.js": "b46c046dc686799220123df8b01d417f5645559d73b79027378d14301604f337",
+    "web/public/chat-sw.js": "f8c162a5f153d2cb06818fbcb71eab067273c810143c58093e100ff23b9a156a",
     "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
     "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
     "web/public/chat.js": "a20a3e74157f7672dd04bd7c4b88cc8fc20080d2df1a80d67c4725f5a798ef44",
@@ -803,7 +803,7 @@
     "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
     "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
     "web/public/evm-vendor/offline-budget.js": "6e14f681077313b40e4aa1551001613122a6143cd040837334b24070d0577244",
-    "web/public/evm-wallet-ui.js": "4cc8c5675f47c15c03f61bd41ec7821e8cf115eed3550b36fdea122c5b8353f3",
+    "web/public/evm-wallet-ui.js": "3c9111b2668f584554e9fd8134a9d8b764b2923701fd29581ebf01c2212c02e3",
     "web/public/evm-wallet.js": "834f6b7460b020604d67db3726f334214788c1c5d670515796c0c35bff7aa21a",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
     "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",

@@ -1,3 +1,10 @@
+# Wallet connection wording, November 5, 2026
+
+The connection prompt uses one short sentence. Wallet account permission,
+native balance reads and payment approval behavior are unchanged. The wallet
+cache revision refreshes the prompt for saved installations. The current
+disposable provider/browser checks pass; no wallet signature or transaction ran.
+
 # Wallet receiving instructions, November 5, 2026
 
 Receive preserves the external wallet address while selecting ETH, USDC or WETH
