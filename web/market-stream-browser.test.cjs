@@ -23,11 +23,11 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{for(const width of [1360,390]){
     const context=await browser.newContext({viewport:{width,height:850},serviceWorkers:'block'}),page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
-    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','on'));await page.goto(base+'/markets.html');await page.locator('[data-category="perpetuals"]').click();await page.locator('#candle-chart[data-candle-count]').waitFor();
-    const socket=sockets.at(-1);assert.equal(socket.sent[0].subscription.coin,'ETH');
+    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','on'));await page.goto(base+'/markets.html');if(width>760)await page.locator('.market-row[data-market-id="hyperliquid:0:ETH"]').click();else{await page.locator('#market-selector').click();await page.getByRole('option',{name:/^ETH \/ USD/}).click();}await page.locator('#candle-chart[data-candle-count]').waitFor();
+    await page.mouse.move(0,0);await page.locator('#candle-chart').focus();await page.keyboard.press('End');const socket=sockets.at(-1);assert.equal(socket.sent[0].subscription.coin,'ETH');
     const f=tapeFixtures({marketId:'hyperliquid:0:ETH',interval:'1h',privacy:'public'});
     socket.emit({channel:'candle',data:{...f.history.at(-1),c:'3010',h:'3020',l:'2700'}});
-    await page.waitForFunction(()=>document.querySelector('.chart-readout').textContent.includes('C 3,010'));
+    await page.waitForFunction(()=>document.querySelector('.chart-readout').textContent.includes('C 3,010')).catch(async e=>{console.error(JSON.stringify({width,subscriptions:socket.sent,socketState:socket.readyState,sockets:sockets.length,readout:await page.locator('.chart-readout').textContent(),status:await page.locator('#tape-status').textContent(),errors}));throw e;});
     assert.match(await page.locator('#tape-status').textContent(),/Streaming/);checks.push('Native '+width+'px chart updates from a pushed candle');
     const canvas=page.locator('#candle-chart');await canvas.focus();await page.keyboard.press('Home');const inspected=await page.locator('.chart-readout').textContent();await page.keyboard.press('ArrowRight');const nextInspected=await page.locator('.chart-readout').textContent();await page.keyboard.press('Home');
     socket.emit({channel:'candle',data:{...f.history.at(-1),c:'3011',h:'3020',l:'2700'}});

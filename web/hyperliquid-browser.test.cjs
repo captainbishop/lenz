@@ -1,0 +1,46 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
+(async()=>{
+  const {createMarketRoute}=await import('./market-relay.mjs'),{createMarketStream}=await import('./market-stream.mjs'),{createHyperliquidCatalogReader}=await import('../integrations/hyperliquid-catalog.mjs'),{readHyperliquidTape}=await import('../integrations/hyperliquid-feed.mjs'),{hyperliquidFixtureFetcher:fetcher}=await import('../integrations/hyperliquid-fixtures.mjs'),{hyperliquidRequest:parse}=await import('./public/hyperliquid-catalog.js'),{checkedHyperliquidEvent:checkEvent}=await import('./public/hyperliquid-feed.js');
+  const sockets=[],errors=[],checks=[],requests=[];
+  class Socket extends EventTarget{
+    readyState=0;sent=[];
+    constructor(){super();sockets.push(this);setImmediate(()=>{if(this.readyState!==3){this.readyState=1;this.dispatchEvent(new Event('open'));}});}
+    send(value){this.sent.push(JSON.parse(value));}close(){this.readyState=3;}
+    emit(data){this.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(data)}));}
+  }
+  const catalog=createHyperliquidCatalogReader({fetcher}),read=r=>readHyperliquidTape(r,{fetcher,catalog});
+  const route=createMarketRoute({catalog,hyperTape:read,hyperStream:createMarketStream({Socket,read,parse,checkEvent,includeTrades:true}),discover:async()=>{throw Error('Fixture excludes legacy providers');}});
+  const root=path.join(__dirname,'public'),server=http.createServer(async(req,res)=>{try{
+    if(req.url.startsWith('/api/')){requests.push(req.url);req.headers.host='127.0.0.1:4173';req.headers.origin='http://127.0.0.1:4173';if(await route(req,res))return;throw Error();}
+    const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep))throw Error();
+    res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');res.end(await fs.readFile(file));
+  }catch{res.writeHead(404);res.end();}});
+  await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({channel:'msedge',headless:true});
+  try{for(const width of [1360,390]){
+    const context=await browser.newContext({viewport:{width,height:850},serviceWorkers:'block'}),page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
+    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','on'));await page.goto(base+'/markets.html');await page.locator('[data-category="spot"]').click();
+    await page.locator('.hyper-chart[data-candle-count="30"]').waitFor();assert.match(await page.locator('.hyper-detail h3').textContent(),/HYPE \/ USDC/);checks.push('Opening Spot selects a market and loads its chart automatically');
+    assert.equal(await page.locator('iframe').count(),0);assert.equal(await page.locator('.hyper-row').count(),2);assert.equal(await page.locator('[data-category="hyperliquid"]').count(),0);assert(await page.locator('.hyper-row .market-logo img').first().evaluate(img=>img.complete&&img.naturalWidth>0));checks.push('Activity navigation and market logos work at '+width+'px');
+    let socket=sockets.at(-1);await page.waitForTimeout(80);assert.deepEqual(socket.sent.map(s=>s.subscription.type),['candle','l2Book','trades']);
+    socket.emit({channel:'candle',data:{s:'@107',i:'1m',t:Math.floor(Date.now()/60000)*60000,o:'1',h:'2',l:'0.1',c:'1.5',v:'12',n:4}});
+    socket.emit({channel:'trades',data:[{coin:'@107',side:'B',px:'1.5',sz:'2',time:Date.now(),tid:1,users:['private-account-not-for-browser']} ]});
+    await page.waitForFunction(()=>document.querySelector('.hyper-readout').textContent.includes('C 1.5'));await page.getByText('Buy',{exact:true}).waitFor();assert(!(await page.content()).includes('private-account-not-for-browser'));checks.push('Candle and trades update without a chart reload; account fields are stripped');
+    const secondMarket=page.getByRole('button',{name:'HYPE / USDH',exact:false});await secondMarket.focus();await secondMarket.press('Enter');assert.equal(await page.evaluate(()=>document.activeElement?.dataset.marketId),'spot:1188');await page.getByText('No candles for this interval',{exact:true}).waitFor();await page.getByText('No asks',{exact:true}).waitFor();assert.equal(socket.readyState,3);checks.push('Empty history and a one-sided book are usable states');
+    await page.locator('[data-category="perpetuals"]').click();assert.equal(await page.locator('.hyper-row').count(),2);assert.match(await page.locator('.hyper-rows').textContent(),/GOLD/);await page.locator('.hyper-chart canvas').first().waitFor();await page.locator('[data-category="predictions"]').click();await page.locator('.hyper-chart[data-candle-count="30"]').waitFor();assert.equal(await page.locator('.hyper-row img').count(),1);assert.match(await page.locator('.hyper-detail h3').textContent(),/<img/);
+    socket=sockets.at(-1);await page.locator('.hyper-sides button').nth(1).click();await page.waitForTimeout(150);assert.equal(socket.readyState,3);assert.equal(sockets.at(-1).sent[0].subscription.coin,'#121');checks.push('Question text stays text, and side selection changes the actual feed');
+    await page.locator('.hyper-chart-tools [data-interval="5m"]').click();await page.waitForTimeout(150);assert.equal(sockets.at(-1).sent[0].subscription.interval,'5m');
+    const refreshChart=page.getByRole('button',{name:'Refresh chart',exact:true});assert.equal(await refreshChart.textContent(),'');assert.equal(await refreshChart.locator('svg').count(),1);await refreshChart.click();await page.locator('.hyper-chart canvas').first().waitFor();checks.push('Labelled icon controls remain usable');
+    await page.getByRole('button',{name:'Save offline',exact:true}).click();assert(await page.evaluate(()=>Boolean(localStorage.getItem('lenz-hyperliquid-catalog-v1'))));
+    const active=sockets.at(-1);await context.setOffline(true);await page.waitForTimeout(100);assert.equal(active.readyState,3);assert(await page.locator('.hyper-chart canvas').count()>0);await page.locator('[data-category="spot"]').click();await page.getByText('Connect to load this chart.',{exact:true}).waitFor();await page.locator('[data-category="predictions"]').click();await page.getByText('Connect to load this chart.',{exact:true}).waitFor();await context.setOffline(false);await page.locator('.hyper-chart canvas').first().waitFor();checks.push('Offline preserves existing charts and explains unavailable history after navigation');
+    await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'));});await page.waitForTimeout(100);assert.equal(sockets.at(-1).readyState,3);await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});await page.waitForTimeout(150);
+    await page.locator('#data-settings summary').click();await page.locator('#market-live').uncheck();await page.waitForTimeout(150);assert.equal(sockets.at(-1).readyState,3);checks.push('Hidden-page and live-off controls release the subscription');
+    await page.evaluate(()=>{const original=Date.now;Date.now=()=>original()+3600000;});await page.waitForFunction(()=>document.querySelector('.hyper-feed-status').textContent.includes('Chart delayed'));checks.push('Old candles remain marked delayed independently of book or connection status');await page.evaluate(()=>{Date.now=()=>new Date().getTime();});
+    const count=sockets.length;await page.locator('[data-category="all"]').click();await page.waitForTimeout(100);assert.equal(sockets.length,count);await page.locator('[data-category="predictions"]').click();
+    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'No horizontal overflow');await page.screenshot({path:path.join(os.tmpdir(),'lenz-hyperliquid-'+width+'.png'),fullPage:true});checks.push('Desktop and phone layouts stay within the viewport');
+    const search=page.getByRole('searchbox',{name:'Search trading markets'});await search.fill('no matching question');await page.locator('.hyper-detail').getByText('No markets match your search.',{exact:true}).waitFor();await search.fill('');await page.locator('.hyper-chart canvas').first().waitFor();checks.push('Clearing an empty search restores a selected market and chart');
+    await page.getByRole('button',{name:'Remove saved',exact:true}).click();assert.equal(await page.evaluate(()=>localStorage.getItem('lenz-hyperliquid-catalog-v1')),null);
+    await context.close();
+  }
+  assert.deepEqual(errors,[]);assert(!requests.some(x=>/sign|transfer|accounts|settle/.test(x)));console.log(JSON.stringify({passed:checks.length,checks},null,2));
+  }finally{await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,7 +1,7 @@
 import {tapeRequest} from './market-tape.js';
 import {checkedMarketEvent} from './market-stream-data.js';
 
-export function marketStream({request,accept,status=()=>{},allowed=()=>navigator.onLine&&!document.hidden,fetcher=fetch}){
+export function marketStream({request,accept,status=()=>{},allowed=()=>navigator.onLine&&!document.hidden,fetcher=fetch,parse=tapeRequest,checkEvent=checkedMarketEvent,endpoint='/api/markets/stream'}){
   let enabled=false,generation=0,controller=null,timer=null,failures=0;
   function cancel(){generation++;clearTimeout(timer);controller?.abort();controller=null;}
   async function run(){
@@ -10,8 +10,8 @@ export function marketStream({request,accept,status=()=>{},allowed=()=>navigator
     let watchdog,reader;status('connecting');
     const arm=()=>{clearTimeout(watchdog);watchdog=setTimeout(()=>abort.abort(),45000);};
     try{
-      const expected=tapeRequest(request());arm();
-      const response=await fetcher('/api/markets/stream',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify(expected),signal:abort.signal});
+      const expected=parse(request());arm();
+      const response=await fetcher(endpoint,{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify(expected),signal:abort.signal});
       if(!response.ok||!response.headers.get('content-type')?.startsWith('application/x-ndjson')||!response.body)throw Error('Stream unavailable');
       reader=response.body.getReader();const decoder=new TextDecoder('utf-8',{fatal:true});let buffer='';
       while(true){
@@ -19,7 +19,7 @@ export function marketStream({request,accept,status=()=>{},allowed=()=>navigator
         if(done)throw Error('Stream ended');
         arm();buffer+=decoder.decode(value,{stream:true});if(buffer.length>524288)throw Error('Oversized stream');
         let newline;while((newline=buffer.indexOf('\n'))!==-1){const line=buffer.slice(0,newline);buffer=buffer.slice(newline+1);if(!line.trim())continue;
-          const event=checkedMarketEvent(JSON.parse(line),expected);accept(event);
+          const event=checkEvent(JSON.parse(line),expected);accept(event);
           if(event.kind!=='snapshot'){failures=0;status('streaming');}
         }
       }

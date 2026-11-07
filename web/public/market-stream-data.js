@@ -19,7 +19,7 @@ const newerCandle=(a,b)=>a.time>b.time||a.time===b.time&&a.trades!==undefined&&(
 export function mergeMarketEvent(tape,event,now=Date.now()){
   if(event.kind==='snapshot'){
     const next=event.tape;if(!tape||JSON.stringify(tape.request)!==JSON.stringify(next.request))return next;
-    const merged=new Map(next.candles.map(c=>[c.time,c])),first=next.candles[0].time;
+    const merged=new Map(next.candles.map(c=>[c.time,c])),first=next.candles[0]?.time??0;
     for(const c of tape.candles){const incoming=merged.get(c.time);if(c.time>=first&&(!incoming||newerCandle(c,incoming)))merged.set(c.time,c);}
     const candles=[...merged.values()].sort((a,b)=>a.time-b.time).slice(-300);
     const book=tape.bookTime>next.bookTime?tape:next;
@@ -27,6 +27,6 @@ export function mergeMarketEvent(tape,event,now=Date.now()){
   }
   if(!tape)return tape;
   if(event.kind==='book')return event.time<tape.bookTime?tape:{...tape,observedAt:now,bookTime:event.time,expiresAt:Math.min(now+30000,event.time+30000),levels:event.levels};
-  const c=event.candle,last=tape.candles.at(-1);if(newerCandle(last,c))return tape;
-  return {...tape,candles:[...tape.candles.slice(c.time===last.time?0:-299,c.time===last.time?-1:undefined),c]};
+  const c=event.candle,last=tape.candles.at(-1);if(last&&newerCandle(last,c))return tape;
+  return {...tape,candles:[...tape.candles.slice(c.time===last?.time?0:-299,c.time===last?.time?-1:undefined),c]};
 }
