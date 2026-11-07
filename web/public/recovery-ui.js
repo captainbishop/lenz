@@ -62,8 +62,7 @@ $('#restore-chat').onclick=async()=>{
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const open=!$('#open-panel').hidden;show(open?'open':'create',false);}});
 addEventListener('pagehide',clear);addEventListener('keydown',event=>{if(event.key==='Escape')show($('#open-panel').hidden?'create':'open');});
-const paintTheme=()=>themeIcon($('#theme-toggle'),document.documentElement.dataset.theme==='dark');paintTheme();
-$('#theme-toggle').onclick=()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('lenz-home-theme',next);}catch{}paintTheme();};
+themeIcon(document.querySelector('#theme-toggle'));
 $('#save-backup-offline').onclick=async()=>{
   $('#save-backup-offline').disabled=true;$('#backup-cache-status').textContent='Saving…';
   try{await saveOffline();$('#backup-cache-status').textContent='Page saved for offline use.';}

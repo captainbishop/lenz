@@ -1,11 +1,12 @@
 import {ORACLE_NETWORKS,ORACLE_FEEDS,oracleSnapshot,oracleDecimal,oracleState} from './oracle-feeds.js';
 import {liveRead} from './market-live.js';
+import {workspaceHeading} from './workspace-heading.js';
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
 const elapsed=time=>{const seconds=Math.max(0,Math.floor((Date.now()-time)/1000));return seconds<60?'just now':seconds<3600?Math.floor(seconds/60)+'m ago':Math.floor(seconds/3600)+'h ago';};
 export function mountOraclePrices(target){
   const storage='lenz-oracle-prices-v1',snapshots=new Map(),saved=new Set(),failed=new Set(),states=new Map(),cells=new Map(),headers=new Map(),controllers=new Map();let active=false,query='';
   try{const raw=localStorage.getItem(storage);if(raw){if(raw.length>64000)throw Error();const values=JSON.parse(raw);if(!Array.isArray(values)||values.length>4)throw Error();for(const value of values){const snapshot=oracleSnapshot(value,{cached:true});if(snapshots.has(snapshot.network))throw Error();snapshots.set(snapshot.network,snapshot);saved.add(snapshot.network);}}}catch{snapshots.clear();saved.clear();}
-  const heading=el('div',undefined,'oracle-heading');heading.append(el('h2','Prices'),el('p','Chainlink · USD reference prices'));target.append(heading);
+  const hero=workspaceHeading({title:'Prices',description:'Chainlink · USD reference prices',kind:'prices'});target.append(hero.element);
   const table=el('div',undefined,'oracle-table');table.setAttribute('role','table');table.setAttribute('aria-label','Chainlink reference prices by network');
   const labels=el('div',undefined,'oracle-labels');labels.setAttribute('role','row');const assetLabel=el('div','Asset');assetLabel.setAttribute('role','columnheader');labels.append(assetLabel);
   for(const [key,n]of Object.entries(ORACLE_NETWORKS)){const label=el('div'),title=el('strong',n.name),status=el('small','');label.setAttribute('role','columnheader');label.append(title,status);headers.set(key,status);labels.append(label);}table.append(labels);

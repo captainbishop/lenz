@@ -1,0 +1,35 @@
+/* One palette for every appearance, shared by pages, menus and charts. */
+:root{
+ --on-forest:#f5f5ef;--on-forest-muted:#c9d9cb;
+ --theme-page:#f5f5ef;--theme-panel:#fffdf7;--theme-well:#edf1e8;--theme-chat:#f0f3eb;--theme-outgoing:#e1efa6;
+ --theme-text:#193b31;--theme-muted:#52665b;--theme-line:#c6d0c4;--theme-hover:#e7eddf;--theme-edge:#718476;--theme-danger:#a12626;
+ --theme-accent:#173f35;--theme-up:#236347;--theme-down:#a53c36;--theme-up-wash:#e4efe5;--theme-down-wash:#f4e5df;color-scheme:light;
+}
+:root[data-theme=dim]{
+ --theme-page:#14291f;--theme-panel:#20382b;--theme-well:#1b3025;--theme-chat:#192e23;--theme-outgoing:#354c2d;
+ --theme-text:#edf3e9;--theme-muted:#b5c7b8;--theme-line:#496153;--theme-hover:#2b4432;--theme-edge:#8aa891;--theme-danger:#ffaaaa;
+ --theme-accent:#e1efa6;--theme-up:#aadeac;--theme-down:#f2a89a;--theme-up-wash:#2a4538;--theme-down-wash:#4c332c;color-scheme:dark;
+}
+:root[data-theme=dark]{
+ --theme-page:#080f0c;--theme-panel:#111d17;--theme-well:#0d1812;--theme-chat:#0b1510;--theme-outgoing:#263923;
+ --theme-text:#e8eee7;--theme-muted:#a8b9ad;--theme-line:#364a3d;--theme-hover:#1b2c21;--theme-edge:#779681;--theme-danger:#ffaaaa;
+ --theme-accent:#d9e8a4;--theme-up:#aadeac;--theme-down:#f2a89a;--theme-up-wash:#1a3024;--theme-down-wash:#38231f;color-scheme:dark;
+}
+:root[data-theme]{--paper:var(--theme-page);--page:var(--theme-page);--panel:var(--theme-panel);--surface:var(--theme-panel);--ink:var(--theme-text);--muted:var(--theme-muted);--line:var(--theme-line);--hover:var(--theme-hover);--focus:var(--theme-accent);--danger:var(--theme-danger)}
+:root[data-theme] body{background:var(--theme-page);color:var(--theme-text)}
+:root[data-theme] .skip{background:var(--theme-panel);color:var(--theme-text)}
+#theme-toggle{display:inline-grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--theme-accent);cursor:pointer;flex-shrink:0}
+#theme-toggle:hover,#theme-toggle[aria-expanded=true]{background:var(--theme-hover)}
+#theme-toggle svg{display:block;pointer-events:none}
+#theme-toggle:focus-visible{outline:2px solid var(--theme-accent);outline-offset:3px}
+#theme-menu{position:fixed;inset:auto;margin:0;padding:12px;width:232px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px);overflow-y:auto;border:1px solid var(--theme-line);border-radius:6px;background:var(--theme-panel);color:var(--theme-text);box-shadow:0 12px 32px #0002;font:14px/1.5 'Segoe UI',Arial,sans-serif}
+#theme-menu .theme-menu-heading{margin:2px 10px 10px;font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--theme-muted)}
+#theme-menu button{display:flex;align-items:center;gap:12px;width:100%;min-height:46px;margin:0;padding:10px;border:0;border-radius:3px;background:transparent;color:var(--theme-text);font:inherit;text-align:left;cursor:pointer;transition:background 150ms}
+#theme-menu button:hover,#theme-menu button:focus-visible{background:var(--theme-hover)}
+#theme-menu button:focus-visible{outline:2px solid var(--theme-accent);outline-offset:-2px}
+#theme-menu button[aria-checked=true]{font-weight:600;color:var(--theme-accent);background:var(--theme-hover)}
+#theme-menu .theme-check{margin-left:auto;visibility:hidden}
+#theme-menu button[aria-checked=true] .theme-check{visibility:visible}
+#theme-menu .theme-auto{margin-top:8px;border-top:1px solid var(--theme-line);border-radius:0}
+#theme-menu .theme-menu-hint{margin:4px 10px 2px;font-size:12px;color:var(--theme-muted)}
+@media(prefers-reduced-motion:reduce){#theme-menu button{transition:none}}

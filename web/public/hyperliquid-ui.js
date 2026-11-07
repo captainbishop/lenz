@@ -1,3 +1,4 @@
+import {workspaceHeading} from './workspace-heading.js';
 import {HYPERLIQUID_KINDS,checkedHyperliquidCatalog,hyperliquidRequest} from './hyperliquid-catalog.js';
 import {checkedHyperliquidEvent} from './hyperliquid-feed.js';
 import {marketStream} from './market-stream.js';
@@ -23,9 +24,9 @@ export function mountHyperliquid(target){
   const allowed=()=>visible&&navigator.onLine&&!document.hidden;
   const request=()=>hyperliquidRequest({marketId:`hypercore:${selected.kind}:${selected.sides[side]?.coin??selected.coin}`,interval,privacy:'public'});
   target.classList.add('hyper-workspace');
-  const intro=node('div',undefined,'hyper-heading'),title=node('div'),heading=node('h2'),description=node('p');title.append(heading,description);
+  const hero=workspaceHeading({title:'Markets',description:'Explore supported trading markets.'}),intro=hero.element,heading=hero.title,description=hero.description;intro.classList.add('hyper-heading');
   const refresh=iconButton('Refresh markets','refresh',()=>void loadCatalog()),save=iconButton('Save offline','save',()=>{try{localStorage.setItem(savedKey,JSON.stringify(catalog));saveError='Catalogue saved on this device.';}catch{saveError='Could not save on this device.';}catalogStatus();}),forget=iconButton('Remove saved','remove',()=>{try{localStorage.removeItem(savedKey);saveError='Saved catalogue removed.';}catch{saveError='Could not remove saved data.';}catalogStatus();});
-  const actions=node('div',undefined,'hyper-actions');actions.append(refresh,save,forget);intro.append(title,actions);
+  const actions=hero.actions;actions.classList.add('hyper-actions');actions.append(refresh,save,forget);
   const status=node('p',undefined,'hyper-status');status.setAttribute('role','status');
   const controls=node('div',undefined,'hyper-controls'),query=node('input');query.type='search';query.placeholder='Search tokens, questions or venues';query.maxLength=100;query.setAttribute('aria-label','Search trading markets');query.oninput=()=>{missingSelection=false;search=query.value.toLowerCase().trim();page=0;renderList();};
   const venues=node('select');venues.setAttribute('aria-label','Trading venue');venues.onchange=()=>{missingSelection=false;venue=venues.value;page=0;renderList();};controls.append(query,venues);
@@ -140,7 +141,7 @@ export function mountHyperliquid(target){
       kind=nextKind;missingSelection=false;page=0;search='';query.value='';venue='';cancelFeed();clearDegenCandles(chart);selected=null;tape=null;trades=[];chart=null;feedStatus=null;feed=null;detail.replaceChildren(node('p','Select a market to explore.'));
       if(catalog)updateDirectory();
     }
-    heading.textContent=({spot:'Spot',perpetuals:'Perpetuals',outcome:'Predictions'})[kind]??'Markets';
+    hero.setKind(kind==='outcome'?'predictions':kind);heading.textContent=({spot:'Spot',perpetuals:'Perpetuals',outcome:'Predictions'})[kind]??'Markets';
     description.textContent=kind==='outcome'?'Explore events, price forecasts and other outcomes.':kind==='perpetuals'?'Explore perpetual markets across supported venues.':'Explore spot markets across supported venues.';
     visible=value;wake();if(value)renderList();
   }};

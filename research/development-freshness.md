@@ -1170,3 +1170,20 @@ Reviewed same-origin public Hyperliquid streaming, interval and lifecycle cancel
 Reviewed read-only native spot, perpetual, builder-venue and outcome discovery, including sparse token/context joins, quote units, side selection, text-only templates, malformed-source isolation, cancellable reads, combined stream quotas and delayed-chart labels. Activity navigation opens a matching market automatically. Local logos, inline timeframe buttons, labelled utility icons and neutral focus styling retain the native chart interface. Keyboard selection retains focus; offline navigation explains unavailable history.
 
 The isolated checkpoint passed 50 Node tests, 22 catalogue browser checks, 18 existing streaming checks, 24 Degen checks and 2 offline upgrade checks. The empty-panel reproduction failed before automatic selection and passed afterward. Live reads returned 1,003 markets; native book/trade events were observed across all four instrument classes. Candle pushes were observed for spot/native perps in the final short run and for an outcome in an earlier run. Empty history and a one-sided spot book remained usable. No account, signing, payment or settlement action ran. External-chain pool coverage and a guaranteed delivery cadence remain outside this feature. See docs/hyperliquid-markets.md.
+
+## Shared appearance, November 7
+
+Reviewed shared illustrated headers and local theme-specific artwork across Markets,
+Wallet, Drafts, Account, Recovery and Conversations. Light, Dim and Dark have
+separate text/surface palettes. Markets retain their richer colours; homepage
+frames and selected panels blend their accents into the darker page. Large cards
+lift their visual contents while keeping the click target fixed. Action arrows
+use the same directional transition. Reduced motion and Motion off remain respected.
+
+Verification: 78 desktop/phone appearance cases, 14 Overview checks, 24 Hyperliquid
+checks, 7 appearance-menu groups, 5 homepage groups, 7 gallery groups and 2 cache
+upgrade checks passed. Edge-click and drag-away cancellation checks passed. The
+saved message/payment replay passed in all three themes with all three stored
+accounts unchanged. Existing illustrated media bytes were retained; see
+web/preview-style-review.json for the scope. Screenshots and exploratory records
+remain outside Git. No new signing, transaction or settlement action ran.

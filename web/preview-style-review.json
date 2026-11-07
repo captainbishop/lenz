@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-07T17:35:22.105Z",
+  "method": "Replayed the saved signed message and payment states in Light, Dim and Dark. Fifteen cropped presentation frames changed with the shared theme; message text, payment status and all three stored accounts remained unchanged. The existing videos remain illustrated explanations with their recorded palettes. Their renderer, story styles, media and poster bytes are unchanged.",
+  "changedSources": {
+    "web/public/app-theme.css": {
+      "before": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
+      "after": "7fb58650e6bf9f9eb98026c5a2194299d3389a5121f21a17b1e48f0b8726875b"
+    },
+    "web/public/app-theme.js": {
+      "before": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+      "after": "5373e436d85804e9cb09d29dcda1d7889b564210ae4c374d762221f4237f5481"
+    },
+    "web/public/chat.html": {
+      "before": "81b45707dd8517235d0f7d2a973177573e433fc2244b608da719dd818f7d7439",
+      "after": "b3a2a28361a19633a2a9c4e4eb80c0afca795d416f4171c224eb6d88eb08ec52"
+    },
+    "web/reframe-preview-flow.cjs": {
+      "before": "1944a8e05c27fdcd1969bd7bb3eb1ba7a974d8993bb5d227d99f4478d6c8a877",
+      "after": "86832a8782c158ce4ba776d6791bfeea96d13ee2b6c101fa1a3d97d0e198f951"
+    }
+  },
+  "addedSources": {
+    "web/public/lenz-design.css": "7af6d52b12a64b095b91bd4cb0c1e10426248d311bfe36085d87fa3777f75c6f",
+    "web/public/theme-tokens.css": "f5b28f0e2c83d0c9861047e7d931aa97b7a4bf4ecd6582ad0731fafb3b1199fd",
+    "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
+    "web/public/card-motion.js": "e6208ca477ad1ea41a30738d0871d6879a8ccf4fbb3bfa004929d91a6cb2734d",
+    "web/public/overview-art/chat-dark.svg": "2d3c8ccbcbae312f686d2895fc954968ebab24c918ae130437713cadb785032d",
+    "web/public/overview-art/chat-dim.svg": "26eeb8a27df501165d776f0e40b6abea6dff9f1872026111177216cad50efb0b",
+    "web/public/overview-art/chat.svg": "260741589b7eb845fcfcc1244b514853edfc5dc9dd568c8306a73c5fe1e80792",
+    "web/public/theme-icon.js": "4c473679bb510814d74d8333f59771c7454ad790ee4a55dd15c03d568e44e7ad"
+  },
+  "captures": {
+    "private-send": {
+      "light": "7a0289e43f0d6b0bbf74f6f68db2e79ed354db97b9b63aef1055cee1c0e97ab8",
+      "dim": "b422e577f24a4d87b89a4fed99e1edb33cb741203f9e25bffbb39df609843e30",
+      "dark": "7e1e57fcc16adb72e83e46836d754b8be2524deda8c8d27dd37d61b0961e5ab9"
+    },
+    "private-read": {
+      "light": "d4c640aeea8a848fa70784d7f28ad3e1069d3a5b631e10b9bf530c0f94a902eb",
+      "dim": "83ffe0cb292a78e2d2ecf05a2542f92149e045cc2e74c08f70ece6475fcb5153",
+      "dark": "f468ac68176a9655c310526cb6dbe0e0555f877a3bb7355fe04133e0a898a3f8"
+    },
+    "payment-received": {
+      "light": "a76d2eceb4b9f0b0850f29301ffce85858fac2c692294aaa991bc5840c2676ce",
+      "dim": "3c7ff8ed63d535944fd1c4979dbe1804c03a432cd709ffd3d73f0ca266d79efd",
+      "dark": "8e99850672667da681c14b097f35676922847a8899a001ae4b00334354f4ef36"
+    },
+    "payment-onward": {
+      "light": "62d0019bae47ed50305ae4065b7115ae4a14be3e84dd301490be9683bb631c30",
+      "dim": "108c1bb4a7e8116bd4fc4fd8179ace879d4350f98805109d66af95e1b86194c8",
+      "dark": "7c7abf1c2869f8c65cf833de64cbd3fc0bc430143e4db6d9b7b927784f48ec11"
+    },
+    "payment-confirmed": {
+      "light": "a2c3a5393078ba5861ad432fab93be58e1b5972825b079b81312b51a924eae4e",
+      "dim": "4e2683a49a441a19e3dfc23ee062b9f0ed32b910b981d5beb30e9a1a78f86797",
+      "dark": "721965391443fd6ce81d9c67132ae4c0b7ce24e58bf1fa562d5d74edb07b24c2"
+    }
+  },
+  "checks": [
+    "Saved message text and recorded pending/final payment states match",
+    "Stored account snapshots unchanged",
+    "Six video files and six posters match their recorded hashes",
+    "78 responsive appearance cases and natural-motion interaction checks pass",
+    "Homepage/gallery keyboard, seeking, pause, both media themes and offline journeys pass"
+  ],
+  "scope": "Presentation verification only. No new signing, settlement or live financial action."
+}

@@ -2,8 +2,8 @@
   "recordedAt": "2026-11-04T13:37:43.036Z",
   "renderer": "Hyperframes 0.8.226 / FFmpeg 9.0.2",
   "sourceFiles": {
-    "web/public/app-theme.css": "78f2f884699daab0b9b1fde812e8037300641374b783564fa83dff73afc676e9",
-    "web/public/app-theme.js": "d199f0e9b5800f257eed5f328bc7497fab9647cc6fdfe1a91e4e819fca01600e",
+    "web/public/app-theme.css": "7fb58650e6bf9f9eb98026c5a2194299d3389a5121f21a17b1e48f0b8726875b",
+    "web/public/app-theme.js": "5373e436d85804e9cb09d29dcda1d7889b564210ae4c374d762221f4237f5481",
     "web/public/brand/chat-pattern.svg": "f9fe47bf66ca966de4e76eb1c3cb8f53d1fb13c1722738691dc817626468b9d7",
     "web/public/brand/mark.svg": "d5afb1e7caa61dbd488543ca07c2d63f35b6699855027bb4c4a4f217bea2fc41",
     "web/public/carrier-client.js": "8167b3dcc225a968629e9b53371c55a323ce9468de52477eae36f43d2e504dac",
@@ -13,7 +13,7 @@
     "web/public/chat-layout.css": "1905f1d35989757ecf30f382448008e092a5e71bda08f0036d038fe3c70e96ba",
     "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
     "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
-    "web/public/chat.html": "81b45707dd8517235d0f7d2a973177573e433fc2244b608da719dd818f7d7439",
+    "web/public/chat.html": "b3a2a28361a19633a2a9c4e4eb80c0afca795d416f4171c224eb6d88eb08ec52",
     "web/public/chat.js": "169d96792fc5aedb9342a82ff40aadd69c656fde15ca9b44772a5e07d91cd857",
     "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
     "web/public/contact-ui.js": "cbc1023ffb3c268871489bd78aabb5b248f758a1f7e302a7dcb40208723698c3",
@@ -46,7 +46,7 @@
     "web/public/save-offline.js": "434eceaed11c3d6aae664d96c9e4125158e7d7be69f4966186ed811fd57ace45",
     "web/public/trade-model.js": "9fed412e26ce7e19d76e65ceaa85af983959312d9a28a8a213c0daa420d8f073",
     "web/public/wallet-feedback.js": "9e02a4c41cf613a7adb29351e66e65788fd6a4d33bf4d79deb5d8976aa08af5d",
-    "web/reframe-preview-flow.cjs": "1944a8e05c27fdcd1969bd7bb3eb1ba7a974d8993bb5d227d99f4478d6c8a877",
+    "web/reframe-preview-flow.cjs": "86832a8782c158ce4ba776d6791bfeea96d13ee2b6c101fa1a3d97d0e198f951",
     "web/render-preview-stories.cjs": "9cf1fe4e8b291ce15f806e9cf1ae21a0a32357270dfee6f446a700c101283de9",
     "web/preview-scene.html": "48ea6e147793c80a7ae111bd7019f95abfd27d02a363bb18bb42dfe8f5daf0de",
     "web/preview-story.css": "775385fa13d4fa7848a75a20a746d14c723e419afb28063afe5cc8537cc2e029",
@@ -65,7 +65,15 @@
     "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
-    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03"
+    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
+    "web/public/lenz-design.css": "7af6d52b12a64b095b91bd4cb0c1e10426248d311bfe36085d87fa3777f75c6f",
+    "web/public/theme-tokens.css": "f5b28f0e2c83d0c9861047e7d931aa97b7a4bf4ecd6582ad0731fafb3b1199fd",
+    "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
+    "web/public/card-motion.js": "e6208ca477ad1ea41a30738d0871d6879a8ccf4fbb3bfa004929d91a6cb2734d",
+    "web/public/overview-art/chat-dark.svg": "2d3c8ccbcbae312f686d2895fc954968ebab24c918ae130437713cadb785032d",
+    "web/public/overview-art/chat-dim.svg": "26eeb8a27df501165d776f0e40b6abea6dff9f1872026111177216cad50efb0b",
+    "web/public/overview-art/chat.svg": "260741589b7eb845fcfcc1244b514853edfc5dc9dd568c8306a73c5fe1e80792",
+    "web/public/theme-icon.js": "4c473679bb510814d74d8333f59771c7454ad790ee4a55dd15c03d568e44e7ad"
   },
   "videos": [
     {
@@ -328,6 +336,7 @@
   "apiRequests": 0,
   "errors": [],
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
-  "sourceReview": "web/preview-mobile-review.json",
-  "sourceReviewedAt": "2026-11-05T15:26:57.215Z"
+  "sourceReview": "web/preview-style-review.json",
+  "sourceReviewedAt": "2026-11-05T15:26:57.215Z",
+  "reviewedAt": "2026-11-07T17:35:22.105Z"
 }

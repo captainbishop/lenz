@@ -74,8 +74,7 @@ async function reload(){
   finally{if(ticket===loading)$('#reload-drafts').disabled=false;}
 }
 $('#reload-drafts').onclick=reload;
-function theme(){themeIcon($('#theme-toggle'),document.documentElement.dataset.theme==='dark');}
-$('#theme-toggle').onclick=()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('lenz-home-theme',next);}catch{}theme();};theme();
+themeIcon(document.querySelector('#theme-toggle'));
 addEventListener('offline',()=>{invalidate();if($('#route-action-status'))$('#route-action-status').textContent='Offline · Saved draft retained.';update();});addEventListener('online',update);setInterval(update,1000);
 await reload();
 if('serviceWorker' in navigator){try{const registration=await navigator.serviceWorker.register('/sw.js');await navigator.serviceWorker.ready;

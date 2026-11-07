@@ -99,10 +99,7 @@ $('#add-contact').addEventListener('close',()=>{
   if(sendAfterContact){sendAfterContact=false;openNearSend();}
   $('#add-title').textContent='Add a person';
 });
-const theme = $('#theme-toggle');
-const paintTheme = () => themeIcon(theme,document.documentElement.dataset.theme==='dark');
-theme.onclick = () => { const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('lenz-home-theme',next);}catch{}paintTheme(); };
-new MutationObserver(paintTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});paintTheme();
+themeIcon(document.querySelector('#theme-toggle'));
 $('#wallet-settings-actions').addEventListener('click',event=>{if(event.target.closest('button'))$('.wallet-settings').open=false;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('.wallet-settings').open){$('.wallet-settings').open=false;$('.wallet-settings summary').focus();}});
 try { await loadNearConfig(); await render(); status('Your wallet is ready.', false, { transient: true }); } catch (error) { status(error.message, true); }

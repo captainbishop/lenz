@@ -17,8 +17,12 @@ or an attractive colour palette alone does not meet it.
   opposing alignment can inform selection/focus and the direction of movement;
   avoid repeating the logo as decoration behind every panel.
 - Keep warm paper `#f5f5ef`, forest `#173f35`, ink `#193b31` and lime `#e1efa6`.
-  Lime identifies the primary action or selected state. Dark surfaces use
-  `#14291f` and `#20382b`, with readable text `#edf3e9`.
+  Lime identifies the primary action or selected state. Dim surfaces use
+  `#14291f` and `#20382b`, with readable text `#edf3e9`. Dark uses near-black
+  green `#080f0c` and `#111d17`. The shared appearance menu offers Light, Dim,
+  Dark and Auto; Auto follows the device setting. Choices persist across pages
+  and tabs and remain usable offline. If storage is blocked, the current page
+  retains the explicit choice. Dim and Dark share the dark preview recordings.
 - Use Georgia for short display headings and Segoe UI for controls and reading.
   Use tabular numerals for financial values. Type hierarchy, aligned baselines
   and whitespace do more work than shadows, gradients or outlines.
@@ -130,3 +134,16 @@ contact is added. The composer stays disabled until a recipient exists. Your
 people opens a separate list; returning preserves the selected conversation and
 its draft. Wallet, offline saving and delivery controls remain available in the
 compact options menu. Desktop retains the people list beside the conversation.
+
+## Shared illustrated surfaces
+
+Use `lenz-design.css` for section tones and `workspace-heading.js` for illustrated
+headings. Light, Dim and Dark each have separate surfaces, text, edges and local
+artwork. Keep utility actions compact, labelled and at least 44px. The homepage
+uses the same palette while retaining its preview controls and composition.
+
+Cards do not acquire a green outline on pointer hover or press. Large actionable
+cards lift on hover or press, with a matching arrow nudge.
+Keep layout stable and disable this motion for reduced-motion or Motion off.
+Reserve a neutral focus ring for keyboard navigation. Verify
+normal text contrast at 4.5:1, small-screen reflow and offline asset availability.

@@ -1,3 +1,4 @@
+const {chooseTheme}=require('./theme-test-ui.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const { writeFile } = require('node:fs/promises');
@@ -8,7 +9,7 @@ const path = require('node:path');
   try {
     const context = await browser.newContext(), page = await context.newPage();
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('http://127.0.0.1:4173/');
+    await page.goto((process.env.LENZ_STYLE_TEST_BASE??'http://127.0.0.1:4173')+'/');
     await page.waitForFunction(() => document.querySelector('#home-cache-status').textContent.startsWith('Homepage saved'));
     for (const [name, width, height] of [['desktop', 1280, 960], ['narrow', 375, 812]]) {
       await page.setViewportSize({ width, height });
@@ -21,8 +22,8 @@ const path = require('node:path');
     await page.locator('#view-chat').press('ArrowDown'); assert.equal(await page.locator('#view-profile').getAttribute('aria-selected'),'true');
     assert.equal(await page.locator('#product-preview').getAttribute('src'),'/previews/profile-light.mp4');
     await page.locator('#view-profile').press('Home'); assert.equal(await page.locator('#view-wallet').getAttribute('aria-selected'),'true');
-    await page.getByRole('button',{name:'Switch to dark theme'}).click(); assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
-    await page.getByRole('button',{name:'Switch to light theme'}).click();
+    await chooseTheme(page,'dark'); assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+    await chooseTheme(page,'light');
     await page.emulateMedia({reducedMotion:'reduce'}); await page.getByRole('button',{name:'Motion off'}).waitFor({state:'visible'});
     assert.equal(await page.locator('#motion-toggle').getAttribute('aria-pressed'),'true');
     checks.push('feature panels support keyboard navigation; theme and reduced-motion controls work');
@@ -35,7 +36,7 @@ const path = require('node:path');
     await page.getByRole('link', { name: 'Proof experiment', exact: true }).click();
     assert.equal(new URL(page.url()).pathname, '/payment-demo.html');
     checks.push('homepage links to wallet and original proof experiment');
-    await context.setOffline(true); await page.goto('http://127.0.0.1:4173/');
+    await context.setOffline(true); await page.goto((process.env.LENZ_STYLE_TEST_BASE??'http://127.0.0.1:4173')+'/');
     assert((await page.locator('h1').innerText()).includes('without internet'));
     assert(await page.locator('img').evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0)));
     assert(await page.locator('.hero').evaluate(node => getComputedStyle(node).display === 'grid'));

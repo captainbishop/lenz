@@ -61,10 +61,12 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
         }
         fragments[name]=await p.locator('.conversation').innerHTML();
         snapshots[name]={};
-        for(const theme of ['light','dark']) {
+        for(const theme of ['light','dim','dark']) {
           await p.evaluate(async t=>{localStorage.setItem('lenz-home-theme',t);document.documentElement.dataset.theme=t;await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);},theme);
-          assert.equal(await p.locator('.conversation-top').evaluate(n=>getComputedStyle(n).backgroundColor),theme==='dark'?'rgb(32, 56, 43)':'rgb(255, 255, 255)');
-          if(theme==='dark'&&name.startsWith('payment'))assert.equal(await p.locator('.trade-state').evaluate(n=>getComputedStyle(n).backgroundColor),'rgb(43, 68, 50)','Dark payment state must use the current readable palette');
+          const contrast=await p.locator('.conversation-top').evaluate(n=>{
+            const luminance=color=>color.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+            const a=luminance(getComputedStyle(n.querySelector('h2')).color),b=luminance(getComputedStyle(n).backgroundColor);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+          });assert(contrast>=4.5,theme+' conversation heading contrast');
           const file=`web/evidence/preview-replay/${name}-${theme}.png`;await fs.mkdir(path.dirname(path.join(root,file)),{recursive:true});
           const data=await p.locator('.conversation').screenshot();await fs.writeFile(path.join(root,file),data);snapshots[name][theme]={file,sha256:sha(data)};
         }
@@ -80,5 +82,5 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
   ev.reframedAt=new Date().toISOString();
   ev.presentation='Read-only replay of the recorded signed packets through current UI renderers with captured pending/final receipt states. Cropped layout and corrected dark palette; historical source captures retained. No wallet state writes or financial calls.';
   await fs.writeFile(path.join(__dirname,'preview-flow-results.json'),JSON.stringify(ev,null,2)+'\n');
-  console.log('Reframed five recorded states in both themes; all three stored accounts unchanged.');
+  console.log('Reframed five recorded states in all three themes; all three stored accounts unchanged.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

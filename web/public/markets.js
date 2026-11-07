@@ -13,6 +13,7 @@ import {mountMarketPicker} from './market-picker.js';
 import {mountDegen} from './degen-ui.js';
 import {mountHyperliquid} from './hyperliquid-ui.js';
 import {mountMarketOverview} from './market-overview.js';
+import {workspaceHeading} from './workspace-heading.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
 const entry=new URLSearchParams(location.search),entryView=entry.get('view'),entryAction=entry.get('action');
 const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity','perpetuals','degen','spot','predictions'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
@@ -20,6 +21,7 @@ const liveStorageKey='lenz-live-market-snapshots-v1';
 const oraclePrices=mountOraclePrices($('#oracle-prices'));
 const degen=mountDegen($('#degen-workspace'));
 const hyperliquid=mountHyperliquid($('#hyperliquid-workspace'));
+const sectionHeading=workspaceHeading({title:'Lending',kind:'credit'});sectionHeading.element.hidden=true;$('.market-body').before(sectionHeading.element);
 let openingMarket=null;
 const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),saveSources:()=>localStorage.setItem(storageKey,JSON.stringify([...data.values()])),forgetSources:()=>{localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);$('#market-live').checked=false;$('#market-live').onchange();}});
 function openMarket(view,id){$('#market-search').value='';$('#market-network').value='';category=view;openingMarket=id??null;if(['credit','liquidity'].includes(view))selected=id??null;for(const b of $('#market-filters').children)b.setAttribute('aria-pressed',String(b.dataset.category===view));render();live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(view));$('#main').scrollIntoView({block:'start'});}
@@ -97,6 +99,7 @@ function render(preserve=false){
   const isOverview=category==='all',isDegen=category==='degen',isHyperliquid=['spot','perpetuals','predictions'].includes(category),special=prices||isDegen||isHyperliquid||isOverview;overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);openingMarket=null;
   selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid||isOverview;$('#market-status').hidden=isDegen||isHyperliquid||isOverview;$('#live-status').hidden=isDegen||isHyperliquid||isOverview;
   $('#market-network').hidden=special;$('.market-body').hidden=special;$('#market-sources').hidden=special;$('.snapshot-bar').hidden=special;
+  sectionHeading.element.hidden=special;if(!special){sectionHeading.setKind(category);sectionHeading.title.textContent=category==='credit'?'Lending':'Liquidity';sectionHeading.description.textContent=category==='credit'?'Reserve settings across supported lending markets.':'Explore pool liquidity, assets and fees.';sectionHeading.description.hidden=false;}
   if(special){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
   const before=selected,focused=document.activeElement?.dataset.marketId;
   sourceStatus();const query=$('#market-search').value.trim().toLowerCase();
@@ -157,9 +160,8 @@ $('#forget-markets').onclick=()=>{
   try{$('#market-live').checked=false;$('#market-live').onchange();localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);localStorage.removeItem('lenz-pool-price-v1');localStorage.removeItem('lenz-market-tape-v1');oraclePrices.clear();for(const p of saved)data.delete(p);saved.clear();$('#snapshot-status').textContent='Saved data removed.';render();}
   catch{$('#snapshot-status').textContent='Could not remove saved data.';}
 };
-function theme(){themeIcon($('#theme-toggle'),document.documentElement.dataset.theme==='dark');}
-$('#theme-toggle').onclick=()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('lenz-home-theme',next);}catch{}theme();};
-new MutationObserver(theme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});theme();
+themeIcon(document.querySelector('#theme-toggle'));
+
 function connectionChanged(){if(!navigator.onLine){manualGeneration++;manualController?.abort();manualController=null;busy=false;}live.wake();data.size?readStates():render();}
 addEventListener('online',connectionChanged);addEventListener('offline',connectionChanged);document.addEventListener('visibilitychange',()=>live.wake());addEventListener('pagehide',()=>{live.stop();manualGeneration++;manualController?.abort();});setInterval(()=>{if(!document.hidden)readStates();},10000);render();
 try{$('#market-live').checked=localStorage.getItem('lenz-market-live-mode')!=='off';}catch{$('#market-live').checked=true;}

@@ -36,7 +36,7 @@ function step(video, direction) {
 export function refreshPreviewVideos() {
   for (const video of videos) {
     const view = viewFor(video);
-    const path = `/previews/${view}-${root.dataset.theme === 'dark' ? 'dark' : 'light'}`;
+    const path = `/previews/${view}-${['dark','dim'].includes(root.dataset.theme) ? 'dark' : 'light'}`;
     if (video.getAttribute('src') !== path + '.mp4') {
       const sameView = video.getAttribute('src')?.includes(`/previews/${view}-`);
       pendingTime.set(video, sameView ? previewTime(video) : 0);

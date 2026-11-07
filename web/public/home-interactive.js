@@ -11,13 +11,8 @@ function motionState() {
  $('#motion-toggle').textContent = paused ? 'Motion off' : 'Motion on'; pausePreviewMotion(paused);
  if (paused) { for (const animation of document.getAnimations()) animation.finish(); for(const target of document.querySelectorAll('[data-tilt-surface]')) { target.style.setProperty('--rx','0deg'); target.style.setProperty('--ry','0deg'); } }
 }
-function theme(dark) { root.dataset.theme=dark?'dark':'light'; themeIcon($('#theme-toggle'),dark); refreshPreviewVideos(); }
-const systemTheme = matchMedia('(prefers-color-scheme: dark)');
-const applySavedTheme = () => { const saved = read('lenz-home-theme'); theme(saved === 'dark' || (saved !== 'light' && systemTheme.matches)); };
-applySavedTheme(); motionState();
-systemTheme.addEventListener('change', applySavedTheme);
-addEventListener('storage', event => { if (event.key === 'lenz-home-theme') applySavedTheme(); });
-$('#theme-toggle').onclick=()=>{ const dark=root.dataset.theme!=='dark'; theme(dark); save('lenz-home-theme',dark?'dark':'light'); };
+themeIcon($('#theme-toggle'));refreshPreviewVideos();motionState();
+addEventListener('lenz-theme-changed',refreshPreviewVideos);
 $('#motion-toggle').onclick=()=>{ paused=!paused; save('lenz-home-motion',paused?'off':'on'); motionState(); };
 reduced.addEventListener('change',()=>{paused=reduced.matches||read('lenz-home-motion')==='off';motionState();});
 const reveal=new IntersectionObserver(entries=>{for(const entry of entries) if(entry.isIntersecting){entry.target.classList.add('seen');reveal.unobserve(entry.target);if(!paused)entry.target.animate([{opacity:.35,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.65,.3,1)'});}}, {threshold:.12});

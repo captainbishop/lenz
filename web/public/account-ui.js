@@ -14,7 +14,7 @@ async function create(){const state=await readState(),name=state.identity?.profi
 $('#account-create-form').onsubmit=e=>{e.preventDefault();action(create);};$('#account-enable').onclick=()=>action(create);
 $('#account-sign-in').onclick=()=>action(async()=>{const material=await useAccountPasskey(false);try{await retrieveAccount(material);}finally{material.phrase='';}await saveOffline().catch(()=>{});location.assign(next);});
 $('#account-retry').onclick=()=>action(async()=>{await backupNow();});
-const paint=()=>themeIcon($('#theme-toggle'),document.documentElement.dataset.theme==='dark');paint();$('#theme-toggle').onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';paint();};
+themeIcon(document.querySelector('#theme-toggle'));
 addEventListener('lenz-backup-status',()=>render());addEventListener('online',()=>render());addEventListener('offline',()=>render());
 $('#account-development').hidden=!['localhost','127.0.0.1'].includes(location.hostname);
 if(location.hostname==='127.0.0.1'){$('#account-start').hidden=true;$('#account-existing').hidden=true;$('#account-address-note').hidden=false;const url=new URL(location.href);url.hostname='localhost';$('#account-address').href=url.href;}
