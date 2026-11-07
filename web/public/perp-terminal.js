@@ -1,7 +1,8 @@
 import {drawDegenCandles as drawCandles,clearDegenCandles as clearChart} from './degen-chart.js';
 import {mountMarketQuote} from './market-quote-ui.js';
 import {checkedTape,tapeRequest,CANDLE_INTERVALS} from './market-tape.js';
-import {liveRead} from './market-live.js';
+import {marketStream} from './market-stream.js';
+import {mergeMarketEvent} from './market-stream-data.js';
 import {tapeCache} from './market-tape-cache.js';
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const number=value=>Number(value).toLocaleString('en-US',{maximumFractionDigits:6});
@@ -37,7 +38,14 @@ export function mountPerpTerminal(panel,row,snapshot){
   tape=restoreTape();
   function saveTape(){try{history.put(tape);}catch{}}
   function invalidate(){generation++;controller?.abort();controller=null;busy=false;update();}
-  function update(){load.disabled=busy||liveBusy||!navigator.onLine||document.hidden;const stale=tape&&Date.now()>=tape.expiresAt;if(tape&&(stale||!navigator.onLine))status.textContent=(!navigator.onLine?'Offline · Saved':'Stale')+' · '+new Date(tape.bookTime).toLocaleTimeString();book.classList.toggle('book-stale',Boolean(stale||!navigator.onLine));}
+  let chartRecoveryAt=0;
+  function update(){
+    load.disabled=busy||liveBusy||!navigator.onLine||document.hidden;const stale=tape&&Date.now()>=tape.expiresAt;
+    if(tape&&(stale||!navigator.onLine))status.textContent=(!navigator.onLine?'Offline · Saved':'Book delayed')+' · '+new Date(tape.bookTime).toLocaleTimeString();
+    const oldCandle=tape&&Date.now()-tape.candles.at(-1).time>2*CANDLE_INTERVALS[interval];
+    if(oldCandle&&navigator.onLine){status.textContent='Chart delayed · Last candle '+new Date(tape.candles.at(-1).time).toLocaleString();if(automatic()&&!document.hidden&&!liveBusy&&Date.now()>=chartRecoveryAt){chartRecoveryAt=Date.now()+60000;queueMicrotask(()=>{if(panel.isConnected&&automatic()&&!document.hidden&&navigator.onLine)live.wake();});}}
+    book.classList.toggle('book-stale',Boolean(stale||!navigator.onLine));
+  }
   function paintChart(){
     tableDetails.querySelector('table')?.remove();if(!tape){clearChart(canvas);canvas.replaceChildren(el('span',navigator.onLine?'Loading candles...':'No saved candles','chart-empty'));readout.textContent='';return;}
     const candles=tape.candles;drawCandles(canvas,candles,row.instrument,readout,{intervalMs:CANDLE_INTERVALS[interval]});
@@ -45,17 +53,22 @@ export function mountPerpTerminal(panel,row,snapshot){
     const table=el('table'),thead=el('thead'),tr=el('tr');for(const label of ['Time','Open','High','Low','Close','Volume'])tr.append(el('th',label));thead.append(tr);const tbody=el('tbody');for(const c of candles){const tr=el('tr');for(const value of [new Date(c.time).toLocaleString(),c.open,c.high,c.low,c.close,c.volume])tr.append(el('td',value));tbody.append(tr);}table.append(thead,tbody);tableDetails.append(table);
   }
   tableDetails.addEventListener('toggle',()=>{if(tableDetails.open)paintChart();});
-  function paint(){
-    paintChart();bookRows.replaceChildren();
+  function paint(){paintChart();paintBook();}
+  function paintBook(){
+    bookRows.replaceChildren();
     if(!tape){bookRows.append(el('p','Depth unavailable','book-empty'));return;}
     const levels=tape.levels.map(side=>side.slice(0,9)),maxSize=Math.max(...levels.flat().map(l=>Number(l.size)));
     const renderSide=(side,index)=>{const rows=index===1?[...side].reverse():side;const group=el('div',undefined,index===1?'book-asks':'book-bids');for(const l of rows){const line=el('div',undefined,'book-level');line.style.setProperty('--depth',Number(l.size)/maxSize*100+'%');line.append(el('span',number(l.price)),el('span',number(l.size)));group.append(line);}bookRows.append(group);};
     renderSide(levels[1],1);const spread=Number(levels[1][0].price)-Number(levels[0][0].price),mid=(Number(levels[0][0].price)+Number(levels[1][0].price))/2;const middle=el('div',undefined,'book-spread');middle.append(el('strong',number(mid)),el('small','Spread '+number(spread)));bookRows.append(middle);renderSide(levels[0],0);update();
   }
-  const live=liveRead({period:10000,allowed:()=>navigator.onLine&&!document.hidden&&automatic()&&panel.isConnected,
-    read:async signal=>{const request=tapeRequest({marketId:row.id,interval,privacy:'public'});const response=await fetch('/api/markets/tape',{method:'POST',headers:{'content-type':'application/json'},credentials:'omit',body:JSON.stringify(request),signal:AbortSignal.any([signal,AbortSignal.timeout(45000)])});if(!response.ok)throw Error('Unavailable');const text=await response.text();if(text.length>262144)throw Error('Too large');const checked=checkedTape(JSON.parse(text),request);if(tape&&checked.bookTime<tape.bookTime)throw Error('Older book');return checked;},
-    accept:checked=>{tape=checked;saveTape();paint();},
-    status:value=>{liveBusy=value==='updating';if(value==='live')status.textContent='Live · '+new Date(tape.bookTime).toLocaleTimeString();else if(value==='retrying')status.textContent=tape?'Retrying · Earlier snapshot':'Market data unavailable · Retrying';else if(value==='paused')status.textContent='Paused · Snapshot retained';else if(value==='off'&&tape)status.textContent='Snapshot '+new Date(tape.bookTime).toLocaleTimeString()+' · Hyperliquid';update();}
+  let lastSave=0;
+  const live=marketStream({request:()=>tapeRequest({marketId:row.id,interval,privacy:'public'}),allowed:()=>navigator.onLine&&!document.hidden&&automatic()&&panel.isConnected,
+    accept:event=>{
+      tape=mergeMarketEvent(tape,event);
+      if(event.kind==='snapshot')paint();else if(event.kind==='book')paintBook();else if(tape)paintChart();
+      if(Date.now()-lastSave>=2000){saveTape();lastSave=Date.now();}
+    },
+    status:value=>{liveBusy=value==='connecting';if(value==='streaming')status.textContent='Streaming · '+new Date().toLocaleTimeString();else if(value==='connecting')status.textContent=tape?'Saved · Connecting…':'Loading candles…';else if(value==='retrying')status.textContent=tape?'Reconnecting · Saved data':'Market data unavailable · Retrying';else if(value==='paused')status.textContent='Paused · Snapshot retained';else if(value==='off'&&tape)status.textContent='Snapshot '+new Date(tape.bookTime).toLocaleTimeString()+' · Hyperliquid';update();}
   });
   function syncLive(){invalidate();live.setEnabled(automatic());}
   load.onclick=async()=>{

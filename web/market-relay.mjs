@@ -8,9 +8,10 @@ import {readPoolPrice} from '../integrations/pool-price.mjs';
 import {QUOTE_POOL} from './public/market-quote.js';
 import {readOraclePrices} from '../integrations/oracle-prices.mjs';
 import {oracleRequest,ORACLE_NETWORKS} from './public/oracle-feeds.js';
+import {createMarketStream} from './market-stream.mjs';
 const origin='http://127.0.0.1:4173';
 const send=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));};
-export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tape=readMarketTape,price=readPoolPrice,oracle=readOraclePrices,clock=Date.now}={}){
+export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tape=readMarketTape,price=readPoolPrice,oracle=readOraclePrices,clock=Date.now,stream=createMarketStream()}={}){
   const pending=new Map(),recent=new Map(),quotePending=new Map(),tapePending=new Map();
   let pricePending=null,priceCache=null;
   const oraclePending=new Map(),oracleCache=new Map();
@@ -18,12 +19,20 @@ export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tap
     if(!req.url.startsWith('/api/markets/'))return false;
     if(req.headers.host!=='127.0.0.1:4173'||req.headers.origin!==origin){send(res,403,{error:'Open market data from the local Lenz app.'});return true;}
     if(req.method!=='POST'){send(res,405,{error:'Use POST'});return true;}
-    if(!['/api/markets/read','/api/markets/quote','/api/markets/tape','/api/markets/price','/api/markets/oracles'].includes(req.url)){send(res,404,{error:'Unknown market route'});return true;}
+    if(!['/api/markets/read','/api/markets/quote','/api/markets/tape','/api/markets/stream','/api/markets/price','/api/markets/oracles'].includes(req.url)){send(res,404,{error:'Unknown market route'});return true;}
     try{
       if(req.headers['content-type']!=='application/json')throw Error('Expected JSON');
       const chunks=[];let size=0;
       for await(const chunk of req){size+=chunk.length;if(size>(req.url==='/api/markets/quote'?512:256))throw Error('Request too large');chunks.push(chunk);}
       const input=JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      if(req.url==='/api/markets/stream'){
+        const request=tapeRequest(input);let release,heartbeat;
+        const close=()=>{clearInterval(heartbeat);release?.();if(!res.writableEnded)res.end();};
+        release=stream.subscribe(request,event=>{if(res.destroyed)return;const frame=JSON.stringify(event)+'\n';if(!res.write(frame)&&res.writableLength>524288)close();},close);
+        res.writeHead(200,{'Content-Type':'application/x-ndjson','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','X-Accel-Buffering':'no'});res.flushHeaders();
+        res.on('close',close);heartbeat=setInterval(()=>{if(!res.destroyed)res.write('\n');},15000);heartbeat.unref?.();
+        return true;
+      }
       if(req.url==='/api/markets/oracles'){
         const request=oracleRequest(input),key=request.network,cached=oracleCache.get(key);
         if(cached&&clock()-cached.at<ORACLE_NETWORKS[key].period){send(res,200,cached.value);return true;}

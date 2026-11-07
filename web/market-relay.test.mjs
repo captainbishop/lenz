@@ -3,6 +3,11 @@ const {createMarketRoute}=await import(process.env.LENZ_RELAY_MODULE?pathToFileU
 const quoteInput={provider:'uniswap',marketId:'uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224',side:'usdc-to-weth',amount:'1',slippageBps:50,privacy:'public'};
 const req=(input={provider:'uniswap'},changes={})=>Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]),{url:'/api/markets/read',method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json'},...changes});
 const res=()=>({writeHead(status,headers){this.status=status;this.headers=headers;},end(body){this.data=JSON.parse(body);}});
+test('stream requests reject foreign origins, account fields and arbitrary upstreams before subscribing',async()=>{
+ const route=createMarketRoute({stream:{subscribe(){assert.fail('Unauthorized subscription');}}}),input={marketId:'hyperliquid:0:ETH',interval:'1h',privacy:'public'};
+ for(const change of [{address:'private'},{url:'wss://foreign.example'},{privacy:'private'},{interval:'1s'}]){const r=res();await route(req({...input,...change},{url:'/api/markets/stream'}),r);assert.equal(r.status,400);}
+ for(const change of [{host:'evil.test'},{origin:'https://evil.test'}]){const r=res(),q=req(input,{url:'/api/markets/stream'});Object.assign(q.headers,change);await route(q,r);assert.equal(r.status,403);}
+});
 test('network reads reject arbitrary inputs and never reuse another network cache',async()=>{
  const calls=[],route=createMarketRoute({discover:async(provider,options)=>{calls.push([provider,options]);return {provider,network:options.network};}});
  for(const input of [{provider:'uniswap',network:'constructor'},{provider:'aave',network:'https://bad.test'},{provider:'hyperliquid',network:'ethereum'},{provider:'aave',network:'arbitrum',address:'private'}]){

@@ -2,6 +2,11 @@ import {test} from 'node:test';import assert from 'node:assert/strict';import {p
 import {readMarketTape} from './market-tape.mjs';import {TAPE_REQUEST,tapeFixtures} from './market-tape-fixtures.mjs';
 const {checkedTape,tapeRequest}=await import(process.env.LENZ_TAPE_MODULE?pathToFileURL(process.env.LENZ_TAPE_MODULE):new URL('../web/public/market-tape.js',import.meta.url));
 const now=1793720000000;
+test('leaving a chart aborts all bootstrap requests',async()=>{
+ const controller=new AbortController(),signals=[];
+ const pending=readMarketTape(TAPE_REQUEST,{signal:controller.signal,fetcher:async(_,options)=>{signals.push(options.signal);return new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(options.signal.reason),{once:true}));}});
+ await new Promise(r=>setImmediate(r));assert.equal(signals.length,3);controller.abort();await assert.rejects(pending);assert(signals.every(s=>s.aborted));
+});
 test('public tape reads only metadata, order book and bounded candles without an account',async()=>{
  const calls=[],f=tapeFixtures(TAPE_REQUEST,now),fetcher=async(url,options)=>{assert.equal(url,'https://api.hyperliquid.xyz/info');assert.equal(options.redirect,'error');const b=JSON.parse(options.body);calls.push(b);return new Response(JSON.stringify(b.type==='metaAndAssetCtxs'?f.meta:b.type==='l2Book'?f.book:f.history));};
  const value=await readMarketTape(TAPE_REQUEST,{fetcher,clock:()=>now});assert.equal(value.candles.length,96);assert.equal(value.levels[0].length,20);assert.equal(value.executable,false);assert.deepEqual(calls.map(c=>c.type).sort(),['candleSnapshot','l2Book','metaAndAssetCtxs']);assert.equal(calls.find(c=>c.type==='candleSnapshot').req.endTime,now);assert(!JSON.stringify(calls).includes('address'));

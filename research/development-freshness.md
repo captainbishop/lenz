@@ -1134,3 +1134,7 @@ when the nearby module is unavailable, then load the complete module set offline
 after a successful upgrade. Three browser security checks pass. Eleven carrier checks and ten public-relay checks also pass. Their consent
 remains separate from the temporary direct session.
 The preview replay and source provenance are refreshed after the app changes.
+
+## Native market streaming, November 7
+
+Reviewed same-origin public Hyperliquid streaming, interval and lifecycle cancellation, bounded connection recovery, independent chart/book freshness, source ordering and the shared chart cursor/live-edge behavior. Exact isolated checkpoint:44 Node tests,18 streaming browser checks,24 Degen browser checks and2 offline upgrade checks passed. Native reads for BTC, ETH and SOL returned history plus real book/candle events. No account, signing or settlement actions ran. Free external DEX coverage and production-throughput guarantees remain unverified. See docs/market-streaming.md for supported behavior and reproducible checks.
