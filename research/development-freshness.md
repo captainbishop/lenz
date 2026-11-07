@@ -1,3 +1,29 @@
+# Market overview and artwork, November 7, 2026
+
+Overview displays supported market counts, active USDC spot/perpetual markets,
+current funding and dated on-chain reserve/pool observations. Exact market links
+clear old filters; missing markets do not fall back to a different instrument.
+Manual refresh and save include public on-chain sources. Saved data is available
+across sections offline; paused startup still completes its one-shot catalogue read.
+
+Five local vector illustrations and themed solid surfaces distinguish activities.
+The artwork registry adds 314 spot/builder mappings backed by 298 WebP images.
+Unavailable or unsupported artwork retains a fallback. Both offline workers include
+the new modules and images. Provider SVG markup is rasterized before bundling.
+
+The isolated sources passed 50 Node tests, 14 Overview browser checks, 24
+Hyperliquid browser checks, 18 legacy stream checks, 24 Degen browser checks and
+2 failed/successful offline-cache upgrade checks. Disposable browser checks cover
+navigation, delayed data, public snapshots, control focus, artwork and responsive
+layout. Root light/dim/dark layouts were also checked at 320, 375 and 1360 pixels;
+minimum sampled text contrast was 4.98:1. The isolated base supports light/dark;
+its unsupported dim preference resolves to light. A live preview confirmed the
+illustrated summary with current market data and restored logos.
+
+These are read-only market changes. Tests do not establish production feed latency,
+offline execution or settlement privacy. No paid service, signing or financial action
+ran. Existing homepage sources, videos and posters remain unchanged.
+
 # Degen request pacing, November 5, 2026
 
 Public data reads are paced instead of exhausting a minute budget in one burst.

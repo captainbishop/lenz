@@ -16,6 +16,10 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   },tape:async r=>tapeFixtures(r).snapshot});
   const server=http.createServer(async(req,res)=>{try{
     if(req.url.startsWith('/api/')){calls.push(req.url);req.headers.host='127.0.0.1:4173';req.headers.origin='http://127.0.0.1:4173';if(await route(req,res))return;res.writeHead(503);res.end();return;}
+    if(req.url==='/terminal-test.html'){
+      const snapshot=structuredClone(templates.find(x=>x.provider==='hyperliquid').observation);snapshot.observedAt=Date.now();snapshot.expiresAt=Date.now()+60000;const row=snapshot.rows.find(r=>r.instrument==='ETH');row.id='hyperliquid:0:ETH';row.venueIndex=0;
+      res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/markets.css"><link rel="stylesheet" href="/terminal.css"></head><body><main id="market-detail"></main><details id="data-settings" style="position:relative;z-index:2;background:var(--page);padding:20px"><summary>Data settings</summary><label><input type="checkbox" id="market-live" checked>Automatic updates</label></details><script type="module">import {mountPerpTerminal} from "/perp-terminal.js";mountPerpTerminal(document.querySelector("#market-detail"),'+JSON.stringify(row).replaceAll('<','\\u003c')+','+JSON.stringify(snapshot).replaceAll('<','\\u003c')+');document.querySelector("#market-live").onchange=()=>dispatchEvent(new Event("market-live-change"));</script></body></html>');return;
+    }
     const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep))throw Error();
     res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');res.end(await fs.readFile(file));
   }catch{res.writeHead(404);res.end();}});
@@ -23,7 +27,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   const browser=await chromium.launch({channel:'msedge',headless:true});
   try{for(const width of [1360,390]){
     const context=await browser.newContext({viewport:{width,height:850},serviceWorkers:'block'}),page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
-    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','on'));await page.goto(base+'/markets.html');if(width>760)await page.locator('.market-row[data-market-id="hyperliquid:0:ETH"]').click();else{await page.locator('#market-selector').click();await page.getByRole('option',{name:/^ETH \/ USD/}).click();}await page.locator('#candle-chart[data-candle-count]').waitFor();
+    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','on'));await page.goto(base+'/terminal-test.html');await page.locator('#candle-chart[data-candle-count]').waitFor();
     await page.mouse.move(0,0);await page.locator('#candle-chart').focus();await page.keyboard.press('End');const socket=sockets.at(-1);assert.equal(socket.sent[0].subscription.coin,'ETH');
     const f=tapeFixtures({marketId:'hyperliquid:0:ETH',interval:'1h',privacy:'public'});
     socket.emit({channel:'candle',data:{...f.history.at(-1),c:'3010',h:'3020',l:'2700'}});

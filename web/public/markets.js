@@ -12,6 +12,7 @@ import {mountOraclePrices} from './oracle-prices-ui.js';
 import {mountMarketPicker} from './market-picker.js';
 import {mountDegen} from './degen-ui.js';
 import {mountHyperliquid} from './hyperliquid-ui.js';
+import {mountMarketOverview} from './market-overview.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
 const entry=new URLSearchParams(location.search),entryView=entry.get('view'),entryAction=entry.get('action');
 const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity','perpetuals','degen','spot','predictions'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
@@ -19,6 +20,9 @@ const liveStorageKey='lenz-live-market-snapshots-v1';
 const oraclePrices=mountOraclePrices($('#oracle-prices'));
 const degen=mountDegen($('#degen-workspace'));
 const hyperliquid=mountHyperliquid($('#hyperliquid-workspace'));
+let openingMarket=null;
+const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),saveSources:()=>localStorage.setItem(storageKey,JSON.stringify([...data.values()])),forgetSources:()=>{localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);$('#market-live').checked=false;$('#market-live').onchange();}});
+function openMarket(view,id){$('#market-search').value='';$('#market-network').value='';category=view;openingMarket=id??null;if(['credit','liquidity'].includes(view))selected=id??null;for(const b of $('#market-filters').children)b.setAttribute('aria-pressed',String(b.dataset.category===view));render();live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(view));$('#main').scrollIntoView({block:'start'});}
 const shape=row=>JSON.stringify([row.id,row.status,row.assets,row.feePips,row.sizeDecimals,row.maxLeverage]);
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
 const selector=el('button');selector.id='market-selector';$('.market-toolbar').insertBefore(selector,$('#market-network'));
@@ -45,7 +49,7 @@ function sourceStatus(){
   }));
   $('#refresh-markets').disabled=busy||liveState==='updating'||!navigator.onLine;$('#save-markets').disabled=busy||!data.size;
   $('#market-live').disabled=busy;
-  $('#refresh-markets').hidden=$('#market-live').checked||['prices','degen','spot','perpetuals','predictions'].includes(category);
+  $('#refresh-markets').hidden=$('#market-live').checked||['all','prices','degen','spot','perpetuals','predictions'].includes(category);
   $('#save-markets').hidden=$('#market-live').checked;
   if(!data.size)$('#market-status').textContent=busy||liveState==='updating'?'Loading markets…':!navigator.onLine?'No saved markets.':failures.size?'Markets unavailable. Try refreshing.':'Load markets to see prices.';
   const stale=[...data.values()].some(s=>state(s)!=='Recently read');
@@ -90,8 +94,8 @@ function refreshDetails(row,snapshot){
 }
 function render(preserve=false){
   const prices=category==='prices';oraclePrices.show(prices);oraclePrices.filter($('#market-search').value);
-  const isDegen=category==='degen',isHyperliquid=['spot','perpetuals','predictions'].includes(category),special=prices||isDegen||isHyperliquid;degen.show(isDegen);hyperliquid.show(isHyperliquid,category);
-  selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid;$('#market-status').hidden=isDegen||isHyperliquid;$('#live-status').hidden=isDegen||isHyperliquid;
+  const isOverview=category==='all',isDegen=category==='degen',isHyperliquid=['spot','perpetuals','predictions'].includes(category),special=prices||isDegen||isHyperliquid||isOverview;overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);openingMarket=null;
+  selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid||isOverview;$('#market-status').hidden=isDegen||isHyperliquid||isOverview;$('#live-status').hidden=isDegen||isHyperliquid||isOverview;
   $('#market-network').hidden=special;$('.market-body').hidden=special;$('#market-sources').hidden=special;$('.snapshot-bar').hidden=special;
   if(special){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
   const before=selected,focused=document.activeElement?.dataset.marketId;

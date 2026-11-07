@@ -7,8 +7,17 @@ registration alone does not establish liquidity.
 
 Navigation groups activities. Hyperliquid and its builder venues appear in the
 venue selector. Lend & Borrow and Liquidity retain their own sections. Overview
-provides the existing cross-category summary. Bundled logos appear beside market
-names; missing artwork uses a monogram, and outcomes use a neutral event icon.
+shows market counts, spot and perpetual activity ranked by reported USDC volume,
+current funding and on-chain reserve settings and pool fees. Each section has
+its own solid colour and local illustration. Rows open the selected market;
+old filters are cleared, and a missing market is reported without substituting
+another pair. Overview starts no selected-market stream or trade form.
+
+Bundled logos appear beside market names. The artwork registry adds 314 verified
+spot/builder mappings using 298 local WebP images, matched by market key, coin and
+name. Unavailable artwork keeps a monogram; outcomes use a neutral event icon.
+Images are rasterized from the official app's artwork before bundling. The
+browser sends no image request to that provider.
 
 Search and venue filters retain each market's quote or collateral asset. Outcome
 sides share one market entry. Remote names and resolution descriptions render as
@@ -27,6 +36,11 @@ shared while consumers remain and stop when the final consumer leaves. Malformed
 or unavailable sources leave healthy catalogue sections available.
 
 Save offline stores the public catalogue on this device, with its observation time.
+Overview also saves the supported on-chain snapshots. Its refresh action reads
+the catalogue and existing public sources; automatic catalogue refresh runs once
+per minute while visible and online. Each on-chain row retains its full observation
+date and freshness label. Remove saved overview deletes those public snapshots
+and turns automatic updates off.
 Existing charts remain visible offline; selecting an unsaved chart asks for a
 connection. The catalogue does not save a live feed or enable offline trading. No wallet address,
 trade participant address, signing key or financial authorization is requested.
@@ -39,6 +53,8 @@ arbitrary external-chain pools. There is no guaranteed update cadence.
 Run `node --test integrations/hyperliquid-catalog.test.mjs web/hyperliquid-feed.test.mjs`
 and `node web/hyperliquid-browser.test.cjs` for synthetic provider, relay and browser
 checks. Browser tests use disposable profiles and do not execute financial actions.
+Run `node web/market-overview.test.cjs` for refresh, saved snapshots, exact-market
+navigation, artwork and responsive-layout regressions.
 
 Provider references: [HIPs](https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips),
 [asset IDs](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/asset-ids),
