@@ -44,3 +44,9 @@ generated upstream code or downloaded research material.
 
 Dependency or source attribution does not make its maintainers authors of Lenz's
 Git commits, imply endorsement or extend an upstream audit to this application.
+
+## MessagePack encoder
+
+Native Hyperliquid action encoding uses @msgpack/msgpack 3.1.2 (ISC). The pinned
+browser bundle, notice and license are in `web/public/hyperliquid-vendor/`; its
+reproducible build and input hashes are in `web/hyperliquid-tools/`.

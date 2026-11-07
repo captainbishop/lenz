@@ -16,7 +16,7 @@
     "web/public/chat.html": "b3a2a28361a19633a2a9c4e4eb80c0afca795d416f4171c224eb6d88eb08ec52",
     "web/public/chat.js": "169d96792fc5aedb9342a82ff40aadd69c656fde15ca9b44772a5e07d91cd857",
     "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
-    "web/public/contact-ui.js": "cbc1023ffb3c268871489bd78aabb5b248f758a1f7e302a7dcb40208723698c3",
+    "web/public/contact-ui.js": "a8def4bb243897b38167e16c7638f6c426fb4e28722a5a23179e320508e92898",
     "web/public/delivery-mode.js": "117661527ec8689dbbec8bbeb243640374cc5d3e54a456f836d082b9c018cbe6",
     "web/public/delivery-receipts.js": "ab15601b62a03caeb77d6924f72e2f2cc9d49836cde51e3f32fcc6d448974c99",
     "web/public/exchange-reservations.js": "8af99ed376e0f677101a629573db071775be4caac197cec6bc2c21ee56d85558",
@@ -38,7 +38,7 @@
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
     "web/public/peer-exchange.js": "62776f7a39c0de11e35cfc8833e988a542976719f830a8938ed19b1b537543ea",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/profile-panels.js": "dd1bc762605a93d87749714b2eff1be8cf034b34020451b624e6dfcdbd98c1dc",
+    "web/public/profile-panels.js": "5d2490b969c289dc90f15dc4a61604f8c3e93336275edb706858c73c38b8ea1b",
     "web/public/profile-ui.js": "d874b9054ee1248cb1fb555317af21591ede6fd8e0e3ddfbda2e67fce3b49daf",
     "web/public/qr-vendor/jsqr.js": "2773f29f5b320e83819f5a5eff5b253e893b2fc28b0a1418046b952ff6d8b604",
     "web/public/qr-vendor/qrcode-generator.js": "69b39788ed440fc3d3dffcee4f250bb921240489c6ec4bbe72188d4162da1874",
@@ -70,9 +70,9 @@
     "web/public/theme-tokens.css": "f5b28f0e2c83d0c9861047e7d931aa97b7a4bf4ecd6582ad0731fafb3b1199fd",
     "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
     "web/public/card-motion.js": "e6208ca477ad1ea41a30738d0871d6879a8ccf4fbb3bfa004929d91a6cb2734d",
-    "web/public/overview-art/chat-dark.svg": "2d3c8ccbcbae312f686d2895fc954968ebab24c918ae130437713cadb785032d",
-    "web/public/overview-art/chat-dim.svg": "26eeb8a27df501165d776f0e40b6abea6dff9f1872026111177216cad50efb0b",
-    "web/public/overview-art/chat.svg": "260741589b7eb845fcfcc1244b514853edfc5dc9dd568c8306a73c5fe1e80792",
+    "web/public/overview-art/chat-dark.svg": "117657a38e08f7c49912044e1745ba56cd60b136b59c84bc180bee528928757d",
+    "web/public/overview-art/chat-dim.svg": "63eaa47ce7dd7bc89e317b413ed9cf67dfd85ddd6ccab62767fabe77499acedf",
+    "web/public/overview-art/chat.svg": "eee3d158be97d3c91371a30a10ba995e1fe5e26c038b5e5fe8404340926fae1d",
     "web/public/theme-icon.js": "4c473679bb510814d74d8333f59771c7454ad790ee4a55dd15c03d568e44e7ad"
   },
   "videos": [
@@ -336,7 +336,7 @@
   "apiRequests": 0,
   "errors": [],
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
-  "sourceReview": "web/preview-style-review.json",
+  "sourceReview": "web/market-action-verification.json",
   "sourceReviewedAt": "2026-11-05T15:26:57.215Z",
-  "reviewedAt": "2026-11-07T17:35:22.105Z"
+  "reviewedAt": "2026-11-07T19:00:37.630Z"
 }

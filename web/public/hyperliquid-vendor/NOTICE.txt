@@ -1,0 +1,1 @@
+@msgpack/msgpack 3.1.2 (ISC). Browser encoding bundle; no wallet or network access. See web/hyperliquid-tools/build.json for source hashes.

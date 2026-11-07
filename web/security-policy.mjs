@@ -11,6 +11,7 @@ export function securityHeaders(pathname, carriers = [], relays = []) {
       "style-src 'self' 'unsafe-inline'", "img-src 'self' data: blob:",
       "font-src 'self'", "media-src 'self'", "manifest-src 'self'", "worker-src 'self' blob:",
       "connect-src 'self'" + (connectedLab ? ' https://test.rpc.fastnear.com' : '') +
+        (pathname === '/markets.html' ? ' https://api.hyperliquid.xyz' : '') +
         (['/chat.html','/money.html'].includes(pathname) && carriers.length ? ' '+carriers.join(' ') : '') +
         (['/chat.html','/money.html'].includes(pathname) && relays.length ? ' '+relays.join(' ') : ''),
       "frame-src 'none'", "frame-ancestors 'none'", "object-src 'none'",

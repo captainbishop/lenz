@@ -1,6 +1,7 @@
 // EIP-1193 session. Keys remain in the selected wallet; no account storage here.
 import { WALLET_NETWORKS, networkId, walletNetworkParameters } from './evm-networks.js';
 import {receivingWalletData,verifyReceivingWallet} from './receiving-instructions.js';
+import {checkedOrderAction,orderTypedData,verifyOrderSignature} from './hyperliquid-order.js';
 export { WALLET_NETWORKS } from './evm-networks.js';
 const assert = (ok, message) => { if (!ok) throw Error(message); };
 const quantity = value => typeof value === 'string' && /^0x(?:0|[1-9a-f][0-9a-f]*)$/i.test(value) && value.length <= 66;
@@ -105,6 +106,17 @@ export function createWalletSession({ changed = () => {}, timeoutMs = 30000, net
           // Keep the eventual hash even if the account changes after wallet dispatch.
           // The transfer service durably records this attempt before invoking us.
           return current.request({method:'eth_sendTransaction',params:[structuredClone(transaction)]});
+        },
+        async signHyperliquid(action,nonce,expiresAt) {
+          assertCurrent();
+          const data=orderTypedData(checkedOrderAction(action),nonce,expiresAt);
+          assert(Date.now()<expiresAt,'Order review expired. Review again.');
+          assert(account(await request('eth_accounts',null,current,ticket))===identity.address&&chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId,'Wallet changed. Review again.');
+          const typed={...data,types:{EIP712Domain:[{name:'name',type:'string'},{name:'version',type:'string'},{name:'chainId',type:'uint256'},{name:'verifyingContract',type:'address'}],...data.types}};
+          const signature=await request('eth_signTypedData_v4',[identity.address,JSON.stringify(typed)],current,ticket);
+          assertCurrent();assert(Date.now()<expiresAt,'Order review expired. Review again.');
+          assert(account(await request('eth_accounts',null,current,ticket))===identity.address,'Wallet changed. Review again.');
+          return verifyOrderSignature(data,signature,identity.address);
         },
         async signReceiving(terms) {
           assertCurrent();

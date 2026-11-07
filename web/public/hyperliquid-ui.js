@@ -6,6 +6,7 @@ import {mergeMarketEvent} from './market-stream-data.js';
 import {CANDLE_INTERVALS} from './market-tape.js';
 import {drawDegenCandles,clearDegenCandles,priceText} from './degen-chart.js';
 import {marketLogo} from './market-logo.js';
+import {mountHyperliquidTrading,clearHyperliquidTrading} from './hyperliquid-order-ui.js';
 
 const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
 const button=(text,action)=>{const e=node('button',text);e.type='button';e.onclick=action;return e;};
@@ -64,7 +65,7 @@ export function mountHyperliquid(target){
   }
   function select(row,scroll=true){
     if(selected?.id===row.id)return;missingSelection=false;
-    cancelFeed();selected=row;side=0;tape=null;trades=[];clearDegenCandles(chart);detail.replaceChildren();
+    cancelFeed();clearHyperliquidTrading();selected=row;side=0;tape=null;trades=[];clearDegenCandles(chart);detail.replaceChildren();
     const header=node('div',undefined,'hyper-detail-heading'),identity=node('div');detailsTitle=node('h3',row.name);identity.append(node('p',`${HYPERLIQUID_KINDS[row.kind]} · ${row.venue}`,'hyper-kicker'),detailsTitle);quotePrice=node('strong',`${price(row.price)} ${row.quote.symbol}`,'hyper-price');header.append(marketLogo(row),identity,quotePrice);
     sideButtons=node('div',undefined,'hyper-sides');
     for(const [i,s] of row.sides.entries()){const b=button(`${s.name} · ${price(s.price)} ${row.quote.symbol}`,()=>{if(side===i)return;side=i;tape=null;trades=[];clearDegenCandles(chart);chart.replaceChildren(node('p','Loading chart…'));readout.textContent='';paintSides();paintTrades();book.replaceChildren();startFeed();});sideButtons.append(b);}
@@ -75,8 +76,7 @@ export function mountHyperliquid(target){
     const lower=node('div',undefined,'hyper-lower'),bookPanel=node('section'),tradePanel=node('section');bookPanel.append(node('h4','Order book'),node('p',`Price (${row.quote.symbol}) · Size`));book=node('div',undefined,'hyper-book');bookPanel.append(book);tradePanel.append(node('h4','Recent trades'),node('p',`Time · Side · Price (${row.quote.symbol}) · Size`));feed=node('div',undefined,'hyper-trades');tradePanel.append(feed);lower.append(bookPanel,tradePanel);
     const terms=node('details',undefined,'hyper-terms');terms.append(node('summary',row.kind==='outcome'?'Outcome details':'Market details'),node('p',row.description||`${row.name} on HyperCore.`));
     if(row.kind==='builder'||row.kind==='perp')terms.append(node('p',`Maximum leverage: ${row.leverage??'—'}× · Funding: ${row.funding===null?'—':(Number(row.funding)*100).toFixed(5)+'%'} · Collateral: ${row.quote.symbol}`));
-    terms.append(node('p','Market data only. Trading is not connected.'));
-    detail.append(header,sideButtons,toolbar,chart,readout,lower,terms);paintSides();paintTrades();renderList();startFeed();if(scroll&&matchMedia('(max-width:760px)').matches)detail.scrollIntoView({block:'start',behavior:'auto'});
+    detail.append(header,sideButtons,toolbar,chart,readout);mountHyperliquidTrading(detail,row);detail.append(lower,terms);paintSides();paintTrades();renderList();startFeed();if(scroll&&matchMedia('(max-width:760px)').matches)detail.scrollIntoView({block:'start',behavior:'auto'});
   }
   function paintSides(){for(const [i,b] of [...sideButtons?.children??[]].entries())b.setAttribute('aria-pressed',String(i===side));if(selected?.kind==='outcome')quotePrice.textContent=`${price(selected.sides[side].price)} ${selected.quote.symbol}`;}
   function paintTrades(){
@@ -134,7 +134,7 @@ export function mountHyperliquid(target){
   function matchesKind(row){return kind==='all'||row.kind===kind||kind==='perpetuals'&&['perp','builder'].includes(row.kind);}
   return {show(value,view,marketId){
     if(value&&marketId){missingSelection=false;preferred=marketId;search='';query.value='';venue='';venues.value='';page=0;}
-    target.hidden=!value;const nextKind=({spot:'spot',perpetuals:'perpetuals',predictions:'outcome'})[view]??kind;
+    target.hidden=!value;if(!value)clearHyperliquidTrading();const nextKind=({spot:'spot',perpetuals:'perpetuals',predictions:'outcome'})[view]??kind;
     if(visible===value&&kind===nextKind){if(preferred)renderList();return;}
     visible=false;if(value)restoreCatalog();
     if(value&&kind!==nextKind){
@@ -143,6 +143,6 @@ export function mountHyperliquid(target){
     }
     hero.setKind(kind==='outcome'?'predictions':kind);heading.textContent=({spot:'Spot',perpetuals:'Perpetuals',outcome:'Predictions'})[kind]??'Markets';
     description.textContent=kind==='outcome'?'Explore events, price forecasts and other outcomes.':kind==='perpetuals'?'Explore perpetual markets across supported venues.':'Explore spot markets across supported venues.';
-    visible=value;wake();if(value)renderList();
+    visible=value;wake();if(value){renderList();if(selected&&!detail.querySelector('.hyper-action'))mountHyperliquidTrading(detail,selected);}
   }};
 }

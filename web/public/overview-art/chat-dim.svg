@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
- <ellipse cx="83" cy="139" rx="58" ry="11" fill="#503e57" opacity=".16"/>
- <path d="M63 55h68a15 15 0 0 1 15 15v43a15 15 0 0 1-15 15h-7v17l-25-17H63a15 15 0 0 1-15-15V70a15 15 0 0 1 15-15Z" fill="#8469a1"/>
- <path d="M24 20h76a17 17 0 0 1 17 17v46a17 17 0 0 1-17 17H61l-25 20v-20H24A17 17 0 0 1 7 83V37a17 17 0 0 1 17-17Z" fill="#bfa7d5"/>
- <path d="M24 13h76a17 17 0 0 1 17 17v46a17 17 0 0 1-17 17H61l-25 20V93H24A17 17 0 0 1 7 76V30a17 17 0 0 1 17-17Z" fill="#d4c3e3"/>
- <rect x="46" y="46" width="33" height="28" rx="7" fill="#8f79a1"/><path d="M53 46v-8a10 10 0 0 1 20 0v8" stroke="#8f79a1" stroke-width="6"/><circle cx="62" cy="58" r="3" fill="#e2d2e9"/><path d="M62 60v5" stroke="#e2d2e9" stroke-width="3" stroke-linecap="round"/>
- <path d="M87 111h36m-1-79v12m-6-6h12" stroke="#e2d2e9" stroke-width="4" stroke-linecap="round"/>
+ <ellipse cx="83" cy="139" rx="58" ry="11" fill="#0d241b" opacity=".16"/>
+ <path d="M63 55h68a15 15 0 0 1 15 15v43a15 15 0 0 1-15 15h-7v17l-25-17H63a15 15 0 0 1-15-15V70a15 15 0 0 1 15-15Z" fill="#557769"/>
+ <path d="M24 20h76a17 17 0 0 1 17 17v46a17 17 0 0 1-17 17H61l-25 20v-20H24A17 17 0 0 1 7 83V37a17 17 0 0 1 17-17Z" fill="#7f9c7f"/>
+ <path d="M24 13h76a17 17 0 0 1 17 17v46a17 17 0 0 1-17 17H61l-25 20V93H24A17 17 0 0 1 7 76V30a17 17 0 0 1 17-17Z" fill="#becda5"/>
+ <rect x="46" y="46" width="33" height="28" rx="7" fill="#4a6752"/><path d="M53 46v-8a10 10 0 0 1 20 0v8" stroke="#4a6752" stroke-width="6"/><circle cx="62" cy="58" r="3" fill="#e5ead0"/><path d="M62 60v5" stroke="#e5ead0" stroke-width="3" stroke-linecap="round"/>
+ <path d="M87 111h36m-1-79v12m-6-6h12" stroke="#e5ead0" stroke-width="4" stroke-linecap="round"/>
 </svg>

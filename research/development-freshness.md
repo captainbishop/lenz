@@ -1187,3 +1187,13 @@ saved message/payment replay passed in all three themes with all three stored
 accounts unchanged. Existing illustrated media bytes were retained; see
 web/preview-style-review.json for the scope. Screenshots and exploratory records
 remain outside Git. No new signing, transaction or settlement action ran.
+
+## Native market actions and compact ID card
+
+Standard-account Hyperliquid USDC spot and default-venue perp limit orders now
+connect wallet funds, public-route review, per-order signing, persistent status
+and cancellation. Native funding/withdrawal, other account modes and private
+execution remain unconnected. The ID card keeps its QR and sharing actions in a
+compact theme-aware layout. See `web/market-action-verification.json` for the
+source-bound checks and tested limits. Existing illustrated homepage recordings
+retain their recorded layouts; no video or poster was changed.

@@ -1,0 +1,14 @@
+import {createRequire} from 'node:module';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {resolve,relative} from 'node:path';
+const require=createRequire(import.meta.url),{build,version}=require('../near-connector/node_modules/esbuild');
+const root=resolve(import.meta.dirname,'../..'),out=resolve(root,'web/public/hyperliquid-vendor');
+await mkdir(out,{recursive:true});
+const result=await build({stdin:{contents:"export {encode} from '@msgpack/msgpack';",resolveDir:import.meta.dirname,sourcefile:'msgpack-entry.js'},bundle:true,platform:'browser',format:'esm',target:'es2022',minify:true,legalComments:'eof',metafile:true,write:false});
+const inputs={};for(const file of Object.keys(result.metafile.inputs).filter(p=>!p.endsWith('msgpack-entry.js')))inputs[relative(root,resolve(file)).replaceAll('\\','/')]=createHash('sha256').update(await readFile(file)).digest('hex');
+await writeFile(resolve(out,'msgpack.js'),result.outputFiles[0].contents);
+await writeFile(resolve(out,'LICENSE.txt'),await readFile(resolve(import.meta.dirname,'node_modules/@msgpack/msgpack/LICENSE')));
+await writeFile(resolve(out,'NOTICE.txt'),'@msgpack/msgpack 3.1.2 (ISC). Browser encoding bundle; no wallet or network access. See web/hyperliquid-tools/build.json for source hashes.\n');
+await writeFile(resolve(import.meta.dirname,'build.json'),JSON.stringify({esbuild:version,inputs,sha256:createHash('sha256').update(result.outputFiles[0].contents).digest('hex')},null,2)+'\n');
+console.log('Built MessagePack encoder.');

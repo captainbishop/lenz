@@ -82,7 +82,7 @@ export function setupContacts({ action, status, select, selectExisting = () => f
   $('#save-qr').onclick = () => { if (cardFile) download(cardFile, cardFile.name); };
   async function copyId() {
     try { await navigator.clipboard.writeText($('#my-lenz-id').value); $('#share-feedback').textContent = 'Lenz ID copied.'; }
-    catch { $('#my-lenz-id').focus(); $('#my-lenz-id').select(); $('#share-feedback').textContent = 'Select and copy your Lenz ID.'; }
+    catch { $('#my-lenz-id').closest('details').open=true; $('#my-lenz-id').focus(); $('#my-lenz-id').select(); $('#share-feedback').textContent = 'Select and copy your Lenz ID.'; }
   }
   $('#copy-lenz-id').onclick = copyId;
   $('#share-card').onclick = async () => {

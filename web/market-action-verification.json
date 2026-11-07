@@ -1,0 +1,73 @@
+{
+  "verifiedAt": "2026-11-07T19:00:37.630Z",
+  "scope": "Native standard-account Hyperliquid limit orders and compact Lenz ID card. Isolated browser stores and simulated exchange responses.",
+  "checks": [
+    {
+      "command": "node --test web/evm-wallet.test.mjs web/hyperliquid-order.test.mjs web/contact-card.test.mjs",
+      "passed": 23
+    },
+    {
+      "command": "node web/hyperliquid-order-browser.test.cjs",
+      "passed": 17
+    },
+    {
+      "command": "node web/profile-card-browser.test.cjs",
+      "passed": 12
+    },
+    {
+      "command": "node web/hyperliquid-browser.test.cjs",
+      "passed": 24
+    },
+    {
+      "command": "node web/near-payment-cache.test.cjs",
+      "passed": 2
+    }
+  ],
+  "liveRead": {
+    "endpoint": "https://api.hyperliquid.xyz/info",
+    "type": "meta",
+    "httpStatus": 200,
+    "collateralToken": 0,
+    "market": "BTC"
+  },
+  "limits": [
+    "No real wallet signature, exchange order, deposit or withdrawal was performed.",
+    "Funding opens the official Hyperliquid interface; native funding and withdrawals remain unconnected.",
+    "Builder markets, outcomes, non-USDC spot, unified accounts and portfolio margin are excluded from native execution.",
+    "Private settlement, offline execution, lending and liquidity execution remain incomplete.",
+    "Existing homepage recordings retain their recorded illustrated layouts; the ID card layout is verified by the browser checks above, not by those recordings."
+  ],
+  "previousSourceReview": "web/preview-style-review.json",
+  "sourceFiles": {
+    "web/public/hyperliquid-order.js": "738d006fa248c064b9048aa114164d9c7fe06a714a33dcb7ce1483ce132b776e",
+    "web/public/hyperliquid-trading.js": "6aa8c8849a1e0cf90b4bf79bbcb8d31fdd59086d7e7eb41894e49dc8bae2e736",
+    "web/public/hyperliquid-order-store.js": "fdf48aca48c8112c4fb52935514ce8524e56ca8f68ad03de739b50be39ae5043",
+    "web/public/hyperliquid-execution.js": "d3523ee096840c48ba5fb49f9c8f014ff1c39411ef5543291ecb6705587ff104",
+    "web/public/hyperliquid-order-ui.js": "c80679703ec2ab795fb0fda47c588c4ec7d4582026fe51f7ed63bc220f0a5271",
+    "web/public/hyperliquid-order.css": "6179a560f647b5f5e0a231ab037ba34b87622f2c895b65a05a52e4e5f9eb6021",
+    "web/public/hyperliquid-ui.js": "ba990fcc52fb49173f8e2ea8c81b2e10fb00c3864018acdb136a2e058ff119dc",
+    "web/public/evm-wallet.js": "b643710fee05473d6ccf331de4906d650b3923f6bd634dddc52df57c6fc421eb",
+    "web/security-policy.mjs": "066b3e4418e82d328d09db30ef5376ce042a412997b6d6f9fe6d6b307c39af49",
+    "web/public/profile-panels.js": "5d2490b969c289dc90f15dc4a61604f8c3e93336275edb706858c73c38b8ea1b",
+    "web/public/contact-ui.js": "a8def4bb243897b38167e16c7638f6c426fb4e28722a5a23179e320508e92898",
+    "web/public/profile-card.css": "a34e425a5ea60208b6ec7a3a7b5ccc3cd7051e9ca1bcbf0e2d354d5c09c7872a",
+    "web/public/overview-art/chat.svg": "eee3d158be97d3c91371a30a10ba995e1fe5e26c038b5e5fe8404340926fae1d",
+    "web/public/overview-art/chat-dim.svg": "63eaa47ce7dd7bc89e317b413ed9cf67dfd85ddd6ccab62767fabe77499acedf",
+    "web/public/overview-art/chat-dark.svg": "117657a38e08f7c49912044e1745ba56cd60b136b59c84bc180bee528928757d",
+    "web/hyperliquid-order.test.mjs": "406324939a5e008e24cedfba7e32d1173afc8119af24063c2ecfa2d7e1716d9a",
+    "web/hyperliquid-order-browser.test.cjs": "8db9ec55ef4b93eda587389979316686f0eb285efd54c73282127098b33d2515",
+    "web/hyperliquid-browser.test.cjs": "9e8efe3458a6720517fb83b82008311ba81b167d8d9cf104d9d786129f1bfc1f",
+    "web/profile-card-browser.test.cjs": "4f51fdeb1ec7b7a44e6a2c3e1cedc24c8934ff04059d61c24843a62cd09737f2",
+    "web/hyperliquid-tools/package.json": "d154f2db42ecfbe220adad3c46804d816de8bb9d2706a785e2e78c67adfb4b3b",
+    "web/hyperliquid-tools/package-lock.json": "71f6884adccf1ff5f42d468a8b81b213f3d850c2ce17c5c792ec0aa6bcab345a",
+    "web/hyperliquid-tools/build.mjs": "665218047e47628a9d1636abe03e2e3a8a1ce7d9bbc18e8fce7899786515750b",
+    "web/hyperliquid-tools/build.json": "bbca231e16293829099c15cc8a2673ca31e75fe792cf35cb5fbbe1341c1cd838",
+    "web/public/hyperliquid-vendor/msgpack.js": "25ba4c21dd880422aa133b99cb8a1a5a1c4f621dd917c7dbff268ca177b63968",
+    "web/public/hyperliquid-vendor/LICENSE.txt": "d95a411bcdadac85d678a99367ff51719e53539fa5ee9994943cd760c4ae64e4",
+    "web/public/hyperliquid-vendor/NOTICE.txt": "fdae3a39e281e1a5636ea45ef35365769c46c2cd75a8b08053554fc2fbff7de8",
+    "docs/hyperliquid-orders.md": "09ff35c49f075ed3259f6389af6c6830450b87e4f8c98f4f83e1f359a41d3220",
+    "web/public/markets.html": "7dccdacbe54f09da247db08181507af7a1f9003fa37ea6283719d2590bb4122b",
+    "web/public/chat-sw.js": "c049844d21fc63881a2a03bda9de148046e989af8b9005150f7fd57ee7762dba",
+    "web/public/sw.js": "be5de157361279921d4beb68661355a5c912d7da8019c035ae99426576e9fea6"
+  }
+}
