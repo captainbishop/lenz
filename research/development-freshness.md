@@ -1,3 +1,26 @@
+# Position management and shared controls
+
+Supported perpetual markets display the selected wallet position and prepare a
+reduce-only limit order after a fresh account read. Position changes before and
+after signing block an obsolete order. Price entry, public-route choice and
+external-wallet review remain explicit.
+
+Dropdowns share rounded surfaces, compact touch targets and visible keyboard
+selection in Light, Dim and Dark. Long market pickers fit phone and landscape
+viewports. The market filter reads All markets. The root offline cache now
+includes the modules required to reopen Markets and its saved activity.
+
+The isolated candidate passed 95 scoped checks: 24 Node, 24 order browser,
+9 shared-controls browser, 12 ID-card browser, 24 market browser and 2 cache
+upgrade checks. Browser state, signatures and exchange responses are disposable
+fixtures. Existing account identity, encrypted storage and reservations survive
+the tested cache upgrades. No real wallet or financial action ran.
+
+The portable source-bound record is web/market-action-verification.json. Existing
+recordings retain their earlier layouts; the changed menus and position panel
+were inspected separately. Private settlement, offline execution and broader
+market/DeFi coverage are not established by this revision.
+
 # Market overview and artwork, November 7, 2026
 
 Overview displays supported market counts, active USDC spot/perpetual markets,

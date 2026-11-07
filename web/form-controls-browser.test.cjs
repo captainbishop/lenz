@@ -1,13 +1,22 @@
-const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),{createHash}=require('node:crypto');
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),http=require('node:http'),{createHash}=require('node:crypto');
 (async()=>{
+ const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results;
+ const root=path.join(__dirname,'public'),server=http.createServer(async(req,res)=>{try{
+   const pathname=new URL(req.url,'http://local').pathname;
+   if(pathname==='/app.js'){res.setHeader('content-type','text/javascript');res.end('');return;}
+   if(pathname==='/api/markets/read'){
+     const chunks=[];for await(const chunk of req)chunks.push(chunk);const input=JSON.parse(Buffer.concat(chunks)),source=templates.find(s=>s.provider===input.provider+(input.network?':'+input.network:''));
+     const snapshot=structuredClone(source.observation);snapshot.observedAt=Date.now();snapshot.expiresAt=snapshot.observedAt+60000;res.setHeader('content-type','application/json');res.end(JSON.stringify(snapshot));return;
+   }
+   const file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root+path.sep))throw Error();res.setHeader('content-type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml','.mp4':'video/mp4','.wasm':'application/wasm'})[path.extname(file)]??'application/octet-stream');res.end(await fs.readFile(file));
+ }catch{res.writeHead(404);res.end();}});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base='http://127.0.0.1:'+server.address().port;
  const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'}),page=await context.newPage(),checks=[],errors=[],quotes=[];
  const pass=name=>{checks.push(name);console.log('PASS '+name);};
  try{
-  const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results;
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.url().endsWith('/api/markets/quote'))quotes.push(r.postData());});
-  await page.route('**/api/markets/read',route=>{const input=route.request().postDataJSON(),source=templates.find(s=>s.provider===input.provider+(input.network?':'+input.network:''));const snapshot=structuredClone(source.observation);snapshot.observedAt=Date.now();snapshot.expiresAt=Date.now()+60000;return route.fulfill({json:snapshot});});
-  await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));await page.goto('http://127.0.0.1:4173/markets.html');await page.waitForFunction(()=>document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
-  await page.locator('#refresh-markets').click();await page.waitForFunction(()=>!document.querySelector('#refresh-markets').disabled);await page.getByRole('button',{name:'Liquidity',exact:true}).first().click();
+  await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));await page.goto(base+'/markets.html?view=liquidity');await page.waitForFunction(()=>document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
+  await page.getByRole('button',{name:'Liquidity',exact:true}).first().click();await page.locator('#refresh-markets').click();await page.waitForFunction(()=>!document.querySelector('#refresh-markets').disabled);
   await page.locator('[data-market-id="uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224"]').click();
   const direction=page.getByRole('combobox',{name:'Swap direction',exact:true}),tolerance=page.getByRole('combobox',{name:'Max price change',exact:true});
   assert.equal(await direction.evaluate(n=>n.tagName),'BUTTON');assert.equal(await tolerance.evaluate(n=>n.tagName),'BUTTON');
@@ -16,16 +25,17 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await tolerance.press('ArrowDown');await tolerance.press('End');await tolerance.press('Escape');assert.equal(await tolerance.innerText(),'1%');assert(await tolerance.evaluate(n=>n===document.activeElement));
   await tolerance.press('Enter');await tolerance.press('Home');await tolerance.press('Enter');assert.equal(await tolerance.innerText(),'0.5%');await tolerance.press('Enter');await tolerance.press('Tab');assert.equal(await tolerance.getAttribute('aria-expanded'),'false');assert.equal(await page.evaluate(()=>document.activeElement.id),'quote-public');
   await direction.press('w');await direction.press('Enter');assert.equal(await direction.innerText(),'WETH → USDC');pass('arrows, Home/End, typeahead, Escape and Tab preserve exact selection and focus');
-  for(const theme of ['light','dark']){
+  for(const theme of ['light','dim','dark']){
    await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);
    for(const [width,height]of [[1280,900],[390,844],[320,740],[740,390]]){
     await page.setViewportSize({width,height});await tolerance.click();const menu=page.locator('#quote-slippage-options'),box=await menu.boundingBox();assert(box,`Menu stays open at ${width}x${height} (${theme})`);assert(box.x>=0&&box.y>=0&&box.x+box.width<=width&&box.y+box.height<=height);
     assert(await menu.getByRole('option').evaluateAll(nodes=>nodes.every(n=>n.getBoundingClientRect().height>=44)));assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
-    const style=await tolerance.evaluate(n=>{const s=getComputedStyle(n);return {outline:s.outlineStyle,shadow:s.boxShadow};});assert.equal(style.outline,'none');assert(style.shadow.includes('-2px'));
-    if(width===390)await page.screenshot({path:path.join(__dirname,`evidence/form-controls-${theme}.png`)});await tolerance.press('Escape');
+    await tolerance.press('Home');const style=await tolerance.evaluate(n=>{const s=getComputedStyle(n);return {outline:s.outlineStyle,shadow:s.boxShadow};});assert.equal(style.outline,'solid');assert.equal(style.shadow,'none');
+    const rows=await menu.getByRole('option').evaluateAll(nodes=>nodes.map(n=>{const s=getComputedStyle(n);return {height:n.getBoundingClientRect().height,border:s.borderBottomWidth};}));assert(rows.every(n=>n.height===44&&n.border==='0px'));
+    if(width===390)await menu.screenshot({path:path.join(require('node:os').tmpdir(),`lenz-dropdown-${theme}.png`)});await tolerance.press('Escape');
    }
   }
-  pass('light/dark menus stay within phone, landscape and desktop viewports with 44px options and underline focus');
+  pass('light/dim/dark menus fit phone, landscape and desktop with compact 44px rows and visible keyboard focus');
   await page.setViewportSize({width:390,height:844});await page.evaluate(()=>document.body.style.zoom='1.5');await direction.click();const enlargedMenu=page.getByRole('listbox',{name:'Swap direction',exact:true}),enlargedBox=await enlargedMenu.boundingBox();assert(enlargedBox&&enlargedBox.x>=0&&enlargedBox.y>=0&&enlargedBox.x+enlargedBox.width<=390&&enlargedBox.y+enlargedBox.height<=844);await enlargedMenu.getByRole('option',{name:'WETH → USDC',exact:true}).click();await page.evaluate(()=>document.body.style.zoom='');
   await direction.click();await page.locator('#quote-amount').click();assert.equal(await direction.getAttribute('aria-expanded'),'false');await page.locator('#quote-amount').fill('10');await tolerance.press('Tab');assert.equal(await page.locator('#quote-public').evaluate(n=>getComputedStyle(n).outlineWidth),'1px');assert.deepEqual(quotes,[]);pass('enlarged menus fit and accept selection; outside clicks dismiss them and checkboxes keep restrained keyboard focus');
   await page.evaluate(()=>{
@@ -36,8 +46,21 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await test.click();await page.evaluate(()=>document.querySelector('#control-select').disabled=true);await page.waitForFunction(()=>document.querySelector('#control-select-control').disabled);assert.equal(await test.getAttribute('aria-expanded'),'false');
   await page.evaluate(()=>{const s=document.querySelector('#control-select');s.disabled=false;s.append(new Option('<img src=x onerror=alert(1)>','d'));});await test.click();assert.equal(await page.locator('#control-select-options img').count(),0);await test.press('Escape');
   await page.evaluate(()=>document.querySelector('#control-form').reset());await page.waitForFunction(()=>document.querySelector('#control-select-control').textContent==='Choose');await test.click();await page.evaluate(()=>document.querySelector('#control-test').remove());assert.equal(await page.locator('.lenz-choice-list:visible').count(),0);pass('dialog Escape, native validation, disabled options, form values, safe text, reset and removal stay correct');
-  await page.locator('#data-settings summary').click();await page.locator('#save-markets').click();await context.setOffline(true);await page.reload();await page.getByRole('button',{name:'Liquidity',exact:true}).first().click();await tolerance.click();await page.getByRole('option',{name:'3%',exact:true}).click();assert.equal(await page.locator('#quote-slippage').inputValue(),'300');assert.deepEqual(quotes,[]);pass('offline reload retains styled controls and cached choices without quote requests');
-  assert.deepEqual(errors,[]);const sources={};for(const f of ['web/public/form-controls.js','web/public/form-controls.css','web/public/markets.html','web/public/money.html','web/public/chat.html','web/public/routes.html','web/public/sw.js','web/public/chat-sw.js','web/form-controls-browser.test.cjs'])sources[f]=createHash('sha256').update(await fs.readFile(path.join(__dirname,'..',f))).digest('hex');
+  await page.locator('#data-settings summary').click();await page.locator('#save-markets').click();assert.match(await page.locator('#snapshot-status').textContent(),/Saved [1-9]/);await context.setOffline(true);await page.reload();await page.waitForFunction(()=>document.querySelector('#snapshot-status').textContent==='Saved data');await page.getByRole('button',{name:'Liquidity',exact:true}).first().click();await tolerance.click();await page.getByRole('option',{name:'3%',exact:true}).click();assert.equal(await page.locator('#quote-slippage').inputValue(),'300');assert.deepEqual(quotes,[]);pass('offline reload retains styled controls and cached choices without quote requests');
+  await context.setOffline(false);
+  for(const [file,label,details]of [['name-lab.html','Name service','#name-options'],['zcash-lab.html','Test account',null]]){
+    await page.goto(base+'/'+file);if(details)await page.locator(details+' summary').click();const control=page.getByRole('combobox',{name:label,exact:true});assert.equal(await control.evaluate(n=>n.tagName),'BUTTON');await control.click();assert(await page.getByRole('listbox',{name:label,exact:true}).isVisible());await control.press('Escape');
+  }
+  pass('Name and Zcash selectors use the same themed menus without wallet actions');
+  await page.goto(base+'/payment-demo.html');await page.evaluate(()=>{const s=document.querySelector('#person');s.replaceChildren(new Option('Amina','a'),new Option('David','b'));s.disabled=false;});
+  const demo=page.getByRole('combobox',{name:'Demo person',exact:true});await demo.press('Enter');await demo.press('ArrowDown');
+  assert(await page.locator('#person-options').evaluate(menu=>{const c=document.createElement('canvas').getContext('2d');const rgb=n=>{c.fillStyle=getComputedStyle(n).backgroundColor;c.fillRect(0,0,1,1);return [...c.getImageData(0,0,1,1).data].join(',');};return rgb(menu.querySelector('.is-active'))!==rgb(menu);}));
+  await demo.press('Enter');assert.equal(await page.locator('#person').inputValue(),'b');pass('Older page styling retains a visible active option and correct native selection');
+  await page.goto(base+'/markets.html?view=liquidity');await page.waitForFunction(()=>document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
+  await page.evaluate(async()=>{document.querySelector('#market-picker')?.remove();const b=document.createElement('button');b.id='layout-picker-trigger';document.querySelector('main').prepend(b);const {mountMarketPicker}=await import('/market-picker.js');mountMarketPicker(b,()=>{}).update(Array.from({length:12},(_,i)=>({id:String(i),label:'Market '+i,detail:'Available market',symbol:'BTC'})),'0');});
+  for(const theme of ['light','dim','dark'])for(const [width,height]of [[390,844],[320,740],[740,390]]){await page.setViewportSize({width,height});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);await page.locator('#layout-picker-trigger').click();const box=await page.locator('#market-picker').boundingBox();assert(box&&box.y>=0&&box.y+box.height<=height);await page.locator('#market-picker-search').press('Escape');}
+  pass('Long market menus fit phone and landscape screens in all three appearances');
+  assert.deepEqual(errors,[]);const sources={};for(const f of ['web/public/market-picker.js','web/public/market-picker.css','web/public/theme-tokens.css','web/public/name-lab.html','web/public/zcash-lab.html','web/public/payment-demo.html','web/public/form-controls.js','web/public/form-controls.css','web/public/markets.html','web/public/money.html','web/public/chat.html','web/public/routes.html','web/public/sw.js','web/public/chat-sw.js','web/form-controls-browser.test.cjs'])sources[f]=createHash('sha256').update(await fs.readFile(path.join(__dirname,'..',f))).digest('hex');
   await fs.writeFile(path.join(__dirname,'form-controls-browser-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),passed:checks.length,checks,sources,scope:'Disposable Edge with fixture market data and synthetic form; emulated viewport checks, no physical-device or screen-reader certification, wallet operation or financial transaction.'},null,2)+'\n');
- }finally{await browser.close();}
+ }finally{if(errors.length)console.error(errors);await browser.close();server.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

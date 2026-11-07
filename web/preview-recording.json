@@ -55,7 +55,7 @@
     "web/public/previews/timelines.json": "dec846f96930917e462ddc3ae77f42dd8cd81736e91a76466ac02de7a60a5651",
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
     "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23",
-    "web/public/form-controls.css": "89bf61937becefc66ccdab397632dc2e470e761ab1f3a3ef0db617a87ab31d79",
+    "web/public/form-controls.css": "b3b31fd79d5b444ac286e3243901bd8aa12e9b353dde2b76e10e54de9c938d80",
     "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
     "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
@@ -67,7 +67,7 @@
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
     "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
     "web/public/lenz-design.css": "7af6d52b12a64b095b91bd4cb0c1e10426248d311bfe36085d87fa3777f75c6f",
-    "web/public/theme-tokens.css": "f5b28f0e2c83d0c9861047e7d931aa97b7a4bf4ecd6582ad0731fafb3b1199fd",
+    "web/public/theme-tokens.css": "51e132519752834c6a90037a73a3cc3422ef96e845152b83fd11a7852507047e",
     "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
     "web/public/card-motion.js": "e6208ca477ad1ea41a30738d0871d6879a8ccf4fbb3bfa004929d91a6cb2734d",
     "web/public/overview-art/chat-dark.svg": "117657a38e08f7c49912044e1745ba56cd60b136b59c84bc180bee528928757d",
@@ -338,5 +338,5 @@
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
   "sourceReview": "web/market-action-verification.json",
   "sourceReviewedAt": "2026-11-05T15:26:57.215Z",
-  "reviewedAt": "2026-11-07T19:00:37.630Z"
+  "reviewedAt": "2026-11-07T21:02:14.283Z"
 }

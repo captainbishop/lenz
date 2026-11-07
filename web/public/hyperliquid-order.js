@@ -32,6 +32,23 @@ export function resolveOrderMarket(row,{spot,perps}){
   return Object.freeze(result);
 }
 function amountPrecision(value,decimals){check((value.split('.')[1]?.length??0)<=decimals,`Use at most ${decimals} decimal places.`);}
+export function orderPosition(market,funds){
+  check(market.kind==='perp'&&Array.isArray(funds?.perp?.assetPositions),'Position unavailable. Refresh your account.');
+  check(funds.perp.assetPositions.every(p=>typeof p?.position?.coin==='string'),'Position unavailable. Refresh your account.');
+  const matches=funds.perp.assetPositions.filter(p=>p.position?.coin===market.coin);
+  check(matches.length<=1,'Position response is ambiguous. Refresh your account.');
+  if(!matches.length)return null;
+  const position=matches[0].position,signed=position.szi;
+  check(typeof signed==='string','Position amount is unavailable.');
+  const negative=signed.startsWith('-'),size=decimal(negative?signed.slice(1):signed);
+  if(orderAmount(size)===0n)return null;
+  const optional=(value,signed=false)=>{
+    if(typeof value!=='string')return null;
+    const minus=signed&&value.startsWith('-');
+    try{const amount=decimal(minus?value.slice(1):value);return minus&&amount!=='0'?'-'+amount:amount;}catch{return null;}
+  };
+  return {side:negative?'short':'long',size,entryPrice:optional(position.entryPx),pnl:optional(position.unrealizedPnl,true),liquidationPrice:optional(position.liquidationPx),margin:optional(position.marginUsed)};
+}
 export function prepareOrder(market,account,input,funds,{now=Date.now(),cloid=id()}={}){
   check(wallet(account),'Connect your wallet first.');
   check(funds?.mode==='disabled','Trading for this account mode is not connected in Lenz yet.');
@@ -58,8 +75,8 @@ export function prepareOrder(market,account,input,funds,{now=Date.now(),cloid=id
     check(Number.isInteger(leverage)&&leverage>0&&leverage<=market.maxLeverage,'Current leverage is unavailable. Refresh your account.');
     check(['cross','isolated'].includes(marginMode)&&orderAmount(markPrice)>0n,'Current margin settings are unavailable.');
     if(input.reduceOnly){
-      const signed=position?.szi??'0',negative=signed.startsWith('-'),held=orderAmount(negative?signed.slice(1):signed);
-      check(held>=s&&held>0n&&(input.side==='buy')===negative,'This order would not reduce the selected position.');spend=0n;
+      const held=orderPosition(market,funds);
+      check(held&&orderAmount(held.size)>=s&&(input.side==='buy')===(held.side==='short'),'This order would not reduce the selected position.');spend=0n;
     }else{
       const markValue=ceilDiv(s*orderAmount(markPrice),scale),budget=markValue>value?markValue:value;
       spend=ceilDiv(budget,BigInt(leverage))+ceilDiv(budget*fee,scale);

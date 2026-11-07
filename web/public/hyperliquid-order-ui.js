@@ -1,5 +1,5 @@
 import {createWalletSession} from './evm-wallet.js';
-import {orderAmount,orderText} from './hyperliquid-order.js';
+import {orderAmount,orderText,orderPosition} from './hyperliquid-order.js';
 import {readTradingAccount,reviewTradingOrder} from './hyperliquid-trading.js';
 import {readHyperOrders,clearResolvedOrders,resolvedOrder} from './hyperliquid-order-store.js';
 import {executeTradingOrder,refreshTradingOrder,cancelTradingOrder} from './hyperliquid-execution.js';
@@ -41,6 +41,10 @@ export function mountHyperliquidTrading(target,row){
   const account=el('div',undefined,'hyper-order-account'),identity=el('span','Connect your wallet to continue.'),connect=button('Connect wallet',()=>walletSession.open()),disconnect=button('Disconnect',()=>wallet.disconnect());disconnect.hidden=true;account.append(identity,connect,disconnect);
   const available=el('p','Funds not loaded.','hyper-order-balance'),refresh=button('Refresh funds',()=>load()),funding=el('details',undefined,'hyper-order-funding');
   funding.append(el('summary','Add or withdraw funds'),el('p','Use Deposit or Withdraw on Hyperliquid with this same wallet. Return here and refresh your funds to continue.'),link('Open Hyperliquid funding ↗'),refresh);
+  const positionPanel=el('section',undefined,'hyper-position');positionPanel.setAttribute('aria-label','Your position');
+  const positionTop=el('div',undefined,'hyper-order-top'),positionTitle=el('h4','Your position'),positionRefresh=button('Refresh position',()=>load());
+  const positionSummary=el('p',undefined,'hyper-position-summary'),positionValues=el('dl'),positionTime=el('p',undefined,'hyper-position-time'),closePosition=button('Close with limit',()=>prepareClose());
+  positionTop.append(positionTitle,positionRefresh);positionPanel.append(positionTop,positionSummary,positionValues,positionTime,closePosition);
   const form=el('form',undefined,'hyper-order-form'),side=el('select'),size=el('input'),price=el('input'),privacy=el('select'),reduce=el('input');
   side.id='hyper-order-side';side.append(new Option(row.kind==='perp'?'Long / Buy':'Buy','buy'),new Option(row.kind==='perp'?'Short / Sell':'Sell','sell'));
   size.id='hyper-order-size';size.inputMode='decimal';size.autocomplete='off';size.placeholder='0.00';size.maxLength=40;
@@ -56,7 +60,7 @@ export function mountHyperliquidTrading(target,row){
   const submit=el('button','Review order →');submit.type='submit';submit.id='hyper-order-review';form.append(submit);
   const status=el('p',undefined,'hyper-order-status');status.setAttribute('role','status');
   const activity=el('section',undefined,'hyper-order-activity');activity.setAttribute('aria-label','Your orders');
-  root.append(account,available,funding,form,status,activity);
+  root.append(account,available,funding,positionPanel,form,status,activity);
   const dialog=el('dialog');dialog.className='hyper-order-dialog';dialog.id='hyper-order-confirm';dialog.setAttribute('aria-labelledby','hyper-review-title');
   const top=el('div',undefined,'hyper-order-top'),title=el('h2','Review order');title.id='hyper-review-title';const back=button('Back',()=>{review=null;dialog.close();});top.append(title,back);
   const terms=el('dl'),explain=el('p'),confirm=button('Sign order in wallet',()=>sign()),feedback=el('p');feedback.setAttribute('role','status');
@@ -64,23 +68,49 @@ export function mountHyperliquidTrading(target,row){
   dialog.addEventListener('cancel',()=>{review=null;});
   function controls(){
     const connected=!!wallet.snapshot;connect.hidden=connected;disconnect.hidden=!connected;refresh.disabled=busy||!connected||!navigator.onLine;
+    positionRefresh.disabled=refresh.disabled;closePosition.disabled=busy||!snapshot||!navigator.onLine;
     submit.disabled=busy||!snapshot||!navigator.onLine||privacy.value!=='public'||snapshot.funds.mode!=='disabled';
     identity.textContent=connected?wallet.snapshot.address.slice(0,6)+'…'+wallet.snapshot.address.slice(-4):'Connect your wallet to continue.';
     identity.title=wallet.snapshot?.address??'';progress.children[0].dataset.done=String(!!snapshot);progress.children[1].dataset.done=String(!!review);
   }
+  function showPosition(message='Position unavailable. Refresh to try again.'){
+    positionPanel.hidden=row.kind!=='perp'||!wallet.snapshot;positionValues.replaceChildren();positionTime.textContent='';closePosition.hidden=true;positionSummary.textContent=message;
+    if(!snapshot||snapshot.funds.mode!=='disabled')return;
+    try{
+      const held=orderPosition(snapshot.market,snapshot.funds);
+      positionTime.textContent='Read '+new Date(snapshot.observedAt).toLocaleString()+' · Refresh for changes';
+      if(!held){positionSummary.textContent='No open '+snapshot.market.base+' position.';return;}
+      positionSummary.textContent=`${held.side==='long'?'Long':'Short'} · ${held.size} ${snapshot.market.base}`;
+      for(const [name,value]of [['Entry price',held.entryPrice],['Unrealized P&L',held.pnl],['Liquidation price',held.liquidationPrice],['Margin used',held.margin]]){
+        const cell=el('div');cell.append(el('dt',name),el('dd',value===null?'Unavailable':value+' USDC'));positionValues.append(cell);
+      }
+      closePosition.hidden=false;
+    }catch{positionSummary.textContent='Position unavailable. Refresh to try again.';}
+  }
+  async function prepareClose(){
+    if(closePosition.disabled||closePosition.hidden)return;
+    const lease=wallet.capture();
+    try{
+      await load();lease.assertCurrent();if(!current()||!snapshot||snapshot.funds.mode!=='disabled')return;
+      const held=orderPosition(snapshot.market,snapshot.funds);if(!held){status.textContent='This position is no longer open.';return;}
+      side.value=held.side==='long'?'sell':'buy';size.value=held.size;reduce.checked=true;price.value='';review=null;side.dispatchEvent(new Event('input',{bubbles:true}));remember();controls();
+      status.textContent='Set a limit price, then review. This order can only reduce your position.';price.focus();
+    }catch(error){if(current())status.textContent=error.message;}
+  }
   async function load(){
-    abort?.abort();abort=new AbortController();const ticket=++generation;snapshot=null;review=null;controls();
-    if(!wallet.snapshot){available.textContent='Funds not loaded.';return;}if(!navigator.onLine){available.textContent='Offline · reconnect to refresh funds.';return;}
+    abort?.abort();abort=new AbortController();const ticket=++generation;snapshot=null;review=null;controls();showPosition('Reading your position…');
+    if(!wallet.snapshot){available.textContent='Funds not loaded.';return;}if(!navigator.onLine){available.textContent='Offline · reconnect to refresh funds.';showPosition('Offline · reconnect to refresh your position.');return;}
     const lease=wallet.capture();available.textContent='Reading your Hyperliquid funds…';
     try{
       const value=await readTradingAccount(row,lease.identity.address,{signal:abort.signal});lease.assertCurrent();if(ticket!==generation||!current())return;snapshot=value;
-      if(value.funds.mode!=='disabled'){available.textContent='Trading for this account mode is not connected in Lenz yet.';return;}
+      if(value.funds.mode!=='disabled'){available.textContent='Trading for this account mode is not connected in Lenz yet.';showPosition('Position unavailable for this account mode.');return;}
       if(row.kind==='spot'){
         const token=value.funds.spot.find(b=>b.token===(side.value==='buy'?value.market.quoteIndex:value.market.baseIndex)),amount=token?orderText(orderAmount(token.total)-orderAmount(token.hold)):'0';
         available.textContent=`Available ${amount} ${side.value==='buy'?value.market.quote:value.market.base} · Hyperliquid`;
       }else available.textContent=`Available margin ${value.funds.perp.withdrawable} USDC · ${value.funds.leverage?.value??'—'}× current leverage`;
       status.textContent=privacy.value==='public'?'':'Choose Public on Hyperliquid to use this route.';
-    }catch(error){if(ticket===generation&&current()){available.textContent='Funds unavailable.';status.textContent=error.message;}}
+      if(row.kind==='perp')showPosition();
+    }catch(error){if(ticket===generation&&current()){available.textContent='Funds unavailable.';status.textContent=error.message;showPosition();}}
     finally{if(ticket===generation){controls();void history();}}
   }
   form.oninput=()=>{remember();review=null;controls();};side.onchange=()=>{remember();void load();};privacy.onchange=()=>{remember();review=null;status.textContent=privacy.value==='public'?'Orders and positions are public on Hyperliquid.':'A private trading route is not connected yet.';controls();};
@@ -136,7 +166,7 @@ export function mountHyperliquidTrading(target,row){
     }catch{activity.append(el('p','Saved order activity could not be read. Trading requires working local storage.'));}
   }
   const connection=()=>{snapshot=null;review=null;if(dialog.open)dialog.close();controls();void load();void history();};
-  const offline=()=>{generation++;abort?.abort();snapshot=null;review=null;if(dialog.open)dialog.close();controls();status.textContent='Offline · saved order activity is still available. Orders can continue filling on Hyperliquid.';void history();};
+  const offline=()=>{generation++;abort?.abort();snapshot=null;review=null;if(dialog.open)dialog.close();controls();showPosition('Offline · reconnect to refresh your position.');status.textContent='Offline · saved order activity is still available. Orders can continue filling on Hyperliquid.';void history();};
   addEventListener('offline',offline);addEventListener('online',connection);
   active={walletChanged:connection,dispose(){remember();disposed=true;generation++;abort?.abort();review=null;dialog.close();dialog.remove();root.remove();for(const panel of cancelPanels){panel.close();panel.remove();}removeEventListener('offline',offline);removeEventListener('online',connection);}};
   controls();void load();void history();

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {resolveOrderMarket,prepareOrder,orderTypedData,inspectOrder,checkedOrderAction} from './public/hyperliquid-order.js';
+import {resolveOrderMarket,prepareOrder,orderTypedData,inspectOrder,checkedOrderAction,orderPosition} from './public/hyperliquid-order.js';
 
 const spot={tokens:[{index:0,name:'USDC',szDecimals:8},{index:150,name:'HYPE',szDecimals:2}],universe:[{index:107,name:'@107',tokens:[150,0]}]};
 const perps={universe:[{name:'BTC',szDecimals:5,maxLeverage:40}],collateralToken:0};
@@ -8,6 +8,18 @@ const account='0x1111111111111111111111111111111111111111';
 const market=()=>resolveOrderMarket({id:'spot:107',kind:'spot',coin:'@107',quote:{index:0,symbol:'USDC'}},{spot,perps});
 const input={side:'buy',size:'1.25',price:'20',reduceOnly:false};
 const balance={spot:[{token:0,coin:'USDC',total:'100',hold:'0'}],perp:null,fee:'0.001',mode:'disabled'};
+
+test('position summary keeps exact market, direction and unavailable risk values distinct',()=>{
+  const m=resolveOrderMarket({id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
+  const position={coin:'BTC',szi:'-0.125',entryPx:'100',unrealizedPnl:'-2.5',liquidationPx:null,marginUsed:'8'};
+  const funds={perp:{assetPositions:[{position:{...position,coin:'xyz:BTC',szi:'5'}},{position}]}};
+  assert.deepEqual(orderPosition(m,funds),{side:'short',size:'0.125',entryPrice:'100',pnl:'-2.5',liquidationPrice:null,margin:'8'});
+  assert.equal(orderPosition(m,{perp:{assetPositions:[]}}),null);
+  assert.throws(()=>orderPosition(m,{perp:{}}),/unavailable/);
+  assert.throws(()=>orderPosition(m,{perp:{assetPositions:[{position:{}}]}}),/unavailable/);
+  assert.throws(()=>orderPosition(m,{perp:{assetPositions:[{position},{position}]}}),/ambiguous/);
+  assert.throws(()=>orderPosition(m,{perp:{assetPositions:[{position:{...position,szi:'bad'}}]}}),/amount/);
+});
 
 test('selected spot pair becomes one bounded order on that exact HyperCore market',()=>{
   const review=prepareOrder(market(),account,input,balance,{now:1700000000000,cloid:'0x'+'ab'.repeat(16)});

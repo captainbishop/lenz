@@ -7,8 +7,8 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[];
   try{
     const context=await browser.newContext({viewport:{width:390,height:850},serviceWorkers:'block'}),page=await context.newPage(),signer=Wallet.createRandom();
-    let submitted=[],orders=new Map(),signMode='normal',signatures=0,accountMode='disabled',funds='1000',statusDelay=0;
-    await page.exposeFunction('fixtureSign',async typed=>{signatures++;if(signMode==='decline')throw Error('User declined');if(signMode==='late'){await new Promise(r=>setTimeout(r,250));}const {EIP712Domain,...types}=typed.types;return signer.signTypedData(typed.domain,types,typed.message);});
+    let submitted=[],orders=new Map(),signMode='normal',signatures=0,accountMode='disabled',funds='1000',statusDelay=0,positions=[];
+    await page.exposeFunction('fixtureSign',async typed=>{signatures++;if(signMode==='decline')throw Error('User declined');if(signMode==='late'){await new Promise(r=>setTimeout(r,250));}if(signMode==='shrink')positions[0].position.szi='-0.01';const {EIP712Domain,...types}=typed.types;return signer.signTypedData(typed.domain,types,typed.message);});
     await page.addInitScript(({address})=>{
       const events=new Map();window.fixtureProvider={on(name,fn){events.set(name,fn);},removeListener(name){events.delete(name);},request:async({method,params})=>{
         if(['eth_accounts','eth_requestAccounts'].includes(method))return [address];if(method==='eth_chainId')return '0xa4b1';if(method==='eth_blockNumber')return '0x100';if(method==='eth_getBalance')return '0x1000000000000000';if(method==='eth_signTypedData_v4'){window.fixtureSigning=true;try{return await window.fixtureSign(JSON.parse(params[1]));}finally{window.fixtureSigning=false;}}throw Error(method);
@@ -28,7 +28,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
         case 'meta':value={collateralToken:0,universe:[{name:'BTC',szDecimals:5,maxLeverage:20}]};break;
         case 'userAbstraction':value=accountMode;break;
         case 'spotClearinghouseState':value={balances:[{token:0,coin:'USDC',total:funds,hold:'0'},{token:150,coin:'HYPE',total:'10',hold:'0'}]};break;
-        case 'clearinghouseState':value={withdrawable:'1000',assetPositions:[]};break;
+        case 'clearinghouseState':value={withdrawable:'1000',assetPositions:positions};break;
         case 'activeAssetData':value={user:body.user,coin:body.coin,leverage:{type:'cross',value:2},markPx:'100'};break;
         case 'userFees':value={userSpotCrossRate:'0.0007',userCrossRate:'0.00045'};break;
         case 'orderStatus':if(statusDelay)await new Promise(r=>setTimeout(r,statusDelay));value=orders.get(body.oid)??{status:'unknownOid'};break;
@@ -69,6 +69,59 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     signMode='late';await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();await page.waitForFunction(()=>window.fixtureSigning===true);await page.evaluate(()=>window.changeFixtureAccount());await page.waitForTimeout(400);assert.equal(submitted.length,2);checks.push('Account changes during approval invalidate the signature before exchange dispatch');
     await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();await page.getByText(/Available 1000 USDC/).waitFor();
     accountMode='portfolioMargin';await page.getByText('Add or withdraw funds',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.getByText('Trading for this account mode is not connected in Lenz yet.',{exact:true}).waitFor();assert(await page.locator('#hyper-order-review').isDisabled());checks.push('Unsupported account modes fail closed without showing guessed spendable funds');
+    accountMode='disabled';signMode='normal';
+    positions=[{position:{coin:'BTC',szi:'0.25',entryPx:'90',unrealizedPnl:'2.5',liquidationPx:'55',marginUsed:'12.5'}}];
+    await page.locator('[data-category="perpetuals"]').click();
+    const positionPanel=page.getByRole('region',{name:'Your position',exact:true});
+    await positionPanel.getByText('Long · 0.25 BTC',{exact:true}).waitFor();
+    assert.match(await positionPanel.textContent(),/2.5 USDC/);assert.match(await positionPanel.textContent(),/55 USDC/);
+    const beforeClose=signatures;
+    await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#hyper-order-side')?.value==='sell');
+    assert.equal(await page.locator('#hyper-order-side').inputValue(),'sell');assert.equal(await page.locator('#hyper-order-size').inputValue(),'0.25');
+    assert.equal(await page.getByRole('combobox',{name:'Direction',exact:true}).textContent(),'Short / Sell');
+    assert(await page.locator('#hyper-order-reduce').isChecked());assert.equal(await page.locator('#hyper-order-price').inputValue(),'');
+    assert.equal(await page.locator('#hyper-order-privacy').inputValue(),'private');assert.equal(signatures,beforeClose);
+    assert(await page.locator('#hyper-order-price').evaluate(n=>n===document.activeElement));
+    checks.push('Selected position shows actual size and risk; closing prepares a reduce-only draft without signing or changing privacy');
+    positions=[{position:{coin:'BTC',szi:'-0.1',entryPx:'100',unrealizedPnl:'-1',liquidationPx:null,marginUsed:'5'}}];
+    await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#hyper-order-size')?.value==='0.1');
+    assert.equal(await page.locator('#hyper-order-side').inputValue(),'buy');
+    await positionPanel.getByText('Short · 0.1 BTC',{exact:true}).waitFor();
+    assert.equal(await positionPanel.locator('dl>div').filter({hasText:'Liquidation price'}).locator('dd').textContent(),'Unavailable');
+    checks.push('Closing refreshes position direction and size; absent liquidation data never becomes zero');
+    await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-privacy').selectOption('public');await page.locator('#hyper-order-review').click();
+    positions[0].position.szi='-0.05';
+    await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.getByRole('dialog',{name:'Review order',exact:true}).getByText('This order would not reduce the selected position.',{exact:true}).waitFor();
+    assert.equal(signatures,beforeClose);await page.getByRole('button',{name:'Back',exact:true}).click();
+    checks.push('A position that shrinks after review blocks signing until the closing amount is reviewed again');
+    await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#hyper-order-size')?.value==='0.05');
+    await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-review').click();
+    signMode='shrink';const beforeShrinkingSubmit=submitted.length;
+    await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.getByRole('dialog',{name:'Review order',exact:true}).getByText('This order would not reduce the selected position.',{exact:true}).waitFor();
+    assert.equal(submitted.length,beforeShrinkingSubmit);assert.equal(signatures,beforeClose+1);await page.getByRole('button',{name:'Back',exact:true}).click();
+    checks.push('A position that shrinks while the wallet signs prevents the signed action from being submitted');
+    signMode='normal';positions[0].position.szi='-0.05';
+    await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#hyper-order-price')?.value==='');
+    await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-review').click();
+    const closeCount=submitted.length;await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.locator('.hyper-saved-order').filter({hasText:'Buy 0.05 BTC'}).getByText('Open',{exact:true}).waitFor();
+    assert.equal(submitted.length,closeCount+1);assert.deepEqual({...submitted.at(-1).action.orders[0],c:null},{a:0,b:true,p:'100',s:'0.05',r:true,t:{limit:{tif:'Gtc'}},c:null});
+    checks.push('Reviewed closing order submits one reduce-only limit action and keeps its recoverable status');
+    positions=null;await positionPanel.getByRole('button',{name:'Refresh position',exact:true}).click();
+    await positionPanel.getByText('Position unavailable. Refresh to try again.',{exact:true}).waitFor();assert(!await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).isVisible());
+    positions=[];await positionPanel.getByRole('button',{name:'Refresh position',exact:true}).click();await positionPanel.getByText('No open BTC position.',{exact:true}).waitFor();
+    checks.push('Failed account reads stay unavailable; an explicit empty position list shows no open position');
+    positions=[{position:{coin:'BTC',szi:'0.25',entryPx:'90',unrealizedPnl:'2.5',liquidationPx:'55',marginUsed:'12.5'}}];
+    await positionPanel.getByRole('button',{name:'Refresh position',exact:true}).click();await positionPanel.getByText('Long · 0.25 BTC',{exact:true}).waitFor();
+    await context.setOffline(true);await positionPanel.getByText('Offline · reconnect to refresh your position.',{exact:true}).waitFor();
+    assert(!await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).isVisible());assert(await page.locator('.hyper-saved-order').count()>0);
+    await context.setOffline(false);await positionPanel.getByText('Long · 0.25 BTC',{exact:true}).waitFor();
+    checks.push('Offline removes actionable position data while keeping saved orders; reconnect reads current positions');
     const stateChecks=await page.evaluate(async()=>{
       const {prepareOrder,resolveOrderMarket}=await import('/hyperliquid-order.js'),{reserveOrderAttempt,recordOrderState,readHyperOrders,updateHyperOrders,clearResolvedOrders}=await import('/hyperliquid-order-store.js'),{executeTradingOrder,refreshTradingOrder}=await import('/hyperliquid-execution.js');
       const original=await readHyperOrders(),account=original[0].review.account,market=original[0].review.market,results=[];
@@ -91,7 +144,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
       }finally{await updateHyperOrders(rows=>rows.splice(0,rows.length,...original));}
       return results;
     });checks.push(...stateChecks);
-    for(const theme of ['light','dim','dark']){await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:path.join(os.tmpdir(),'lenz-order-'+theme+'.png'),fullPage:true});}
+    for(const width of [320,390,1360])for(const theme of ['light','dim','dark']){await page.setViewportSize({width,height:850});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await positionPanel.screenshot({path:path.join(os.tmpdir(),`lenz-position-${theme}-${width}.png`)});}
     assert.deepEqual(errors,[]);checks.push('Phone layout fits all three themes without browser errors');
     await context.close();console.log(JSON.stringify({passed:checks.length,checks},null,2));
   }finally{await browser.close();server.close();}

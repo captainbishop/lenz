@@ -9,6 +9,10 @@
 .hyper-action button:disabled,.hyper-order-dialog button:disabled{opacity:.5;cursor:not-allowed}
 .hyper-action a{display:inline-flex;align-items:center;color:var(--lenz-text)}
 .hyper-order-balance{font-size:14px;font-variant-numeric:tabular-nums;margin:14px 0}
+.hyper-position{padding:16px 0 20px;margin-bottom:20px;border-bottom:1px solid var(--lenz-edge)}
+.hyper-position .hyper-order-top h4{font-size:14px;font-weight:600}.hyper-position-summary{font-size:20px;font-weight:600;margin:16px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hyper-position dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0}.hyper-position dl:empty{display:none}
+.hyper-position dt,.hyper-position-time{font-size:12px;line-height:1.5;color:var(--lenz-muted)}.hyper-position dd{font-size:14px;font-variant-numeric:tabular-nums;margin:6px 0 0;overflow-wrap:anywhere}.hyper-position-time{margin:16px 0}.hyper-position-time:empty{display:none}
 .hyper-order-funding{border-block:1px solid var(--lenz-edge);padding:12px 0;margin:12px 0 20px;font-size:13px}
 .hyper-order-funding summary{cursor:pointer;min-height:24px}.hyper-order-funding p{color:var(--lenz-muted);line-height:1.5;max-width:60ch}
 .hyper-order-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.hyper-order-field{display:flex;flex-direction:column;gap:7px;min-width:0}.hyper-order-field label{color:var(--lenz-muted);font-size:12px}
@@ -23,3 +27,4 @@
 .hyper-order-dialog dl{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;font-size:13px;padding:20px 0;border-block:1px solid var(--lenz-edge)}.hyper-order-dialog dt{color:var(--lenz-muted)}.hyper-order-dialog dd{margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.hyper-wallet-options{display:grid;gap:8px}
 .hyper-action :is(a,button,input,select,summary):focus-visible,.hyper-order-dialog button:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 @media(max-width:600px){.hyper-action{padding:16px;margin:18px 0}.hyper-order-steps{gap:18px;font-size:11px}.hyper-order-dialog{padding:18px}.hyper-order-dialog dl{grid-template-columns:92px minmax(0,1fr)}}
+@media(max-width:800px){.hyper-position dl{grid-template-columns:repeat(2,minmax(0,1fr))}}

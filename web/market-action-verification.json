@@ -1,14 +1,18 @@
 {
-  "verifiedAt": "2026-11-07T19:00:37.630Z",
-  "scope": "Native standard-account Hyperliquid limit orders and compact Lenz ID card. Isolated browser stores and simulated exchange responses.",
+  "verifiedAt": "2026-11-07T21:02:14.283Z",
+  "scope": "Selected perpetual position, reduce-only closing journey, shared dropdowns and offline module completeness. Disposable browser state and simulated exchange responses.",
   "checks": [
     {
       "command": "node --test web/evm-wallet.test.mjs web/hyperliquid-order.test.mjs web/contact-card.test.mjs",
-      "passed": 23
+      "passed": 24
     },
     {
       "command": "node web/hyperliquid-order-browser.test.cjs",
-      "passed": 17
+      "passed": 24
+    },
+    {
+      "command": "node web/form-controls-browser.test.cjs",
+      "passed": 9
     },
     {
       "command": "node web/profile-card-browser.test.cjs",
@@ -23,29 +27,22 @@
       "passed": 2
     }
   ],
-  "liveRead": {
-    "endpoint": "https://api.hyperliquid.xyz/info",
-    "type": "meta",
-    "httpStatus": 200,
-    "collateralToken": 0,
-    "market": "BTC"
-  },
   "limits": [
     "No real wallet signature, exchange order, deposit or withdrawal was performed.",
-    "Funding opens the official Hyperliquid interface; native funding and withdrawals remain unconnected.",
-    "Builder markets, outcomes, non-USDC spot, unified accounts and portfolio margin are excluded from native execution.",
-    "Private settlement, offline execution, lending and liquidity execution remain incomplete.",
-    "Existing homepage recordings retain their recorded illustrated layouts; the ID card layout is verified by the browser checks above, not by those recordings."
+    "Funding and withdrawal remain external; native execution remains restricted to supported standard-account USDC spot and default-venue perpetual markets.",
+    "Submitting a closing order does not establish that the position has closed.",
+    "Predictions provider expansion, broader DeFi, private settlement and offline execution remain incomplete.",
+    "Existing recordings illustrate earlier layouts; current dropdown and position layouts were checked separately."
   ],
   "previousSourceReview": "web/preview-style-review.json",
   "sourceFiles": {
-    "web/public/hyperliquid-order.js": "738d006fa248c064b9048aa114164d9c7fe06a714a33dcb7ce1483ce132b776e",
+    "web/public/hyperliquid-order.js": "d74ec3f405cb8418fecbc17a1f27a6a2e9ebe2296aca0bcd4644c66e196729c9",
     "web/public/hyperliquid-trading.js": "6aa8c8849a1e0cf90b4bf79bbcb8d31fdd59086d7e7eb41894e49dc8bae2e736",
     "web/public/hyperliquid-order-store.js": "fdf48aca48c8112c4fb52935514ce8524e56ca8f68ad03de739b50be39ae5043",
     "web/public/hyperliquid-execution.js": "d3523ee096840c48ba5fb49f9c8f014ff1c39411ef5543291ecb6705587ff104",
-    "web/public/hyperliquid-order-ui.js": "c80679703ec2ab795fb0fda47c588c4ec7d4582026fe51f7ed63bc220f0a5271",
-    "web/public/hyperliquid-order.css": "6179a560f647b5f5e0a231ab037ba34b87622f2c895b65a05a52e4e5f9eb6021",
-    "web/public/hyperliquid-ui.js": "ba990fcc52fb49173f8e2ea8c81b2e10fb00c3864018acdb136a2e058ff119dc",
+    "web/public/hyperliquid-order-ui.js": "d8551f6013369d6ba4f3aff16182ffcda37d08e79bb67c69d44735387d44267c",
+    "web/public/hyperliquid-order.css": "19ae1fa1cea34a94561587baf97f819a5842b378990f657e9824cd89a26fe7e5",
+    "web/public/hyperliquid-ui.js": "c33e046dc550e7f5b88127b24b5cdee2b589365fec3ebc633296fed3cdbf6d28",
     "web/public/evm-wallet.js": "b643710fee05473d6ccf331de4906d650b3923f6bd634dddc52df57c6fc421eb",
     "web/security-policy.mjs": "066b3e4418e82d328d09db30ef5376ce042a412997b6d6f9fe6d6b307c39af49",
     "web/public/profile-panels.js": "5d2490b969c289dc90f15dc4a61604f8c3e93336275edb706858c73c38b8ea1b",
@@ -54,8 +51,8 @@
     "web/public/overview-art/chat.svg": "eee3d158be97d3c91371a30a10ba995e1fe5e26c038b5e5fe8404340926fae1d",
     "web/public/overview-art/chat-dim.svg": "63eaa47ce7dd7bc89e317b413ed9cf67dfd85ddd6ccab62767fabe77499acedf",
     "web/public/overview-art/chat-dark.svg": "117657a38e08f7c49912044e1745ba56cd60b136b59c84bc180bee528928757d",
-    "web/hyperliquid-order.test.mjs": "406324939a5e008e24cedfba7e32d1173afc8119af24063c2ecfa2d7e1716d9a",
-    "web/hyperliquid-order-browser.test.cjs": "8db9ec55ef4b93eda587389979316686f0eb285efd54c73282127098b33d2515",
+    "web/hyperliquid-order.test.mjs": "791ea0e282ecc216267055ae5018803d28ed24d011186121bc1b68e53a2947c5",
+    "web/hyperliquid-order-browser.test.cjs": "eff5b3c623c7a792204df071edec357b6b88ba879fe9dc3ca3376e777ab69ff8",
     "web/hyperliquid-browser.test.cjs": "9e8efe3458a6720517fb83b82008311ba81b167d8d9cf104d9d786129f1bfc1f",
     "web/profile-card-browser.test.cjs": "4f51fdeb1ec7b7a44e6a2c3e1cedc24c8934ff04059d61c24843a62cd09737f2",
     "web/hyperliquid-tools/package.json": "d154f2db42ecfbe220adad3c46804d816de8bb9d2706a785e2e78c67adfb4b3b",
@@ -65,9 +62,16 @@
     "web/public/hyperliquid-vendor/msgpack.js": "25ba4c21dd880422aa133b99cb8a1a5a1c4f621dd917c7dbff268ca177b63968",
     "web/public/hyperliquid-vendor/LICENSE.txt": "d95a411bcdadac85d678a99367ff51719e53539fa5ee9994943cd760c4ae64e4",
     "web/public/hyperliquid-vendor/NOTICE.txt": "fdae3a39e281e1a5636ea45ef35365769c46c2cd75a8b08053554fc2fbff7de8",
-    "docs/hyperliquid-orders.md": "09ff35c49f075ed3259f6389af6c6830450b87e4f8c98f4f83e1f359a41d3220",
+    "docs/hyperliquid-orders.md": "c082b88b5bea81fe9ea94661d78bca1fd708284b2636da3cd7ace81bf5fdf792",
     "web/public/markets.html": "7dccdacbe54f09da247db08181507af7a1f9003fa37ea6283719d2590bb4122b",
-    "web/public/chat-sw.js": "c049844d21fc63881a2a03bda9de148046e989af8b9005150f7fd57ee7762dba",
-    "web/public/sw.js": "be5de157361279921d4beb68661355a5c912d7da8019c035ae99426576e9fea6"
+    "web/public/chat-sw.js": "2bb10e83847480a3cad834ee36b5ef79351fc9053a4f5ee917a95410070bc3f8",
+    "web/public/sw.js": "e774f94ac26a07080745c00508932d507ae8fc594605b436d46a2fa29d3600e8",
+    "web/public/form-controls.css": "b3b31fd79d5b444ac286e3243901bd8aa12e9b353dde2b76e10e54de9c938d80",
+    "web/public/theme-tokens.css": "51e132519752834c6a90037a73a3cc3422ef96e845152b83fd11a7852507047e",
+    "web/public/market-picker.css": "6c398a7664252e3e2db077f0bfdb7249a8854e8304c1a7e0319790844dcf4034",
+    "web/form-controls-browser.test.cjs": "c963b41085898566610b44cb4785d80c8319cb75263923f34ae26a646615623b",
+    "web/public/name-lab.html": "5c7036c8d180406b1eb0adc31b5930f2725bd2d0234f33f6f559170fad7695f5",
+    "web/public/zcash-lab.html": "2a7b4b29a480e1150bb9ccbe4be59011d8d50f61ed1ede583b7b56e0f9cd8c3b",
+    "web/public/payment-demo.html": "466feaa9af2637d4f971a944a820c180b66f83ebca0763dc033f1173ce4f4875"
   }
 }

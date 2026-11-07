@@ -5,6 +5,18 @@ market, connect an external wallet, check funds, enter a size and limit price,
 choose public execution, and review before signing. Returning from another market
 category retains the editable draft for that market during the current page session.
 
+For supported perpetuals, the connected wallet's selected position shows direction,
+size, entry price, unrealized P&L, liquidation price and margin used. Values carry
+their read time; use Refresh position to update them. Missing risk values remain
+unavailable. Account changes and going offline remove actionable position data.
+
+Close with limit refreshes that position and fills the opposite direction and
+current size with Reduce only enabled. Enter a limit price and review before
+signing. The privacy choice stays unchanged. Position size is checked again before
+and after signing; a smaller or reversed position requires a new review. A closing
+limit order can remain open or fill partially; submitting it does not mean the
+position has closed.
+
 The native path covers USDC spot markets and default-venue perpetuals using a
 standard Hyperliquid account (`userAbstraction: disabled`). Builder perpetuals,
 outcomes, other quote assets, unified accounts and portfolio margin are not enabled.

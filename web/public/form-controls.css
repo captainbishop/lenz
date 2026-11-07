@@ -1,4 +1,4 @@
-/* Underlined fields and ink focus replace the legacy lime rectangles. */
+/* Shared fields keep native values and use the same surfaces as the workspace. */
 body :is(button,a,summary,[tabindex]):focus-visible{outline:1px solid var(--ink);outline-offset:3px}
 body :is(button,a,summary,input,textarea,select):focus:not(:focus-visible){outline:none}
 body :is(input,textarea,select):focus-visible,body .composer textarea:focus-visible{outline:none;box-shadow:inset 0 -2px 0 var(--ink)}
@@ -8,22 +8,22 @@ body input[type=checkbox]:checked::after{content:'';width:5px;height:9px;border-
 body input[type=checkbox]:disabled{opacity:.5;cursor:default}
 body .lenz-choice{position:relative;display:inline-flex;min-width:0;max-width:100%;vertical-align:middle}
 body select.lenz-choice-source{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
-body .lenz-choice-button{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;max-width:100%;width:100%;padding:8px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);font:inherit;text-align:left;box-shadow:none;cursor:pointer}
-body .lenz-choice-button:hover:not(:disabled){background:transparent;border-bottom-color:var(--ink)}
-body .lenz-choice-button:focus-visible,body .lenz-choice-button[aria-expanded=true]{outline:none;box-shadow:inset 0 -2px 0 var(--ink)}
+body .lenz-choice-button{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;max-width:100%;width:100%;padding:10px 12px;border:1px solid var(--lenz-edge,var(--line));border-radius:12px;background:var(--lenz-panel,var(--theme-panel,var(--panel,var(--paper))));color:var(--lenz-text,var(--ink));font:400 14px/1.4 'Segoe UI',Arial,sans-serif;text-align:left;box-shadow:none;cursor:pointer;transition:background 150ms,box-shadow 150ms}
+body .lenz-choice-button:hover:not(:disabled),body .lenz-choice-button[aria-expanded=true]{background:var(--lenz-well,var(--theme-hover,var(--hover,color-mix(in srgb,var(--ink) 8%,var(--paper)))));border-color:var(--lenz-edge,var(--line))}
+body .lenz-choice-button:focus-visible{outline:2px solid currentColor;outline-offset:3px;box-shadow:none}
+body .lenz-choice-button:disabled{opacity:.5;cursor:default}
 .lenz-choice-value{min-width:0;overflow-wrap:anywhere}
 .lenz-choice-chevron{width:7px;height:7px;flex:none;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 4px 4px}
-body .lenz-choice-list{position:fixed;inset:auto;margin:0;padding:4px 8px;background:var(--page,var(--paper));color:var(--ink);border:1px solid var(--line);border-radius:0;box-shadow:0 8px 24px #0001;overflow:auto;overscroll-behavior:contain;z-index:1000;font:400 14px/1.5 'Segoe UI',Arial,sans-serif;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-:root[data-theme=dark] .lenz-choice-list{background:#14291f}
-body .lenz-choice-option{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:44px;padding:10px 8px;border-bottom:1px solid var(--line);cursor:pointer;overflow-wrap:anywhere}
-.lenz-choice-option:last-child{border-bottom:0}
-.lenz-choice-option.is-active,.lenz-choice-option:hover{background:var(--panel,#edf1e5)}
-:root[data-theme=dark] .lenz-choice-option:is(.is-active,:hover){background:#20382b}
+body .lenz-choice-list{box-sizing:border-box;position:fixed;inset:auto;margin:0;padding:6px;background:var(--lenz-panel,var(--theme-panel,var(--panel,var(--paper))));color:var(--lenz-text,var(--ink));border:1px solid var(--lenz-edge,var(--line));border-radius:14px;box-shadow:0 12px 32px #0002;overflow:auto;overscroll-behavior:contain;z-index:1000;font:400 14px/1.4 'Segoe UI',Arial,sans-serif;scrollbar-width:thin;scrollbar-color:var(--lenz-edge,var(--line)) transparent}
+body .lenz-choice-option{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;padding:10px 12px;border:0;border-radius:9px;cursor:pointer;overflow-wrap:anywhere}
+body .lenz-choice-option:is(.is-active,:hover):not([aria-disabled=true]){background:var(--lenz-well,var(--theme-hover,var(--hover,color-mix(in srgb,var(--ink) 8%,var(--paper)))))}
+body .lenz-choice-option[aria-selected=true]{font-weight:600}
 .lenz-choice-option[aria-disabled=true]{opacity:.45;cursor:default}
 .lenz-choice-tick{width:12px;flex:none}
 .lenz-choice-option[aria-selected=true] .lenz-choice-tick::after{content:'';display:block;width:4px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin-bottom:3px}
 body .lenz-choice[hidden],body .lenz-choice-list[hidden],body .lenz-choice-option[hidden]{display:none!important}
 body .quote-field>.lenz-choice,body .defi-choice>.lenz-choice,body #defi-contact-choice>.lenz-choice{width:100%}
+body .hyper-order-field>.lenz-choice{width:100%}
 body .exchange-path .lenz-choice{font-size:12px;max-width:100%}
 body .quote-command .lenz-choice{width:auto;min-width:68px;font-size:16px}
 body .draft-dialog .lenz-choice{font-size:18px}
@@ -31,3 +31,4 @@ body #data-settings .lenz-choice{font-size:12px;margin-top:12px;min-width:145px}
 body .dex-privacy>.lenz-choice{grid-column:2;max-width:100%;font-size:13px}
 body .dex-protection>.lenz-choice{font-size:14px}
 @media(forced-colors:active){body .lenz-choice-button:focus-visible,body :is(input,textarea,select):focus-visible{outline:2px solid Highlight;outline-offset:2px}.lenz-choice-option.is-active{outline:1px solid Highlight}}
+@media(prefers-reduced-motion:reduce){body .lenz-choice-button{transition:none}}

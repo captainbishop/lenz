@@ -120,7 +120,7 @@ export function mountHyperliquid(target){
     finally{if(catalogAbort===abort)catalogAbort=null;catalogStatus();}
   }
   function updateDirectory(){
-    venues.replaceChildren();for(const value of ['',...new Set(catalog.rows.filter(matchesKind).map(r=>r.venue))].sort()){const o=node('option',value?(value==='HyperCore'?'Hyperliquid':`Hyperliquid · ${value}`):'All venues');o.value=value;venues.append(o);}if(![...venues.options].some(o=>o.value===venue))venue='';venues.value=venue;
+    venues.replaceChildren();for(const value of ['',...new Set(catalog.rows.filter(matchesKind).map(r=>r.venue))].sort()){const o=node('option',value?(value==='HyperCore'?'Hyperliquid':`Hyperliquid · ${value}`):'All markets');o.value=value;venues.append(o);}if(![...venues.options].some(o=>o.value===venue))venue='';venues.value=venue;
     if(selected){const row=catalog.rows.find(r=>r.id===selected.id);if(!row){cancelFeed();clearDegenCandles(chart);selected=null;tape=null;detail.replaceChildren(node('p','This market is no longer in the current catalogue.'));}else selected=row;}
     renderList();catalogStatus();
   }
