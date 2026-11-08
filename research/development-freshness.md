@@ -1,3 +1,30 @@
+# Prediction discovery and event artwork
+
+Predictions brings public Polymarket, Kalshi and Hyperliquid events into searchable
+Lenz cards with categories, provider filters, dated prices and resolution details.
+Saved events retain their original observation time during failures and offline
+navigation. Hyperliquid details remain readable without a separate native cache.
+Overview refresh and save include CoinMarketCap public market metrics.
+
+Cards use approved provider event images or exact existing Hyperliquid asset
+mappings. Grouped events cannot substitute a featured candidate when the event
+image fails. The image relay checks fixed hosts, ticker identity, raster signatures,
+size and concurrency. Gzip JSON is decoded before the response-size boundary.
+Both offline workers include the new modules.
+
+The isolated candidate passed 126 checks: 52 Node, 10 prediction browser,
+24 Hyperliquid browser, 24 order browser, 14 Overview browser and 2 cache
+upgrade checks. Disposable browser state covers phone and desktop layouts,
+provider failures, malformed metadata, saved recovery and navigation. Existing
+fixture identities, encrypted storage and reservations survive cache upgrades.
+The source-bound record is web/market-action-verification.json.
+
+The live local preview loaded event images from Polymarket and Kalshi and the
+existing Anthropic asset for Hyperliquid. Unverified images retain the fallback.
+Existing recordings, their source inputs and posters are unchanged; they illustrate
+earlier layouts. This revision does not establish outcome execution, unrestricted
+provider availability, physical-device behavior or private settlement.
+
 # Position management and shared controls
 
 Supported perpetual markets display the selected wallet position and prepare a

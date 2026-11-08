@@ -29,7 +29,7 @@ function walletSession(){
   walletSession.open=()=>{message.textContent='';dispatchEvent(new Event('eip6963:requestProvider'));if(!providers.length){try{add(window.ethereum,'Browser wallet');}catch{}}picker.showModal();};
   return session;
 }
-export function clearHyperliquidTrading(){active?.dispose();active=null;}
+export function clearHyperliquidTrading(target){if(target&&!target.contains(active?.root))return;active?.dispose();active=null;}
 export function mountHyperliquidTrading(target,row){
   clearHyperliquidTrading();const root=el('section',undefined,'hyper-action');root.setAttribute('aria-label','Use this market');
   const supported=['spot','perp'].includes(row.kind)&&row.quote.index===0&&row.quote.symbol==='USDC';
@@ -168,6 +168,6 @@ export function mountHyperliquidTrading(target,row){
   const connection=()=>{snapshot=null;review=null;if(dialog.open)dialog.close();controls();void load();void history();};
   const offline=()=>{generation++;abort?.abort();snapshot=null;review=null;if(dialog.open)dialog.close();controls();showPosition('Offline · reconnect to refresh your position.');status.textContent='Offline · saved order activity is still available. Orders can continue filling on Hyperliquid.';void history();};
   addEventListener('offline',offline);addEventListener('online',connection);
-  active={walletChanged:connection,dispose(){remember();disposed=true;generation++;abort?.abort();review=null;dialog.close();dialog.remove();root.remove();for(const panel of cancelPanels){panel.close();panel.remove();}removeEventListener('offline',offline);removeEventListener('online',connection);}};
+  active={root,walletChanged:connection,dispose(){remember();disposed=true;generation++;abort?.abort();review=null;dialog.close();dialog.remove();root.remove();for(const panel of cancelPanels){panel.close();panel.remove();}removeEventListener('offline',offline);removeEventListener('online',connection);}};
   controls();void load();void history();
 }

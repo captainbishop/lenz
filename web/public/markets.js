@@ -12,6 +12,7 @@ import {mountOraclePrices} from './oracle-prices-ui.js';
 import {mountMarketPicker} from './market-picker.js';
 import {mountDegen} from './degen-ui.js';
 import {mountHyperliquid} from './hyperliquid-ui.js';
+import {mountPredictions} from './prediction-ui.js';
 import {mountMarketOverview} from './market-overview.js';
 import {workspaceHeading} from './workspace-heading.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
@@ -21,6 +22,8 @@ const liveStorageKey='lenz-live-market-snapshots-v1';
 const oraclePrices=mountOraclePrices($('#oracle-prices'));
 const degen=mountDegen($('#degen-workspace'));
 const hyperliquid=mountHyperliquid($('#hyperliquid-workspace'));
+const predictionsTarget=document.createElement('section');predictionsTarget.id='prediction-workspace';predictionsTarget.hidden=true;$('#hyperliquid-workspace').before(predictionsTarget);
+const predictions=mountPredictions(predictionsTarget);
 const sectionHeading=workspaceHeading({title:'Lending',kind:'credit'});sectionHeading.element.hidden=true;$('.market-body').before(sectionHeading.element);
 let openingMarket=null;
 const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),saveSources:()=>localStorage.setItem(storageKey,JSON.stringify([...data.values()])),forgetSources:()=>{localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);$('#market-live').checked=false;$('#market-live').onchange();}});
@@ -96,8 +99,8 @@ function refreshDetails(row,snapshot){
 }
 function render(preserve=false){
   const prices=category==='prices';oraclePrices.show(prices);oraclePrices.filter($('#market-search').value);
-  const isOverview=category==='all',isDegen=category==='degen',isHyperliquid=['spot','perpetuals','predictions'].includes(category),special=prices||isDegen||isHyperliquid||isOverview;overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);openingMarket=null;
-  selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid||isOverview;$('#market-status').hidden=isDegen||isHyperliquid||isOverview;$('#live-status').hidden=isDegen||isHyperliquid||isOverview;
+  const isOverview=category==='all',isDegen=category==='degen',isPrediction=category==='predictions',isHyperliquid=['spot','perpetuals'].includes(category),special=prices||isDegen||isHyperliquid||isPrediction||isOverview;overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);predictions.show(isPrediction,isPrediction?openingMarket:null);openingMarket=null;
+  selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid||isPrediction||isOverview;$('#market-status').hidden=isDegen||isHyperliquid||isPrediction||isOverview;$('#live-status').hidden=isDegen||isHyperliquid||isPrediction||isOverview;
   $('#market-network').hidden=special;$('.market-body').hidden=special;$('#market-sources').hidden=special;$('.snapshot-bar').hidden=special;
   sectionHeading.element.hidden=special;if(!special){sectionHeading.setKind(category);sectionHeading.title.textContent=category==='credit'?'Lending':'Liquidity';sectionHeading.description.textContent=category==='credit'?'Reserve settings across supported lending markets.':'Explore pool liquidity, assets and fees.';sectionHeading.description.hidden=false;}
   if(special){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}

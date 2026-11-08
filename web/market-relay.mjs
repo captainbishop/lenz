@@ -13,9 +13,13 @@ import {readHyperliquidCatalog} from '../integrations/hyperliquid-catalog.mjs';
 import {readHyperliquidTape} from '../integrations/hyperliquid-feed.mjs';
 import {hyperliquidRequest} from './public/hyperliquid-catalog.js';
 import {checkedHyperliquidEvent} from './public/hyperliquid-feed.js';
+import {readPredictionCatalog} from '../integrations/prediction-catalog.mjs';
+import {createPredictionImageRoute} from './prediction-image.mjs';
+import {readMarketContext} from '../integrations/market-context.mjs';
 const origin='http://127.0.0.1:4173';
 const send=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));};
-export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tape=readMarketTape,price=readPoolPrice,oracle=readOraclePrices,clock=Date.now,stream,catalog=readHyperliquidCatalog,hyperTape=readHyperliquidTape,hyperStream}={}){
+export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tape=readMarketTape,price=readPoolPrice,oracle=readOraclePrices,clock=Date.now,stream,catalog=readHyperliquidCatalog,hyperTape=readHyperliquidTape,hyperStream,predictions=readPredictionCatalog,marketContext=readMarketContext}={}){
+  const predictionImage=createPredictionImageRoute();
   const limits=createMarketStreamLimits({clock});
   stream??=createMarketStream({read:tape,clock,limits});
   hyperStream??=createMarketStream({read:hyperTape,parse:hyperliquidRequest,checkEvent:checkedHyperliquidEvent,includeTrades:true,clock,limits});
@@ -25,14 +29,23 @@ export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tap
   const oraclePending=new Map(),oracleCache=new Map();
   return async function marketRoute(req,res){
     if(!req.url.startsWith('/api/markets/'))return false;
+    if(req.url.startsWith('/api/markets/prediction-image?')){await predictionImage(req,res);return true;}
     if(req.headers.host!=='127.0.0.1:4173'||req.headers.origin!==origin){send(res,403,{error:'Open market data from the local Lenz app.'});return true;}
     if(req.method!=='POST'){send(res,405,{error:'Use POST'});return true;}
-    if(!['/api/markets/read','/api/markets/quote','/api/markets/tape','/api/markets/stream','/api/markets/price','/api/markets/oracles','/api/markets/hyper-catalog','/api/markets/hyper-tape','/api/markets/hyper-stream'].includes(req.url)){send(res,404,{error:'Unknown market route'});return true;}
+    if(!['/api/markets/read','/api/markets/quote','/api/markets/tape','/api/markets/stream','/api/markets/price','/api/markets/oracles','/api/markets/hyper-catalog','/api/markets/hyper-tape','/api/markets/hyper-stream','/api/markets/predictions','/api/markets/context'].includes(req.url)){send(res,404,{error:'Unknown market route'});return true;}
     try{
       if(req.headers['content-type']!=='application/json')throw Error('Expected JSON');
       const chunks=[];let size=0;
       for await(const chunk of req){size+=chunk.length;if(size>(req.url==='/api/markets/quote'?512:256))throw Error('Request too large');chunks.push(chunk);}
       const input=JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      if(req.url==='/api/markets/context'){
+        if(!input||Object.keys(input).length!==1||input.privacy!=='public')throw Error('Public reads only');
+        try{send(res,200,await marketContext());}catch{send(res,503,{error:'Market context unavailable.'});}return true;
+      }
+      if(req.url==='/api/markets/predictions'){
+        if(!input||Object.keys(input).length!==2||input.privacy!=='public'||!['polymarket','kalshi','hyperliquid'].includes(input.provider))throw Error('Invalid prediction request');
+        try{send(res,200,await predictions(input.provider));}catch{send(res,503,{error:'Prediction source unavailable.'});}return true;
+      }
       if(req.url==='/api/markets/hyper-catalog'){
         if(!input||Object.keys(input).length!==1||input.privacy!=='public')throw Error('Public reads only');
         const abort=new AbortController(),cancel=()=>abort.abort();res.once?.('close',cancel);

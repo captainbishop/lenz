@@ -32,9 +32,12 @@ export function normalizeHyperliquidCatalog({spot,perps,outcomes,templates},obse
     if(outcome.name==='Recurring Named Outcome')name=`${values.underlying??'Recurring'} · bucket ${Number(values.index)+1} · ${values.expiry??''}`;
     if(outcome.name==='Recurring Fallback Outcome')name=`${values.underlying??'Recurring'} · fallback · ${values.expiry??''}`;
     const parentName=parentTemplate?expand(parentTemplate.name,values):'';
+    const iconKeys=(template?.keywords??[]).filter(k=>Array.isArray(k)&&k[1]==='hlPerp');
+    let artworkSymbol=iconKeys.length===1?values[iconKeys[0][0]]:outcome.name.startsWith('Recurring ')?values.underlying:null;
+    if(!artworkSymbol&&['companyIpoConfirmed','companyIpoFirstDayMarketCap'].includes(template?.id)&&values.company==='Anthropic')artworkSymbol='xyz:ANT';
     const sides=outcome.sideSpecs.map((side,i)=>({name:expand(side.name,values),coin:`#${10*id+i}`,...stats(contexts.get(`#${10*id+i}`))}));
     requireValue(sides.length===2);
-    rows.push({id:`outcome:${id}`,kind:'outcome',coin:sides[0].coin,venue:outcome.venue??'HyperCore',name:parentName?`${parentName} · ${name}`:name,quote:{index:null,symbol:label(outcome.quoteToken,80)},...stats(null),sides,description:[parentTemplate&&expand(parentTemplate.description,values),template&&expand(template.description,values)].filter(Boolean).join('\n\n')||[parent?.description,outcome.description].filter(Boolean).join(' | ')});
+    rows.push({id:`outcome:${id}`,kind:'outcome',coin:sides[0].coin,venue:outcome.venue??'HyperCore',name:parentName?`${parentName} · ${name}`:name,quote:{index:null,symbol:label(outcome.quoteToken,80)},...stats(null),sides,artworkSymbol:typeof artworkSymbol==='string'&&/^[A-Za-z0-9][A-Za-z0-9:._-]{0,79}$/.test(artworkSymbol)?artworkSymbol:null,description:[parentTemplate&&expand(parentTemplate.description,values),template&&expand(template.description,values)].filter(Boolean).join('\n\n')||[parent?.description,outcome.description].filter(Boolean).join(' | ')});
   }
   return {version:1,observedAt,rows,unavailable:[]};
 }
@@ -58,7 +61,7 @@ export function checkedHyperliquidCatalog(value){
     requireValue(row.quote?.index===null||Number.isSafeInteger(row.quote?.index));
     requireValue(Array.isArray(row.sides)&&row.sides.length===(row.kind==='outcome'?2:0));
     const sides=row.sides.map((s,i)=>{requireValue(s.coin===`#${10*Number(row.id.split(':')[1])+i}`);return {name:label(s.name,200),coin:s.coin,price:number(s.price),volume:number(s.volume),funding:null};});
-    return {id:row.id,kind:row.kind,coin:row.coin,venue:label(row.venue,80),name:label(row.name,1000),quote:{index:row.quote.index,symbol:label(row.quote.symbol,80)},price:number(row.price),volume:number(row.volume),funding:number(row.funding),leverage:Number.isFinite(row.leverage)?row.leverage:null,description:typeof row.description==='string'?row.description.slice(0,24000):'',sides};
+    return {id:row.id,kind:row.kind,coin:row.coin,venue:label(row.venue,80),name:label(row.name,1000),quote:{index:row.quote.index,symbol:label(row.quote.symbol,80)},price:number(row.price),volume:number(row.volume),funding:number(row.funding),leverage:Number.isFinite(row.leverage)?row.leverage:null,artworkSymbol:row.kind==='outcome'&&typeof row.artworkSymbol==='string'&&/^[A-Za-z0-9][A-Za-z0-9:._-]{0,79}$/.test(row.artworkSymbol)?row.artworkSymbol:null,description:typeof row.description==='string'?row.description.slice(0,24000):'',sides};
   });
   return {version:1,observedAt:value.observedAt,rows,unavailable:value.unavailable.map(x=>label(x,100))};
 }

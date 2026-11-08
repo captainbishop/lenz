@@ -3,6 +3,7 @@ import {checkedHyperliquidCatalog} from './hyperliquid-catalog.js';
 import {marketLogo} from './market-logo.js';
 import {marketSource} from './evm-markets.js';
 import {marketFreshness} from './market-snapshot.js';
+import {mountMarketContext} from './market-context.js';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const action=(label,fn,key=label)=>{const e=node('button',label);e.type='button';e.onclick=fn;e.dataset.overviewFocus=key;return e;};
@@ -25,9 +26,13 @@ export function mountMarketOverview(target,{open,snapshots,refreshSources,saveSo
   const counts=node('nav',undefined,'overview-counts');counts.setAttribute('aria-label','Market coverage');
   const panels=node('div',undefined,'overview-panels'),venues=node('div',undefined,'overview-venues');
   target.append(heading,status,counts,panels,venues);
+  const pulse=document.createElement('div');counts.before(pulse);let context;context=mountMarketContext(pulse,{changed:paintStatus});
+  refresh.addEventListener('click',()=>context.refresh());
+  save.addEventListener('click',()=>{try{context.save();}catch{notice='Could not save market pulse.';paintStatus();}});
+  forget.addEventListener('click',()=>context.forget());
 
   function paintStatus(){
-    refresh.disabled=Boolean(controller)||!navigator.onLine;save.disabled=!catalog&&![...snapshots()].length;
+    refresh.disabled=Boolean(controller)||!navigator.onLine;save.disabled=!catalog&&![...snapshots()].length&&!context?.hasSnapshot();
     status.textContent=[catalog?`${navigator.onLine?'Snapshot':'Offline snapshot'} · ${new Date(catalog.observedAt).toLocaleString()}`:navigator.onLine?'Loading market overview…':'No saved overview on this device.',controller?'Refreshing…':'',catalog?.unavailable.length?'Some markets unavailable':'',error,notice].filter(Boolean).join(' · ');
   }
   function section(title,subtitle,view,kind=view){
@@ -77,5 +82,5 @@ export function mountMarketOverview(target,{open,snapshots,refreshSources,saveSo
   addEventListener('market-live-change',()=>{const next=automatic();if(next===wasAutomatic)return;wasAutomatic=next;cancel();if(allowed()&&next)void load();paintStatus();});
   try{const raw=localStorage.getItem(savedKey);if(raw&&raw.length<=8*1024*1024)catalog=checkedHyperliquidCatalog(JSON.parse(raw));}catch{}
   paint();
-  return {show(value){target.hidden=!value;if(visible===value)return;visible=value;if(!value)cancel();else{paint();if(!catalog||Date.now()-catalog.observedAt>=60000)void load();else schedule();}paintStatus();},update(){if(visible)paint();}};
+  return {show(value){context.show(value);target.hidden=!value;if(visible===value)return;visible=value;if(!value)cancel();else{paint();if(!catalog||Date.now()-catalog.observedAt>=60000)void load();else schedule();}paintStatus();},update(){if(visible)paint();}};
 }

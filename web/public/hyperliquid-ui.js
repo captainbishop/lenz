@@ -65,7 +65,7 @@ export function mountHyperliquid(target){
   }
   function select(row,scroll=true){
     if(selected?.id===row.id)return;missingSelection=false;
-    cancelFeed();clearHyperliquidTrading();selected=row;side=0;tape=null;trades=[];clearDegenCandles(chart);detail.replaceChildren();
+    cancelFeed();clearHyperliquidTrading(detail);selected=row;side=0;tape=null;trades=[];clearDegenCandles(chart);detail.replaceChildren();
     const header=node('div',undefined,'hyper-detail-heading'),identity=node('div');detailsTitle=node('h3',row.name);identity.append(node('p',`${HYPERLIQUID_KINDS[row.kind]} · ${row.venue}`,'hyper-kicker'),detailsTitle);quotePrice=node('strong',`${price(row.price)} ${row.quote.symbol}`,'hyper-price');header.append(marketLogo(row),identity,quotePrice);
     sideButtons=node('div',undefined,'hyper-sides');
     for(const [i,s] of row.sides.entries()){const b=button(`${s.name} · ${price(s.price)} ${row.quote.symbol}`,()=>{if(side===i)return;side=i;tape=null;trades=[];clearDegenCandles(chart);chart.replaceChildren(node('p','Loading chart…'));readout.textContent='';paintSides();paintTrades();book.replaceChildren();startFeed();});sideButtons.append(b);}
@@ -134,7 +134,7 @@ export function mountHyperliquid(target){
   function matchesKind(row){return kind==='all'||row.kind===kind||kind==='perpetuals'&&['perp','builder'].includes(row.kind);}
   return {show(value,view,marketId){
     if(value&&marketId){missingSelection=false;preferred=marketId;search='';query.value='';venue='';venues.value='';page=0;}
-    target.hidden=!value;if(!value)clearHyperliquidTrading();const nextKind=({spot:'spot',perpetuals:'perpetuals',predictions:'outcome'})[view]??kind;
+    target.hidden=!value;if(!value)clearHyperliquidTrading(detail);const nextKind=({spot:'spot',perpetuals:'perpetuals',predictions:'outcome'})[view]??kind;
     if(visible===value&&kind===nextKind){if(preferred)renderList();return;}
     visible=false;if(value)restoreCatalog();
     if(value&&kind!==nextKind){

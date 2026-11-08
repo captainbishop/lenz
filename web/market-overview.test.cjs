@@ -9,7 +9,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     emit(data){this.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(data)}));}
   }
   const catalog=createHyperliquidCatalogReader({fetcher}),read=r=>readHyperliquidTape(r,{fetcher,catalog});
-  const route=createMarketRoute({catalog,hyperTape:read,hyperStream:createMarketStream({Socket,read,parse,checkEvent,includeTrades:true}),discover:async()=>{throw Error('Fixture excludes legacy providers');}});
+  const route=createMarketRoute({catalog,marketContext:async()=>({version:1,provider:'coinmarketcap',observedAt:Date.now(),marketCap:null,volume24h:null,btcDominance:null}),hyperTape:read,hyperStream:createMarketStream({Socket,read,parse,checkEvent,includeTrades:true}),discover:async()=>{throw Error('Fixture excludes legacy providers');}});
   const root=path.join(__dirname,'public'),server=http.createServer(async(req,res)=>{try{
     if(req.url.startsWith('/api/')){requests.push(req.url);req.headers.host='127.0.0.1:4173';req.headers.origin='http://127.0.0.1:4173';if(await route(req,res))return;throw Error();}
     const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep))throw Error();
