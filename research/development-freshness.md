@@ -1,3 +1,11 @@
+# Authenticated executor updates, November 9, 2026
+
+Executor update decoding binds the selected sender, recipient and saved request,
+rejects malformed or future-dated reports, and snapshots input before validation.
+Authenticated reports remain claims for independent settlement verification.
+Four protocol tests pass, including mutable input and hostile reply cases; four
+removed validation guards are detected. This parser does not activate delivery.
+
 # Prediction discovery and event artwork
 
 Predictions brings public Polymarket, Kalshi and Hyperliquid events into searchable

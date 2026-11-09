@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-08T05:19:52.530Z",
+  "reviewedAt": "2026-11-09T00:45:34.018Z",
   "review": "research/development-freshness.md",
   "files": {
     ".gitignore": "58a135928336f74cfa9fe6754abdc8128fa6c74e68c9ce6f08c70ab330f95ae1",
@@ -365,7 +365,7 @@
     "research/crypto-step/step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
     "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
     "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
-    "research/development-freshness.md": "cfa677b515767b91482c061264009bd1154930399e734192e303635bebd76a9c",
+    "research/development-freshness.md": "cf99b6a09ff05164919d1e998e457aeaadf0bf02ffc82e79598fcabc35a1156b",
     "research/mobile-handover/CapsuleCrypto.swift": "ed0c84e7418b9294dbf94d4e9ce9e5dc70b6b3bf097803a8b2e518c49034e25c",
     "research/mobile-handover/CapsuleVectors.swift": "58f5ba0fe4d240d4eef40ac966087a1310492cd0df1408d210b86803fa9d4d8f",
     "research/mobile-handover/README.md": "9f010170efd2f0a35b4ff184e4f309bd2002c411dbba762cb20ae80ac211e236",
@@ -1365,7 +1365,7 @@
     "web/public/defi-catalog.js": "28c89b96470572d795a9ff006fb384b88b03bf55a5fb089eda73dee26200ab22",
     "web/public/defi-delivery.js": "812fd592a9fc814338cb4a9c7ceee6762510b6aeaa47716928a923d45b8c3206",
     "web/public/defi-market-match.js": "fd7ee07a4d381529d61cc77f3d5c7c8710474b8bc0e82a0bd470e5a78c0ac32b",
-    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
+    "web/public/defi-request.js": "4a3eddb39de6acb90833c1e851a2963a0ad99d03ee38e84b2c7cd2466b9ee8eb",
     "web/public/defi-route-drafts.js": "ea96bce102e2f50943911c3f70e2b1ca55a8f34f67934f2f713354901a95816b",
     "web/public/defi-route-plan.js": "cf900167b7a7b5db76e55dcaf491f93134ab23b17fc3349e19794d6a74e8c5e2",
     "web/public/defi-route-quote.js": "aa775f60c4cb22ac3119aa080cc0f8481f893614d119a222729793c4dbe3423b",
@@ -1747,6 +1747,7 @@
     "zcash/verify-payment-freshness.mjs": "f4f15d44069615a138c30822812168bb80d711fb359de1e477d3db4fec61cb2b",
     "zcash/verify-payment-review.mjs": "89d20dd76b3e273a678c0c6ca894c259f04d06d401d822c3cb30ecf240b0f497",
     "zcash/verify-pczt.mjs": "10885eecee1841bee02164c33aaa0698244a8653ef10900e696aaea20f1f03b3",
-    "zcash/wallet.mjs": "81044f47d6c300d36783c5a4aa7cfcd13f6ba7b2f95f1c89ab2baf83d6c13011"
+    "zcash/wallet.mjs": "81044f47d6c300d36783c5a4aa7cfcd13f6ba7b2f95f1c89ab2baf83d6c13011",
+    "contracts/defi-reply.test.mjs": "01b4daa2264513a3b179d02b58cee7897b78bbabeef969cc45b0f949ef5e4412"
   }
 }
