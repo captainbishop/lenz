@@ -1,3 +1,16 @@
+# Durable executor recovery and receiving service, November 9, 2026
+
+The NEAR testnet executor retains exact signed transactions across interrupted
+submission and reconciles their outcomes before another action. Status-only reads
+cannot open a signer. The authenticated receiving service stores encrypted replies
+and reserves result capacity before execution; restart preserves sender policy,
+receipts, pending attempts and independently observed final outcomes.
+
+An isolated source tree passed 47 executor, 19 inbox and 5 HTTP route tests.
+Verification detected 41 executor and 13 inbox guard changes. These use local
+SQLite, WebCrypto, SDK signatures and synthetic chain state. Production identity
+provisioning, live execution, private settlement and physical devices remain open.
+
 # Authenticated executor updates, November 9, 2026
 
 Executor update decoding binds the selected sender, recipient and saved request,

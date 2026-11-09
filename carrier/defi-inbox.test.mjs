@@ -42,6 +42,21 @@ async function temporary(fn) {
 }
 const setup = (directory,f,extra={}) => new DefiInbox(directory,{identity:f.executor,config:c,now:()=>now,...extra});
 
+test('accepted requests can be enumerated and their storage receipts recovered after restart and expiry',async()=>temporary(async directory=>{
+  const f=await fixture();let clock=now,inbox=setup(directory,f,{now:()=>clock});
+  try {
+    assert.deepEqual(inbox.list(),[]);await inbox.receive(f.envelope);inbox.close();
+    clock=f.request.expiresAt+1;inbox=setup(directory,f,{now:()=>clock});
+    assert.deepEqual(inbox.list(),[{id:f.request.id,sender:f.owner.profile.id,storedAt:now,expired:true}]);
+    assert.deepEqual(inbox.list({after:f.request.id}),[]);
+    const receipt=await openDefiReceipt(f.owner,f.executor.profile,await inbox.receipt(f.request.id),f.request);
+    assert.equal(receipt.state,'stored');assert.equal(receipt.storedAt,now);
+    await assert.rejects(inbox.receipt('a'.repeat(64)),/Unknown/);
+    assert.throws(()=>inbox.list({limit:1000}),/limit/);
+    assert.equal((await nearLedger(f.prepared.vault)).reserved.size,1);
+  } finally {inbox.close();}
+}));
+
 test('encrypted handoff binds the chosen executor and preserves all wallet reservations',async()=>{
   const f = await fixture(), before = structuredClone(f.prepared.vault);
   assert.deepEqual(await openDefiRequest(f.executor,f.owner.profile,c,f.packet,now),f.request);

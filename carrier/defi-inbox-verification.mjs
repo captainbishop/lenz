@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 const root = fileURLToPath(new URL('../',import.meta.url));
 const files = ['carrier/defi-inbox.mjs','carrier/defi-inbox.test.mjs','carrier/defi-inbox-verification.mjs',
   'carrier/server.mjs','carrier/store.mjs','web/public/defi-request.js','web/public/peer-crypto.js',
-  'web/public/profile-display.js','web/public/carrier-protocol.js','web/public/near-protocol.js',
+  'web/public/profile-display.js','web/public/chat-access.js','web/public/carrier-protocol.js','web/public/near-protocol.js',
   'web/public/rhea-protocol.js','web/public/near-deposit.js'];
 const contents = Object.fromEntries(await Promise.all(files.map(async file=>[file,await readFile(join(root,file),'utf8')])));
 const run = directory => {

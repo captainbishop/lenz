@@ -39,3 +39,10 @@ test('provider failure stays an error instead of a successful quote', async () =
   const response = res(); await route(req('/api/defi/rhea/quote'), response);
   assert.equal(response.status, 400); assert.equal(response.body.error, 'No liquidity');
 });
+
+test('status route accepts a bounded signed approval and never selects a quote or spending action',async()=>{
+  const input={request:{data:'x'.repeat(6000)}},route=createDefiRoute({readDefiStatus:async data=>{assert.deepEqual(data,input);return {state:'pending'};},rheaQuote:()=>assert.fail('Not a quote')});
+  const response=res();await route(req('/api/defi/rhea/status',input),response);assert.equal(response.status,200);assert.equal(response.body.state,'pending');
+  const large=res();await route(req('/api/defi/rhea/status',{data:'x'.repeat(65536)}),large);assert.equal(large.status,400);
+  const foreign=res();await route(req('/api/defi/rhea/status',input,{headers:{host:'127.0.0.1:4173',origin:'https://foreign.example'}}),foreign);assert.equal(foreign.status,403);
+});

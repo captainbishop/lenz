@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { isDeepStrictEqual } from 'node:util';
-import { actions, baseEncode, encodeTransaction } from 'near-api-js';
+import { actions, baseEncode, encodeTransaction, decodeSignedTransaction } from 'near-api-js';
 import { createHash } from 'node:crypto';
 import { provider, relayAccount, configuration } from './client.mjs';
 import { checkRheaPacket, checkRheaInstruction, redemptionTerms } from '../web/public/rhea-protocol.js';
@@ -99,6 +99,11 @@ export function inspectDefiTransaction(ref,expected,tx) {
     receiptIds:rows.map(r=>r.id),failedReceipts:rows.filter(r=>Object.hasOwn(r.outcome.status,'Failure')).map(r=>r.id)};
 }
 
+function submissionResult(ref,expected,response) {
+  try {return inspectDefiTransaction(ref,expected,response);}
+  catch {return {state:'unverified',txHash:ref.txHash,sender:ref.sender};}
+}
+
 export async function createDefiExecutorClients(config,{rpc=provider,getSigner=relayAccount,reserveConfig=configuration,now=Date.now}={}) {
   const c=structuredClone(config),reserve=await reserveConfig();
   assert(c.ready===true && c.network==='testnet' && reserve.ready===true && reserve.network==='testnet' && reserve.contract===c.reserve,'Unconfigured testnet executor');
@@ -130,6 +135,7 @@ export async function createDefiExecutorClients(config,{rpc=provider,getSigner=r
     },
     async send(input,record) {
       const expected=structuredClone(input),account=await getSigner();
+      let reference;
       assert(/^lenz-dev-[0-9]+\.testnet$/.test(account.accountId),'Only a disposable test sponsor is supported');
       assert(!expected.payer || expected.payer===account.accountId,'The refund payer must sign its own deposit');
       assert([c.adapter,c.reserve].includes(expected.receiver) && ['settle','submit','advance','recover_redemption','deposit_offline'].includes(expected.method),'Unsupported executor call');
@@ -145,10 +151,36 @@ export async function createDefiExecutorClients(config,{rpc=provider,getSigner=r
         assert(Buffer.from(encodeTransaction(signed.signedTransaction.transaction)).equals(unsigned),'Signer changed the approved transaction');
         const txHash=baseEncode(createHash('sha256').update(encodeTransaction(signed.signedTransaction.transaction)).digest());
         assert.equal(baseEncode(signed.txHash),txHash,'Signed transaction hash mismatch');
-        await record({sender:account.accountId,txHash});return signed;
+        const encoded=Buffer.from(encodeTransaction(signed.signedTransaction));
+        assert(encoded.length<=65536,'Signed transaction is too large to retain');
+        await record({sender:account.accountId,txHash,signedTransaction:encoded.toString('base64')});
+        reference={sender:account.accountId,txHash};
+        // Keep a signer-owned object from changing while durable storage is awaited.
+        return {...signed,signedTransaction:decodeSignedTransaction(encoded)};
       }};
-      return account.signAndSendTransaction({receiverId:expected.receiver,actions:[actions.functionCall(expected.method,expected.args,BigInt(expected.gas),BigInt(expected.deposit))],
+      const response=await account.signAndSendTransaction({receiverId:expected.receiver,actions:[actions.functionCall(expected.method,expected.args,BigInt(expected.gas),BigInt(expected.deposit))],
         signer,waitUntil:'FINAL',throwOnFailure:false,retries:0});
+      return submissionResult(reference,expected,response);
+    },
+    async rebroadcast(ref,expected,encoded,beforeBroadcast) {
+      assert(typeof encoded==='string' && encoded.length<=87384,'Invalid saved transaction');
+      const raw=Buffer.from(encoded,'base64');assert(raw.length>0 && raw.length<=65536 && raw.toString('base64')===encoded,'Invalid saved transaction encoding');
+      const signed=decodeSignedTransaction(raw),t=signed.transaction;
+      assert(Buffer.from(encodeTransaction(signed)).equals(raw),'Saved transaction encoding changed');
+      const digest=createHash('sha256').update(encodeTransaction(t)).digest();
+      assert(baseEncode(digest)===ref.txHash && t.signerId===ref.sender,'Different saved transaction identity');
+      assert(/^lenz-dev-[0-9]+\.testnet$/.test(ref.sender),'Only a disposable test sponsor is supported');
+      assert(!expected.payer || expected.payer===ref.sender,'Different refund payer');
+      const signature=signed.signature[['ed25519Signature','secp256k1Signature','mlDsa65Signature'][t.publicKey.keyType]];
+      assert(signature && t.publicKey.verify(digest,Uint8Array.from(signature.data)),'Invalid saved transaction signature');
+      assert([c.adapter,c.reserve].includes(t.receiverId) && t.receiverId===expected.receiver,'Different saved transaction target');
+      const [a]=t.actions;assert(t.actions.length===1 && a.functionCall,'Different saved transaction actions');
+      assert(a.functionCall.methodName===expected.method && String(a.functionCall.gas)===expected.gas && String(a.functionCall.deposit)===expected.deposit,'Different saved transaction call');
+      assert.deepEqual(JSON.parse(Buffer.from(a.functionCall.args).toString('utf8')),expected.args,'Different saved transaction arguments');
+      assert(typeof beforeBroadcast==='function','Recovery authorization check required');
+      await beforeBroadcast();
+      const response=await rpc.sendTransactionUntil(signed,'FINAL');
+      return submissionResult(ref,expected,response);
     },
     async reconcile(ref,expected) {
       try {return inspectDefiTransaction(ref,expected,await rpc.viewTransactionStatus({txHash:ref.txHash,accountId:ref.sender,waitUntil:'FINAL'}));}

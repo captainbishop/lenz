@@ -66,6 +66,19 @@ export class DefiInbox {
     const row = this.#db.prepare('SELECT envelope, expires, stored FROM requests WHERE id=?').get(id);
     return row ? {envelope:JSON.parse(row.envelope), storedAt:row.stored, expired:this.#now() >= row.expires} : null;
   }
+  list({after='',limit=8}={}) {
+    assert(after==='' || /^[0-9a-f]{64}$/.test(after),'Invalid inbox cursor');
+    assert(Number.isSafeInteger(limit) && limit>0 && limit<=32,'Invalid inbox page limit');
+    return this.#db.prepare('SELECT id,sender,stored,expires FROM requests WHERE id>? ORDER BY id LIMIT ?').all(after,limit)
+      .map(row=>({id:row.id,sender:row.sender,storedAt:row.stored,expired:this.#now()>=row.expires}));
+  }
+  async receipt(id) {
+    const saved=this.read(id);assert(saved,'Unknown DeFi request');
+    const e=await validateEnvelope(saved.envelope,saved.storedAt),sender=carrierSenderProfile(e.sender);
+    const request=await openDefiRequest(this.#identity,sender,this.#config,e.packet,saved.storedAt);
+    assert(request.id===id,'Different saved DeFi request');
+    return sealMessage(this.#identity,sender,{type:DEFI_RECEIPT,requestId:id,state:'stored',storedAt:saved.storedAt});
+  }
   // Expiry never deletes conflict records or implies a financial reservation can be released.
   close() { this.#db.close(); }
 }
