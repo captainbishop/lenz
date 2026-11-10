@@ -4,7 +4,7 @@
 
 The official `@defuse-protocol/one-click-sdk-typescript` **0.1.26** is pinned in this isolated folder. Its lockfile and [advisory report](dependency-audit.json) cover 40 installed dependencies; the current report has zero known vulnerabilities. Lifecycle scripts were disabled during installation. This does not resolve the earlier experimental Intents SDK's separate dependency findings.
 
-The server imports only the verifier wrapper from this folder. No new browser bundle, SDK signing operation or spending route is enabled. The SDK's pinned manager public key is used by default:
+The server imports the verifier wrapper from this folder. The [private spending library](../../docs/private-spending.md) also bundles this verifier for browser use without the HTTP client. Product spending controls remain separate. The SDK's pinned manager public key is used by default:
 
 ```text
 ed25519:reYaWhvwu8Jzo3WUM3zhn6VrhuMEF4eADL17qtRVifc
@@ -18,7 +18,7 @@ The [official signature guide](https://docs.near-intents.org/integration/distrib
 
 **`quoteRequest.confidentiality` is excluded from the signed fields in 0.1.26.** A test changes this field while retaining a valid SDK signature. Lenz separately requires the HTTPS response to echo the requested confidentiality and never falls back to public routing. That echo check does not cryptographically bind the privacy mode: a valid signature is not proof that confidential execution was selected or delivered. The result metadata explicitly records this boundary. A documented upstream binding or a separately verified privacy mechanism is still needed.
 
-Other selected fields include assets, amount, receiving/refund accounts, deadline and output bounds. The SDK also excludes some metadata and fee configuration. This integration remains restricted to dry exact-input previews and does not claim the signature covers every response property.
+Other selected fields include assets, amount, receiving/refund accounts, deadline and output bounds. The SDK also excludes some metadata and fee configuration. The original preview remains restricted to dry exact-input quotes; the private spending library has its own checks. Neither claims the signature covers every response property.
 
 ## Checks and remaining access requirement
 

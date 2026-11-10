@@ -1,3 +1,11 @@
+# Private signing and submission libraries, November 10, 2026
+
+Owner review binds the signed private quote to one exact transfer. The external wallet retains its key; cancelled or changed-account prompts cannot release an approval. The connected adapter distinguishes pre-dispatch rejection from unknown submission outcomes, and reads the original deposit after expiry without renewing authority. Malformed provider timestamps and invalid local clocks are rejected before they can become status evidence. Quote-level routing instructions are rejected. Recovery preserves approvals accepted within clock tolerance and rejects review windows that have not opened.
+
+The isolated candidate passed 61 Node tests, including the existing quote and EVM connection regressions, plus three offline Edge signing groups with a disposable provider. Verification detected 33 single-guard changes and one paired clock-bound change. Real local HTTP checks reject redirects and cancel stalled responses; malformed UTF-8 and oversized otherwise-valid reports are rejected. Five browser bundle/license files reproduced exactly from pinned dependencies. Existing dependency advisory records were not refreshed.
+
+These libraries do not activate Wallet controls, an HTTP execution endpoint or offline caches. Browser checks load the modules before disconnecting; they do not prove cold installation or physical-wallet compatibility. The caller must persist the signed request and submission attempt before dispatch. Private funding, encrypted outcome return and independent settlement/refund verification remain unfinished. Existing preview sources and media are unchanged.
+
 # Private execution observations, November 10, 2026
 
 The status validator binds normalized provider reports to an already verified quote review. It checks the original deposit, exact input, minimum output, refund bounds, canonical integer quantities and timestamps. Independent clock bounds prevent two tolerance windows from accepting an update two minutes in the future. Missing amounts and fees stay unknown. A provider report never becomes signed settlement evidence.
