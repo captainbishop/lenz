@@ -1,3 +1,13 @@
+# Send, sharing and drafts, November 10, 2026
+
+Send commits encrypted chat before opening device sharing. Cancelled sharing retains the message, and Share retries its original packet. Drafts follow the selected contact; text entered during a save survives. A queued Send rejects a replaced account inside the storage lock.
+
+The isolated candidate passed eight Send browser groups and five same-ID recovery groups, including a complete offline browser restart. Sharing uses an API fixture; physical system sharing remains untested. The source-bound record is web/chat-send-verification.json.
+
+Read-only replay hides the composer. Its visible fragments preserve every element except the outgoing Save message label, which becomes Share. Twelve frames and the signed receipts are unchanged. Existing recordings retain the earlier file-saving walkthrough; saving a copy remains available as a fallback. No financial flow changed.
+
+An interrupted Conversations update retains the older cache still used by Wallet. The isolated browser regression first failed with global cache deletion and passes after that deletion is removed, including after the server stops and the browser restarts. Old cache reclamation awaits reliable ownership information.
+
 # Same-ID chat recovery and receipts, November 10, 2026
 
 The recovery page installs same-ID chat archives in an empty browser and re-exports new conversations with the existing phrase. Version 2 archives and automatic backups preserve verified delivery receipts; version 1 and legacy successor readers remain supported. Receipt-only changes synchronize without repeated uploads. Financial authority is excluded.

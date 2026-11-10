@@ -27,10 +27,10 @@ export function mountChatMoney({ action, status, selected, expose }) {
   let recipient = null;
   const connection = () => {
     const mode = deliveryMode(selected()), payMode = deliveryMode($('#chat-pay-dialog').open ? recipient : selected());
-    $('#prepare-message').textContent = mode !== 'file' ? 'Send' : 'Save to share ↗';
+    $('#prepare-message').textContent = 'Send';
     if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = payMode !== 'file' ? 'Send payment' : 'Save payment to share';
     $('#chat-pay-delivery').textContent = payMode === 'nearby' ? 'Sends directly nearby. Payment confirmation happens separately.' : payMode === 'automatic' ? 'Saved payments will deliver when connected. Your contact can pass them onward offline.' : 'Share the encrypted payment file. Your contact can pass it onward offline.';
-    $('#chat-connection').textContent = mode === 'nearby' ? 'Nearby · connected to ' + $('#conversation-name').textContent + ' · keep Lenz open' : mode === 'automatic' ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · sends when connected. File sharing is still available.' : navigator.onLine ? 'Encrypted files · save and share with your contact' : 'You’re offline · share by file. Payments await online confirmation.';
+    $('#chat-connection').textContent = mode === 'nearby' ? 'Nearby · connected to ' + $('#conversation-name').textContent + ' · keep Lenz open' : mode === 'automatic' ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · waiting for a delivery connection' : 'Saved automatically · Send opens sharing options';
   };
   updateChatDelivery = connection;
   const updateConnection = () => { connection(); paymentConnection(); };

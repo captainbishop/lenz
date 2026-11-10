@@ -1,3 +1,5 @@
+// Preview recording revision: cfc2b5cffe2115c67fca3cb45cfb16ba11a10adfbe6cbff10b0a2ef504f28d70
+// chat-send-20261110-r1
 // recovery-receipts-20261110-r2
 // Preview recording revision: f163cd3a4cba36be88b3dadd938a578c5aa7d9e42a67a5aa6909808dc8ff21da
 // Market shell revision: prediction-artwork-20261108-r3

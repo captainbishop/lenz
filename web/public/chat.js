@@ -17,6 +17,14 @@ const $ = selector => document.querySelector(selector);
 mountProfilePanels();
 startAccountSync();
 let active = null, lastPacket = null, busy = false, showThread = true;
+const drafts = new Map();
+let draftOwner = null;
+let draftRevision = 0;
+$('#message').addEventListener('input', () => { draftRevision++; });
+function selectConversation(id) {
+  if (active) drafts.set(active, $('#message').value);
+  active = id; $('#message').value = drafts.get(id) ?? ''; showThread = true;
+}
 const phone = matchMedia('(max-width:760px), (max-width:1000px) and (max-height:500px)'), appNav = $('#chat-app-nav');
 function updateNavigation() {
   if (phone.matches) appNav.setAttribute('popover', 'auto');
@@ -58,12 +66,13 @@ async function action(operation) {
 }
 async function render() {
   const state = await readState();
+  if (draftOwner !== state.identity?.profile.id) { drafts.clear(); $('#message').value = ''; draftOwner = state.identity?.profile.id; }
   const recovered=state.recoveredChat?await(await import('./chat-restore.js')).readRecoveredHistory(state):null;
   $('#identity-form').hidden = !!state.identity; $('#my-profile').hidden = !state.identity;
   await renderProfile(state.identity?.profile);
   const list = $('#contact-list'); list.replaceChildren();
   $('#people-count').textContent = String(state.contacts.length);
-  active = state.contacts.some(p => p.id === active) ? active : (state.contacts[0]?.id ?? null);
+  if (!state.contacts.some(p => p.id === active)) selectConversation(state.contacts[0]?.id ?? null);
   for (const contact of state.contacts) {
     if (!contact.name.toLocaleLowerCase().includes($('#contact-search').value.toLocaleLowerCase())) continue;
     const button = element('button'); button.type = 'button'; button.setAttribute('aria-pressed', String(contact.id === active));
@@ -78,7 +87,7 @@ async function render() {
     }
     const earlier=(state.contactRecoveries??[]).some(link=>link.from.id===contact.id);
     copy.append(element('small', earlier?'Earlier ID · '+preview:preview)); button.append(avatar, copy);
-    button.onclick = () => action(async () => { active = contact.id; showThread = true; }); list.append(button);
+    button.onclick = () => action(async () => { selectConversation(contact.id); }); list.append(button);
   }
   $('#people-empty').hidden = !!list.children.length;
   $('#people-empty').textContent = state.contacts.length ? 'No one matches that name.' : 'Your conversations will appear here.';
@@ -120,8 +129,9 @@ async function render() {
       bubble.append(element('small', outgoing ? await deliveryAcknowledged(state, record) ? 'Receipt received · your contact acknowledged this file' : 'Prepared here · delivery not confirmed' : 'Opened here · sender signature checked'));
     }
     if (outgoing && !paymentBlocked) {
-      const download = element('button', isNearPayment(payload) ? 'Save payment file' : isTrade(payload) ? 'Save financial card' : 'Save message'); download.type = 'button';
-      download.onclick = () => save(record.packet, `proof-u-message-${record.packet.id}.json`); bubble.append(download);
+      const financial = isNearPayment(payload) || isTrade(payload);
+      const download = element('button', isNearPayment(payload) ? 'Save payment file' : isTrade(payload) ? 'Save financial card' : 'Share'); download.type = 'button';
+      download.onclick = () => financial ? save(record.packet, `proof-u-message-${record.packet.id}.json`) : action(async () => status(chatShareStatus(await shareChat(record.packet)))); bubble.append(download);
     } else if (!outgoing && !isTrade(payload)) {
       const receipt = element('button', 'Share receipt'); receipt.type = 'button';
       receipt.onclick = () => action(async () => {
@@ -150,7 +160,7 @@ const alias = privateName(); $('#private-default-name').textContent = alias; pai
 $('#identity-form').onsubmit = event => { event.preventDefault(); startIdentity($('#name').value); };
 $('#continue-private').onclick = () => startIdentity(alias, true);
 setupProfile({ action, status });
-setupContacts({ action, status, select: id => { active = id; showThread = true; } });
+setupContacts({ action, status, select: selectConversation });
 $('#contact-search').oninput = () => action(async () => {});
 $('#back-people').onclick = () => { showThread = false; $('main').classList.remove('has-conversation'); $('.people-heading h2').focus(); };
 $('#close-people').onclick = () => { showThread = true; $('main').classList.add('has-conversation'); $('#back-people').focus(); };
@@ -158,26 +168,48 @@ $('#open-about').onclick = () => $('#about-lenz').showModal();
 $('#receive-message').onclick = () => { $('#handover-feedback').textContent = ''; $('#handover').showModal(); };
 async function expose(packet, kind = 'message') {
   if (await requestAutomaticDelivery(packet)) return true;
+  openHandover(packet, kind);
+  return false;
+}
+function openHandover(packet, kind = 'message') {
   lastPacket = packet; $('#outgoing').value = JSON.stringify(packet); $('#save-message').disabled = false; $('#handover-feedback').textContent = '';
   $('#handover-label').textContent = kind === 'receipt' ? 'Receipt ready to share' : kind === 'payment' ? 'Payment ready to share' : 'Share a message';
-  $('#handover-description').textContent = kind === 'receipt' ? 'Share this encrypted receipt back to your contact. It acknowledges this file only; it does not confirm a payment on NEAR or guarantee its value.' : kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Save an encrypted message to share, or open a message, payment or receipt you received.';
-  $('#save-message').textContent = kind === 'receipt' ? 'Save encrypted receipt' : kind === 'payment' ? 'Save payment file' : 'Save encrypted message';
+  $('#handover-description').textContent = kind === 'receipt' ? 'Share this encrypted receipt back to your contact. It acknowledges this file only; it does not confirm a payment on NEAR or guarantee its value.' : kind === 'payment' ? 'Save this encrypted payment file and share it with your contact using a nearby sharing app. It is saved in your wallet and this conversation.' : 'Your message is saved. Pass it to your contact using your device’s sharing options.';
+  $('#save-message').textContent = kind === 'receipt' ? 'Save encrypted receipt' : kind === 'payment' ? 'Save payment file' : 'Save a copy';
   if (!$('#handover').open) $('#handover').showModal();
-  return false;
+}
+const chatShareStatus = result => ({automatic:'Message saved for delivery.',shared:'Message shared. Delivery is not confirmed.',cancelled:'Sharing cancelled. Your message is saved. Tap Share to try again.',retry:'Message saved. Tap Share to choose where to send it.',file:'Message saved. Choose how to share it.'})[result];
+async function deliverChat(packet) {
+  if (await requestAutomaticDelivery(packet)) return 'automatic';
+  return shareChat(packet);
+}
+async function shareChat(packet) {
+  const file = new File([JSON.stringify(packet)], `lenz-message-${packet.id}.json`, {type:'application/json'});
+  if (typeof navigator.share === 'function' && navigator.canShare?.({files:[file]})) {
+    if (draftOwner !== packet.from) throw Error('This message is no longer available in the current account.');
+    if (navigator.userActivation && !navigator.userActivation.isActive) return 'retry';
+    // Callers provide a committed packet. Keep this call before any await so Share retains its user gesture.
+    try { await navigator.share({files:[file],title:'Lenz message'}); return 'shared'; }
+    catch (error) { if (error.name === 'AbortError') return 'cancelled'; if (error.name === 'NotAllowedError') return 'retry'; }
+  }
+  openHandover(packet);
+  return 'file';
 }
 mountChatMoney({ action, status, selected: () => active, expose });
 $('#compose').onsubmit = event => { event.preventDefault(); action(async () => {
   const payload = { kind: 'chat', text: $('#message').value }; chatPayload(payload);
-  const recipient = active; status('Encrypting your message…');
+  const recipient = active, revision = draftRevision, owner = draftOwner; status('Saving your message…');
   const packet = await updateState(async state => {
+    if (state.identity?.profile.id !== owner) throw new Error('Your account changed. Reload before sending.');
     const contact = state.contacts.find(p => p.id === recipient); if (!contact) throw new Error('Choose a contact first.');
     if (state.messages.length >= 1000) throw new Error('This prototype has reached its 1,000-message storage limit.');
     const packet = await sealMessage(state.identity, contact, payload);
     state.messages.push({ packet }); return packet;
   });
   // Delivery starts only after encrypted history has been committed.
-  const automatic = await expose(packet);
-  $('#message').value = ''; status(automatic ? 'Message saved for delivery.' : 'Message saved and encrypted. Share the file with your contact.');
+  if (revision === draftRevision) { drafts.delete(recipient); $('#message').value = ''; }
+  else drafts.set(recipient, $('#message').value);
+  status(chatShareStatus(await deliverChat(packet)));
 }); };
 $('#save-message').onclick = () => { if (lastPacket) save(lastPacket, `proof-u-message-${lastPacket.id}.json`); };
 $('#incoming-file').onchange = () => action(async () => {
@@ -188,7 +220,7 @@ $('#incoming-file').onchange = () => action(async () => {
 $('#open-message').onclick = () => action(async () => {
   const packet = parse($('#incoming').value);
   const received = await updateState(state => receivePacket(state, packet, false, chatNearContract()));
-  active = received.contactId; showThread = true; const duplicate = received.duplicate;
+  selectConversation(received.contactId); const duplicate = received.duplicate;
   $('#incoming').value = ''; $('#incoming-file').value = ''; status(received.kind === DELIVERY_RECEIPT ? duplicate ? 'This receipt is already saved.' : 'Receipt received from your contact. Payment confirmation is separate.' : duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Its sender’s signature is valid.');
   $('#handover').close();
 });
