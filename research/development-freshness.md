@@ -1,3 +1,9 @@
+# Private execution observations, November 10, 2026
+
+The status validator binds normalized provider reports to an already verified quote review. It checks the original deposit, exact input, minimum output, refund bounds, canonical integer quantities and timestamps. Independent clock bounds prevent two tolerance windows from accepting an update two minutes in the future. Missing amounts and fees stay unknown. A provider report never becomes signed settlement evidence.
+
+Nine Node tests pass in an isolated candidate, and 24 deliberate guard changes are detected. Six existing adapter tests also pass in the working tree; that adapter and its signing dependencies remain outside this commit. The new validator is not mounted in the browser or its offline cache. Encrypted outcome delivery and independent settlement verification remain unfinished. Existing preview sources and media are unchanged.
+
 # Send, sharing and drafts, November 10, 2026
 
 Send commits encrypted chat before opening device sharing. Cancelled sharing retains the message, and Share retries its original packet. Drafts follow the selected contact; text entered during a save survives. A queued Send rejects a replaced account inside the storage lock.
