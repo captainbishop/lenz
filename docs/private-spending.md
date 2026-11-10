@@ -46,8 +46,30 @@ the original quote signature and cannot credit a balance or release a reservatio
 
 SDK 0.1.26 excludes confidentiality, refund-start time and parts of the fee
 configuration from its signature. Exact response checks do not establish private
-execution or settlement. Funded execution, encrypted outcome delivery, independent
+execution or settlement. Funded execution, independent
 settlement evidence and financial recovery remain separate work.
+
+## Encrypted approval and outcome journals
+
+The browser outbox saves an encrypted approval before handing it to a selected,
+verified executor. The executor must opt in to the sender and wallet owner. Intake
+rejects conflicting nonces and commits the request before returning a storage
+receipt. Submission saves an unknown attempt before calling the connected adapter;
+a lost response or failed result write cannot authorize another attempt.
+
+`observeConfidentialRequest` accepts the connected status reader. It rechecks the
+account, permission and cancellation after the read, then encrypts and saves one
+latest provider report for return to the owner. Reports and receipts bind the
+original approval and exact encrypted packet. Retries reuse the saved packet;
+older updates cannot replace newer ones, and conflicting equal-time updates fail.
+Admission reserves space for later submission, report and receipt records.
+
+The owner stores a report before returning its receipt. Reports remain readable
+after the approval expires and after a backward clock change. They do not credit
+funds, verify settlement or release reservations. A provider's reported deposit
+activity blocks a fresh submission, including activity in an older or conflicting
+report. These services and their offline dependencies are available to the app; Wallet controls and automatic courier routing are
+separate integration work.
 
 ## Local verification
 
@@ -60,12 +82,17 @@ node web/build-intents-codecs.mjs
 node web/build-intents-quote.mjs
 node --test web/intents-spend.test.mjs integrations/intents-spend.test.mjs web/intents-status.test.mjs
 node web/intents-signing-browser.test.cjs
+node --test web/intents-spend-outbox-browser.test.cjs web/intents-outcome-browser.test.cjs
+node --test web/intents-cache-browser.test.cjs
 ```
 
 Tests use disposable signing keys and provider responses, including a local HTTP
-server for redirect and stalled-response checks. The browser check loads the
-modules before disconnecting and tests signing without network requests. It does
-not establish offline installation, a cold cache restart or physical-wallet
+server for redirect and stalled-response checks. The signing check loads modules
+before disconnecting. The cache check requires
+the prepared proof assets from `web/build.mjs`; it closes persistent Edge, stops
+the server and reopens the saved page offline through each app worker, without
+an explicit preparation action. These
+checks do not establish first-time offline installation or physical-wallet
 compatibility.
 
 Interfaces follow the official [OpenAPI specification](https://1click.chaindefuser.com/docs/v0/openapi.yaml),

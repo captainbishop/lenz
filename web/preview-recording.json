@@ -11,7 +11,7 @@
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
     "web/public/carrier-ui.js": "97cb90e916975811f337f65934dca7d3f4ac5c7984305cdfbc22731ef3185744",
     "web/public/chat-layout.css": "1905f1d35989757ecf30f382448008e092a5e71bda08f0036d038fe3c70e96ba",
-    "web/public/chat-store.js": "dfb221f115d6800130b6f62e81e703f53e857dcccdba29a7c9732f0ff278545d",
+    "web/public/chat-store.js": "4ec3664517f9aa67c26396b09312375deb152cd4b76fe73b48cc246fa6e234f2",
     "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
     "web/public/chat.html": "b6b8d06807798b2ad0843ca7b12a9253ba47ccf215e66c9f35971c9687058f8c",
     "web/public/chat.js": "7e3a5f6ef405b67078eb487d16ad627e58315ee781c14dfbc8a8196b4a72b971",
@@ -336,7 +336,7 @@
   "apiRequests": 0,
   "errors": [],
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
-  "sourceReview": "web/chat-send-verification.json",
-  "sourceReviewedAt": "2026-11-10T17:45:27.500Z",
+  "sourceReview": "web/private-outcome-verification.json",
+  "sourceReviewedAt": "2026-11-10T23:44:41.547Z",
   "reviewedAt": "2026-11-08T05:14:26.390Z"
 }

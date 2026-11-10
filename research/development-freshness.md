@@ -1,3 +1,11 @@
+# Durable encrypted private reports, November 11, 2026
+
+Private approval journals save encrypted provider observations and exact owner storage receipts. Duplicate reads reuse the same packet; older or conflicting updates cannot replace the latest report. A durable activity warning prevents a later pending report from reopening submission, including when conflicting evidence is rejected. Interrupted status checks remain blocked until reconciliation. Optional IndexedDB cancellation aborts the write without publishing a packet.
+
+The isolated candidate passed 61 Node tests and 33 Edge outcome, outbox and automatic-cache cases. Existing account backup and Send passed 13 and eight behavior groups. Independent Spec probes passed 10 cases; separate Spec and Standards reviews have no remaining findings. Eight selected mutation scenarios were detected, including one paired receipt-binding change. A fresh read-only replay matched all 15 saved preview frames and preserved all three test accounts. Both workers retain outcome services after a full offline restart without explicit preparation.
+
+Provider reports and storage receipts do not credit balances, verify settlement or release financial reservations. Wallet controls, automatic courier routing, production funding/private execution/refund, independent settlement verification, financial recovery and physical first-offline delivery remain unfinished. Localhost, synthetic providers and disposable browser keys define the tested scope. No live financial operation or deployment ran.
+
 # Private signing and submission libraries, November 10, 2026
 
 Owner review binds the signed private quote to one exact transfer. The external wallet retains its key; cancelled or changed-account prompts cannot release an approval. The connected adapter distinguishes pre-dispatch rejection from unknown submission outcomes, and reads the original deposit after expiry without renewing authority. Malformed provider timestamps and invalid local clocks are rejected before they can become status evidence. Quote-level routing instructions are rejected. Recovery preserves approvals accepted within clock tolerance and rejects review windows that have not opened.
