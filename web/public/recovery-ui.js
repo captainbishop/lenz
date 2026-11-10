@@ -3,6 +3,7 @@ import {prepareChatBackup} from './recovery-service.js';
 import {stageChatRestore} from './chat-restore.js';
 import {themeIcon} from './theme-icon.js';
 import {saveOffline} from './save-offline.js';
+import {isRecoveredChat} from './chat-access.js';
 const $=s=>document.querySelector(s),el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
 let generation=0,prepared=null,history=null,busy=false,restoreReview=null,installing=false;
 const status=text=>{$('#backup-status').textContent=text;};
@@ -48,6 +49,7 @@ $('#open-backup-form').onsubmit=async event=>{
     for(const peer of history.contacts){const b=el('button',peer.name);b.type='button';b.dataset.id=peer.id;b.onclick=()=>selectContact(peer.id);$('#history-contacts').append(b);}
     selectContact(history.contacts[0]?.id);status('Backup verified. History opened on this device.');$('#close-history').focus();
     $('#restore-chat-review').hidden=false;$('#restore-chat-consent').checked=false;$('#restore-chat').disabled=true;
+    $('#restore-chat-fields p').textContent=result.identityChanged?'Restore chat with an updated Lenz ID. Share the signed update with your contacts. Offline funds stay unavailable.':'Continue with the same Lenz ID and conversations. New messages save automatically on this device. Funds are not restored.';
     $('#restore-chat-fields').hidden=!result.canInstall;$('#restore-existing').hidden=result.canInstall;
   }catch(error){if(own===generation)status(error instanceof SyntaxError?'This file is not a Lenz chat backup.':error.message);}finally{if(own===generation){busy=false;$('#open-backup').disabled=false;}}
 };
@@ -68,4 +70,4 @@ $('#save-backup-offline').onclick=async()=>{
   try{await saveOffline();$('#backup-cache-status').textContent='Page saved for offline use.';}
   catch{$('#backup-cache-status').textContent='Could not save offline. Retry when connected.';}finally{$('#save-backup-offline').disabled=false;}
 };
-try{const state=await readState();$('#backup-account').textContent=state.identity?.profile.name??'No account in this browser';$('#saved-phrase-field').hidden=!state.recoveredChat;if(!state.identity)show('open',false);}catch{show('open',false);status('Could not read the account in this browser. You can still open a backup.');}
+try{const state=await readState();$('#backup-account').textContent=state.identity?.profile.name??'No account in this browser';$('#saved-phrase-field').hidden=!isRecoveredChat(state.identity);if(!state.identity)show('open',false);}catch{show('open',false);status('Could not read the account in this browser. You can still open a backup.');}

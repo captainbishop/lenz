@@ -1,7 +1,9 @@
 // Staged identity/chat recovery only. No storage writes or financial restoration.
 import {Mnemonic,p256} from './evm-vendor/identity-recovery.js';
 import {CHAT_DOMAIN,assert,bytes,hex,unhex,digest,keysAre,validateProfile,openMessage} from './peer-crypto.js';
-const DOMAIN='lenz/identity-recovery/v1',ARCHIVE='lenz/chat-archive/v1',MAX_BYTES=8_000_000;
+import {validateDeliveryReceipt} from './delivery-receipts.js';
+const DOMAIN='lenz/identity-recovery/v1',ARCHIVE='lenz/chat-archive/v2',PREVIOUS_ARCHIVE='lenz/chat-archive/v1',MAX_BYTES=8_000_000;
+export const isChatArchiveType=type=>type===ARCHIVE||type===PREVIOUS_ARCHIVE;
 const enc=new TextEncoder(),dec=new TextDecoder('utf-8',{fatal:true});
 const b64=raw=>btoa(String.fromCharCode(...raw)).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
 function entropyOf(phrase){
@@ -43,7 +45,7 @@ export async function stageIdentityRecovery(phrase,name){
   const entropy=entropyOf(phrase);
   try {return await identityFromEntropy(entropy,name);}finally {entropy.fill(0);}
 }
-async function validateChatSnapshot(identity,input){
+async function validateChatSnapshot(identity,input,withReceipts){
   assert(keysAre(input,['profile','contacts','messages']),'Only identity and chat history can be archived.');
   assert(Array.isArray(input.contacts)&&input.contacts.length<=500&&Array.isArray(input.messages)&&input.messages.length<=1000,'Archive exceeds the contact or message limit.');
   // Bound the whole serialized input before cloning/cryptographic validation.
@@ -54,16 +56,19 @@ async function validateChatSnapshot(identity,input){
   for(const value of snapshot.contacts){const p=await validateProfile(value);assert(p.id!==profile.id&&!contacts.has(p.id),'Duplicate or own contact in archive.');contacts.set(p.id,p);}
   const ids=new Set();
   for(const record of snapshot.messages){
-    assert(keysAre(record,['packet'])&&record.packet&&typeof record.packet.id==='string'&&!ids.has(record.packet.id),'Invalid or duplicate archived message.');
+    assert(record?.packet&&typeof record.packet.id==='string'&&!ids.has(record.packet.id),'Invalid or duplicate archived message.');
     const packet=record.packet,peer=contacts.get(packet.from===profile.id?packet.to:packet.from);
+    const receiptField=packet.from===profile.id?'receivedReceipt':'receiptToShare';
+    assert(keysAre(record,['packet'])||(withReceipts&&keysAre(record,['packet',receiptField])),'Invalid archived message fields.');
     assert(peer,'Archived message has no matching contact.');
     const payload=await openMessage(identity,peer,packet);
     assert(keysAre(payload,['kind','text'])&&payload.kind==='chat'&&typeof payload.text==='string'&&payload.text.trim().length>0&&bytes(payload.text).length<=16002,'Financial records cannot be restored as chat.');
+    if(Object.hasOwn(record,receiptField))await validateDeliveryReceipt({identity,contacts:snapshot.contacts},record,record[receiptField]);
     ids.add(packet.id);
   }
   return snapshot;
 }
-async function archiveKey(entropy,salt){return crypto.subtle.deriveKey({name:'HKDF',hash:'SHA-256',salt,info:enc.encode(ARCHIVE)},await material(entropy),{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function archiveKey(entropy,salt,type){return crypto.subtle.deriveKey({name:'HKDF',hash:'SHA-256',salt,info:enc.encode(type)},await material(entropy),{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
 const header=archive=>bytes([archive.type,archive.kdf,archive.salt,archive.iv]);
 export async function sealChatArchive(phrase,input){
   // Capture caller-owned values before the first asynchronous operation.
@@ -72,25 +77,25 @@ export async function sealChatArchive(phrase,input){
   let plaintext;
   try {
     const identity=await identityFromEntropy(entropy,snapshot.profile?.name);
-    plaintext=bytes(await validateChatSnapshot(identity,snapshot));
+    plaintext=bytes(await validateChatSnapshot(identity,snapshot,true));
     const salt=crypto.getRandomValues(new Uint8Array(32)),iv=crypto.getRandomValues(new Uint8Array(12));
     const archive={type:ARCHIVE,kdf:'HKDF-SHA256/entropy256',salt:hex(salt),iv:hex(iv),ciphertext:''};
-    archive.ciphertext=hex(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:header(archive),tagLength:128},await archiveKey(entropy,salt),plaintext));
+    archive.ciphertext=hex(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:header(archive),tagLength:128},await archiveKey(entropy,salt,ARCHIVE),plaintext));
     return archive;
   } finally {entropy.fill(0);plaintext?.fill(0);}
 }
 export async function openChatArchive(phrase,input){
-  assert(keysAre(input,['type','kdf','salt','iv','ciphertext'])&&input.type===ARCHIVE&&input.kdf==='HKDF-SHA256/entropy256','Unsupported chat archive.');
+  assert(keysAre(input,['type','kdf','salt','iv','ciphertext'])&&isChatArchiveType(input.type)&&input.kdf==='HKDF-SHA256/entropy256','Unsupported chat archive.');
   assert(typeof input.salt==='string'&&/^[0-9a-f]{64}$/.test(input.salt)&&typeof input.iv==='string'&&/^[0-9a-f]{24}$/.test(input.iv),'Invalid archive header.');
   assert(typeof input.ciphertext==='string'&&input.ciphertext.length>=32&&input.ciphertext.length<=(MAX_BYTES+16)*2&&/^(?:[0-9a-f]{2})+$/.test(input.ciphertext),'Invalid archive size or encoding.');
   const archive=structuredClone(input),entropy=entropyOf(phrase);
   let plaintext;
   try {
-    try {plaintext=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(archive.iv),additionalData:header(archive),tagLength:128},await archiveKey(entropy,unhex(archive.salt)),unhex(archive.ciphertext)));}
+    try {plaintext=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(archive.iv),additionalData:header(archive),tagLength:128},await archiveKey(entropy,unhex(archive.salt),archive.type),unhex(archive.ciphertext)));}
     catch {throw Error('The recovery phrase or archive is incorrect.');}
     const input=JSON.parse(dec.decode(plaintext));
     const identity=await identityFromEntropy(entropy,input.profile?.name);
-    const snapshot=await validateChatSnapshot(identity,input);
+    const snapshot=await validateChatSnapshot(identity,input,archive.type===ARCHIVE);
     identity.profile=snapshot.profile;
     return {identity,contacts:snapshot.contacts,messages:snapshot.messages,recovery:{scope:'chat-only',financialState:'not-restored'}};
   } finally {entropy.fill(0);plaintext?.fill(0);}

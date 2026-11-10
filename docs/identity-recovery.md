@@ -1,3 +1,11 @@
+## Same-ID archives and delivery receipts
+
+The recovery page accepts same-ID chat archives and continues with the original Lenz ID in an empty browser. New replies save on that device. Re-export uses the same recovery phrase. Existing accounts cannot be replaced by an import.
+
+New archives use `lenz/chat-archive/v2` and preserve verified outgoing acknowledgements and incoming receipts prepared for sharing. Receipt validation binds the signature, direction, message ID and exact encrypted packet. Version 1 remains readable with its strict packet-only schema. Same-ID automatic backups merge receipt changes across devices.
+
+Legacy successor archives retain their format. Old-ID receipt history is not migrated; new messages written by the recovered successor use v2 within the recovered-backup bundle. Chat recovery does not restore financial authority or settlement state.
+
 # Identity and chat recovery
 
 A generated 24-word Lenz phrase recreates the same P-256 signing and encryption

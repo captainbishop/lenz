@@ -23,22 +23,26 @@ export function createChatRestorer({read=readState,update=updateState}={}){
     const restored=await readChatBackup(phrase,file),identity=structuredClone(restored.identity);
     identity.access=RECOVERED_CHAT;
     const value={sourceProfile:restored.sourceProfile,contacts:restored.contacts,history:restored.history};
-    const key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']),iv=crypto.getRandomValues(new Uint8Array(12));
-    const plaintext=bytes(value);let ciphertext;
-    try{ciphertext=hex(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(identity.profile.id,restored.sourceProfile.id)},key,plaintext));}finally{plaintext.fill(0);}
-    const recoveredChat={type:HISTORY,sourceId:restored.sourceProfile.id,link:structuredClone(restored.link),key,iv:hex(iv),ciphertext,archive:structuredClone(restored.archive)};
+    let recoveredChat=null;
+    if(restored.link){
+      const key=await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']),iv=crypto.getRandomValues(new Uint8Array(12));
+      const plaintext=bytes(value);let ciphertext;
+      try{ciphertext=hex(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(identity.profile.id,restored.sourceProfile.id)},key,plaintext));}finally{plaintext.fill(0);}
+      recoveredChat={type:HISTORY,sourceId:restored.sourceProfile.id,link:structuredClone(restored.link),key,iv:hex(iv),ciphertext,archive:structuredClone(restored.archive)};
+    }
     const previewHistory=structuredClone(restored.history);
     for(const {packet} of restored.messages??[]){const peer=restored.contacts.find(p=>p.id===(packet.from===identity.profile.id?packet.to:packet.from));previewHistory.push({packet,payload:await openMessage(identity,peer,packet)});}
     let active=true;
     return {
-      preview:{...structuredClone(value),history:previewHistory,ownIds:[restored.sourceProfile.id,identity.profile.id]},canInstall:empty(await read()),
+      preview:{...structuredClone(value),history:previewHistory,ownIds:[restored.sourceProfile.id,identity.profile.id]},canInstall:empty(await read()),identityChanged:identity.profile.id!==restored.sourceProfile.id,
       cancel(){active=false;},
       async install(){
         assert(active,'Open the backup again before restoring.');
         return update(state=>{
           assert(active,'Restore was cancelled.');
           assert(empty(state),'This browser already has account data. Use an empty browser to restore chat.');
-          state.identity=structuredClone(identity);state.contacts=structuredClone(restored.contacts);state.messages=structuredClone(restored.messages??[]);state.recoveredChat=structuredClone(recoveredChat);
+          state.identity=structuredClone(identity);state.contacts=structuredClone(restored.contacts);state.messages=structuredClone(restored.messages??[]);
+          if(recoveredChat)state.recoveredChat=structuredClone(recoveredChat);
           return structuredClone(identity.profile);
         });
       },

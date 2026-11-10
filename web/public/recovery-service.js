@@ -1,6 +1,6 @@
 import {readState} from './chat-store.js';
 import {assert,keysAre,openMessage} from './peer-crypto.js';
-import {createRecoverableIdentity,sealChatArchive,openChatArchive} from './identity-recovery.js';
+import {createRecoverableIdentity,sealChatArchive,openChatArchive,isChatArchiveType} from './identity-recovery.js';
 import {sealLegacyChatArchive,openLegacyChatArchive} from './legacy-recovery.js';
 import {isRecoveredChat} from './chat-access.js';
 const BUNDLE='lenz/recovered-chat-backup/v1',MAX_FILE=16_001_024;
@@ -14,7 +14,7 @@ export async function prepareChatBackup(savedPhrase){
     const p=record.packet,peer=peers.get(p.from===state.identity.profile.id?p.to:p.from);assert(peer,'A message has no matching contact.');
     const payload=await openMessage(state.identity,peer,p);
     if(payload.kind==='chat'){
-      assert(keysAre(payload,['kind','text']),'Unsupported chat fields.');messages.push({packet:p});
+      assert(keysAre(payload,['kind','text']),'Unsupported chat fields.');messages.push(isRecoveredChat(state.identity)?structuredClone(record):{packet:p});
     }else{
       assert(['lenz-near-payment-v1','trade-offer','trade-agreed','trade-payment'].includes(payload.kind),'Unsupported message type.');excluded++;
     }
@@ -22,11 +22,11 @@ export async function prepareChatBackup(savedPhrase){
   if(isRecoveredChat(state.identity)){
     assert(typeof savedPhrase==='string'&&savedPhrase.trim(),'Enter the Lenz phrase used to restore this account.');
     const current=await sealChatArchive(savedPhrase,{profile:state.identity.profile,contacts:state.contacts,messages});
-    const archive={type:BUNDLE,legacy:state.recoveredChat.archive,current};
-    const restored=await openBundle(savedPhrase,archive);
+    const archive=state.recoveredChat?{type:BUNDLE,legacy:state.recoveredChat.archive,current}:current;
+    const restored=state.recoveredChat?await openBundle(savedPhrase,archive):await openChatArchive(savedPhrase,archive);
     assert(restored.identity.profile.id===state.identity.profile.id,'Backup does not match this account.');
     assert(new TextEncoder().encode(JSON.stringify(archive)).length<=MAX_FILE,'Backup exceeds the 16 MB limit.');
-    return {phrase:savedPhrase.trim().toLowerCase().split(/\s+/).join(' '),archive,name:state.identity.profile.name,contacts:restored.contacts.length,messages:restored.history.length+messages.length,excluded};
+    return {phrase:savedPhrase.trim().toLowerCase().split(/\s+/).join(' '),archive,name:state.identity.profile.name,contacts:restored.contacts.length,messages:(restored.history?.length??0)+messages.length,excluded};
   }
   const next=await createRecoverableIdentity(state.identity.profile.name);
   const archive=await sealLegacyChatArchive(state.identity,next.phrase,{profile:state.identity.profile,contacts:state.contacts,messages});
@@ -47,5 +47,9 @@ export async function readChatBackup(phrase,file){
   const text=await file.text();assert(new TextEncoder().encode(text).length<=MAX_FILE,'Backup is too large.');
   const archive=JSON.parse(text);
   if(archive?.type===BUNDLE)return openBundle(phrase,archive);
+  if(isChatArchiveType(archive?.type)){
+    const restored=await openChatArchive(phrase,archive);
+    return {...restored,sourceProfile:restored.identity.profile,history:[],archive};
+  }
   return {...await openLegacyChatArchive(phrase,archive),archive};
 }

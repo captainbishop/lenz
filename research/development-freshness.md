@@ -1,3 +1,13 @@
+# Same-ID chat recovery and receipts, November 10, 2026
+
+The recovery page installs same-ID chat archives in an empty browser and re-exports new conversations with the existing phrase. Version 2 archives and automatic backups preserve verified delivery receipts; version 1 and legacy successor readers remain supported. Receipt-only changes synchronize without repeated uploads. Financial authority is excluded.
+
+The isolated candidate passed 53 protocol tests, five main recovery browser groups, 13 automatic-backup groups and one identity browser group. Verification detected 27 guard alterations. Main recovery retained receipts after a complete offline browser restart. Fifteen read-only preview frames and signed receipts match a fresh replay of the preceding commit; existing videos and posters retain their earlier layouts. The source-bound record is web/chat-recovery-verification.json.
+
+The root worker caches the receipt dependency graph. A separate browser regression opens a receipt-bearing archive offline after only that worker is installed; removing the dependencies reproduces the failure. Its unused generated proof runtime uses inert fixtures.
+
+Physical devices, cloud passkey transfer and financial recovery remain unverified.
+
 # Durable executor recovery and receiving service, November 9, 2026
 
 The NEAR testnet executor retains exact signed transactions across interrupted

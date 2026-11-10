@@ -5,8 +5,9 @@ import {createAccountBackup,openAccountBackup,accountChatSnapshot} from './accou
 import {createChatRestorer} from './chat-restore.js';
 import {RECOVERED_CHAT} from './chat-access.js';
 import {unlockLocalBackup} from './account-keys.js';
-import {stageIdentityRecovery} from './identity-recovery.js';
+import {stageIdentityRecovery,isChatArchiveType} from './identity-recovery.js';
 const empty=s=>keysAre(s,['identity','contacts','messages'])&&s.identity===null&&s.contacts.length===0&&s.messages.length===0;
+const receiptOrder=packet=>JSON.stringify([packet.id,packet.iv,packet.ciphertext,packet.signature]);
 const makeSync=(m,revision=0,hash='')=>({type:'lenz/account-sync/v1',accountId:m.accountId,authority:m.authority,backupKey:m.backupKey,deviceKey:m.deviceKey,phraseBox:m.phraseBox,revision,digest:hash,version:1,savedVersion:0,pending:null,status:'pending',savedAt:null});
 export async function accountRequest(sync,operation,{archive=null,expected=0,previous=''}={},fetcher=fetch){
   async function post(path,body){const r=await fetcher('/api/accounts/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store',signal:AbortSignal.timeout(15000)}),value=await r.json();if(!r.ok)throw Object.assign(Error(value.error??'Backup is unavailable.'),{code:value.code,status:r.status});return value;}
@@ -20,7 +21,7 @@ export async function setUpAccount(material,expectedIdentity=null){
 export async function retrieveAccount(material){
   assert(empty(await readState()),'This browser already has an account.');
   const result=await accountRequest(material,'read'),value=await openAccountBackup(material,result),sync=makeSync(material,result.revision,result.digest);sync.savedVersion=1;sync.status='saved';sync.savedAt=result.savedAt;
-  if(value.chat.type==='lenz/chat-archive/v1'){
+  if(isChatArchiveType(value.chat.type)){
     await updateState(state=>{assert(empty(state),'This browser already has an account.');state.identity=value.recovered.identity;state.identity.access=RECOVERED_CHAT;state.contacts=value.recovered.contacts;state.messages=value.recovered.messages;state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;},{markBackup:false});
   }else{
     const stage=createChatRestorer({read:readState,update:fn=>updateState(async state=>{const result=await fn(state);state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;return result;},{markBackup:false})});
@@ -36,15 +37,27 @@ async function reconcileBackup(sync,{request,metadata}){
   const remote=await openAccountBackup(material,latest);material.phrase='';
   await metadata(async state=>{
     const current=state.accountSync;assert(current?.accountId===sync.accountId&&current.revision===sync.revision,'Account changed during synchronization.');
-    assert(remote.chat.type==='lenz/chat-archive/v1'&&!state.recoveredChat&&remote.recovered.identity.profile.id===state.identity.profile.id,'These device histories need a verified transfer.');
+    assert(isChatArchiveType(remote.chat.type)&&!state.recoveredChat&&remote.recovered.identity.profile.id===state.identity.profile.id,'These device histories need a verified transfer.');
     const dirty=current.version!==current.savedVersion||!!current.pending;
     const contacts=new Map(remote.recovered.contacts.map(p=>[p.id,p]));for(const p of state.contacts)if(dirty||!contacts.has(p.id))contacts.set(p.id,p);
-    const messages=new Map(remote.recovered.messages.map(r=>[r.packet.id,r]));for(const r of state.messages){const earlier=messages.get(r.packet.id);assert(!earlier||JSON.stringify(earlier.packet)===JSON.stringify(r.packet),'Message histories disagree.');messages.set(r.packet.id,r);}
+    const messages=new Map(remote.recovered.messages.map(r=>[r.packet.id,r]));
+    for(const record of state.messages){
+      const remoteRecord=messages.get(record.packet.id);
+      assert(!remoteRecord||JSON.stringify(remoteRecord.packet)===JSON.stringify(record.packet),'Message histories disagree.');
+      const merged={...remoteRecord,...record};
+      // Two devices may prepare different valid receipts. Keep the same existing
+      // packet on both devices so reconciliation does not cause repeated uploads.
+      for(const field of ['receiptToShare','receivedReceipt']){
+        const remoteReceipt=remoteRecord?.[field],localReceipt=record[field];
+        if(remoteReceipt&&(!localReceipt||receiptOrder(remoteReceipt)<=receiptOrder(localReceipt)))merged[field]=remoteReceipt;
+      }
+      messages.set(record.packet.id,merged);
+    }
     const updates=new Map(remote.contactRecoveries.map(link=>[link.from.id,link]));for(const link of state.contactRecoveries??[]){const earlier=updates.get(link.from.id);assert(!earlier||earlier.to.id===link.to.id,'Contact updates disagree.');updates.set(link.from.id,link);}
     assert(contacts.size<=500&&messages.size<=1000,'Combined conversations exceed the backup limit.');
     state.contacts=[...contacts.values()];state.messages=[...messages.values()];state.contactRecoveries=[...updates.values()];
     if(!dirty)state.identity.profile=remote.recovered.identity.profile;
-    const contents=({profile,contacts,messages},links)=>JSON.stringify([profile,[...contacts].sort((a,b)=>a.id.localeCompare(b.id)),messages.map(r=>r.packet).sort((a,b)=>a.id.localeCompare(b.id)),[...links].sort((a,b)=>a.from.id.localeCompare(b.from.id))]);
+    const contents=({profile,contacts,messages},links)=>JSON.stringify([profile,[...contacts].sort((a,b)=>a.id.localeCompare(b.id)),messages.map(r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null]).sort((a,b)=>a[0].id.localeCompare(b[0].id)),[...links].sort((a,b)=>a.from.id.localeCompare(b.from.id))]);
     const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages},remote.contactRecoveries);
     current.revision=latest.revision;current.digest=latest.digest;current.pending=null;current.version++;current.status=changed?'pending':'saved';current.savedAt=latest.savedAt;if(!changed)current.savedVersion=current.version;
   });

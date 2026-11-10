@@ -9,8 +9,9 @@ function receiptTerms(payload) {
     typeof payload.messageId === 'string' && typeof payload.messageHash === 'string' &&
     /^[0-9a-f]{32}$/.test(payload.messageId) && /^[0-9a-f]{64}$/.test(payload.messageHash), 'Invalid delivery receipt.');
 }
-async function checkReceipt(state, record, packet) {
+export async function validateDeliveryReceipt(state, record, packet) {
   const original = record.packet;
+  assert(packet && typeof packet === 'object', 'Invalid delivery receipt.');
   assert(packet.from === original.to && packet.to === original.from, 'This receipt is from a different recipient.');
   const peer = state.contacts.find(c => c.id === (original.from === state.identity.profile.id ? original.to : original.from));
   assert(peer, 'Add and verify the contact first.');
@@ -28,7 +29,7 @@ export async function prepareDeliveryReceipt(state, messageId) {
   assert(peer, 'Add and verify the sender first.');
   const payload = await openMessage(state.identity, peer, record.packet);
   assert(supported(payload), 'Receipts are available for messages and tUSD payments.');
-  if (record.receiptToShare) { await checkReceipt(state, record, record.receiptToShare); return record.receiptToShare; }
+  if (record.receiptToShare) { await validateDeliveryReceipt(state, record, record.receiptToShare); return record.receiptToShare; }
   const packet = await sealMessage(state.identity, peer, {kind: DELIVERY_RECEIPT, messageId, messageHash: await packetHash(record.packet)});
   record.receiptToShare = packet;
   return packet;
@@ -39,17 +40,17 @@ export async function acceptDeliveryReceipt(state, packet, {financialOnly = fals
   const payload = await openMessage(state.identity, peer, packet); receiptTerms(payload);
   const record = state.messages.find(r => r.packet.id === payload.messageId);
   assert(record && record.packet.from === state.identity.profile.id, 'The original outgoing file is not saved on this device.');
-  const original = await checkReceipt(state, record, packet);
+  const original = await validateDeliveryReceipt(state, record, packet);
   if (financialOnly) assert(isNearPayment(original), 'Open this message receipt in Conversations.');
   if (isNearPayment(original)) assert(nearContract && original.contract === nearContract, 'This receipt belongs to another network or contract.');
   const duplicate = !!record.receivedReceipt;
-  if (duplicate) await checkReceipt(state, record, record.receivedReceipt);
+  if (duplicate) await validateDeliveryReceipt(state, record, record.receivedReceipt);
   else record.receivedReceipt = packet;
   return {duplicate, contactId: peer.id, kind: DELIVERY_RECEIPT};
 }
 export async function deliveryAcknowledged(state, record) {
   if (!record?.receivedReceipt) return false;
   assert(record.packet.from === state.identity.profile.id, 'Only an outgoing file can have a received receipt.');
-  await checkReceipt(state, record, record.receivedReceipt);
+  await validateDeliveryReceipt(state, record, record.receivedReceipt);
   return true;
 }

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createIdentity,sealMessage,openMessage,signValue} from './public/peer-crypto.js';
 import {createRecoverableIdentity,sealChatArchive} from './public/identity-recovery.js';
+import {prepareDeliveryReceipt,acceptDeliveryReceipt,deliveryAcknowledged} from './public/delivery-receipts.js';
 import {sealLegacyChatArchive,openLegacyChatArchive} from './public/legacy-recovery.js';
 const {fundingRequest,makeNearPayment,acceptNearPayment,emptyNearVault,compressed,saveNearVault,readNearVault}=await import(process.env.LENZ_RESTORE_NEAR_MODULE||'./public/near-protocol.js');
 import {makeAgreement,signAgreement} from './public/peer-exchange.js';
@@ -22,6 +23,15 @@ function store(initial=empty()){
  let state=structuredClone(initial),tail=Promise.resolve();
  return {read:async()=>structuredClone(state),update:operation=>{const job=tail.then(async()=>{const next=structuredClone(state),result=await operation(next);state=next;return result;});tail=job.catch(()=>{});return job;}};
 }
+
+test('direct same-ID restoration keeps verified message acknowledgements',async()=>{
+ const owner=await createRecoverableIdentity('Amina'),peer=await createIdentity('Bola'),packet=await sealMessage(owner.identity,peer.profile,{kind:'chat',text:'Already acknowledged.'});
+ const state={identity:owner.identity,contacts:[peer.profile],messages:[{packet}]},receiver={identity:peer,contacts:[owner.identity.profile],messages:[{packet}]};
+ await acceptDeliveryReceipt(state,await prepareDeliveryReceipt(receiver,packet.id));
+ const archive=await sealChatArchive(owner.phrase,{profile:owner.identity.profile,contacts:state.contacts,messages:state.messages}),s=store();
+ await(await createChatRestorer(s)(owner.phrase,new File([JSON.stringify(archive)],'backup.json'))).install();
+ const restored=await s.read();assert.equal(restored.identity.access,RECOVERED_CHAT);assert.equal(await deliveryAcknowledged(restored,restored.messages[0]),true);
+});
 test('restoration installs usable successor chat and encrypted history in an empty account',async()=>{
  const f=await fixture(),s=store(),review=await createChatRestorer(s)(f.next.phrase,f.file);
  assert(review.canInstall);assert.equal((await s.read()).identity,null);review.preview.contacts[0].name='Edited preview';review.preview.history[0].payload.text='Edited preview';

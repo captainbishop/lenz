@@ -1,18 +1,18 @@
 import {assert,bytes,hex,unhex,openMessage,keysAre,digest} from './peer-crypto.js';
-import {stageIdentityRecovery,sealChatArchive,openChatArchive} from './identity-recovery.js';
+import {stageIdentityRecovery,sealChatArchive,openChatArchive,isChatArchiveType} from './identity-recovery.js';
 import {sealLegacyChatArchive,validateRecoveryLink} from './legacy-recovery.js';
 import {unlockLocalBackup} from './account-keys.js';
 import {readChatBackup} from './recovery-service.js';
 export const ACCOUNT_BACKUP='lenz/account-backup/v1';
 const terms=a=>bytes([a.type,a.accountId,a.revision,a.previous]);
-export async function accountChatSnapshot(state){
+export async function accountChatSnapshot(state,{receipts=true}={}){
   const messages=[];
-  for(const {packet} of state.messages){const peer=state.contacts.find(p=>p.id===(packet.from===state.identity.profile.id?packet.to:packet.from));assert(peer,'A saved message has no contact.');const payload=await openMessage(state.identity,peer,packet);if(payload.kind==='chat'){assert(keysAre(payload,['kind','text']),'Unsupported chat message.');messages.push({packet});}else assert(['lenz-near-payment-v1','trade-offer','trade-agreed','trade-payment'].includes(payload.kind),'Unsupported saved message.');}
+  for(const record of state.messages){const {packet}=record,peer=state.contacts.find(p=>p.id===(packet.from===state.identity.profile.id?packet.to:packet.from));assert(peer,'A saved message has no contact.');const payload=await openMessage(state.identity,peer,packet);if(payload.kind==='chat'){assert(keysAre(payload,['kind','text']),'Unsupported chat message.');messages.push(receipts?structuredClone(record):{packet});}else assert(['lenz-near-payment-v1','trade-offer','trade-agreed','trade-payment'].includes(payload.kind),'Unsupported saved message.');}
   return {profile:state.identity.profile,contacts:state.contacts,messages};
 }
 export async function createAccountBackup(state){
   const sync=state.accountSync,phrase=await unlockLocalBackup(sync),own=await stageIdentityRecovery(phrase,state.identity.profile.name);
-  const snapshot=await accountChatSnapshot(state);let chat;
+  const snapshot=await accountChatSnapshot(state,{receipts:own.profile.id===state.identity.profile.id});let chat;
   if(own.profile.id!==state.identity.profile.id)chat=await sealLegacyChatArchive(state.identity,phrase,snapshot);
   else{const current=await sealChatArchive(phrase,snapshot);chat=state.recoveredChat?{type:'lenz/recovered-chat-backup/v1',legacy:state.recoveredChat.archive,current}:current;}
   const archive={type:ACCOUNT_BACKUP,accountId:sync.accountId,revision:sync.revision+1,previous:sync.digest,iv:hex(crypto.getRandomValues(new Uint8Array(12))),ciphertext:''};
@@ -27,7 +27,7 @@ export async function openAccountBackup(material,result){
   const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(a.iv),additionalData:terms(a)},material.backupKey,unhex(a.ciphertext));let value;
   try{value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(plain));}finally{new Uint8Array(plain).fill(0);}
   assert(keysAre(value,['chat','contactRecoveries'])&&Array.isArray(value.contactRecoveries)&&value.contactRecoveries.length<=500,'Invalid account contents.');
-  const recovered=value.chat.type==='lenz/chat-archive/v1'?await openChatArchive(material.phrase,value.chat):await readChatBackup(material.phrase,new File([JSON.stringify(value.chat)],'backup.json'));
+  const recovered=isChatArchiveType(value.chat.type)?await openChatArchive(material.phrase,value.chat):await readChatBackup(material.phrase,new File([JSON.stringify(value.chat)],'backup.json'));
   assert(recovered.identity.profile.id===material.identity.profile.id,'Backup identity does not match this passkey.');
   const roots=new Set();for(const link of value.contactRecoveries){assert(recovered.contacts.some(p=>p.id===link.from?.id)&&recovered.contacts.some(p=>p.id===link.to?.id)&&!roots.has(link.from.id),'Invalid saved contact update.');await validateRecoveryLink(link,link.from.id);roots.add(link.from.id);}
   return {...value,recovered};

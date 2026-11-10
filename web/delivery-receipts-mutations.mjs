@@ -8,7 +8,7 @@ const mutations=[
   ['exact file binding','payload.messageHash === await packetHash(original)','true'],
   ['wallet receipt scope',"if (financialOnly) assert(isNearPayment(original), 'Open this message receipt in Conversations.');",''],
   ['payment contract binding',"if (isNearPayment(original)) assert(nearContract && original.contract === nearContract, 'This receipt belongs to another network or contract.');",''],
-  ['stored receipt verification','await checkReceipt(state, record, record.receivedReceipt);\n  return true;','return true;'],
+  ['stored receipt verification','await validateDeliveryReceipt(state, record, record.receivedReceipt);\n  return true;','return true;'],
 ];
 const results=[];
 for(const[guard,from,to]of mutations){
@@ -26,5 +26,5 @@ for(const[guard,from,to]of mutations){
     assert.equal(run.error,undefined);assert.notEqual(run.status,0,guard+' survived');assert(!/SyntaxError|ERR_MODULE_NOT_FOUND/.test(run.stdout+run.stderr));assert.match(run.stdout,/tests 8/);results.push({guard,rejected:true});
   }finally{await rm(directory,{recursive:true,force:true});}
 }
-await writeFile(new URL('delivery-receipts-mutations.json',import.meta.url),JSON.stringify({checkedAt:new Date().toISOString(),results},null,2)+'\n');
+await writeFile(process.env.LENZ_RECEIPT_MUTATIONS_REPORT??new URL('delivery-receipts-mutations.json',import.meta.url),JSON.stringify({checkedAt:new Date().toISOString(),results},null,2)+'\n');
 console.log(`PASS ${results.length} removed receipt guards caused behavioral test failures.`);

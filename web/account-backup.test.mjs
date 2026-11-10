@@ -10,6 +10,7 @@ const {accountKeys,unlockLocalBackup,ACCOUNT_REQUEST}=await import(process.env.L
 const {createAccountBackup,openAccountBackup}=await import(process.env.LENZ_ACCOUNT_ARCHIVE||'./public/account-backup.js');
 const {createBackupRunner}=await import(process.env.LENZ_ACCOUNT_SYNC||'./public/account-sync.js');
 import {createIdentity,sealMessage,openMessage,signValue,digest} from './public/peer-crypto.js';
+import {prepareDeliveryReceipt,acceptDeliveryReceipt,deliveryAcknowledged} from './public/delivery-receipts.js';
 async function fixture(){const secret=crypto.getRandomValues(new Uint8Array(32)),m=await accountKeys(secret.buffer.slice(0),'Amina'),peer=await createIdentity('Bola'),packet=await sealMessage(peer,m.identity.profile,{kind:'chat',text:'Never readable by the backup host.'});const state={identity:m.identity,contacts:[peer.profile],messages:[{packet}],nearBox:{ciphertext:'financial-record'},pendingOrders:['retain'],accountSync:{accountId:m.accountId,authority:m.authority,backupKey:m.backupKey,deviceKey:m.deviceKey,phraseBox:m.phraseBox,revision:0,digest:'',version:1,savedVersion:0,pending:null,status:'pending'}};return {secret,m,peer,state};}
 async function result(archive){return {archive,revision:archive.revision,digest:await digest(archive),savedAt:Date.now()};}
 test('passkey material derives stable separate identities and keeps backup keys nonextractable',async()=>{
@@ -20,6 +21,12 @@ test('passkey material derives stable separate identities and keeps backup keys 
 test('encrypted account snapshots restore the same profile and chat while excluding financial state',async()=>{
  const f=await fixture(),archive=await createAccountBackup(f.state);assert(!JSON.stringify(archive).includes('Never readable'));assert(!JSON.stringify(archive).includes(f.m.identity.profile.id));const opened=await openAccountBackup(f.m,await result(archive));assert.equal(opened.recovered.identity.profile.id,f.state.identity.profile.id);assert.equal((await openMessage(opened.recovered.identity,f.peer.profile,opened.recovered.messages[0].packet)).text,'Never readable by the backup host.');assert(!('nearBox'in opened.recovered));assert(!('pendingOrders'in opened.recovered));
  const other=await accountKeys(crypto.getRandomValues(new Uint8Array(32)).buffer);await assert.rejects(openAccountBackup(other,await result(archive)),/another account/);
+});
+
+test('automatic same-ID backups preserve the exact prepared receipt',async()=>{
+ const f=await fixture(),receipt=await prepareDeliveryReceipt(f.state,f.state.messages[0].packet.id);
+ const opened=await openAccountBackup(f.m,await result(await createAccountBackup(f.state)));
+ assert.deepEqual(await prepareDeliveryReceipt(opened.recovered,opened.recovered.messages[0].packet.id),receipt);
 });
 test('account ciphertext binds identity, revision, previous digest and authenticated contents',async()=>{
  const f=await fixture(),original=await createAccountBackup(f.state);
@@ -67,6 +74,54 @@ test('concurrent account backups merge verified chat messages without replacing 
  await local.update(async state=>{state.messages.push({packet:await sealMessage(state.identity,f.peer.profile,{kind:'chat',text:'Only on this device.'})});state.accountSync.version++;});let writes=0;
  const run=createBackupRunner({...local,request:async(sync,op,pending)=>{if(op==='read')return newer;if(!writes++)throw Object.assign(Error('Newer backup'),{code:'CONFLICT'});assert.equal(pending.expected,1);return result(pending.archive);}});
  await run();let state=await local.read();assert.equal(state.messages.length,3);assert.equal(state.accountSync.status,'pending');assert.deepEqual(state.nearBox,f.state.nearBox);assert.deepEqual(state.pendingOrders,f.state.pendingOrders);await run();state=await local.read();assert.equal(state.accountSync.status,'saved');assert.equal(state.accountSync.revision,2);
+});
+
+test('an idle device merges a receipt for an existing message and preserves local receipts',async()=>{
+ const f=await fixture(),local=memory(f.state),remote=structuredClone(f.state);
+ const outgoing=await sealMessage(f.state.identity,f.peer.profile,{kind:'chat',text:'Receipt arrives on another device.'});
+ await local.update(state=>state.messages.push({packet:outgoing}));remote.messages.push({packet:outgoing});
+ const localReceipt=await local.update(state=>prepareDeliveryReceipt(state,state.messages[0].packet.id));
+ const peer={identity:f.peer,contacts:[f.state.identity.profile],messages:[{packet:outgoing}]};
+ await acceptDeliveryReceipt(remote,await prepareDeliveryReceipt(peer,outgoing.id));
+ const newer=await result(await createAccountBackup(remote));
+ await local.update(state=>{state.accountSync.savedVersion=state.accountSync.version;state.accountSync.status='saved';});
+ const run=createBackupRunner({...local,request:async()=>newer});await run();const after=await local.read();
+ assert.equal(await deliveryAcknowledged(after,after.messages[1]),true);
+ assert.equal(after.messages[0].receiptToShare.id,localReceipt.id);
+ assert.equal(after.accountSync.status,'pending');
+ assert.deepEqual(after.nearBox,f.state.nearBox);
+});
+
+test('independently prepared receipts converge across two restored devices',async()=>{
+ const f=await fixture(),one=memory(f.state),two=memory(f.state);
+ const first=await one.update(state=>prepareDeliveryReceipt(state,state.messages[0].packet.id));
+ const second=await two.update(state=>prepareDeliveryReceipt(state,state.messages[0].packet.id));
+ assert.notEqual(first.id,second.id);
+ let saved,writes=0;const request=async(sync,operation,pending)=>{
+  if(operation==='read')return saved;
+  if(pending.expected!==(saved?.revision??0))throw Object.assign(Error('Newer backup'),{code:'CONFLICT'});
+  writes++;saved=await result(pending.archive);return saved;
+ };
+ const a=createBackupRunner({...one,request}),b=createBackupRunner({...two,request});
+ for(let round=0;round<3;round++){await a();await b();}
+ const settled=writes;await a();await b();assert.equal(writes,settled,'Repeated synchronization must not keep uploading competing receipts.');
+ const left=await one.read(),right=await two.read();assert.equal(left.messages[0].receiptToShare.id,right.messages[0].receiptToShare.id);
+ assert.equal(left.accountSync.status,'saved');assert.equal(right.accountSync.status,'saved');
+});
+
+test('equivalent received receipts converge despite different JSON field order',async()=>{
+ const f=await fixture(),packet=await sealMessage(f.state.identity,f.peer.profile,{kind:'chat',text:'Same acknowledgement, different encoding.'});f.state.messages=[{packet}];
+ const peer={identity:f.peer,contacts:[f.state.identity.profile],messages:[{packet}]},receipt=await prepareDeliveryReceipt(peer,packet.id),one=memory(f.state),two=memory(f.state);
+ await one.update(state=>acceptDeliveryReceipt(state,receipt));await two.update(state=>acceptDeliveryReceipt(state,Object.fromEntries(Object.entries(receipt).reverse())));
+ let saved,writes=0;const request=async(sync,operation,pending)=>{
+  if(operation==='read')return saved;
+  if(pending.expected!==(saved?.revision??0))throw Object.assign(Error('Newer backup'),{code:'CONFLICT'});
+  writes++;saved=await result(pending.archive);return saved;
+ };
+ const a=createBackupRunner({...one,request}),b=createBackupRunner({...two,request});
+ for(let round=0;round<5;round++){await a();await b();}
+ assert.equal(writes,1,'Equivalent acknowledgements must not create further backup revisions.');
+ for(const device of [one,two]){const state=await device.read();assert.equal(state.accountSync.status,'saved');assert.equal(await deliveryAcknowledged(state,state.messages[0]),true);}
 });
 test('invalid or mixed-history conflicts retain the pending archive and original financial records',async()=>{
  for(const mode of ['tampered','legacy','rollback']){
