@@ -43,10 +43,11 @@ for(const worker of ['chat-sw.js','sw.js'])test(worker+' retains private outcome
   const response=await page.goto(base+(worker==='sw.js'?'/':'/money.html'));assert(response.fromServiceWorker());
   const imports=await page.evaluate(async()=>{
    const [inbox,outbox,spend,status,funding,transfer]=await Promise.all([import('/intents-courier.js'),import('/intents-spend-outbox.js'),import('/intents-spend.js'),import('/intents-status.js'),import('/private-funding.js'),import('/evm-transfer-service.js')]);
-   await import('/private-funding-ui.js');await import('/evm-transfer-store.js');
-   return [inbox.observeConfidentialRequest,inbox.submitConfidentialRequest,outbox.confidentialSpendOutbox.acceptReport,spend.checkConfidentialSpend,status.checkConfidentialObservation,funding.checkPrivateFunding,transfer.createTransferService].map(value=>typeof value);
+   await import('/private-funding-ui.js');await import('/evm-transfer-store.js');const account=await import('/market-account-overview.js');
+   return [inbox.observeConfidentialRequest,inbox.submitConfidentialRequest,outbox.confidentialSpendOutbox.acceptReport,spend.checkConfidentialSpend,status.checkConfidentialObservation,funding.checkPrivateFunding,transfer.createTransferService,account.marketAccountOverview].map(value=>typeof value);
   });
-  assert.deepEqual(imports,Array(7).fill('function'));
+  assert.deepEqual(imports,Array(8).fill('function'));
+  const accountStyles=await page.evaluate(async()=>{const response=await fetch('/account-overview.css');return {ok:response.ok,text:await response.text()};});assert.equal(accountStyles.ok,true);assert.match(accountStyles.text,/\.account-overview\{display:grid/);
   const fundingRows=await page.evaluate(async()=>(await import('/evm-transfer-store.js')).readTransfers());assert.equal(fundingRows[0].review.funding.terms.owner,owner);assert.equal(fundingRows[0].state,'unknown');assert.equal(fundingRows[0].review.funding.quote.signature,fundingOffer.quote.signature);
   const review=await page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview());assert.equal(review.assets[0].decimals,18);
   await page.evaluate(()=>import('/private-spend-ui.js'));assert(await page.evaluate(async()=>(await fetch('/private-spend.css')).ok));

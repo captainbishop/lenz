@@ -1,3 +1,21 @@
+# Section Account restoration, November 11, 2026
+
+Supported Spot and Perpetuals Account views reuse the existing funds summary and
+P&L panels through shared styles. Available to withdraw and Margin used
+remain in the summary. Both workers retain the shared stylesheet after restart. Explicit native-USDC history, encrypted local
+persistence, amount hiding and account/lifecycle cancellation are retained. The
+checked native catalogue supplies the history eligibility fields. Unsupported
+market histories remain unavailable.
+
+The isolated candidate passed eight accounting cases, nine section Account
+groups, 25 trading lifecycle groups and two full offline browser restarts. The
+current standalone Account separately passed seven groups after style extraction.
+Actual markets.html was inspected at desktop and phone widths in light and dark
+themes without connecting a wallet. The earlier incomplete visual fixture and
+legacy navigation timeout remain recorded in the [verification](../web/market-account-verification.json).
+No production funding, signing, settlement, refund, recovery or device capability
+is established by these checks. Existing preview recordings remain unchanged.
+
 # Borderless funding and plain-language actions, November 11, 2026
 
 Wallet adds native ETH from Ethereum, Arbitrum or Base through NEAR Intents 1Click. The selected wallet supplies the source network; amount entry survives wallet selection. Signed quotes and exact reviews are stored encrypted before a wallet prompt. Unknown attempts block repeats, and checks reconcile only the original transaction and finalized source receipt. Source confirmation never credits private funds or verifies refunds. Both offline workers retain attempts after a full browser restart.

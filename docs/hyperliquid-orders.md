@@ -81,3 +81,23 @@ Live metadata was read separately; it is not execution evidence.
 
 The MessagePack codec is pinned and built by `web/hyperliquid-tools/build.mjs`.
 EIP-712 hashing and signature recovery reuse the existing pinned ethers bundle.
+
+## Section Account views
+
+Supported Spot and Perpetuals sections have separate Markets, Trade and Account
+views. Account reuses the shared funds summary and P&L layout, with Balances,
+Positions, Open orders and History below. Switching views preserves the market
+and editable order; it does not approve an order.
+
+Trading history loads only after an explicit action. It covers available native
+USDC perpetual fills from the last 30 days, with trading fees included and funding
+payments and open-position gains excluded. Spot cost basis, builder venues and
+other collateral performance remain unavailable. Missing figures stay unknown.
+The selected address is sent to Hyperliquid for this read. History is encrypted
+on this device and scoped to its Lenz identity; it is excluded from chat backups.
+Balance hiding also removes the chart. Account changes and interrupted reads
+discard pending history.
+
+[Account verification](../web/market-account-verification.json) records tested
+boundaries. Live market reads and disposable provider tests are separate from
+real financial execution.

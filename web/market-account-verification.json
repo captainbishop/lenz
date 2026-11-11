@@ -1,0 +1,60 @@
+{
+  "verifiedAt": "2026-11-11T14:33:29.585Z",
+  "baseCommit": "ed202a6191bc458eda726ed3984f550065ef2570",
+  "scope": "Section Account layout, native USDC perpetual history and offline dependency closure",
+  "sourceFiles": {
+    "web/public/market-account-overview.js": "e39f0f7d479c5710e3ff3f4391e9e72046e16ee1998f9da82748415fb48338b3",
+    "web/market-account-overview-browser.test.cjs": "cee554d3b83326e9d0064ccfc9bc6773735f7302872eca0989a80e86cfd5e50c",
+    "web/public/account-performance.js": "7d1779c9c56374e53efe06c2b3028661bfbe93230582cdf8f4605ae1f368854c",
+    "web/account-performance.test.mjs": "0be48e46bbb25094b450a9e309c88cedec50aad60fc25b8cacd283e4d6738633",
+    "web/public/hyperliquid-account.js": "ea703e4486fc728bfd852501e39b7701c11246fcd884e440105655fd44f88e9c",
+    "web/hyperliquid-account.test.mjs": "02de0ef41516a5d1556dbe2e11484d839ab190cf976b91cd51ca65d0ddc83f63",
+    "web/public/hyperliquid-order-ui.js": "1cec584836a6fa443e8b5879ea27afdd9a4376ef8c019d680be94ca39e49f4ee",
+    "web/public/hyperliquid-order.css": "7b96d2e2b0b7e511590f8716767f2d3383751f98a5fc6076b103d705b11af002",
+    "web/hyperliquid-order-browser.test.cjs": "39f16e83eb8c73ce76aa099935422624492cf0db3c38bbe5a07665aac28e240d",
+    "web/public/hyperliquid-ui.js": "1615d3c98b6dba648894b44a95c91b080b6e181916b45b5677a3efefe0b7cc38",
+    "web/public/hyperliquid.css": "571b89eb2999a5a7130dce6a9a8da08802eb2a52fae5a7e5c1a05f8ed3b0f1cf",
+    "web/public/sw.js": "5ec67cfee60a26ffd0fecac404c8ec96a1e003a2791fe2bbd24f99bdca5996c0",
+    "web/public/chat-sw.js": "f76499129e06dba0b19575da7383e2ff9e6b929c661e231e6f1f6ff8ebd63d1b",
+    "web/public/hyperliquid-trading.js": "f2927dc69d886f14071643457e48b89bcfbfe0c83938f2db3a8c10583e9680fc",
+    "web/intents-cache-browser.test.cjs": "565a70634097700a6a49a527d6a676cb741793b38b85a57674830868ecff3d7e",
+    "web/public/account.css": "c45ae6ad401ffb820d96c843e352eeffe7518113bcbff5fdef7b6c2de6a3390b",
+    "web/public/account-overview.css": "ae7a3dbf261fa69c1287b69fd29e96cbaab2559ae4567998b02bac0be2bc881c"
+  },
+  "checks": {
+    "accounting": {
+      "passed": 8
+    },
+    "sectionAccount": {
+      "passed": 9
+    },
+    "tradingLifecycle": {
+      "passed": 25
+    },
+    "offlineRestart": {
+      "passed": 2
+    },
+    "existingAccount": {
+      "passed": 7,
+      "scope": "Current standalone Account implementation, outside this focused commit"
+    }
+  },
+  "regression": {
+    "before": "Native catalogue history button unavailable: missing venueIndex",
+    "after": "Native row from normalization and checked catalogue loads history; Spot, builder and other collateral histories remain unavailable",
+    "restoredFigures": "Available to withdraw and Margin used remain in the summary alongside performance metrics.",
+    "offlineStyles": "Shared stylesheet is cached before effective path lists are assembled; both workers return it after full offline restart."
+  },
+  "limits": [
+    "Disposable Edge profiles and simulated trading providers; no user wallet connected or financial action.",
+    "History is local encrypted data; chat backups exclude it.",
+    "P&L includes USDC perpetual trading fees and excludes funding payments and open-position gains.",
+    "Live market screens were checked separately; provider availability can change.",
+    "Physical devices, private settlement, refunds and financial recovery remain outside this verification."
+  ],
+  "retainedFailures": [
+    "Legacy market-navigation browser suite timed out; it is not claimed as passing.",
+    "An early visual probe omitted product styles and showed synthetic figures; actual markets.html was checked separately.",
+    "The initial shared stylesheet registration followed the root cache-list copies; a fresh offline reproduction failed before registration was moved."
+  ]
+}
