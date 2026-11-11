@@ -1,6 +1,7 @@
 import {WALLET_NETWORKS} from './evm-networks.js';
 import {EVM_MARKETS} from './evm-markets.js';
 import {getAddress} from './evm-vendor/address.js';
+import {checkFundingTransfer} from './private-funding.js';
 export const check=(ok,message)=>{if(!ok)throw Error(message);};
 export const uint=value=>typeof value==='string'&&/^0x(?:0|[1-9a-f][0-9a-f]*)$/i.test(value)&&value.length<=66;
 export const hash=value=>typeof value==='string'&&/^0x[0-9a-f]{64}$/.test(value);
@@ -41,7 +42,7 @@ async function tokenCheck(lease,terms){
  check(abiUint(await lease.request('eth_call',[{to:terms.asset,data:'0x70a08231'+accountWord(terms.from)},'latest']))>=q(terms.units),'Insufficient token balance.');
 }
 export function validateReview(value){
- check(exact(value,['version','terms','transaction','createdAt','expiresAt'])&&value.version===1,'Invalid transfer review.');
+ check(exact(value,['version','terms','transaction','createdAt','expiresAt',...(value?.version===3?['funding']:[])])&&[1,3].includes(value.version),'Invalid transfer review.');
  const t=value.terms;check(exact(t,['chainId','from','recipient','asset','units','to','value','data']),'Invalid transfer terms.');
  const asset=transferAssets(t.chainId).find(a=>a.id===t.asset);check(asset,'Unsupported transfer asset.');
  const rebuilt=transferTerms({chainId:t.chainId,address:t.from},{asset:t.asset,recipient:t.recipient,amount:amount(t.units,asset.decimals),publicConsent:true});
@@ -51,6 +52,7 @@ export function validateReview(value){
  for(const field of ['nonce','gas','gasPrice'])check(uint(tx[field]),'Invalid transaction '+field);
  check(q(tx.gas)>=21000n&&q(tx.gas)<=2000000n&&q(tx.gasPrice)>0n,'Invalid gas budget.');
  check(Number.isSafeInteger(value.createdAt)&&value.createdAt>0&&value.expiresAt===value.createdAt+60000,'Invalid review expiry.');
+ if(value.version===3)checkFundingTransfer(value);
  return structuredClone(value);
 }
 export async function prepareTransfer(lease,input,{now=Date.now()}={}){
@@ -66,6 +68,7 @@ export async function prepareTransfer(lease,input,{now=Date.now()}={}){
 }
 export async function recheckTransfer(lease,review,{now=Date.now()}={}){
  const r=validateReview(review);check(now>=r.createdAt&&now<r.expiresAt,'Review expired. Check the transfer again.');await identityCheck(lease,r.terms);
+ if(r.version===3)checkFundingTransfer(r,{now});
  await tokenCheck(lease,r.terms);
  check(q(await lease.request('eth_getTransactionCount',[r.terms.from,'pending']))===q(r.transaction.nonce),'Wallet activity changed. Review again.');
  check(q(await lease.request('eth_gasPrice'))<=q(r.transaction.gasPrice),'Gas price changed. Review again.');

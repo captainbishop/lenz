@@ -48,7 +48,7 @@ async function run(){
   assert.equal(await page.evaluate(async()=>(await(await import('/chat-store.js')).readState()).identity.profile.id),fixture.id);
   checks.push('offline-entry backup opens in main recovery and continues chat with the same Lenz ID, without restoring payment authority');
   assert.match(await page.locator('#messages').innerText(),/Receipt received/);
-  await page.locator('#messages').getByRole('button',{name:'Share receipt',exact:true}).click();await idle(page);
+  await page.locator('#messages').getByRole('button',{name:'Share delivery confirmation',exact:true}).click();await idle(page);
   assert.equal(await page.evaluate(async()=>(await(await import('/chat-store.js')).readState()).messages[0].receiptToShare.id),fixture.receiptId);
   if(await page.locator('#handover').isVisible())await page.locator('[data-close="handover"]').click();
   checks.push('restored messages keep their verified acknowledgement and reuse the previously prepared receipt');

@@ -1,5 +1,6 @@
 import {check,hash,validateReview,recheckTransfer,inspectTransfer} from './evm-transfer.js';
 import {readTransfers,updateTransfers,transferOpen} from './evm-transfer-store.js';
+import {checkFundingTransfer} from './private-funding.js';
 const errorText=e=>(e instanceof Error?e.message:'Wallet reply unavailable.').slice(0,240);
 export function createTransferService({read=readTransfers,update=updateTransfers,timeoutMs=60000}={}){
  async function change(id,operation){return update(rows=>{const row=rows.find(r=>r.id===id);check(row,'Saved transfer not found.');operation(row);row.updatedAt=Date.now();return structuredClone(row);});}
@@ -12,6 +13,7 @@ export function createTransferService({read=readTransfers,update=updateTransfers
   const outcome=(async()=>{
    try{
     lease.assertCurrent();check(Date.now()<review.expiresAt,'Review expired. Check again.');
+    if(review.version===3)checkFundingTransfer(review,{now:Date.now()});
     // Capture synchronous throws before treating the request as dispatched.
     dispatched=true;const transactionHash=await lease.sendTransaction(review.transaction);
     check(hash(transactionHash),'Wallet returned no usable transaction hash. Check wallet activity.');

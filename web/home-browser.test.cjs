@@ -10,7 +10,7 @@ const path = require('node:path');
     const context = await browser.newContext(), page = await context.newPage();
     page.on('pageerror', error => errors.push(error.message));
     await page.goto((process.env.LENZ_STYLE_TEST_BASE??'http://127.0.0.1:4173')+'/');
-    await page.waitForFunction(() => document.querySelector('#home-cache-status').textContent.startsWith('Homepage saved'));
+    await page.waitForFunction(() => document.querySelector('#home-cache-status').dataset.offlineState==='ready'||document.querySelector('#home-cache-status').textContent.startsWith('Homepage saved'));
     for (const [name, width, height] of [['desktop', 1280, 960], ['narrow', 375, 812]]) {
       await page.setViewportSize({ width, height });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));

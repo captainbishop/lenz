@@ -38,7 +38,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   for(const device of devices.slice(1)){await device.context.setOffline(true);await device.context.setOffline(false);await untilState(device.p,s=>s.messages.length===1);await device.p.locator('#messages .bubble').filter({hasText:'One account in three places.'}).waitFor();}
   await devices[0].p.reload();await devices[0].p.locator('#messages .bubble').filter({hasText:'One account in three places.'}).waitFor();
   const beforeReceipt=(await state(devices[0].p)).accountSync.version;
-  await devices[0].p.locator('#messages').getByRole('button',{name:'Share receipt',exact:true}).click();await devices[0].p.locator('#handover[open]').waitFor();
+  await devices[0].p.locator('#messages').getByRole('button',{name:'Share delivery confirmation',exact:true}).click();await devices[0].p.locator('#handover[open]').waitFor();
   const withReceipt=await state(devices[0].p),receiptId=withReceipt.messages[0].receiptToShare.id;
   assert(withReceipt.accountSync.version>beforeReceipt,'A receipt-only edit must schedule automatic backup.');await devices[0].p.locator('[data-close="handover"]').click();await saved(devices[0].p,withReceipt.accountSync.version);
   for(const device of devices.slice(1)){await device.context.setOffline(true);await device.context.setOffline(false);await untilState(device.p,s=>s.messages[0]?.receiptToShare?.id===receiptId);}

@@ -5,9 +5,9 @@ const chapters = [...document.querySelectorAll('[data-defi-time]')];
 const details = [
   ['Markets', 'Spot, credit and perpetuals.', 'Uniswap · Aave · Hyperliquid · Rhea'],
   ['Cross-chain routes', 'Starting asset → destination action.', 'Bridge only when the route needs it.'],
-  ['Hyperliquid', 'Orders, collateral and position exits.', 'Funding and liquidation continue offline.'],
+  ['Hyperliquid', 'Orders, collateral and position exits.', 'Holding costs and liquidation risks continue while you are offline.'],
   ['Yield', 'Staking, farming, LP ranges and claims.', 'Positions stay on their original chain.'],
-  ['Offline approval', 'A connected executor submits approved actions.', 'Encrypted requests do not hide public execution.'],
+  ['Offline approval', 'Your chosen contact goes online to submit approved actions.', 'Public transaction records remain visible.'],
 ];
 function sync() {
   const index = Math.max(0, Math.min(4, Math.floor(previewTime(video) / 6)));

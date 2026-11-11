@@ -1,4 +1,5 @@
 import {mountPrivateSpend} from './private-spend-ui.js';
+import {mountPrivateFunding} from './private-funding-ui.js';
 import { createWalletSession } from './evm-wallet.js';
 import { iconButton } from './wallet-actions.js';
 import { walletAmount } from './wallet-visibility.js';
@@ -14,11 +15,11 @@ export function mountEvmWallet() {
   const section = el('section'); section.id = 'connected-wallet'; section.className = 'connected-wallet';
   section.innerHTML = '<div class="section-heading"><h2>Connected wallet</h2><button id="evm-connect" type="button">Connect wallet</button><button id="evm-disconnect" type="button" class="secondary" hidden>Disconnect</button></div><p id="evm-intro" class="quiet">Ethereum · Arbitrum · Base</p><div id="evm-account" hidden><div class="evm-identity"><strong id="evm-network"></strong><span id="evm-address"></span><small id="evm-observed"></small></div><div class="evm-funds"><strong id="evm-balance"></strong><span>ETH</span></div><div class="evm-actions"><button id="evm-receive" type="button" class="secondary">Receive</button><button id="evm-refresh" type="button" class="secondary">Refresh</button></div></div><p id="evm-status" class="quiet" role="status"></p>';
   document.querySelector('#wallet-onboarding').before(section);
-  section.querySelector('h2').textContent='External wallet';
+  section.querySelector('h2').textContent='Your wallet';
   const dialog = el('dialog'); dialog.id = 'evm-connect-dialog'; dialog.setAttribute('aria-labelledby', 'evm-connect-title');
   dialog.innerHTML = '<div class="dialog-top"><h2 id="evm-connect-title">Connect wallet</h2><button id="evm-connect-close" type="button" class="secondary wallet-close"></button></div><p class="quiet">Connect to see your tokens and balances.</p><div id="evm-providers"></div><p id="evm-provider-empty" class="quiet">No browser wallet found. Open Lenz in a browser with your wallet installed.</p><p id="evm-connect-status" class="wallet-feedback" role="status"></p><details class="quiet"><summary>What connecting allows</summary><p>Connecting shares your address with Lenz and your wallet’s network provider to read your balance. It gives no permission to spend. You approve payments separately in your wallet.</p><p>Your recovery phrase stays in your wallet.</p></details>';
   const receive = el('dialog'); receive.id = 'evm-receive-dialog'; receive.setAttribute('aria-labelledby', 'evm-receive-title');
-  receive.innerHTML = '<div class="dialog-top"><h2 id="evm-receive-title">Receive</h2><button id="evm-receive-close" type="button" class="secondary wallet-close"></button></div><p id="evm-receive-network"></p><canvas id="evm-receive-qr" aria-label="Wallet address QR code"></canvas><p id="evm-receive-address" class="evm-address-full"></p><button id="evm-copy" type="button">Copy address</button><p class="quiet">Use this network in the sending wallet. This address does not receive offline tUSD.</p><p id="evm-receive-status" class="wallet-feedback" role="status"></p>';
+  receive.innerHTML = '<div class="dialog-top"><h2 id="evm-receive-title">Receive</h2><button id="evm-receive-close" type="button" class="secondary wallet-close"></button></div><p id="evm-receive-network"></p><canvas id="evm-receive-qr" aria-label="Wallet address QR code"></canvas><p id="evm-receive-address" class="evm-address-full"></p><button id="evm-copy" type="button">Copy address</button><p class="quiet">Send using the network shown above. This address cannot receive test dollars (tUSD).</p><p id="evm-receive-status" class="wallet-feedback" role="status"></p>';
   document.body.append(dialog, receive);
   const $ = id => document.getElementById(id);
   for (const [id, target] of [['evm-connect-close', dialog], ['evm-receive-close', receive]]) {
@@ -49,6 +50,7 @@ export function mountEvmWallet() {
   }});
   mountEvmTransfers(session);
   mountPrivateSpend(session, document.querySelector('#wallet-onboarding'));
+  mountPrivateFunding(session,{connect:async()=>{selection=null;openConnect();await new Promise(resolve=>dialog.addEventListener('close',resolve,{once:true}));return session.snapshot;}});
   mountReceivingLinks(session);
   mountNetworkControls(session, networks, next => { selection = next; openConnect(); });
   const providers = [];
@@ -84,7 +86,7 @@ export function mountEvmWallet() {
   dialog.addEventListener('cancel', cancelConnection);
   $('evm-connect-close').onclick = () => { cancelConnection(); dialog.close(); };
   dialog.addEventListener('close', () => { if (!dialog.open) cancelConnection(); });
-  $('evm-disconnect').onclick = () => session.disconnect('Disconnected here. Site permissions remain in your wallet.');
+  $('evm-disconnect').onclick = () => session.disconnect('Disconnected from Lenz. Remove site access in your wallet if needed.');
   $('evm-refresh').onclick = async () => { try { await session.refresh(); } catch {} };
   function renderReceiving(asset='native') {
     const snapshot = session.snapshot; if (!snapshot) return;

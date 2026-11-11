@@ -2,7 +2,10 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 
 for(const worker of ['chat-sw.js','sw.js'])test(worker+' retains private outcome services after a full offline restart',async()=>{
- const {fixture,managerKey,wallet,now}=await import('./intents-spend-fixture.mjs');
+ const {fixture,managerKey,wallet,now,owner,signQuote}=await import('./intents-spend-fixture.mjs');
+ const {fundingRequest}=await import('./public/private-funding.js');
+ const fundingTerms={owner,chainId:'0x1',amount:'10000000000000000',refundDeadline:new Date(now+3600000).toISOString()};
+ const fundingOffer={terms:fundingTerms,quote:signQuote({quoteRequest:fundingRequest(fundingTerms,{now}),quote:{amountIn:fundingTerms.amount,minAmountIn:fundingTerms.amount,amountOut:'9900000000000000',minAmountOut:'9900000000000000',depositAddress:'0x'+'34'.repeat(20),deadline:fundingTerms.refundDeadline,refundFee:'0',withdrawFee:'0'},timestamp:new Date(now).toISOString()})};
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'lenz-private-cache-'));let context,serving=true;const missing=[];
  const server=http.createServer(async(req,res)=>{
   const pathname=new URL(req.url,'http://localhost').pathname;
@@ -21,11 +24,15 @@ for(const worker of ['chat-sw.js','sw.js'])test(worker+' retains private outcome
    const active=registration.installing??registration.waiting??registration.active;
    if(active.state!=='activated')await new Promise((resolve,reject)=>{const changed=()=>{if(active.state==='activated')resolve();if(active.state==='redundant')reject(Error('Cache installation failed'));};active.addEventListener('statechange',changed);changed();});
   },worker);
-  await page.evaluate(async({offer,now})=>{
+  await page.evaluate(async({offer,now,fundingOffer})=>{
    Date.now=()=>now;const store=await import('/chat-store.js'),p=await import('/peer-crypto.js');
    await store.updateState(async s=>{s.identity=await p.createIdentity('Offline owner');s.contacts=[(await p.createIdentity('Offline executor')).profile];});
    const s=await store.readState();await(await import('/private-spend-review.js')).savePrivateReview(offer,s.contacts[0],s.identity.profile.id,{token:{assetId:'nep141:eth.omft.near',blockchain:'eth',symbol:'ETH',decimals:18}});
-  },{offer:fixture(),now});
+   const transfer=await import('/evm-transfer.js'),lease={identity:{address:fundingOffer.terms.owner,chainId:'0x1'},assertCurrent(){},async request(method){return {eth_accounts:[fundingOffer.terms.owner],eth_chainId:'0x1',eth_getTransactionCount:'0x0',eth_gasPrice:'0x3b9aca00',eth_estimateGas:'0x5208',eth_getBalance:'0x56bc75e2d63100000'}[method];}};
+   const baseReview=await transfer.prepareTransfer(lease,{asset:'native',recipient:fundingOffer.quote.quote.depositAddress,amount:'0.01',publicConsent:true});
+   const fundingReview=transfer.validateReview({...baseReview,version:3,funding:fundingOffer});
+   await(await import('/evm-transfer-store.js')).updateTransfers(rows=>rows.push({id:crypto.randomUUID(),review:fundingReview,state:'unknown',hash:null,createdAt:now,updatedAt:now,observation:null,error:'Wallet reply lost'}));
+  },{offer:fixture(),now,fundingOffer});
   await context.close();context=null;server.closeAllConnections();await new Promise(resolve=>server.close(resolve));serving=false;
   context=await open();await context.setOffline(true);page=context.pages()[0];
   await page.exposeFunction('offlinePrivateSignature',hex=>wallet.signMessage(Buffer.from(hex.slice(2),'hex')));
@@ -35,13 +42,16 @@ for(const worker of ['chat-sw.js','sw.js'])test(worker+' retains private outcome
   },{owner:wallet.address.toLowerCase(),now});
   const response=await page.goto(base+(worker==='sw.js'?'/':'/money.html'));assert(response.fromServiceWorker());
   const imports=await page.evaluate(async()=>{
-   const [inbox,outbox,spend,status]=await Promise.all([import('/intents-courier.js'),import('/intents-spend-outbox.js'),import('/intents-spend.js'),import('/intents-status.js')]);
-   return [inbox.observeConfidentialRequest,inbox.submitConfidentialRequest,outbox.confidentialSpendOutbox.acceptReport,spend.checkConfidentialSpend,status.checkConfidentialObservation].map(value=>typeof value);
+   const [inbox,outbox,spend,status,funding,transfer]=await Promise.all([import('/intents-courier.js'),import('/intents-spend-outbox.js'),import('/intents-spend.js'),import('/intents-status.js'),import('/private-funding.js'),import('/evm-transfer-service.js')]);
+   await import('/private-funding-ui.js');await import('/evm-transfer-store.js');
+   return [inbox.observeConfidentialRequest,inbox.submitConfidentialRequest,outbox.confidentialSpendOutbox.acceptReport,spend.checkConfidentialSpend,status.checkConfidentialObservation,funding.checkPrivateFunding,transfer.createTransferService].map(value=>typeof value);
   });
-  assert.deepEqual(imports,Array(5).fill('function'));
+  assert.deepEqual(imports,Array(7).fill('function'));
+  const fundingRows=await page.evaluate(async()=>(await import('/evm-transfer-store.js')).readTransfers());assert.equal(fundingRows[0].review.funding.terms.owner,owner);assert.equal(fundingRows[0].state,'unknown');assert.equal(fundingRows[0].review.funding.quote.signature,fundingOffer.quote.signature);
   const review=await page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview());assert.equal(review.assets[0].decimals,18);
   await page.evaluate(()=>import('/private-spend-ui.js'));assert(await page.evaluate(async()=>(await fetch('/private-spend.css')).ok));
   if(worker==='sw.js')return;
+  await page.locator('#private-funding-open').click();await page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Wallet response lost · check before trying again'));assert(await page.locator('#private-funding-prepare').isDisabled());await page.locator('#private-funding-close').click();
   await page.locator('#private-spend-open').click();await page.locator('#private-spend-approve').waitFor({state:'visible'});
   assert.match(await page.locator('#private-spend-review').innerText(),/0\.01 ETH/);assert.match(await page.locator('#private-spend-review').innerText(),/Ethereum/);
   await page.locator('#private-spend-approve').click();await page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Waiting for delivery'));

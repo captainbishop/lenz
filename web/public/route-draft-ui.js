@@ -13,7 +13,7 @@ export function draftError(error){
   if(/precision|decimal|amount|units/i.test(text))return 'Check the amounts and decimal places.';
   if(/leverage/i.test(text))return 'Use a leverage limit from 1 to 50.';
   if(/price limit|route minimum/.test(text))return 'This estimate misses the saved limits.';
-  if(/public route|private route/.test(text))return 'Public-route consent is required.';
+  if(/public route|private route/.test(text))return 'Confirm that this transfer is public first.';
   if(/storage is full/.test(text))return 'Draft storage is full. Delete a draft first.';
   return 'Draft could not be saved. Your money is unchanged.';
 }
@@ -47,21 +47,21 @@ export async function openDraftReview(value,trigger,isCurrent=()=>true){
       if(select)for(const [value,text]of select){const option=el('option',text);option.value=value;input.append(option);}else{input.type='text';input.autocomplete='off';input.required=true;input.maxLength=name==='draft-address'?42:50;input.placeholder=placeholder??'0.00';if(name!=='draft-address')input.inputMode='decimal';}
       wrap.append(input);form.append(wrap);return input;};
     const section=el('p',swap?'ROUTE LIMITS':'ORDER LIMITS');section.className='draft-section';form.append(section);let collateral,limitPrice,leverage,reduceOnly;
-    if(!swap){limitPrice=field('draft-limit','Limit price / USD');limitPrice.value=r.worstPrice;collateral=field('draft-collateral','Collateral cap / USDC');
+    if(!swap){limitPrice=field('draft-limit','Limit price / USD');limitPrice.value=r.worstPrice;collateral=field('draft-collateral','Maximum collateral / USDC');
       leverage=field('draft-leverage','Leverage limit',{select:[1,2,3,5,10,20,50].map(n=>[String(n),n+'×'])});
       const label=el('label');label.className='quote-consent draft-reduce';reduceOnly=el('input');reduceOnly.type='checkbox';reduceOnly.id='draft-reduce';reduceOnly.onchange=()=>{direction.textContent=reduceOnly.checked?(quote.request.side==='buy'?'BUY':'SELL')+' / REDUCE ONLY':quote.request.side==='buy'?'LONG / BUY':'SHORT / SELL';};label.append(reduceOnly,el('span','Reduce only'));form.append(label);}
-    const fee=field('draft-fee',swap?'Fee cap / ETH':'Fee cap / USDC');
+    const fee=field('draft-fee',swap?'Maximum fee / ETH':'Maximum fee / USDC');
     const duration=field('draft-duration','Review within',{select:[['3600000','1 hour'],['86400000','24 hours']]});
     const address=field('draft-address',swap?'Receiving address':'Trading address',{placeholder:'0x…'});address.parentNode.classList.add('draft-account');
-    const disclosure=el('label');disclosure.className='quote-consent draft-disclosure';const consent=el('input');consent.type='checkbox';consent.id='draft-public';disclosure.append(consent,el('span','Allow public route'));form.append(disclosure);
-    const save=el('button','Save draft →');save.type='submit';save.id='draft-save';save.className='primary';save.disabled=true;form.append(save);const note=el('p','Private routes unavailable · No funds reserved');note.className='draft-final-note';form.append(note);
+    const disclosure=el('label');disclosure.className='quote-consent draft-disclosure';const consent=el('input');consent.type='checkbox';consent.id='draft-public';disclosure.append(consent,el('span','Allow a public transfer'));form.append(disclosure);
+    const save=el('button','Save draft →');save.type='submit';save.id='draft-save';save.className='primary';save.disabled=true;form.append(save);const note=el('p','Private transfers unavailable · No money set aside');note.className='draft-final-note';form.append(note);
     const update=()=>{const expired=Date.now()>=quote.expiresAt||!isCurrent();save.disabled=saving||!consent.checked||expired;if(expired&&!saving&&form.isConnected)status.textContent='Estimate expired or changed. Get a new one.';};consent.onchange=update;timer=setInterval(update,500);
     form.onsubmit=async e=>{e.preventDefault();if(saving||!consent.checked||!isCurrent())return;
       saving=true;close.disabled=true;save.disabled=true;status.textContent='Saving…';
       for(const control of form.elements)control.disabled=true;
       try{
         const objective=draftFromQuote(quote,{id,address:address.value,fee:fee.value,duration:Number(duration.value),publicRoute:consent.checked,collateral:collateral?.value,limitPrice:limitPrice?.value,leverage:Number(leverage?.value),reduceOnly:reduceOnly?.checked});
-        await saveRouteDraft(objective,{quote});clearInterval(timer);form.remove();status.textContent='Draft saved. No funds reserved.';
+        await saveRouteDraft(objective,{quote});clearInterval(timer);form.remove();status.textContent='Draft saved. No money set aside.';
         const link=el('a','Open drafts');link.id='open-saved-drafts';link.className='draft-link';link.href='/routes.html#'+encodeURIComponent(id);panel.append(link);link.focus();
       }catch(error){status.textContent=draftError(error);for(const control of form.elements)control.disabled=false;}
       finally{saving=false;close.disabled=false;update();}

@@ -2,6 +2,7 @@ import {checkConfidentialSpend,checkConfidentialSpendTerms,checkConfidentialSign
 import {base58} from '../web/public/intents-vendor/codecs.js';
 import {verifyQuoteSignature} from './quote-verifier/index.mjs';
 import {checkConfidentialObservation} from '../web/public/intents-status.js';
+import {fundingRequest,checkPrivateFunding} from '../web/public/private-funding.js';
 const API='https://1click.chaindefuser.com/v0/';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 function providerTime(value){
@@ -43,6 +44,13 @@ export async function prepareConfidentialSpend(input,{now=Date.now,verifySignatu
  const generated=await request('generate-intent',{type:'swap_transfer',standard:'erc191',signerId:terms.owner,depositAddress:quote.quote.depositAddress},options);
  const offer={terms,quote,generated},review=checkConfidentialSpend(offer,{now:now(),verifySignature});
  return {state:'awaiting-owner-review',offer,review};
+}
+
+export async function prepareConfidentialFunding(input,{now=Date.now,verifySignature=verifyQuoteSignature,...options}={}){
+ const terms=structuredClone(input),body=fundingRequest(terms,{now:now()});
+ const quote=await request('quote',body,options),offer={terms,quote};
+ const review=checkPrivateFunding(offer,{now:now(),verifySignature});
+ return {state:'awaiting-funding-review',offer,review};
 }
 
 // The caller must durably retain its signed request and submission attempt first.

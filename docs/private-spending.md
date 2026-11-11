@@ -97,7 +97,7 @@ compatibility.
 
 ## Wallet approvals
 
-Wallet has a Private approvals panel for same-asset payments between Confidential
+Wallet has a Lenz funds panel for same-asset payments between Confidential
 Intents accounts. Preparation requires the server's `LENZ_PRIVATE_INTENTS_KEY`
 partner credential; it stays on the server. The endpoint accepts only chosen,
 unfunded terms and never accepts signatures or submits money. Missing access
@@ -113,13 +113,32 @@ sender and owner before intake and execution.
 Executor update files contain a carrier envelope under
 `{type: "lenz/private-update-file/v1", envelope}`. Import authenticates and stores
 the report or receipt through the existing journals. Reports stay explicitly
-unverified after expiry and restart. Native ETH funding, deployed executor
-controls, independently verified private settlement and financial recovery remain
-unfinished. Browser data loss is not recovered by this local review journal.
+unverified after expiry and restart.
+
+Wallet's Add funds flow follows native ETH from the selected Ethereum, Arbitrum
+or Base wallet into the same owner's Confidential Intents account. NEAR Intents'
+1Click API prepares the route and deposit address; Aurora remains an optional
+execution adapter. The user does not switch to NEAR or manually configure a bridge.
+The quote preserves the source-specific ETH asset instead of converting it to NEAR.
+
+The user permits a public source-chain deposit and reviews the exact deposit,
+quoted private credit, route cost, refund and withdrawal fees, gas budget and
+deadlines. Rollup fees may add to the displayed gas budget. The complete signed
+quote and transfer review are saved encrypted before the wallet opens. Source
+selection preserves the amount; changed accounts, closed reviews, stale quotes,
+storage failures and chat-only recovery block new prompts. Unknown wallet replies
+block repeat sends and can be reconciled against the original transaction.
+
+A finalized source-chain deposit is not proof of private credit or a completed
+refund. Private settlement, deployed executor controls, broader funding assets
+and financial recovery remain unfinished. Browser data loss is not recovered by
+the local transfer journal. Cancel a wallet prompt if its review or deposit
+deadline passes; Lenz cannot prevent the wallet from sending later.
 
 ```powershell
 node --test web/private-spend-relay.test.mjs
 node --test web/private-spend-ui.test.cjs
+node --test web/private-funding.test.mjs web/private-funding-ui.test.cjs web/evm-transfer.test.mjs
 ```
 
 Interfaces follow the official [OpenAPI specification](https://1click.chaindefuser.com/docs/v0/openapi.yaml),

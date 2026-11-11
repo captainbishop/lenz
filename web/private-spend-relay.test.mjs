@@ -26,3 +26,12 @@ test('payment preparation rejects alternate assets, reduced minimums and slippag
  for(const changes of [{destinationAsset:'nep141:usdc.near'},{minOutput:'1'},{slippageBps:1}])assert.equal((await send({...terms,...changes})).status,400);
  assert.equal(calls(),0);
 }));
+
+test('native funding endpoint prepares only explicit ETH terms and rejects signatures',async()=>{
+ let calls=0;const funding={owner:terms.owner,chainId:'0x1',amount:terms.amount,refundDeadline:terms.refundDeadline};
+ let route;const server=http.createServer(async(req,res)=>{if(!await route(req,res)){res.writeHead(404);res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;
+ route=createPrivateSpendRoute({origin,apiKey:'test-partner',prepareFunding:async input=>{calls++;assert.deepEqual(input,funding);return {state:'awaiting-funding-review'};}});
+ const send=body=>fetch(origin+'/api/private-spend/fund-prepare',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify(body)});
+ try{assert.equal((await send(funding)).status,200);assert.equal((await send({...funding,signedData:{}})).status,400);assert.equal((await send({...funding,chainId:'0x89'})).status,400);assert.equal(calls,1);}
+ finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
+});

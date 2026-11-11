@@ -8,7 +8,7 @@ import {paymentRecipient,checkRecipientTransfer} from './payment-recipient.js';
 import {readState} from './chat-store.js';
 import {isRecoveredContact} from './chat-access.js';
 const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
-const labels={awaiting_wallet:'Check wallet',unknown:'Check wallet activity',submitted:'Submitted',pending:'Pending',included:'Included · awaiting finality',confirmed:'Confirmed',failed:'Failed on chain',declined:'Declined',not_sent:'Not sent'};
+const labels={awaiting_wallet:'Waiting for your wallet',unknown:'Wallet response lost · check before trying again',submitted:'Sent · waiting for confirmation',pending:'Waiting for confirmation',included:'Confirming transfer',confirmed:'Transfer confirmed',failed:'Transfer failed',declined:'Cancelled in wallet',not_sent:'Not sent'};
 export function mountEvmTransfers(session){
  const $=id=>document.getElementById(id),service=createTransferService(),button=el('button','Send');button.id='evm-send';button.type='button';$('evm-receive').before(button);
  const history=el('section');history.id='evm-transfers';history.hidden=true;history.innerHTML='<h3>Transfers</h3><div id="evm-transfer-list"></div><p id="evm-history-status" class="quiet" role="status"></p>';$('connected-wallet').append(history);
@@ -41,7 +41,7 @@ export function mountEvmTransfers(session){
   try{
    const recipient=await paymentRecipient(text);if(ticket!==recipientVersion||identity!==sourceIdentity||!dialog.open)return;
    $('evm-recipient-network').value=recipient.chainId;$('evm-recipient-network').disabled=true;$('evm-recipient-network').dispatchEvent(new Event('change'));
-   $('evm-recipient-detail').textContent=(recipient.profile?recipient.profile.name+' · Signed receiving instructions':'Wallet payment link')+' · '+transferAssets(recipient.chainId).find(t=>t.id===recipient.asset).symbol;
+   $('evm-recipient-detail').textContent=(recipient.profile?recipient.profile.name+' · Payment link':'Wallet payment link')+' · '+transferAssets(recipient.chainId).find(t=>t.id===recipient.asset).symbol;
    if(recipient.chainId===identity.chainId){asset=recipient.asset;$('evm-send-symbol').textContent=transferAssets(identity.chainId).find(t=>t.id===asset).symbol;$('evm-send-assets').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.asset===asset)));}
   }catch(error){if(ticket===recipientVersion&&identity===sourceIdentity&&dialog.open)$('evm-recipient-detail').textContent=error.message;}
  });
@@ -69,7 +69,7 @@ export function mountEvmTransfers(session){
    const rows=[['Send',amount(terms.terms.units,token.decimals)+' '+token.symbol],...(recipient.profile?[['Recipient',(known?.name??recipient.profile.name)+(known?' · Saved contact':' · New recipient')]]:[]),['To',terms.terms.recipient],['Network',WALLET_NETWORKS[recipient.chainId].name],['Gas budget',amount('0x'+(BigInt(terms.transaction.gas)*BigInt(terms.transaction.gasPrice)).toString(16))+' ETH']];
    for(const [label,value]of rows){const row=el('div');if(label==='Send')row.className='evm-review-amount';row.append(el('dt',label),el('dd',value));summary.append(row);}
    if(recipient.profile){const details=el('details');details.append(el('summary','Recipient identity'),el('p',recipient.profile.id));summary.append(details);if(!known)summary.append(el('p','Confirm who shared this link. A signed name alone does not identify a person.'));}
-   summary.hidden=false;$('evm-send-form').hidden=true;$('evm-send-assets').hidden=true;edit.hidden=false;$('evm-send-fee-note').textContent=identity.chainId==='0x1'?'Unused gas is not charged. Check the final terms in your wallet.':'Additional rollup fees may apply. Check the total in your wallet.';$('evm-send-fee-note').hidden=false;$('evm-send-approve').hidden=false;$('evm-send-approve').disabled=false;$('evm-send-status').textContent='';
+   summary.hidden=false;$('evm-send-form').hidden=true;$('evm-send-assets').hidden=true;edit.hidden=false;$('evm-send-fee-note').textContent=identity.chainId==='0x1'?'Unused gas is not charged. Check the final terms in your wallet.':'Extra network fees may apply. Check the total in your wallet.';$('evm-send-fee-note').hidden=false;$('evm-send-approve').hidden=false;$('evm-send-approve').disabled=false;$('evm-send-status').textContent='';
   }catch(error){if(ticket===version)$('evm-send-status').textContent=error.message;}
   finally{busy=false;$('evm-send-review').disabled=!$('evm-send-consent').checked||!navigator.onLine;}
  };
@@ -96,10 +96,10 @@ export function mountEvmTransfers(session){
     const item=el('article');item.className='evm-transfer-row';const details=el('div'),tools=el('div'),token=transferAssets(snapshot.chainId).find(a=>a.id===row.review.terms.asset);
     details.append(walletAmount(el('strong'),amount(row.review.terms.units,token.decimals)+' '+token.symbol),el('span',labels[row.state]),el('small','To '+row.review.terms.recipient),el('small',new Date(row.createdAt).toLocaleString()));
     if(row.hash){const explorer={ethereum:'https://etherscan.io/tx/',arbitrum:'https://arbiscan.io/tx/',base:'https://basescan.org/tx/'}[snapshot.network.key],link=el('a','View transaction');link.href=explorer+row.hash;link.target='_blank';link.rel='noopener noreferrer';details.append(link);}
-    if(row.observation?.executionFee)details.append(el('small','Execution fee '+amount(row.observation.executionFee)+' ETH'));
+    if(row.observation?.executionFee)details.append(el('small','Network fee '+amount(row.observation.executionFee)+' ETH'));
     if(row.error)details.append(el('small',row.error));
     if(transferOpen(row)){
-     let input=null;if(!row.hash){const label=el('label','Transaction hash from your wallet');input=el('input');input.id='evm-recover-'+row.id;label.htmlFor=input.id;input.placeholder='0x…';input.autocomplete='off';input.spellcheck=false;tools.append(label,input);}
+     let input=null;if(!row.hash){const label=el('label','Transaction ID from your wallet');input=el('input');input.id='evm-recover-'+row.id;label.htmlFor=input.id;input.placeholder='0x…';input.autocomplete='off';input.spellcheck=false;tools.append(label,input);}
      const checkButton=el('button','Check status'),feedback=el('p');feedback.className='quiet';feedback.setAttribute('role','status');checkButton.type='button';checkButton.className='secondary';
      checkButton.onclick=async()=>{checkButton.disabled=true;feedback.textContent='Checking…';try{await service.reconcile(session.capture(),row.id,input?.value.trim());await render();}catch(error){feedback.textContent=error.message;}finally{checkButton.disabled=false;}};tools.append(checkButton,feedback);
     }

@@ -27,33 +27,34 @@ function feedback(error){
 export function mountPrivateSpend(session,before){
  const style=el('link');style.rel='stylesheet';style.href='/private-spend.css';document.head.append(style);
  const panel=el('section');panel.id='wallet-private-approvals';panel.className='wallet-private-approvals';
- panel.innerHTML='<div class="section-heading"><h2>Private approvals</h2><button id="private-spend-open" type="button" class="secondary">Open</button></div><p class="quiet">Review a private account payment. Saved approvals can travel through nearby delivery.</p>';
+ panel.innerHTML='<div class="section-heading"><h2>Lenz funds</h2><button id="private-spend-open" type="button" class="secondary">Pay</button></div><p class="quiet">Wallet funds → Private account → Offline approval</p>';
  before.before(panel);
+ iconButton(panel.querySelector('#private-spend-open'),'Pay from private funds','M6 18 18 6M6 6h12v12');panel.querySelector('#private-spend-open').append(el('span','Pay'));
  const dialog=el('dialog');dialog.id='private-spend-dialog';dialog.setAttribute('aria-labelledby','private-spend-title');
- dialog.innerHTML=`<div class="dialog-top"><h2 id="private-spend-title">Private payment</h2><button id="private-spend-close" class="secondary wallet-close" type="button"></button></div>
- <p class="quiet">Uses funds already in a Confidential Intents account. Funding from your external wallet is not connected here.</p>
+ dialog.innerHTML=`<div class="dialog-top"><h2 id="private-spend-title">Pay from Lenz</h2><button id="private-spend-close" class="secondary wallet-close" type="button"></button></div>
+ <p class="quiet">Pay with funds already in Lenz. Use Add funds in Wallet if needed.</p>
  <form id="private-spend-form">
-  <label for="private-spend-recipient">Recipient’s private account</label><input id="private-spend-recipient" autocomplete="off" spellcheck="false" placeholder="0x…" required>
+  <label for="private-spend-recipient">Recipient’s Lenz account</label><input id="private-spend-recipient" autocomplete="off" spellcheck="false" placeholder="0x…" required>
   <label for="private-spend-asset">Asset</label><select id="private-spend-asset" required></select>
   <div class="private-payment-value"><label for="private-spend-amount">Amount</label><input id="private-spend-amount" inputmode="decimal" autocomplete="off" placeholder="0.00" required></div>
-  <label for="private-spend-executor">Deliver approval to</label><select id="private-spend-executor" required></select>
-  <p class="quiet">This contact must agree to execute your request. They can read its terms and submit this one approval.</p>
-  <p class="quiet">Preparation shares your wallet address, recipient and amount with Lenz and NEAR Intents. Its operators can see these details.</p>
-  <button id="private-spend-prepare" type="submit">Prepare review</button>
+  <label for="private-spend-executor">Send request through</label><select id="private-spend-executor" required></select>
+  <p class="quiet">Choose a contact who agrees to complete this payment while online. They can read the details and submit only this approved payment.</p>
+  <p class="quiet">Lenz and the transfer provider can see your wallet address, recipient and amount.</p>
+  <button id="private-spend-prepare" type="submit">Review payment</button>
  </form>
  <section id="private-spend-review" hidden><dl id="private-spend-terms"></dl>
-  <p class="quiet">Signing authorizes this transfer until its approval deadline, including if funds arrive later. It does not reserve funds. Privacy and settlement have not been independently verified.</p>
-  <label for="private-spend-signer">Signing wallet</label><select id="private-spend-signer"></select>
-  <button id="private-spend-approve" type="button">Approve in wallet</button><button id="private-spend-new" type="button" class="secondary">New request</button>
-  <details><summary>Exact terms</summary><dl id="private-spend-exact"></dl></details>
+  <p class="quiet">Confirming allows this payment until the deadline shown, even if funds arrive later. No money is set aside. Privacy and completion are not yet independently verified.</p>
+  <label for="private-spend-signer">Your wallet</label><select id="private-spend-signer"></select>
+  <button id="private-spend-approve" type="button">Confirm in wallet</button><button id="private-spend-new" type="button" class="secondary">New request</button>
+  <details><summary>Transfer details</summary><dl id="private-spend-exact"></dl></details>
  </section>
  <p id="private-spend-feedback" class="wallet-feedback" role="status" aria-atomic="true"></p>
- <div class="section-heading"><h3>Saved approvals</h3><button id="private-spend-refresh" type="button" class="secondary">Refresh</button></div>
- <ul id="private-spend-history"></ul><p id="private-spend-empty" class="quiet">No private approvals saved.</p>
- <label for="private-spend-update">Open an executor update</label><input id="private-spend-update" type="file" accept="application/json,.json">`;
+ <div class="section-heading"><h3>Saved requests</h3><button id="private-spend-refresh" type="button" class="secondary">Refresh</button></div>
+ <ul id="private-spend-history"></ul><p id="private-spend-empty" class="quiet">Your payment requests will appear here.</p>
+ <label for="private-spend-update">Open a payment update</label><input id="private-spend-update" type="file" accept="application/json,.json">`;
  document.body.append(dialog);const $=id=>dialog.querySelector('#'+id);
  iconButton($('private-spend-close'),'Close','m6 6 12 12M18 6 6 18');
- iconButton($('private-spend-refresh'),'Refresh saved private approvals','M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3');
+ iconButton($('private-spend-refresh'),'Refresh saved payment requests','M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3');
  let draft=null,tokens=[],savedAssets=[],providers=[],busy=false,controller=null,version=0,viewVersion=0,newRequest=false,paymentAccess=false;
  setChoiceRenderer($('private-spend-asset'),option=>assetLabel(option.textContent,tokens.find(t=>t.assetId===option.value)));
  const announce=event=>{
@@ -84,9 +85,9 @@ export function mountPrivateSpend(session,before){
   $('private-spend-form').hidden=!!draft;$('private-spend-review').hidden=!draft;if(!draft)return;
   const r=checkConfidentialSpend(draft.offer,{now:draft.checkedAt});$('private-spend-terms').replaceChildren();$('private-spend-exact').replaceChildren();
   const token=draft.assets?.find(t=>t.assetId===r.destinationAsset)??tokens.find(t=>t.assetId===r.destinationAsset);
-  line($('private-spend-terms'),'Receiving account','Confidential Intents');line($('private-spend-terms'),'Asset network',token?receiveChain(token.blockchain):'Details unavailable');
-  for(const [label,value]of [['Send',assetLabel(assetAmount(r.amount,r.originAsset),token)],['Receive at least',assetLabel(assetAmount(r.minAmountOut,r.destinationAsset),token)],['Recipient',r.recipient],['Owner',r.owner],['Deliver to',draft.executor.name],['Refund may start',new Date(r.refundDeadline).toLocaleString()],['Approval ends',new Date(r.signingDeadline).toLocaleString()],['Refund / withdrawal fee','0 / 0']])line($('private-spend-terms'),label,value);
-  for(const [label,value]of [['Source asset',r.originAsset],['Destination asset',r.destinationAsset],['Deposit',r.depositAddress],['Contract','intents.far'],['Nonce',JSON.parse(r.payload).nonce],['Refund-start time','Not covered by the quote signature'],['Confidentiality','Requested; not covered by the quote signature']])line($('private-spend-exact'),label,value);
+  line($('private-spend-terms'),'Account type','Lenz funds');line($('private-spend-terms'),'Network',token?receiveChain(token.blockchain):'Details unavailable');
+  for(const [label,value]of [['Send',assetLabel(assetAmount(r.amount,r.originAsset),token)],['Receive at least',assetLabel(assetAmount(r.minAmountOut,r.destinationAsset),token)],['Recipient',r.recipient],['Owner',r.owner],['Deliver to',draft.executor.name],['Refund can begin after',new Date(r.refundDeadline).toLocaleString()],['Permission ends',new Date(r.signingDeadline).toLocaleString()],['Refund / withdrawal fee','0 / 0']])line($('private-spend-terms'),label,value);
+  for(const [label,value]of [['Account type','Confidential Intents'],['Provider','NEAR Intents'],['Source asset',r.originAsset],['Destination asset',r.destinationAsset],['Deposit',r.depositAddress],['Contract','intents.far'],['Nonce',JSON.parse(r.payload).nonce],['Refund-start time','Not covered by the quote signature'],['Confidentiality','Requested; not covered by the quote signature']])line($('private-spend-exact'),label,value);
   control();
  }
  async function refresh(){
@@ -96,13 +97,13 @@ export function mountPrivateSpend(session,before){
   paymentAccess=s.identity.access===undefined;savedAssets=saved?.assets??[];draft=newRequest?null:saved;paintReview();
   $('private-spend-review').dataset.queued=String(rows.some(r=>r.id===savedId));
   $('private-spend-history').replaceChildren();$('private-spend-empty').hidden=rows.length>0;
-  const labels={queued:'Waiting for delivery','shared-unresolved':'Shared · completion unknown','executor-reported-stored':'Executor stored · completion unknown','review-window-ended':'Delivery window ended · unresolved','expired-unresolved':'Approval expired · unresolved'};
+  const labels={queued:'Waiting for delivery','shared-unresolved':'Shared · completion unknown','executor-reported-stored':'Saved by your contact · completion unknown','review-window-ended':'Time to share ended · completion unknown','expired-unresolved':'Permission expired · completion unknown'};
   for(const row of rows){
    const item=el('li'),details=el('details'),title=walletAmount(el('summary'),assetAmount(row.amount,row.originAsset)),terms=el('dl');
    const report=row.observation?.status;
    details.append(title);
-   for(const [label,value]of [['Recipient',row.recipient],['Owner',row.owner],['Executor',s.contacts.find(c=>c.id===row.executor)?.name??row.executor],['Approval ends',new Date(row.signingDeadline).toLocaleString()]])line(terms,label,value);
-   details.append(terms);item.append(details,el('p',report?'Provider reports '+report.toLowerCase().replaceAll('_',' ')+' · settlement unverified':labels[row.status]??'Pending · settlement unverified'));
+   for(const [label,value]of [['Recipient',row.recipient],['Owner',row.owner],['Completing contact',s.contacts.find(c=>c.id===row.executor)?.name??row.executor],['Permission ends',new Date(row.signingDeadline).toLocaleString()]])line(terms,label,value);
+   details.append(terms);item.append(details,el('p',report?'Provider reports '+report.toLowerCase().replaceAll('_',' ')+' · completion not yet verified':labels[row.status]??'Pending · completion not yet verified'));
    if(['queued','shared-unresolved'].includes(row.status)){
     const button=el('button','Save request');button.type='button';button.className='secondary';button.onclick=()=>act(async(signal)=>{
      requirePaymentAccess((await readState()).identity);const packet=await confidentialSpendOutbox.handoff(row.id,{signal}),current=await readState();
@@ -171,8 +172,8 @@ export function mountPrivateSpend(session,before){
    let message;
    if(packet.type==='lenz/private-spend-report/v1'){
     const result=await confidentialSpendOutbox.acceptReport(s,value.envelope.packet);
-    message=JSON.stringify(result.request.observation)===JSON.stringify(packet.observation)?'Executor report checked. Settlement remains unverified.':'Newer executor report retained. Settlement remains unverified.';
-   }else{await confidentialSpendOutbox.acceptAcknowledgement(s,value.envelope.packet);message='Executor receipt checked. Completion remains unknown.';}
+    message=JSON.stringify(result.request.observation)===JSON.stringify(packet.observation)?'Payment update checked. Completion is not yet verified.':'The newer payment update was kept. Completion is not yet verified.';
+   }else{await confidentialSpendOutbox.acceptAcknowledgement(s,value.envelope.packet);message='Your contact saved the request. Completion remains unknown.';}
    assert(Date.now()<value.envelope.expiresAt,'Private update expired before storage.');return message;
   },{signal});
   $('private-spend-feedback').textContent=outcome;

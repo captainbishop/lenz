@@ -13,8 +13,8 @@
     "web/public/chat-layout.css": "1905f1d35989757ecf30f382448008e092a5e71bda08f0036d038fe3c70e96ba",
     "web/public/chat-store.js": "4ec3664517f9aa67c26396b09312375deb152cd4b76fe73b48cc246fa6e234f2",
     "web/public/chat.css": "dc4bdc8b251b8f3b62b0e61738daa5a14c989c21d7bb5b0bb42505c5a5a4519a",
-    "web/public/chat.html": "b6b8d06807798b2ad0843ca7b12a9253ba47ccf215e66c9f35971c9687058f8c",
-    "web/public/chat.js": "7e3a5f6ef405b67078eb487d16ad627e58315ee781c14dfbc8a8196b4a72b971",
+    "web/public/chat.html": "01533e4312e25b97c4da7ce6ad382f3676d6899e64c1c2897688597580523e46",
+    "web/public/chat.js": "348230394473e074e80b1e79136e74d78d8b8dc0626bb1b8d74915dd387c147a",
     "web/public/contact-card.js": "871b680fe70bcf8023440e718dffde907b6a299b95178406a58fc433118c2aba",
     "web/public/contact-ui.js": "a8def4bb243897b38167e16c7638f6c426fb4e28722a5a23179e320508e92898",
     "web/public/delivery-mode.js": "117661527ec8689dbbec8bbeb243640374cc5d3e54a456f836d082b9c018cbe6",
@@ -347,6 +347,24 @@
       "evidence": "web/private-spend-verification.json",
       "framesMatched": 15,
       "scope": "Current baseline and changed renderer produced identical replay frames. Original recordings and captures remain preserved."
+    },
+    {
+      "file": "web/public/chat.html",
+      "before": "b6b8d06807798b2ad0843ca7b12a9253ba47ccf215e66c9f35971c9687058f8c",
+      "after": "01533e4312e25b97c4da7ce6ad382f3676d6899e64c1c2897688597580523e46",
+      "evidence": "web/private-funding-verification.json",
+      "framesMatched": 9,
+      "framesCompared": 15,
+      "scope": "Read-only replay differs only by message-status and delivery-confirmation wording. Signed payment states and all other DOM content are unchanged. Existing illustrative videos and historical captures are preserved."
+    },
+    {
+      "file": "web/public/chat.js",
+      "before": "7e3a5f6ef405b67078eb487d16ad627e58315ee781c14dfbc8a8196b4a72b971",
+      "after": "348230394473e074e80b1e79136e74d78d8b8dc0626bb1b8d74915dd387c147a",
+      "evidence": "web/private-funding-verification.json",
+      "framesMatched": 9,
+      "framesCompared": 15,
+      "scope": "Read-only replay differs only by message-status and delivery-confirmation wording. Signed payment states and all other DOM content are unchanged. Existing illustrative videos and historical captures are preserved."
     }
   ]
 }

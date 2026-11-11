@@ -48,12 +48,12 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     assert.equal(await page.locator('#hyper-order-size').inputValue(),'1');assert.equal(await page.locator('#hyper-order-price').inputValue(),'20');assert.equal(await page.locator('#hyper-order-privacy').inputValue(),'public');checks.push('Category navigation preserves the exact market draft and privacy choice');
     await page.locator('#hyper-order-review').click();
     await page.getByRole('button',{name:'Back',exact:true}).click();assert.equal(signatures,0);checks.push('Review and back preserve the chosen market and terms without signing');
-    await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();
     await page.locator('.hyper-saved-order').getByText('Open',{exact:true}).waitFor();assert.equal(submitted.length,1);assert.equal(submitted[0].action.orders[0].a,10107);checks.push('A reviewed limit order signs with an ephemeral test wallet and reaches matching open-order status');
     statusDelay=300;const beforeCancelledLookup=signatures;
-    await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Sign cancellation',exact:true}).click();await page.getByRole('button',{name:'Keep order',exact:true}).click();await page.waitForTimeout(450);assert.equal(signatures,beforeCancelledLookup);assert.equal(submitted.length,1);statusDelay=0;checks.push('Closing cancellation during status lookup prevents wallet signing');
-    signMode='decline';await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Sign cancellation',exact:true}).click();await page.getByRole('dialog',{name:'Cancel order',exact:true}).getByRole('status').filter({hasText:'User declined'}).waitFor();await page.getByRole('button',{name:'Keep order',exact:true}).click();signMode='normal';checks.push('Cancellation rejection stays visible inside its dialog');
-    await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Sign cancellation',exact:true}).click();await page.locator('.hyper-saved-order').getByText('Cancelled',{exact:true}).waitFor();checks.push('Cancellation signs only the saved order; status is re-read after submission');
+    await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Confirm cancellation',exact:true}).click();await page.getByRole('button',{name:'Keep order',exact:true}).click();await page.waitForTimeout(450);assert.equal(signatures,beforeCancelledLookup);assert.equal(submitted.length,1);statusDelay=0;checks.push('Closing cancellation during status lookup prevents wallet signing');
+    signMode='decline';await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Confirm cancellation',exact:true}).click();await page.getByRole('dialog',{name:'Cancel order',exact:true}).getByRole('status').filter({hasText:'User declined'}).waitFor();await page.getByRole('button',{name:'Keep order',exact:true}).click();signMode='normal';checks.push('Cancellation rejection stays visible inside its dialog');
+    await page.locator('.hyper-saved-order').getByRole('button',{name:'Cancel order',exact:true}).click();await page.getByRole('button',{name:'Confirm cancellation',exact:true}).click();await page.locator('.hyper-saved-order').getByText('Cancelled',{exact:true}).waitFor();checks.push('Cancellation signs only the saved order; status is re-read after submission');
     await page.reload();await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();await page.locator('.hyper-saved-order').getByText('Cancelled',{exact:true}).waitFor();checks.push('Encrypted activity survives reload and reconnect');
     const recovery=await page.evaluate(async()=>{
       const {resolveOrderMarket,prepareOrder}=await import('/hyperliquid-order.js'),{reserveOrderAttempt,readHyperOrders,recordOrderState,updateHyperOrders}=await import('/hyperliquid-order-store.js'),{refreshTradingOrder}=await import('/hyperliquid-execution.js');
@@ -66,7 +66,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
       const next=await reserveOrderAttempt(prepareOrder(market,account,{side:'buy',size:'1',price:'20',reduceOnly:false},funds));await recordOrderState(next.id,'not_sent');return state;
     });assert.equal(recovery,'not_sent');checks.push('Expired pre-submission approvals recover safely and allow a fresh order');
     await page.locator('#hyper-order-privacy').selectOption('public');await page.locator('#hyper-order-size').fill('1');await page.locator('#hyper-order-price').fill('20');
-    signMode='late';await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();await page.waitForFunction(()=>window.fixtureSigning===true);await page.evaluate(()=>window.changeFixtureAccount());await page.waitForTimeout(400);assert.equal(submitted.length,2);checks.push('Account changes during approval invalidate the signature before exchange dispatch');
+    signMode='late';await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();await page.waitForFunction(()=>window.fixtureSigning===true);await page.evaluate(()=>window.changeFixtureAccount());await page.waitForTimeout(400);assert.equal(submitted.length,2);checks.push('Account changes during approval invalidate the signature before exchange dispatch');
     await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();await page.getByText(/Available 1000 USDC/).waitFor();
     accountMode='portfolioMargin';await page.getByText('Add or withdraw funds',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.getByText('Trading for this account mode is not connected in Lenz yet.',{exact:true}).waitFor();assert(await page.locator('#hyper-order-review').isDisabled());checks.push('Unsupported account modes fail closed without showing guessed spendable funds');
     accountMode='disabled';signMode='normal';
@@ -93,7 +93,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     checks.push('Closing refreshes position direction and size; absent liquidation data never becomes zero');
     await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-privacy').selectOption('public');await page.locator('#hyper-order-review').click();
     positions[0].position.szi='-0.05';
-    await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();
     await page.getByRole('dialog',{name:'Review order',exact:true}).getByText('This order would not reduce the selected position.',{exact:true}).waitFor();
     assert.equal(signatures,beforeClose);await page.getByRole('button',{name:'Back',exact:true}).click();
     checks.push('A position that shrinks after review blocks signing until the closing amount is reviewed again');
@@ -101,14 +101,14 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     await page.waitForFunction(()=>document.querySelector('#hyper-order-size')?.value==='0.05');
     await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-review').click();
     signMode='shrink';const beforeShrinkingSubmit=submitted.length;
-    await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();
     await page.getByRole('dialog',{name:'Review order',exact:true}).getByText('This order would not reduce the selected position.',{exact:true}).waitFor();
     assert.equal(submitted.length,beforeShrinkingSubmit);assert.equal(signatures,beforeClose+1);await page.getByRole('button',{name:'Back',exact:true}).click();
     checks.push('A position that shrinks while the wallet signs prevents the signed action from being submitted');
     signMode='normal';positions[0].position.szi='-0.05';
     await positionPanel.getByRole('button',{name:'Close with limit',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#hyper-order-price')?.value==='');
     await page.locator('#hyper-order-price').fill('100');await page.locator('#hyper-order-review').click();
-    const closeCount=submitted.length;await page.getByRole('button',{name:'Sign order in wallet',exact:true}).click();
+    const closeCount=submitted.length;await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();
     await page.locator('.hyper-saved-order').filter({hasText:'Buy 0.05 BTC'}).getByText('Open',{exact:true}).waitFor();
     assert.equal(submitted.length,closeCount+1);assert.deepEqual({...submitted.at(-1).action.orders[0],c:null},{a:0,b:true,p:'100',s:'0.05',r:true,t:{limit:{tif:'Gtc'}},c:null});
     checks.push('Reviewed closing order submits one reduce-only limit action and keeps its recoverable status');

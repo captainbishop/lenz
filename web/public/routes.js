@@ -34,12 +34,12 @@ function details(row){
   pair(swap?'Receiving address':o.destination.order?'Trading address':'Recipient',o.recipient.address,'route-address');
   for(const fee of o.limits.maxFees)pair('Fee limit',`${formatUnits(fee.amount,fee.asset.decimals)} ${assetName(fee.asset)} · ${CHAINS[fee.asset.chainId].name}`);
   if(o.returnTo){pair('Return minimum',`${formatUnits(o.returnTo.minAmount,o.returnTo.asset.decimals)} ${assetName(o.returnTo.asset)} · ${CHAINS[o.returnTo.asset.chainId].name}`);pair('Return address',o.returnTo.address,'route-address');}
-  pair('Review before',new Date(o.limits.deadline).toLocaleString());pair('Privacy',o.privacy==='transparent'?'Public route':'Private route required');panel.append(dl);
-  if(row.estimate){const q=row.estimate.quote;panel.append(el('p',`Estimate read ${new Date(q.observedAt).toLocaleString()}`));const text=swap?`${formatUnits(q.result.outputUnits,q.result.outputDecimals)} ${q.result.outputSymbol} expected`:`${formatUnits(q.result.notionalUnits,6)} USDC estimated notional`;panel.append(el('p',text));}
+  pair('Review before',new Date(o.limits.deadline).toLocaleString());pair('Privacy',o.privacy==='transparent'?'Public route':'Private transfer required');panel.append(dl);
+  if(row.estimate){const q=row.estimate.quote;panel.append(el('p',`Estimate read ${new Date(q.observedAt).toLocaleString()}`));const text=swap?`${formatUnits(q.result.outputUnits,q.result.outputDecimals)} ${q.result.outputSymbol} expected`:`${formatUnits(q.result.notionalUnits,6)} USDC estimated trade value`;panel.append(el('p',text));}
   panel.append(el('p',o.destination.order?'Fees, margin and account checks pending.':'Network fees and account checks pending.'));
   const controls=el('div');controls.className='route-controls';const message=el('p');message.id='route-action-status';message.className='route-status';message.setAttribute('role','status');const buttons=el('div');buttons.className='route-buttons';
   if(row.estimate&&o.privacy==='transparent'){
-    const consent=el('input');consent.type='checkbox';consent.id='draft-quote-public';const label=el('label');label.className='quote-consent';label.append(consent,el('span',swap?'Allow public quote · Amount sent to Base RPC':'Allow public estimate · Market sent to Hyperliquid'));controls.append(label);
+    const consent=el('input');consent.type='checkbox';consent.id='draft-quote-public';const label=el('label');label.className='quote-consent';label.append(consent,el('span',swap?'Public estimate · share amount with Base network providers':'Public estimate · share market with Hyperliquid'));controls.append(label);
     const refresh=el('button','Refresh estimate');refresh.id='refresh-draft-quote';refresh.className='primary';buttons.append(refresh);
     consent.onchange=()=>{invalidate();message.textContent='';update();};
     refresh.onclick=async()=>{
@@ -50,7 +50,7 @@ function details(row){
         const text=await response.text();if(text.length>16384)throw Error('Invalid quote');const quote=checkedMarketQuote(JSON.parse(text),request);
         if(ticket!==generation||!consent.checked||!navigator.onLine||!controls.isConnected)return;
         await attachRouteQuote(o.id,row.revision,quote);if(ticket!==generation)return;
-        await reload();$('#route-action-status').textContent='Estimate saved. No trade approved.';
+        await reload();$('#route-action-status').textContent='Estimate saved. No trade confirmed.';
       }catch(error){if(ticket===generation&&controls.isConnected)message.textContent=/Quote unavailable|fetch|Invalid quote/i.test(error.message)?'Refresh failed. Saved draft unchanged.':draftError(error);}
       finally{if(ticket===generation){busy=false;controller=null;update();}}
     };

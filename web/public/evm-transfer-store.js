@@ -21,7 +21,8 @@ export async function updateTransfers(operation){
  return navigator.locks.request(DB,async()=>{
   const saved=await record(),rows=await decode(saved),result=await operation(rows);check(rows.length<=200,'Transfer history is full.');rows.forEach(validateTransferRow);
   const key=saved?.key??await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']),iv=crypto.getRandomValues(new Uint8Array(12));
-  const box=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:AAD},key,enc.encode(JSON.stringify(rows)));
+  const plain=enc.encode(JSON.stringify(rows));check(plain.byteLength+16<=2000000,'Transfer history storage is full.');
+  const box=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:AAD},key,plain);
   await record({key,iv,box},true);channel?.postMessage('changed');dispatchEvent(new Event('lenz-transfers-changed'));return result;
  });
 }

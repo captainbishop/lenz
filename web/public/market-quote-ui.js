@@ -49,9 +49,9 @@ export function mountMarketQuote(panel,row,snapshot){
       if(ticket!==generation||!form.isConnected||!consent.checked||!navigator.onLine)return;
       current=quote;const r=quote.result;const rows=swap?[
         ['Expected',`${formatUnits(r.outputUnits,r.outputDecimals)} ${r.outputSymbol}`],['Minimum',`${formatUnits(r.minOutputUnits,r.outputDecimals)} ${r.outputSymbol}`],['Pool fee','0.05% · included'],
-      ]:[['Size',`${formatUnits(r.sizeUnits,r.sizeDecimals)} ${r.instrument}`],[request.side==='buy'?'Estimated cost':'Estimated proceeds',`${formatUnits(r.notionalUnits,6)} USDC`],['Worst book price',`${r.worstPrice} USD`]];
+      ]:[['Size',`${formatUnits(r.sizeUnits,r.sizeDecimals)} ${r.instrument}`],[request.side==='buy'?'Estimated cost':'Estimated proceeds',`${formatUnits(r.notionalUnits,6)} USDC`],['Least favourable price',`${r.worstPrice} USD`]];
       const list=el('dl',null,'detail-data');for(const [label,value] of rows){const line=el('div');line.append(el('dt',label),el('dd',value));list.append(line);}
-      result.replaceChildren(list,el('p',swap?'Network fee excluded. Trading unavailable.':'Fees and margin excluded. Orders unavailable.'),el('small',swap?`Block ${quote.evidence.blockNumber} · Unfinalized`:`Book ${new Date(quote.sourceTime).toLocaleTimeString()}`));
+      result.replaceChildren(list,el('p',swap?'Network fee excluded. Trading unavailable.':'Fees and margin excluded. Orders unavailable.'),el('small',swap?`Block ${quote.evidence.blockNumber} · Not yet confirmed`:`Book ${new Date(quote.sourceTime).toLocaleTimeString()}`));
       const save=el('button',swap?'Review swap →':'Review order →');save.type='button';save.id='quote-save-draft';save.onclick=()=>openDraftReview(quote,save,()=>current===quote&&ticket===generation&&consent.checked&&form.isConnected);result.append(save);
       status.textContent=`Expires ${new Date(quote.expiresAt).toLocaleTimeString()}`;
     }catch{if(ticket===generation&&form.isConnected){result.replaceChildren();status.textContent='Estimate unavailable. Check the amount or refresh.';}}

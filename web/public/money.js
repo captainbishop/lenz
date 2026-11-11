@@ -72,7 +72,7 @@ $('.balance-label>span').textContent = 'Offline balance';
 $('.near-network').textContent = 'NEAR testnet';
 $('.near-token-note').textContent = 'Test dollars · No cash value';
 const amounts = document.createElement('dl'); amounts.className = 'wallet-amounts';
-amounts.innerHTML = '<div><dt>Confirmed</dt><dd><span id="near-confirmed">—</span><small>tUSD</small></dd></div><div><dt>Pending</dt><dd><span id="near-pending">—</span><small>tUSD</small></dd></div><div><dt>Reserved</dt><dd><span id="near-reserved">—</span><small>tUSD</small></dd></div>';
+amounts.innerHTML = '<div><dt>Confirmed</dt><dd><span id="near-confirmed">—</span><small>tUSD</small></dd></div><div><dt>Pending</dt><dd><span id="near-pending">—</span><small>tUSD</small></dd></div><div><dt>Set aside</dt><dd><span id="near-reserved">—</span><small>tUSD</small></dd></div>';
 const balanceDetails=document.createElement('details');balanceDetails.className='wallet-balance-details';balanceDetails.innerHTML='<summary id="wallet-balance-detail-label">Details</summary>';
 balanceDetails.append(amounts,$('.near-network'));$('.near-balance').append(balanceDetails);
 $('#wallet-content').append($('#rhea-wallet'));

@@ -1,3 +1,15 @@
+# Borderless funding and plain-language actions, November 11, 2026
+
+Wallet adds native ETH from Ethereum, Arbitrum or Base through NEAR Intents 1Click. The selected wallet supplies the source network; amount entry survives wallet selection. Signed quotes and exact reviews are stored encrypted before a wallet prompt. Unknown attempts block repeats, and checks reconcile only the original transaction and finalized source receipt. Source confirmation never credits private funds or verifies refunds. Both offline workers retain attempts after a full browser restart.
+
+The action screens use Lenz funds, Review transfer and Confirm in wallet. Contract and provider details are expandable; amounts, fees, send/refund times, public visibility and unknown outcomes remain visible. Chat backup wording warns that clearing site data can delete financial records and lose access to device-dependent funds. Message checks are separate from person verification.
+
+The isolated candidate passed 79 Node cases, 28 funding/payment/offline browser cases and 7 broader browser files. Four removed protections failed behavioral assertions and were restored exactly. Separate Spec and Standards reviews have no remaining findings. Read-only replay compared 15 frames; 9 matched and the remainder differ only in approved message-status wording. Original captures, videos and stored account data are preserved. Source-bound commands and limits are in web/private-funding-verification.json.
+
+Legacy market navigation timed out. The saved-route suite targets a hidden Refresh control on the unchanged baseline as well; those browser journeys remain unverified.
+
+Server partner access, broader funding assets, production private execution, independent private credit/refunds, financial recovery and physical first-offline delivery remain unfinished. No deployment or real financial operation ran.
+
 # Wallet private approvals, November 11, 2026
 
 The existing Wallet prepares an unfunded same-asset Confidential Intents payment, retains an encrypted unsigned review and saves an approval before encrypted handoff. Receipt terms bind the chosen recipient and asset. Executor reports and storage receipts preserve newer history and remain explicitly unverified. The asset menu preserves its pressed label during focus, opens on the first click and keeps native values and keyboard cancellation. Signing uses the displayed wallet selection.

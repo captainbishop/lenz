@@ -49,21 +49,21 @@ export function mountHyperliquidTrading(target,row){
   side.id='hyper-order-side';side.append(new Option(row.kind==='perp'?'Long / Buy':'Buy','buy'),new Option(row.kind==='perp'?'Short / Sell':'Sell','sell'));
   size.id='hyper-order-size';size.inputMode='decimal';size.autocomplete='off';size.placeholder='0.00';size.maxLength=40;
   price.id='hyper-order-price';price.inputMode='decimal';price.autocomplete='off';price.placeholder='0.00';price.maxLength=40;
-  privacy.id='hyper-order-privacy';privacy.append(new Option('Private required','private'),new Option('Public on Hyperliquid','public'));
+  privacy.id='hyper-order-privacy';privacy.append(new Option('Private trade only','private'),new Option('Public trade on Hyperliquid','public'));
   reduce.type='checkbox';reduce.id='hyper-order-reduce';
   const draftKey=`${row.id}:${row.coin}:${row.quote.index}`,draft=drafts.get(draftKey);
   if(draft){side.value=draft.side;size.value=draft.size;price.value=draft.price;privacy.value=draft.privacy;reduce.checked=draft.reduce;}
   const remember=()=>drafts.set(draftKey,{side:side.value,size:size.value,price:price.value,privacy:privacy.value,reduce:reduce.checked});
   const field=(text,input)=>{const label=el('label',text);label.htmlFor=input.id;const area=el('div',undefined,'hyper-order-field');area.append(label,input);return area;};
   form.append(field('Direction',side),field('Size · '+row.name.split(' / ')[0],size),field('Limit price · USDC',price),field('Execution',privacy));
-  if(row.kind==='perp'){const label=el('label',undefined,'hyper-order-reduce');label.append(reduce,document.createTextNode('Reduce my position only'));form.append(label);}
+  if(row.kind==='perp'){const label=el('label',undefined,'hyper-order-reduce');label.append(reduce,document.createTextNode('Only reduce my position'));form.append(label);}
   const submit=el('button','Review order →');submit.type='submit';submit.id='hyper-order-review';form.append(submit);
   const status=el('p',undefined,'hyper-order-status');status.setAttribute('role','status');
   const activity=el('section',undefined,'hyper-order-activity');activity.setAttribute('aria-label','Your orders');
   root.append(account,available,funding,positionPanel,form,status,activity);
   const dialog=el('dialog');dialog.className='hyper-order-dialog';dialog.id='hyper-order-confirm';dialog.setAttribute('aria-labelledby','hyper-review-title');
   const top=el('div',undefined,'hyper-order-top'),title=el('h2','Review order');title.id='hyper-review-title';const back=button('Back',()=>{review=null;dialog.close();});top.append(title,back);
-  const terms=el('dl'),explain=el('p'),confirm=button('Sign order in wallet',()=>sign()),feedback=el('p');feedback.setAttribute('role','status');
+  const terms=el('dl'),explain=el('p'),confirm=button('Confirm order in wallet',()=>sign()),feedback=el('p');feedback.setAttribute('role','status');
   dialog.append(top,terms,explain,el('p','This signs one public limit order. It may fill immediately; otherwise it stays open until filled or cancelled. This grants no withdrawal permission.'),confirm,feedback);document.body.append(dialog);
   dialog.addEventListener('cancel',()=>{review=null;});
   function controls(){
@@ -81,7 +81,7 @@ export function mountHyperliquidTrading(target,row){
       positionTime.textContent='Read '+new Date(snapshot.observedAt).toLocaleString()+' · Refresh for changes';
       if(!held){positionSummary.textContent='No open '+snapshot.market.base+' position.';return;}
       positionSummary.textContent=`${held.side==='long'?'Long':'Short'} · ${held.size} ${snapshot.market.base}`;
-      for(const [name,value]of [['Entry price',held.entryPrice],['Unrealized P&L',held.pnl],['Liquidation price',held.liquidationPrice],['Margin used',held.margin]]){
+      for(const [name,value]of [['Entry price',held.entryPrice],['Open-position profit / loss',held.pnl],['Liquidation price',held.liquidationPrice],['Margin used',held.margin]]){
         const cell=el('div');cell.append(el('dt',name),el('dd',value===null?'Unavailable':value+' USDC'));positionValues.append(cell);
       }
       closePosition.hidden=false;
@@ -108,7 +108,7 @@ export function mountHyperliquidTrading(target,row){
         const token=value.funds.spot.find(b=>b.token===(side.value==='buy'?value.market.quoteIndex:value.market.baseIndex)),amount=token?orderText(orderAmount(token.total)-orderAmount(token.hold)):'0';
         available.textContent=`Available ${amount} ${side.value==='buy'?value.market.quote:value.market.base} · Hyperliquid`;
       }else available.textContent=`Available margin ${value.funds.perp.withdrawable} USDC · ${value.funds.leverage?.value??'—'}× current leverage`;
-      status.textContent=privacy.value==='public'?'':'Choose Public on Hyperliquid to use this route.';
+      status.textContent=privacy.value==='public'?'':'Choose Public trade on Hyperliquid to use this route.';
       if(row.kind==='perp')showPosition();
     }catch(error){if(ticket===generation&&current()){available.textContent='Funds unavailable.';status.textContent=error.message;showPosition();}}
     finally{if(ticket===generation){controls();void history();}}
@@ -118,7 +118,7 @@ export function mountHyperliquidTrading(target,row){
     event.preventDefault();if(submit.disabled)return;
     try{
       review=reviewTradingOrder(snapshot,{side:side.value,size:size.value,price:price.value,reduceOnly:reduce.checked});
-      terms.replaceChildren();for(const [name,value]of [['Market',row.name],['Action',`${review.side==='buy'?'Buy':'Sell'} ${review.size} ${review.market.base}`],['Limit price',review.price+' USDC'],[row.kind==='perp'?'Margin estimate':'Funds needed',review.spend+' '+review.spendAsset],['Trading fee',`${Number(review.fee)*100}% current taker rate; maker rate may be lower`],['Wallet',review.account],['Network','HyperCore mainnet'],...(row.kind==='perp'?[['Position effect',review.reduceOnly?'Reduce only':'May open or increase a position'],['Margin',`${review.marginMode==='cross'?'Cross':'Isolated'} · ${review.leverage}×`],['Mark price',review.markPrice+' USDC'],['Collateral risk',review.marginMode==='cross'?'Other cross-margin funds can cover losses.':'Losses can consume this position’s isolated collateral.']]:[])])terms.append(el('dt',name),el('dd',value));
+      terms.replaceChildren();for(const [name,value]of [['Market',row.name],['Action',`${review.side==='buy'?'Buy':'Sell'} ${review.size} ${review.market.base}`],['Limit price',review.price+' USDC'],[row.kind==='perp'?'Collateral needed · estimate':'Funds needed',review.spend+' '+review.spendAsset],['Trading fee',`${Number(review.fee)*100}% current taker rate; maker rate may be lower`],['Wallet',review.account],['Network','HyperCore mainnet'],...(row.kind==='perp'?[['Position effect',review.reduceOnly?'Reduce only':'May open or increase a position'],['Margin',`${review.marginMode==='cross'?'Cross':'Isolated'} · ${review.leverage}×`],['Mark price',review.markPrice+' USDC'],['Collateral risk',review.marginMode==='cross'?'Other cross-margin funds can cover losses.':'Losses can consume this position’s isolated collateral.']]:[])])terms.append(el('dt',name),el('dd',value));
       explain.textContent='Submit this review within 60 seconds. The price limit remains in force after submission.';feedback.textContent='';confirm.disabled=false;dialog.showModal();controls();
     }catch(error){status.textContent=error.message;}
   };
@@ -137,7 +137,7 @@ export function mountHyperliquidTrading(target,row){
       const rows=(await readHyperOrders()).filter(o=>!address||o.review.account===address).reverse();if(ticket!==historyVersion||!current()||wallet.snapshot?.address!==address)return;
       if(!address&&rows.length)activity.append(el('p','Saved on this device. Connect the matching wallet to manage orders.'));
       for(const saved of rows){
-        const item=el('article',undefined,'hyper-saved-order'),label=el('strong',`${saved.review.side==='buy'?'Buy':'Sell'} ${saved.review.size} ${saved.review.market.base}`),state=el('span',({awaiting_wallet:'Wallet approval interrupted',submitting:'Confirmation pending',unknown:'Confirmation pending',open:'Open',filled:'Filled',cancelled:'Cancelled',rejected:'Rejected',not_sent:'Not sent'})[saved.state]);
+        const item=el('article',undefined,'hyper-saved-order'),label=el('strong',`${saved.review.side==='buy'?'Buy':'Sell'} ${saved.review.size} ${saved.review.market.base}`),state=el('span',({awaiting_wallet:'Wallet approval unfinished · check status',submitting:'Confirmation pending',unknown:'Confirmation pending',open:'Open',filled:'Filled',cancelled:'Cancelled',rejected:'Rejected',not_sent:'Not sent'})[saved.state]);
         item.append(label,state,el('small',`${saved.review.market.coin} · Limit ${saved.review.price} USDC`));
         item.append(el('small',`${saved.review.account.slice(0,6)}…${saved.review.account.slice(-4)} · Saved ${new Date(saved.updatedAt).toLocaleString()}`));
         if(saved.observation)item.append(el('small',`Filled ${saved.observation.filled} · Remaining ${saved.observation.remaining}`));
@@ -145,7 +145,7 @@ export function mountHyperliquidTrading(target,row){
         if(saved.state!=='not_sent')item.append(check);
         if(saved.state==='open'&&wallet.snapshot?.address===saved.review.account)item.append(button('Cancel order',()=>{
           const cancel=el('dialog');cancelPanels.add(cancel);cancel.className='hyper-order-dialog';cancel.setAttribute('aria-label','Cancel order');let approvedCancel=false;
-          const message=el('p');message.setAttribute('role','status');const signCancel=button('Sign cancellation',async()=>{
+          const message=el('p');message.setAttribute('role','status');const signCancel=button('Confirm cancellation',async()=>{
             if(approvedCancel)return;approvedCancel=true;signCancel.disabled=true;message.textContent='Check your wallet to approve cancellation…';
             try{await cancelTradingOrder(saved,wallet.capture(),{current:()=>current()&&cancel.open});cancel.close();cancel.remove();status.textContent='Cancellation checked. See the updated order status.';}
             catch(e){message.textContent=e.message;approvedCancel=false;signCancel.disabled=false;}finally{void history();}

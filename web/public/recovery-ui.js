@@ -47,9 +47,9 @@ $('#open-backup-form').onsubmit=async event=>{
     $('#backup-phrase').value='';$('#backup-file').value='';$('#open-backup-form').hidden=true;$('#backup-history').hidden=false;
     $('#history-name').textContent=history.sourceProfile.name;$('#history-counts').textContent=`${count(history.contacts.length,'contact')} · ${count(history.history.length,'text message')}`;
     for(const peer of history.contacts){const b=el('button',peer.name);b.type='button';b.dataset.id=peer.id;b.onclick=()=>selectContact(peer.id);$('#history-contacts').append(b);}
-    selectContact(history.contacts[0]?.id);status('Backup verified. History opened on this device.');$('#close-history').focus();
+    selectContact(history.contacts[0]?.id);status('Backup checked. Your chats are open on this device.');$('#close-history').focus();
     $('#restore-chat-review').hidden=false;$('#restore-chat-consent').checked=false;$('#restore-chat').disabled=true;
-    $('#restore-chat-fields p').textContent=result.identityChanged?'Restore chat with an updated Lenz ID. Share the signed update with your contacts. Offline funds stay unavailable.':'Continue with the same Lenz ID and conversations. New messages save automatically on this device. Funds are not restored.';
+    $('#restore-chat-fields p').textContent=result.identityChanged?'Restore your chats with a new Lenz ID. Send the account update to your contacts. Funds will not be restored.':'Continue with the same Lenz ID and conversations. New messages save automatically on this device. Funds are not restored.';
     $('#restore-chat-fields').hidden=!result.canInstall;$('#restore-existing').hidden=result.canInstall;
   }catch(error){if(own===generation)status(error instanceof SyntaxError?'This file is not a Lenz chat backup.':error.message);}finally{if(own===generation){busy=false;$('#open-backup').disabled=false;}}
 };
@@ -57,7 +57,7 @@ $('#restore-chat-consent').onchange=()=>{$('#restore-chat').disabled=!restoreRev
 $('#restore-chat').onclick=async()=>{
   if(installing||!restoreReview||!$('#restore-chat-consent').checked)return;installing=true;
   for(const id of ['restore-chat','close-history','create-tab','open-tab'])$('#'+id).disabled=true;
-  status('Saving recovered chat…');
+  status('Restoring your chats…');
   try{await restoreReview.install();restoreReview=null;location.assign('/chat.html');}
   catch(error){status(error.message);}
   finally{installing=false;for(const id of ['close-history','create-tab','open-tab'])$('#'+id).disabled=false;$('#restore-chat').disabled=!restoreReview||!$('#restore-chat-consent').checked;}

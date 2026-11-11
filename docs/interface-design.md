@@ -72,6 +72,18 @@ interactive controls for unconnected protocols.
 
 ## Interaction and review
 
+Use the same plain language across Wallet, conversations, markets and backups.
+Start with the action: Send, Receive, Add funds, Review transfer or Confirm in wallet.
+Call money added to Lenz “Lenz funds”; keep test dollars clearly labelled with no
+cash value. Describe an uncertain outcome with its next step, such as “Check
+status before trying again”. Distinguish a confirmed wallet transfer from money
+whose arrival in Lenz has been verified.
+
+Use “Chat backup” and “Lenz backup words” consistently in recovery. Keep the
+limits on fund recovery visible. Provider names, contract addresses, signatures
+and routing mechanics belong under Details or How this works. Amounts, fees,
+public visibility, time limits and financial risks stay visible before confirmation.
+
 Keep visible wording short and specific: screen names, actions, amounts and
 necessary state or risk information. Omit promotional headings, generic slogans,
 repeated explanations and decorative copy. Data screens begin with their controls

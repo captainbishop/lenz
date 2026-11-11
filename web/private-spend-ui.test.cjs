@@ -93,10 +93,10 @@ test('encrypted executor reports remain explicitly unverified after expiry and r
  await f.prepare();await f.reviewed();await f.page.locator('#private-spend-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Waiting for delivery'));
  const report=await makeReport(f);
  await f.page.locator('#private-spend-update').setInputFiles({name:'update.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(report))});
- await f.page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Provider reports success · settlement unverified'));
+ await f.page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Provider reports success · completion not yet verified'));
  assert.equal((await f.rows())[0].settlementVerified,false);await f.page.evaluate(()=>privateTime+=4*86400000);
  await f.page.locator('#private-spend-refresh').click();await f.page.waitForFunction(()=>document.querySelector('#private-spend-dialog').getAttribute('aria-busy')==='false');assert(await f.page.locator('#private-spend-approve').isDisabled());
- await f.page.reload();await f.open();assert.match(await f.page.locator('#private-spend-history').innerText(),/settlement unverified/);
+ await f.page.reload();await f.open();assert.match(await f.page.locator('#private-spend-history').innerText(),/completion not yet verified/);
 }));
 test('private review reflows in all themes and supports keyboard dismissal',()=>uiFixture(async f=>{
  await f.prepare();await f.reviewed();const output=path.join(os.tmpdir(),'lenz-private-wallet-ui-20261111');await fs.mkdir(output,{recursive:true});
@@ -141,7 +141,7 @@ test('stale and forged executor updates preserve the saved report and report int
  await f.prepare();await f.reviewed();await f.page.locator('#private-spend-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Waiting for delivery'));
  const input=async value=>{await f.page.locator('#private-spend-update').setInputFiles({name:'report.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(value))});await f.page.waitForFunction(()=>document.querySelector('#private-spend-dialog').getAttribute('aria-busy')==='false');};
  await input(await makeReport(f));assert.equal((await f.rows())[0].observation.status,'SUCCESS');
- await input(await makeReport(f,{status:'PENDING_DEPOSIT',offset:-1000}));assert.equal((await f.rows())[0].observation.status,'SUCCESS');assert.match(await f.page.locator('#private-spend-feedback').innerText(),/Newer executor report retained/);
+ await input(await makeReport(f,{status:'PENDING_DEPOSIT',offset:-1000}));assert.equal((await f.rows())[0].observation.status,'SUCCESS');assert.match(await f.page.locator('#private-spend-feedback').innerText(),/The newer payment update was kept/);
  const forged=await makeReport(f);forged.envelope.signature=forged.envelope.signature.slice(0,-2)+(forged.envelope.signature.endsWith('00')?'01':'00');
  await input(forged);assert.equal((await f.rows())[0].observation.status,'SUCCESS');assert.match(await f.page.locator('#private-spend-feedback').innerText(),/Could not/);
 }));
@@ -152,9 +152,9 @@ test('a self-consistent quote cannot replace the chosen recipient',()=>uiFixture
 test('asset and signer menus retain exact native values and keyboard cancellation',()=>uiFixture(async f=>{
  const asset=f.page.getByRole('combobox',{name:'Asset',exact:true});await asset.click();assert.equal(await asset.getAttribute('aria-expanded'),'true');assert.equal(await f.page.getByRole('option',{name:'ETH · Ethereum',exact:true}).locator('img').getAttribute('src'),'/asset-icons/eth.svg');
  await asset.press('Enter');assert.equal(await f.page.locator('#private-spend-asset').inputValue(),'nep141:eth.omft.near');
- await f.prepare();await f.reviewed();assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'0');assert.equal(await f.page.getByRole('combobox',{name:'Signing wallet',exact:true}).innerText(),'Browser wallet');
+ await f.prepare();await f.reviewed();assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'0');assert.equal(await f.page.getByRole('combobox',{name:'Your wallet',exact:true}).innerText(),'Browser wallet');
  await f.page.evaluate(()=>dispatchEvent(new CustomEvent('eip6963:announceProvider',{detail:{info:{name:'Second wallet'},provider:{...ethereum}}})));
- const signer=f.page.getByRole('combobox',{name:'Signing wallet',exact:true});await signer.press('ArrowDown');await signer.press('End');await signer.press('Enter');
+ const signer=f.page.getByRole('combobox',{name:'Your wallet',exact:true});await signer.press('ArrowDown');await signer.press('End');await signer.press('Enter');
  assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'1');assert.equal(await signer.innerText(),'Second wallet');
  await signer.press('Enter');await signer.press('Home');await signer.press('Escape');assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'1');assert.equal(await signer.getAttribute('aria-expanded'),'false');assert(await signer.evaluate(n=>n===document.activeElement));assert.equal(await f.signed(),0);
 }));

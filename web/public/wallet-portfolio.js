@@ -29,7 +29,7 @@ export function mountWalletPortfolio(){
   button.onclick=()=>openAssets(name);
  }
  $('.balance-label>span').textContent='Offline tUSD';
- $('.wallet-receiving>.quiet').textContent='Offline tUSD only. Settlement is public on NEAR testnet. Not an ETH or SOL address.';
+ $('.wallet-receiving>.quiet').textContent='Receives test dollars (tUSD) only. Confirmed payments are public on the NEAR test network. Do not send ETH or SOL here.';
  const picker=document.createElement('dialog');picker.id='wallet-asset-dialog';picker.setAttribute('aria-labelledby','wallet-asset-title');
  picker.innerHTML='<div class="dialog-top"><h2 id="wallet-asset-title">Receive asset</h2><button id="wallet-asset-close" type="button" class="secondary wallet-close"></button></div><div id="wallet-asset-options"></div>';
  document.body.append(picker);iconButton($('#wallet-asset-close'),'Close','m6 6 12 12M18 6 6 18');$('#wallet-asset-close').onclick=()=>picker.close();
@@ -49,7 +49,7 @@ export function mountWalletPortfolio(){
    const symbol=$('#evm-balance').nextElementSibling.textContent,network=$('#evm-network').textContent;
    assetOption(symbol,network+' · Wallet address',$('#evm-'+assetAction),'Public network');
   }else{
-   const button=document.createElement('button'),label=document.createElement('span');button.type='button';label.textContent='Connect an external wallet';button.append(label);button.insertAdjacentHTML('beforeend',walletIcon('m9 5 7 7-7 7'));button.disabled=$('#evm-connect').disabled;
+   const button=document.createElement('button'),label=document.createElement('span');button.type='button';label.textContent='Connect wallet';button.append(label);button.insertAdjacentHTML('beforeend',walletIcon('m9 5 7 7-7 7'));button.disabled=$('#evm-connect').disabled;
    button.onclick=()=>{resumeConnection=assetAction;picker.close();$('#evm-connect').click();};$('#wallet-asset-options').append(button);
   }
  }
@@ -61,9 +61,9 @@ export function mountWalletPortfolio(){
  new MutationObserver(()=>{if(picker.open)paintAssets();}).observe($('#wallet-offline-controls'),{subtree:true,attributes:true,attributeFilter:['disabled']});
  $('#wallet-tokens h2').textContent='Watched tokens';
  $('#wallet-defi-positions').append($('#rhea-wallet'));
- $('#rhea-wallet h2').textContent='Positions & approvals';
+ $('#rhea-wallet h2').textContent='Positions & requests';
  for(const [label,detail,href,icon] of [
-  ['Swap & routes','Compare markets','/markets.html','M4 8h16m-4-4 4 4-4 4M20 16H4m4-4-4 4 4 4'],
+  ['Swap','Compare markets','/markets.html','M4 8h16m-4-4 4 4-4 4M20 16H4m4-4-4 4 4 4'],
   ['Perpetuals','Hyperliquid','/markets.html?view=perpetuals','M6 3v18M3 8h6v7H3zm12-12v18m-3-15h6v6h-6z'],
   ['Lend & borrow','Credit markets','/markets.html?view=credit','M4 20h16M6 16V9m6 7V9m6 7V9M3 6l9-4 9 4H3z'],
   ['Liquidity','Pools & fees','/markets.html?view=liquidity','M5 5h5v14H5zM14 9h5v10h-5z'],

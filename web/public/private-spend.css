@@ -1,4 +1,31 @@
 .wallet-private-approvals{margin:24px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.wallet-private-approvals .section-heading{flex-wrap:wrap}
+.wallet-private-approvals .section-heading button{display:inline-flex;align-items:center;gap:8px}
+.wallet-private-approvals .section-heading svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6}
+.money-page #private-funding-dialog{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}
+#private-funding-dialog .private-funding-value{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;margin:24px 0}
+#private-funding-dialog .private-funding-value label{grid-column:1/-1;color:var(--muted);font-size:14px}
+#private-funding-dialog input:not([type=checkbox]){min-width:0;width:100%;min-height:48px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);padding:12px 0;font-size:16px}
+#private-funding-dialog #private-funding-amount{font-size:32px;font-variant-numeric:tabular-nums}
+#private-funding-dialog :is(button,input[type=checkbox]):focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+#private-funding-dialog input:not([type=checkbox]):focus-visible{outline:0;border-color:var(--ink);box-shadow:0 2px 0 var(--ink)}
+.private-funding-route{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:16px;align-items:center;margin:24px 0;padding:16px 0;border-block:1px solid var(--line)}
+.private-funding-route>div{display:flex;flex-direction:column;gap:8px;min-width:0}.private-funding-route strong{font-size:18px}.private-funding-route button{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border:0;border-radius:0;background:transparent;text-align:left;font-size:18px}
+.private-funding-route svg,#private-funding-open svg,#private-funding-refresh svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;flex:none}
+#private-funding-open{display:inline-flex;align-items:center;gap:8px}
+#private-funding-dialog .check{display:flex;align-items:flex-start;gap:12px;margin:16px 0}
+#private-funding-dialog .check input{flex:none;margin-top:4px}
+#private-funding-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px;margin:20px 0;font-size:14px}
+#private-funding-dialog dt{color:var(--muted)}
+#private-funding-dialog dd{margin:0;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#private-funding-dialog ul{list-style:none;padding:0}
+#private-funding-dialog li{padding:16px 0;border-bottom:1px solid var(--line)}
+#private-funding-dialog button{min-height:48px}
+#private-funding-dialog :is(#private-funding-prepare,#private-funding-approve){width:100%;margin:16px 0 8px}
+#private-funding-dialog details{margin:12px 0}
+#private-funding-dialog summary{min-height:44px;align-content:center;cursor:pointer}
+#private-funding-dialog details p{font-size:14px;line-height:1.6;color:var(--muted)}
+@media(max-width:360px){.money-page #private-funding-dialog{padding:16px}#private-funding-dialog dl{grid-template-columns:1fr}#private-funding-dialog dd{text-align:left}.private-funding-route{gap:8px}.private-funding-route strong,.private-funding-route button{font-size:16px}}
 .money-page #private-spend-dialog{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}
 #private-spend-dialog label{display:block;margin-top:16px;color:var(--muted);font-size:14px}
 #private-spend-dialog :is(input:not([type=file]),select){width:100%;min-width:0;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;min-height:48px;font-size:16px}

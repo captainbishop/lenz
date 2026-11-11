@@ -1,0 +1,195 @@
+{
+  "checkedAt": "2026-11-11T11:10:50.036Z",
+  "base": "72d9e58015a61f875ff5ba21077b7bc0673b504e",
+  "sourceFiles": {
+    "integrations/intents-spend.mjs": "e02b885aefa5b025d8319807338105644b9fcbfc864d8a8b5e21e9bb900b7c27",
+    "web/private-spend-relay.mjs": "829635ebd348df5da6b5f0da9379aaaa6d123403a6f984da83fd8bb3e50105b2",
+    "web/private-spend-relay.test.mjs": "0fce3b7f8a163b952efb85b2973f1a9572343d03fe7a0786a53c76155719ddea",
+    "web/private-funding.test.mjs": "768b019772a788707883b2f285fc6f7faf7d5217bc845b3c7baaa2e44f75edfe",
+    "web/private-funding-ui.test.cjs": "7da7917035bf0d88fc697c181df4d039a1086ea445a72623d2d508d2d837b431",
+    "web/public/private-funding.js": "aae165c99bad5de5e7b2c0573b97b479c9de58601c24f577dadd9cfb1e6cd534",
+    "web/public/private-funding-ui.js": "1cd966b1a24692fc7c6f91635bf39a311d7ff6250a9ee836ddfbf37f5d48d2b6",
+    "web/public/evm-transfer.js": "5b3b113de9fc38bd2aa8e941540e93a1ff44e797864ee076f46a1578090f0812",
+    "web/public/evm-transfer-service.js": "731064e196b876a468d42193d221f8f6ce53dba13613613071e6f5ef1ee3358f",
+    "web/public/evm-transfer-store.js": "41687bb5c16a6a05766e6f9ba86ef27ee6b2b6ff9a26d1b45278b73154aa0374",
+    "web/public/evm-wallet-ui.js": "5dfd20f30d567b7d97caaa61e9e9776958609ae0c595dea21e0550ac9c428570",
+    "web/public/private-spend-ui.js": "3e13ab9a9e3778e5f7be2665067653e8555cec4765a10ac0792d0790371f0f06",
+    "web/public/private-spend.css": "ad3b488a346bb6210abfaf7a52ac536351964914639eca33359db9402cb4acea",
+    "web/public/sw.js": "d260c2b12fd8ea762006200a53ac9c88587843da792c1a7904bcf38baade53bb",
+    "web/public/chat-sw.js": "7bacc367aae4786e8c8a7488148bbd0388e9caa1e7c9f4379613edeaa91e0937",
+    "web/intents-cache-browser.test.cjs": "3d5a24e4d75939c30e83880df1c571bddb72b7e5061f99e32805d1d3da5f8788",
+    "docs/private-spending.md": "3d5856d43c3aa0b9ced04da78f71430b4c1db1d77c81388f714e67d8b0b4e8ce",
+    "web/public/money.html": "921f6e773bf90e33f61fc64e9b3d02bcbb20c8f30b34015dc73c7f440b829196",
+    "web/public/chat.html": "01533e4312e25b97c4da7ce6ad382f3676d6899e64c1c2897688597580523e46",
+    "web/public/wallet-portfolio.js": "e5d741531eb7be2d9d944cff8dddff0b799421ead81f3af0c7177e1bf74bd96d",
+    "web/public/evm-transfer-ui.js": "da8deb92ae351579631c5e155db584464084a8c8d3cff1a58b0ff7b3da121d53",
+    "web/public/chat.js": "348230394473e074e80b1e79136e74d78d8b8dc0626bb1b8d74915dd387c147a",
+    "web/public/recovery.html": "c64ac50f47ae7b754465759f458fd3f388fb0e37a570ba0b060f4ca4c4e0a5e2",
+    "web/public/recovery-ui.js": "e576056e8a7552e1fd7612089790e8d3003d29f272c153bcb1c962f83a96dfd6",
+    "web/public/account.html": "50b478d4cdea1a234b9aacd3235d8bd25af7f3093f238f0cd8058ad123ac732e",
+    "web/public/markets.html": "09a168ccc0473ad1dd5f253c20199194b2946e3da122ff25ca6862e042fa6707",
+    "web/public/hyperliquid-order-ui.js": "e32726a3e809f9272fbf2cceab2936bf4f8044bfa3649c2ce9b00f2ee74beec1",
+    "web/public/routes.html": "eaa964521a4d020c44cb92e80894baf1fb4b26d8d43a53d11fd3b1b59718d2be",
+    "web/public/routes.js": "85cc0698086ab3506ecde4dcae8939bc6ff510b4933decac2fd0974ca5b33532",
+    "web/public/index.html": "4f1cd80b0fa204d22c2933850793727cf06445d1b42b8812329196f11b64da3f",
+    "web/public/home-defi.js": "62a83f718f281c257c0ddeefe5a4d39bb8eec415cd884df03604d1a134b49ec3",
+    "web/public/route-draft-ui.js": "ca5530661054f4b228b9e673fe5f2936e64983d22fe9b82d7b186870046f1b3f",
+    "web/public/route-draft-form.js": "20e50586e0f8703cc7929d060150fbfb789e4ebf5d060420bae22a94090d813c",
+    "web/public/market-quote-ui.js": "12d429c9839b2727bd023ef2c46c56b93d7292347f410e2edb472a39bfc27e3c",
+    "web/public/money.js": "ee70365aa34e881db0cfc340394ab80a2ac2d98e2cfc35e1b59bf843e1b2fe28",
+    "web/hyperliquid-order-browser.test.cjs": "12d513f56e00856e4a4c25beac2969dcb401642827699e53fe6206ffffae2d30",
+    "web/delivery-receipts-browser.test.cjs": "cdd1df8e4c1ba00048a350756a685b0227f42252c1c78224aec6876e89117348",
+    "docs/interface-design.md": "a5e5b2dbad6332eb11a493dec4009fa671cd4069bb3c6de509726e699dc04d72",
+    "web/private-spend-ui.test.cjs": "5c599a52a2b215ae95ac2581c006be0be197e45ee141451410e9b1df54f0930d",
+    "web/evm-transfer-browser.test.cjs": "c6914dec07db00e2b626873a1f4aab094b63d24547ef949069152ef3df6ec16d",
+    "web/account-backup-browser.test.cjs": "5579bd7f9234b20f4401d6835ffafc84cf3f693e7a2c6e373be8eb79cdb057b1",
+    "web/portable-chat-import-browser.test.cjs": "ad12b60bfd81cb3a0113aefdc9e1573a7e4243f2a6dbed5fc643788dee3f3feb",
+    "web/chat-mobile-browser.test.cjs": "171e9233338d81878261d150814eb498a731ef827536a5aabe35d8ebf40afecc",
+    "web/home-browser.test.cjs": "07ae83f2e28ac24617510fdd54466a40b7c03d2449ddf848787c84ccef0f9092"
+  },
+  "unavailableChecks": [
+    {
+      "journey": "Legacy market navigation",
+      "status": "Timed out; no passing claim."
+    },
+    {
+      "journey": "Legacy saved-route browser suite",
+      "status": "Targets a hidden Refresh control on the unchanged baseline as well; user journey remains unverified."
+    }
+  ],
+  "tests": {
+    "node": 79,
+    "fundingPaymentAndOfflineBrowser": 28,
+    "broaderBrowserFiles": 7
+  },
+  "commands": [
+    [
+      "node",
+      "--test",
+      "web/private-funding.test.mjs",
+      "web/private-spend-relay.test.mjs",
+      "web/evm-transfer.test.mjs",
+      "web/evm-wallet.test.mjs",
+      "web/intents-spend.test.mjs",
+      "integrations/intents-spend.test.mjs",
+      "web/intents-status.test.mjs",
+      "integrations/intents-receive.test.mjs"
+    ],
+    [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "web/private-funding-ui.test.cjs",
+      "web/private-spend-ui.test.cjs",
+      "web/intents-cache-browser.test.cjs"
+    ]
+  ],
+  "runtime": {
+    "browser": "Microsoft Edge",
+    "automation": "Playwright",
+    "mode": "headless",
+    "scope": "Disposable providers, quote signatures and encrypted browser storage; no real financial operation."
+  },
+  "mutationChecks": [
+    {
+      "name": "quote-signature",
+      "file": "web/public/private-funding.js",
+      "test": "web/private-funding.test.mjs",
+      "detected": true,
+      "detection": "behavioral assertion",
+      "sourceSha256": "aae165c99bad5de5e7b2c0573b97b479c9de58601c24f577dadd9cfb1e6cd534",
+      "testSha256": "768b019772a788707883b2f285fc6f7faf7d5217bc845b3c7baaa2e44f75edfe",
+      "restoredExactly": true
+    },
+    {
+      "name": "source-asset",
+      "file": "web/public/private-funding.js",
+      "test": "web/private-funding.test.mjs",
+      "detected": true,
+      "detection": "behavioral assertion",
+      "sourceSha256": "aae165c99bad5de5e7b2c0573b97b479c9de58601c24f577dadd9cfb1e6cd534",
+      "testSha256": "768b019772a788707883b2f285fc6f7faf7d5217bc845b3c7baaa2e44f75edfe",
+      "restoredExactly": true
+    },
+    {
+      "name": "after-storage-clock",
+      "file": "web/public/evm-transfer-service.js",
+      "test": "web/private-funding-ui.test.cjs",
+      "detected": true,
+      "detection": "behavioral assertion",
+      "sourceSha256": "731064e196b876a468d42193d221f8f6ce53dba13613613071e6f5ef1ee3358f",
+      "testSha256": "7da7917035bf0d88fc697c181df4d039a1086ea445a72623d2d508d2d837b431",
+      "restoredExactly": true
+    },
+    {
+      "name": "journal-capacity",
+      "file": "web/public/evm-transfer-store.js",
+      "test": "web/private-funding-ui.test.cjs",
+      "detected": true,
+      "detection": "behavioral assertion",
+      "sourceSha256": "41687bb5c16a6a05766e6f9ba86ef27ee6b2b6ff9a26d1b45278b73154aa0374",
+      "testSha256": "7da7917035bf0d88fc697c181df4d039a1086ea445a72623d2d508d2d837b431",
+      "restoredExactly": true
+    }
+  ],
+  "replay": {
+    "checkedAt": "2026-11-11T10:06:18.253Z",
+    "framesCompared": 15,
+    "framesMatched": 9,
+    "changedFrames": [
+      {
+        "name": "private-send",
+        "theme": "light"
+      },
+      {
+        "name": "private-send",
+        "theme": "dim"
+      },
+      {
+        "name": "private-send",
+        "theme": "dark"
+      },
+      {
+        "name": "private-read",
+        "theme": "light"
+      },
+      {
+        "name": "private-read",
+        "theme": "dim"
+      },
+      {
+        "name": "private-read",
+        "theme": "dark"
+      }
+    ],
+    "approvedCopyOnly": true,
+    "accountStateUnchanged": true,
+    "originalCapturesUnchanged": true,
+    "changedRecordedSources": [
+      "web/public/chat.html",
+      "web/public/chat.js"
+    ]
+  },
+  "reviews": {
+    "specFindings": 0,
+    "standardsFindings": 0,
+    "scope": "Focused candidate sources and exact copy hunks in existing unpublished interfaces; static review."
+  },
+  "funding": {
+    "asset": "Native ETH",
+    "sourceNetworks": [
+      "Ethereum",
+      "Arbitrum",
+      "Base"
+    ],
+    "routeProvider": "NEAR Intents 1Click",
+    "aurora": "Optional execution adapter"
+  },
+  "limits": [
+    "Legacy market navigation and saved-route browser journeys remain unverified.",
+    "Source-chain deposit confirmation does not verify private credit or a refund.",
+    "Funded private execution, independent settlement/refund evidence and financial-key recovery remain unfinished.",
+    "Broader funding assets, deployed executor controls and physical first-offline delivery remain separate work.",
+    "Existing illustrative videos preserve their original captions; read-only replay changes only the reviewed message-status copy."
+  ]
+}
