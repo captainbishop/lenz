@@ -1,6 +1,6 @@
 import {readState,readStateLocked,updateState} from './chat-store.js';
 import {assert,bytes,hex,unhex,keysAre,randomId,openMessage,sealMessage,validateProfile} from './peer-crypto.js';
-import {requirePaymentAccess} from './chat-access.js';
+import {requirePaymentAccess,isRecoveredContact} from './chat-access.js';
 import {validateEnvelope} from './carrier-protocol.js';
 import {checkConfidentialSpend,checkConfidentialSignedData} from './intents-spend.js';
 import {confidentialSpendOutbox,confidentialApprovalId,confidentialApprovalSlot} from './intents-spend-outbox.js';
@@ -12,7 +12,8 @@ const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),aad=s=>bytes([DOMAIN,s.i
 const hasActivity=observation=>observation&&(observation.status!=='PENDING_DEPOSIT'||['amountIn','amountOut','refundedAmount'].some(field=>BigInt(observation[field]??'0')>0n));
 const validHash=value=>typeof value==='string'&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value)&&base58.decode(value).length===32;
 function requestView(row){
- return {id:row.id,sender:row.sender.id,owner:row.packet.offer.terms.owner,amount:row.packet.offer.terms.amount,originAsset:row.packet.offer.terms.originAsset,status:row.submission?.state??(Date.now()>=Date.parse(row.packet.offer.terms.signingDeadline)?'expired-unresolved':'stored'),intentHash:row.submission?.intentHash??null,observation:structuredClone(row.report?.observation??null),statusCheckPending:!!row.observationPending,reportReceived:!!row.report?.acknowledgement,settlementVerified:false};
+ const terms=row.packet.offer.terms;
+ return {id:row.id,sender:row.sender.id,owner:terms.owner,amount:terms.amount,originAsset:terms.originAsset,destinationAsset:terms.destinationAsset,recipient:terms.recipient,minOutput:row.packet.offer.quote.quote.minAmountOut,depositAddress:row.packet.offer.quote.quote.depositAddress,refundDeadline:terms.refundDeadline,signingDeadline:terms.signingDeadline,status:row.submission?.state??(Date.now()>=Date.parse(terms.signingDeadline)?'expired-unresolved':'stored'),intentHash:row.submission?.intentHash??null,observation:structuredClone(row.report?.observation??null),statusCheckPending:!!row.observationPending,activitySeen:!!row.activitySeen,reportReceived:!!row.report?.acknowledgement,settlementVerified:false};
 }
 function checkPolicies(policies){
  assert(Array.isArray(policies)&&policies.length>0&&policies.length<=MAX_ROWS,'Choose the approved senders and wallet owners first.');
@@ -76,17 +77,30 @@ async function save(s,v){
  const iv=crypto.getRandomValues(new Uint8Array(12)),ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(s)},s.privateInboxKey,raw);
  s.privateInboxBox={iv:hex(iv),ciphertext:hex(ciphertext)};
 }
-export async function setConfidentialInboxEnabled(enabled,approved=[]){
+export async function setConfidentialInboxEnabled(enabled,approved=[],{signal,identity,previous}={}){
  assert(typeof enabled==='boolean','Choose whether to receive private approvals.');const policies=structuredClone(approved);
  if(enabled)checkPolicies(policies);
  return updateState(async s=>{
+  if(identity!==undefined)assert(s.identity?.profile.id===identity,'Executor account changed.');
   if(enabled)requirePaymentAccess(s.identity);const v=await read(s);
-  if(enabled){for(const policy of policies)assert(s.contacts.some(p=>p.id===policy.sender),'Add and verify the approved sender first.');v.policies=policies;}
+  if(previous!==undefined)assert(same(v.policies,previous),'Approved senders changed. Review again.');
+  if(enabled){for(const policy of policies)assert(s.contacts.some(p=>p.id===policy.sender)&&!isRecoveredContact(s,policy.sender),'Add and verify the approved sender first.');v.policies=policies;}
+  else if(previous!==undefined){if(policies.length)checkPolicies(policies);v.policies=policies;}
   v.enabled=enabled;await save(s,v);
- });
+ },{signal});
 }
 export async function confidentialInboxSummary(){
- const v=await read(await readState());return {enabled:v.enabled,requests:v.rows.map(requestView)};
+ const s=await readState(),v=await read(s);
+ return {enabled:v.enabled,policies:structuredClone(v.policies),requests:v.rows.map(row=>{
+  const value=requestView(row),allowed=v.enabled&&s.identity.access===undefined&&!isRecoveredContact(s,row.sender.id)&&s.contacts.some(p=>p.id===row.sender.id)&&v.policies.some(p=>p.sender===row.sender.id&&p.owner===value.owner);
+  let live=false;try{checkConfidentialSpend(row.packet.offer);live=true;}catch{}
+  return {...value,canCheck:allowed,canSubmit:allowed&&live&&!row.activitySeen&&!row.observationPending&&(!row.submission||row.submission.state==='not-submitted')};
+ })};
+}
+
+export async function confidentialRequestUpdate(id,{signal}={}){
+ signal?.throwIfAborted();
+ return readStateLocked(async s=>{const v=await read(s),row=v.rows.find(r=>r.id===id);assert(row,'Private request not found.');signal?.throwIfAborted();return structuredClone(row.report?.packet??row.receipt);});
 }
 
 // submit is the connected provider adapter. Persist the exact request and attempt
@@ -97,6 +111,7 @@ export async function submitConfidentialRequest(id,submit,{signal}={}){
  function permitted(s,v,row){
   assert(s.identity?.profile.id===identity,'Executor account changed.');requirePaymentAccess(s.identity);
   assert(v.enabled&&row&&v.policies.some(p=>p.sender===row.sender.id&&p.owner===row.packet.offer.terms.owner),'Private execution is not enabled for this sender and owner.');
+  assert(s.contacts.some(p=>p.id===row.sender.id)&&!isRecoveredContact(s,row.sender.id),'Add and verify the approved sender first.');
   assert(!row.activitySeen,'Provider reported activity for this deposit. Reconcile it before submitting.');
   assert(!row.observationPending,'A private status check needs reconciliation before submitting.');
   signal?.throwIfAborted();
@@ -149,6 +164,7 @@ async function observeRequest(id,observe,{signal}){
  function permitted(s,v,row){
   assert(s.identity?.profile.id===identity,'Executor account changed.');requirePaymentAccess(s.identity);
   assert(v.enabled&&row&&v.policies.some(p=>p.sender===row.sender.id&&p.owner===row.packet.offer.terms.owner),'Private status reading is not enabled for this sender and owner.');
+  assert(s.contacts.some(p=>p.id===row.sender.id)&&!isRecoveredContact(s,row.sender.id),'Add and verify the approved sender first.');
   signal?.throwIfAborted();
  }
  await updateState(async s=>{
@@ -201,6 +217,7 @@ export async function acceptConfidentialCourierEnvelope(s,envelope){
  if(packet?.type==='lenz/private-spend-ack/v1'){await confidentialSpendOutbox.acceptAcknowledgement(s,envelope.packet);return {receipt:null,expiresAt:null};}
  if(packet?.type!=='lenz/private-spend/v1')return null;
  requirePaymentAccess(s.identity);await validateEnvelope(envelope);const v=await read(s);assert(v.enabled,'This device is not receiving private approvals.');
+ assert(!isRecoveredContact(s,sender.id),'Add and verify the approved sender first.');
  assert(v.policies.some(p=>p.sender===sender.id&&p.owner===packet.offer?.terms?.owner),'This sender and private wallet owner have not been approved.');
  const storedAt=Date.now(),review=await checkPacket(packet,storedAt),slot=confidentialApprovalSlot(review);
  let row=v.rows.find(r=>r.id===packet.id);

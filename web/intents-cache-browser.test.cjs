@@ -51,7 +51,9 @@ for(const worker of ['chat-sw.js','sw.js'])test(worker+' retains private outcome
   const fundingRows=await page.evaluate(async()=>(await import('/evm-transfer-store.js')).readTransfers());assert.equal(fundingRows[0].review.funding.terms.owner,owner);assert.equal(fundingRows[0].state,'unknown');assert.equal(fundingRows[0].review.funding.quote.signature,fundingOffer.quote.signature);
   const review=await page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview());assert.equal(review.assets[0].decimals,18);
   await page.evaluate(()=>import('/private-spend-ui.js'));assert(await page.evaluate(async()=>(await fetch('/private-spend.css')).ok));
+  assert.equal(await page.evaluate(async()=>typeof(await import('/private-executor-ui.js')).mountPrivateExecutor),'function');
   if(worker==='sw.js')return;
+  await page.locator('#private-executor-open').click();await page.waitForFunction(()=>document.querySelector('#private-executor-dialog').getAttribute('aria-busy')==='false');assert.match(await page.locator('#private-executor-connection').innerText(),/Offline/);assert(await page.locator('#private-executor-submit').isDisabled());await page.locator('#private-executor-close').click();
   await page.locator('#private-funding-open').click();await page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Wallet response lost · check before trying again'));assert(await page.locator('#private-funding-prepare').isDisabled());await page.locator('#private-funding-close').click();
   await page.locator('#private-spend-open').click();await page.locator('#private-spend-approve').waitFor({state:'visible'});
   assert.match(await page.locator('#private-spend-review').innerText(),/0\.01 ETH/);assert.match(await page.locator('#private-spend-review').innerText(),/Ethereum/);

@@ -1,3 +1,19 @@
+# Received private requests, November 11, 2026
+
+Wallet now exposes exact sender-owner consent, encrypted request intake, separate
+payment review, explicit submission, original-deposit status reads and encrypted
+update export. Unknown attempts cannot retry automatically. Permission removal,
+account changes, unavailable asset metadata and unfinished checks block submission.
+Provider reports remain unverified. Both workers cache the receiving controls.
+
+The isolated candidate passed 60 Node cases and 62 browser/HTTP cases across the
+receiving controls, owner Wallet, existing journals and full offline restart. Four
+controlled guard removals failed their intended regressions. Phone and desktop
+views were inspected in light and dark themes. [Verification](../web/private-executor-verification.json)
+records the exact sources, retained fixture/build failures and tested limits.
+No deployment, real signing, private settlement, refund or financial recovery is
+established. Recorded application videos and their sources remain unchanged.
+
 # Section Account restoration, November 11, 2026
 
 Supported Spot and Perpetuals Account views reuse the existing funds summary and

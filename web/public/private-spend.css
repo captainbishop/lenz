@@ -2,6 +2,16 @@
 .wallet-private-approvals .section-heading{flex-wrap:wrap}
 .wallet-private-approvals .section-heading button{display:inline-flex;align-items:center;gap:8px}
 .wallet-private-approvals .section-heading svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6}
+.money-page #private-executor-dialog{width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}
+#private-executor-dialog label{display:block;margin-top:16px;color:var(--muted);font-size:14px}
+#private-executor-dialog :is(input:not([type=file]):not([type=checkbox]),select){width:100%;min-width:0;min-height:48px;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;background:transparent;color:var(--ink);font-size:16px}
+#private-executor-dialog .check{display:flex;align-items:flex-start;gap:12px;line-height:1.6}#private-executor-dialog .check input{flex:none;margin-top:5px}
+#private-executor-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px 24px;margin:24px 0;font-variant-numeric:tabular-nums}#private-executor-dialog dt{color:var(--muted);font-size:14px}#private-executor-dialog dd{margin:0;text-align:right;overflow-wrap:anywhere;min-width:0}
+#private-executor-dialog :is(p,input[type=file],summary){max-width:100%;overflow-wrap:anywhere}#private-executor-dialog summary{min-height:44px;align-content:center;cursor:pointer}
+#private-executor-dialog ul{list-style:none;padding:0}#private-executor-dialog li{border-top:1px solid var(--line);padding:16px 0}#private-executor-dialog li p{font-size:14px}#private-executor-dialog li button{margin:8px 8px 0 0}
+#private-executor-dialog button{min-height:44px}#private-executor-dialog #private-executor-submit{width:100%;min-height:48px;margin:16px 0}#private-executor-dialog :is(input,select,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+#private-executor-dialog button.secondary{color:var(--ink);background:transparent;border-color:var(--line)}
+@media(max-width:380px){.money-page #private-executor-dialog{padding:16px}#private-executor-dialog dl{grid-template-columns:1fr;gap:8px}#private-executor-dialog dd{text-align:left;margin-bottom:12px}}
 .money-page #private-funding-dialog{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}
 #private-funding-dialog .private-funding-value{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;margin:24px 0}
 #private-funding-dialog .private-funding-value label{grid-column:1/-1;color:var(--muted);font-size:14px}

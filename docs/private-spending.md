@@ -135,6 +135,37 @@ and financial recovery remain unfinished. Browser data loss is not recovered by
 the local transfer journal. Cancel a wallet prompt if its review or deposit
 deadline passes; Lenz cannot prevent the wallet from sending later.
 
+## Received requests
+
+Wallet’s Lenz funds panel opens **Received requests**. The receiving contact
+allows an exact sender and owner account, imports the encrypted saved request,
+and reviews its recipient, amounts, deposit, fees and deadlines before explicitly
+submitting it. Receiving, reopening and reconnecting never submit a payment.
+Verified built-in ETH identifiers for Ethereum, Arbitrum and Base use their exact
+18-decimal amounts and network labels. Other assets remain saved and checkable;
+submission waits for verified display metadata rather than assuming decimals.
+Pausing or removing permissions retains saved requests. Chat-only recovery blocks
+intake and execution; recovered contacts require renewed verification.
+
+The encrypted journal saves an uncertain attempt before calling the provider.
+Lost replies stay unresolved after reopening. **Check update** reads the original
+deposit, including after expiry. Pending reports cannot reopen an already recorded
+submission. Any observed activity or unfinished check blocks a new submission.
+**Save update** returns the exact stored receipt or latest encrypted report to the
+owner’s existing payment-update importer. Provider reports remain unverified and
+cannot credit funds or release reservations.
+
+The local bridge uses the server-only `LENZ_PRIVATE_INTENTS_KEY`. Its Host/Origin
+checks restrict browser requests; the device journal enforces sender-owner consent.
+They do not authenticate another local process. The server listens on loopback,
+and exposing this bridge to remote clients requires separate executor authentication.
+No server wallet key, automatic retry or transaction signing is added.
+
+```powershell
+node --test web/private-executor-relay.test.mjs web/private-executor-ui.test.cjs
+node --test web/intents-spend-outbox-browser.test.cjs web/intents-outcome-browser.test.cjs web/intents-cache-browser.test.cjs
+```
+
 ```powershell
 node --test web/private-spend-relay.test.mjs
 node --test web/private-spend-ui.test.cjs

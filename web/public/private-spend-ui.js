@@ -9,6 +9,7 @@ import {wrapForCarrier,validateEnvelope} from './carrier-protocol.js';
 import {iconButton} from './wallet-actions.js';
 import {walletAmount} from './wallet-visibility.js';
 import {setChoiceRenderer} from './form-controls.js';
+import {mountPrivateExecutor} from './private-executor-ui.js';
 
 const el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const units=(value,decimals)=>{const padded=value.padStart(decimals+1,'0'),fraction=decimals?padded.slice(-decimals).replace(/0+$/,''):'';return (decimals?padded.slice(0,-decimals):padded)+(fraction?'.'+fraction:'');};
@@ -29,6 +30,7 @@ export function mountPrivateSpend(session,before){
  const panel=el('section');panel.id='wallet-private-approvals';panel.className='wallet-private-approvals';
  panel.innerHTML='<div class="section-heading"><h2>Lenz funds</h2><button id="private-spend-open" type="button" class="secondary">Pay</button></div><p class="quiet">Wallet funds → Private account → Offline approval</p>';
  before.before(panel);
+ mountPrivateExecutor(panel);
  iconButton(panel.querySelector('#private-spend-open'),'Pay from private funds','M6 18 18 6M6 6h12v12');panel.querySelector('#private-spend-open').append(el('span','Pay'));
  const dialog=el('dialog');dialog.id='private-spend-dialog';dialog.setAttribute('aria-labelledby','private-spend-title');
  dialog.innerHTML=`<div class="dialog-top"><h2 id="private-spend-title">Pay from Lenz</h2><button id="private-spend-close" class="secondary wallet-close" type="button"></button></div>
@@ -124,7 +126,7 @@ export function mountPrivateSpend(session,before){
   catch(error){if(ticket===version)$('private-spend-feedback').textContent=feedback(error);}
   finally{if(ticket===version){busy=false;controller=null;control();}}
  }
- panel.querySelector('button').onclick=async()=>{
+ panel.querySelector('#private-spend-open').onclick=async()=>{
   const ticket=++version;
   $('private-spend-feedback').textContent='';dialog.showModal();discover();
   try{

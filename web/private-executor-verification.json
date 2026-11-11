@@ -1,0 +1,55 @@
+{
+  "verifiedAt": "2026-11-11T18:30:11.158Z",
+  "baseCommit": "af7b2cbfb171cc4232c2f88fe3a3519037c02ad4",
+  "scope": "Wallet received Confidential Intents requests, exact sender-owner consent and durable submission/status recovery",
+  "sourceFiles": {
+    "web/public/private-executor-ui.js": "f0302d63bcf87616b0052d16bdf072d86bd5411180153b96ea2569fc620128a2",
+    "web/private-executor-ui.test.cjs": "d74b346d8a2ddbcaaca5537719b9abe0a005e534760c993b72d1a82df3d56823",
+    "web/private-executor-relay.mjs": "3e103fc182a01690339f86e16b399fd3a763e1a41b7fb53a3fa0909fc1d1544e",
+    "web/private-executor-relay.test.mjs": "8cb70caf251b14c1d67c0c684fdf59dd23d5b26143a2f5b3c1af13f9a47acebe",
+    "web/public/intents-courier.js": "dc2d3e8227cf89d84854205a1bf4e1b80a18ed36cac6d55317e5b7771c4d2cf0",
+    "web/public/private-spend-ui.js": "1f58ec2abaf5d1046c18cb5a88b2ef9d2b8f0d5a7f7da44e4bd354e4a9eaccdf",
+    "web/public/private-spend.css": "46a3e045b047324cfd54e4e3e168d50ad08ac59d4df111c0864600a145de3756",
+    "web/intents-cache-browser.test.cjs": "7c1360340e81c10618e1c29a1d2615737a2fa6cb95e4597a4d0def8e5171ab19",
+    "docs/private-spending.md": "7303a87c768d589f97804321f85b44d0f28e886da6c276d30dcbb8ef04949574",
+    "web/server.mjs": "fd5a339473bc1aa7c8eb8ad1945b7efc019205b8ad0fdc87f6bd217c44fb38cf",
+    "web/public/chat-sw.js": "7e14af1f44285547c66bad10320cd869c55c4b18f252dc8e18fbc3bb2d77d9cc",
+    "web/public/sw.js": "ce905bef7f3f946dee2f28cbff528ecad6831f5c7ba9eacb367410d5cfb684d3"
+  },
+  "checks": {
+    "node": {
+      "passed": 60
+    },
+    "receivingUI": {
+      "passed": 8
+    },
+    "relayHTTP": {
+      "passed": 6
+    },
+    "existingWalletUI": {
+      "passed": 15
+    },
+    "offlineRestart": {
+      "passed": 2
+    },
+    "existingJournalAndOutcome": {
+      "passed": 31
+    },
+    "guardRemovals": {
+      "detected": 4
+    }
+  },
+  "limits": [
+    "Disposable Edge profiles, synthetic signatures/providers and loopback HTTP; no real financial operation or live private settlement.",
+    "The device journal enforces sender-owner consent; Host/Origin checks do not authenticate another local process. Remote exposure needs separate executor authentication.",
+    "Known Ethereum, Arbitrum and Base ETH display metadata is built in; other assets remain saved/checkable with submission paused.",
+    "Provider reports remain unverified and cannot credit funds or release reservations.",
+    "Physical delivery, independent private credit/settlement/refund and financial recovery remain outside these checks."
+  ],
+  "retainedFailures": [
+    "Initial happy-path fixture compared an unused payload field that the owner outbox intentionally excludes; corrected expected offer.",
+    "An early candidate copy used its own directory as source; corrected absolute source path.",
+    "The clean offline cache initially lacked generated proof dependencies; the existing verified test-only build restored them.",
+    "The timeout mutation raised its specific expected timeout error; the harness initially expected only an assertion error and was corrected."
+  ]
+}
