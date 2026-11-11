@@ -68,8 +68,8 @@ The owner stores a report before returning its receipt. Reports remain readable
 after the approval expires and after a backward clock change. They do not credit
 funds, verify settlement or release reservations. A provider's reported deposit
 activity blocks a fresh submission, including activity in an older or conflicting
-report. These services and their offline dependencies are available to the app; Wallet controls and automatic courier routing are
-separate integration work.
+report. Wallet controls use these services and their offline dependencies.
+Automatic courier routing remains separate integration work.
 
 ## Local verification
 
@@ -94,6 +94,33 @@ the server and reopens the saved page offline through each app worker, without
 an explicit preparation action. These
 checks do not establish first-time offline installation or physical-wallet
 compatibility.
+
+## Wallet approvals
+
+Wallet has a Private approvals panel for same-asset payments between Confidential
+Intents accounts. Preparation requires the server's `LENZ_PRIVATE_INTENTS_KEY`
+partner credential; it stays on the server. The endpoint accepts only chosen,
+unfunded terms and never accepts signatures or submits money. Missing access
+leaves the entries available to retry.
+
+The owner reviews the exact recipient, asset, amount, minimum output, executor,
+refund-start time and signature deadline. An encrypted unsigned review survives
+reopening. A compatible external wallet can sign the saved review offline; Lenz
+saves the signed approval before its encrypted request can be exported. Nearby
+delivery uses the same saved journal. The executor must separately opt in to the
+sender and owner before intake and execution.
+
+Executor update files contain a carrier envelope under
+`{type: "lenz/private-update-file/v1", envelope}`. Import authenticates and stores
+the report or receipt through the existing journals. Reports stay explicitly
+unverified after expiry and restart. Native ETH funding, deployed executor
+controls, independently verified private settlement and financial recovery remain
+unfinished. Browser data loss is not recovered by this local review journal.
+
+```powershell
+node --test web/private-spend-relay.test.mjs
+node --test web/private-spend-ui.test.cjs
+```
 
 Interfaces follow the official [OpenAPI specification](https://1click.chaindefuser.com/docs/v0/openapi.yaml),
 [signed intent flow](https://docs.near-intents.org/integration/distribution-channels/1click-api/quickstart/signed-intent-execution)

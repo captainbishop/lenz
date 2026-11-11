@@ -1,0 +1,16 @@
+.wallet-private-approvals{margin:24px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.money-page #private-spend-dialog{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}
+#private-spend-dialog label{display:block;margin-top:16px;color:var(--muted);font-size:14px}
+#private-spend-dialog :is(input:not([type=file]),select){width:100%;min-width:0;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;min-height:48px;font-size:16px}
+#private-spend-dialog :is(input:not([type=file]),select):focus-visible{outline:0;border-color:var(--ink);box-shadow:0 2px 0 var(--ink)}
+#private-spend-dialog .lenz-choice-button{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;background:transparent;box-shadow:none}
+#private-spend-dialog .lenz-choice-button:focus-visible{outline:0;border-color:var(--ink);box-shadow:0 2px 0 var(--ink)}
+#private-spend-dialog .private-asset-label{display:inline-flex;align-items:center;gap:8px;max-width:100%}#private-spend-dialog .private-asset-label img{flex:none;width:24px;height:24px}
+#private-spend-dialog .private-payment-value{padding:16px 0}
+#private-spend-dialog .private-payment-value input{font-size:clamp(32px,6vw,48px);font-variant-numeric:tabular-nums}
+#private-spend-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px 24px;margin:24px 0;font-variant-numeric:tabular-nums}
+#private-spend-dialog dt{color:var(--muted);font-size:14px}#private-spend-dialog dd{margin:0;text-align:right;overflow-wrap:anywhere;min-width:0}
+#private-spend-dialog button{min-height:44px}#private-spend-dialog :is(#private-spend-approve,#private-spend-prepare){width:100%;min-height:48px;margin-top:16px}
+#private-spend-dialog :is(summary,input[type=file]){max-width:100%;min-height:44px;align-content:center;overflow-wrap:anywhere}
+#private-spend-dialog ul{list-style:none;padding:0}#private-spend-dialog li{border-top:1px solid var(--line);padding:16px 0}#private-spend-dialog li p{font-size:14px}
+@media(max-width:380px){#private-spend-dialog dl{grid-template-columns:1fr;gap:8px}#private-spend-dialog dd{text-align:left;margin-bottom:12px}}

@@ -1,0 +1,161 @@
+{
+  "checkedAt": "2026-11-11T05:17:41.283Z",
+  "base": "02b540cd89cf077e794c1efbed51f5e1e0dda80f",
+  "sourceFiles": {
+    "web/private-spend-relay.mjs": "136a67a1c7741ac1d7f39ea21c658680695bf1b246cbde54082dd08a8691bc58",
+    "web/private-spend-relay.test.mjs": "68fae244fc886893027446c7d975a54236288a609a5f8df9e84383a8a4f8fc8c",
+    "web/private-spend-ui.test.cjs": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+    "web/public/private-spend-ui.js": "3f044e7acc4a81cfd68ebbc272793e122483e6998a880dbfbea45a79d70956d4",
+    "web/public/private-spend-review.js": "79858eaed9a6a054612bc0bbd4283dceee8cb86fa1895f7b742f62c69019c6c8",
+    "web/public/private-spend.css": "e532a4db6b40df479fb70690dc470224817ec1dada4924d65725409c199986fd",
+    "web/intents-cache-browser.test.cjs": "0465f7cdd1f3bda8f7e8141c4e9066ca38d7454a96fc4cd2870c097e1f3cada3",
+    "docs/private-spending.md": "f5b122a669b842e707248cc49bf918e14b812bcb513b5728a5f73749faffbdfc",
+    "web/public/evm-wallet-ui.js": "cab59f089d56eaa200aad995ea0d0682eb81c3f95f076eefd09c868ccb6f288f",
+    "web/public/form-controls.js": "0851b696d622e6ea4f7567f698a4ee378529c6e3a7049e91f31d75c905805610",
+    "web/server.mjs": "e1d1754249e5fdbb6083089ad9aaccc6be491791b288ada1ca319cf90d062a08",
+    "web/public/sw.js": "6a0ee56b5df57addda074053cc06550eafb63c13f887466dee1ecf9bbf622c1b",
+    "web/public/chat-sw.js": "1f41143006c05d224f7a9edf805b93f0b268c3cab45375430a5f87a63559688c",
+    "web/preview-recording.json": "76ce92f4229c04d767e251b5fd1928b304e3dc2434a0ac669a829d339231b0d5",
+    "web/public/intents-spend.js": "dc2ff044f94c2dd031bed37d896d0ad39ebc7306bfc10b1a42f899acdfbf4f01",
+    "web/public/intents-spend-outbox.js": "9736741d60ce832cbba536e7f231b0cb541722e1963eaf6f307ebaa68aa7f092",
+    "web/public/intents-courier.js": "9c6877b61a744f29d551b54f550764e015220d8e71ada9073f5fddedbe72d116",
+    "web/public/intents-report.js": "d3575517198975b184cb79b879c9976f3691cf0254e153e76379665c4809e558",
+    "web/public/intents-status.js": "a53d56b223a118bece9c71d94eba976f2e09b924b327c999736e219f1d2a931d",
+    "web/public/chat-store.js": "4ec3664517f9aa67c26396b09312375deb152cd4b76fe73b48cc246fa6e234f2",
+    "web/public/receive-assets.js": "96a8f44e13122fadd1c7c8887f7d4208a28e1132b889273b1fccea59a8ddab64",
+    "web/public/wallet-visibility.js": "c4183968cdce3d2131f8b9548d7d67de03b72c34381c6120e790b239154626c4"
+  },
+  "tests": {
+    "node": 98,
+    "walletBrowser": 15,
+    "offlineWorkerRestart": 2
+  },
+  "commands": [
+    [
+      "node",
+      "--test",
+      "web/private-spend-relay.test.mjs",
+      "web/intents-spend.test.mjs",
+      "integrations/intents-spend.test.mjs",
+      "web/intents-status.test.mjs",
+      "web/evm-wallet.test.mjs",
+      "web/evm-networks.test.mjs",
+      "web/evm-transfer.test.mjs",
+      "web/receiving-instructions.test.mjs",
+      "integrations/quotes.test.mjs"
+    ],
+    [
+      "node",
+      "--test",
+      "web/private-spend-ui.test.cjs"
+    ],
+    [
+      "node",
+      "--test",
+      "web/intents-cache-browser.test.cjs"
+    ]
+  ],
+  "runtime": {
+    "browser": "Microsoft Edge",
+    "automation": "Playwright",
+    "mode": "headless",
+    "state": "Disposable EIP-1193 providers and IndexedDB with real quote and wallet signatures"
+  },
+  "mutationChecks": {
+    "scenarios": 6,
+    "results": [
+      {
+        "name": "payment-route",
+        "file": "web/private-spend-relay.mjs",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "136a67a1c7741ac1d7f39ea21c658680695bf1b246cbde54082dd08a8691bc58",
+        "test": "web/private-spend-relay.test.mjs",
+        "testSha256": "68fae244fc886893027446c7d975a54236288a609a5f8df9e84383a8a4f8fc8c",
+        "detection": "behavioral assertion"
+      },
+      {
+        "name": "chosen-recipient",
+        "file": "web/public/private-spend-ui.js",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "3f044e7acc4a81cfd68ebbc272793e122483e6998a880dbfbea45a79d70956d4",
+        "test": "web/private-spend-ui.test.cjs",
+        "testSha256": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+        "detection": "behavioral assertion"
+      },
+      {
+        "name": "hidden-history",
+        "file": "web/public/private-spend-ui.js",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "3f044e7acc4a81cfd68ebbc272793e122483e6998a880dbfbea45a79d70956d4",
+        "test": "web/private-spend-ui.test.cjs",
+        "testSha256": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+        "detection": "behavioral assertion"
+      },
+      {
+        "name": "stale-feedback",
+        "file": "web/public/private-spend-ui.js",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "3f044e7acc4a81cfd68ebbc272793e122483e6998a880dbfbea45a79d70956d4",
+        "test": "web/private-spend-ui.test.cjs",
+        "testSha256": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+        "detection": "behavioral assertion"
+      },
+      {
+        "name": "first-click-menu",
+        "file": "web/public/form-controls.js",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "0851b696d622e6ea4f7567f698a4ee378529c6e3a7049e91f31d75c905805610",
+        "test": "web/private-spend-ui.test.cjs",
+        "testSha256": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+        "detection": "behavioral assertion"
+      },
+      {
+        "name": "visible-signer",
+        "file": "web/public/private-spend-ui.js",
+        "detected": true,
+        "exitCode": 1,
+        "sourceSha256": "3f044e7acc4a81cfd68ebbc272793e122483e6998a880dbfbea45a79d70956d4",
+        "test": "web/private-spend-ui.test.cjs",
+        "testSha256": "6863c11aa3c0523777c2680405fd5278edf595784f383cc18b4c37f700d91961",
+        "detection": "behavioral assertion"
+      }
+    ]
+  },
+  "previewCompatibility": {
+    "checkedAt": "2026-11-11T04:43:07.369Z",
+    "framesMatched": 15,
+    "accountsUnchanged": 3,
+    "source": "web/public/form-controls.js",
+    "comparison": "Published baseline versus final renderer using copied test profiles",
+    "historicalCapturesAndRecordingsPreserved": true,
+    "historicalDifference": "The published baseline already uses Share where an older saved capture used Save message. This comparison tests renderer compatibility against the current baseline."
+  },
+  "verifiedBoundaries": [
+    "Exact chosen recipient, same asset, full amount minimum and zero slippage remain bound before approval.",
+    "Missing partner access, cancellation, account changes and failed durable storage cannot queue a late approval or expose a handoff.",
+    "Saved unsigned reviews retain asset metadata; compatible offline signing and encrypted outbox export work after reopening.",
+    "Authenticated owner reports and storage receipts preserve newer history and remain settlementVerified:false.",
+    "The asset menu opens on the first click, retains exact native values and keyboard cancellation, and signing uses the displayed wallet selection.",
+    "Both app workers retain the complete private approval dependencies through a full offline browser restart."
+  ],
+  "unavailableChecks": [
+    {
+      "check": "Legacy form-controls browser suite",
+      "result": "Stopped at its old market offline-readiness prerequisite before exercising controls. The focused Wallet menu test covers the changed renderer."
+    }
+  ],
+  "limitations": [
+    "Preparation requires the server-only LENZ_PRIVATE_INTENTS_KEY partner credential. No money submission endpoint is exposed by this slice.",
+    "Native ETH funding, deployed executor controls, automatic courier routing and funded private execution remain unfinished.",
+    "Provider observations do not independently verify privacy, settlement or refund; they cannot credit funds or release reservations.",
+    "Financial-key/liability recovery, first-time offline installation and physical-device/wallet compatibility remain unverified.",
+    "Zcash and Tornado Cash remain separate integrations."
+  ],
+  "financialOperations": 0,
+  "deployments": 0
+}

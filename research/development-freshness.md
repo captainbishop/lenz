@@ -1,3 +1,11 @@
+# Wallet private approvals, November 11, 2026
+
+The existing Wallet prepares an unfunded same-asset Confidential Intents payment, retains an encrypted unsigned review and saves an approval before encrypted handoff. Receipt terms bind the chosen recipient and asset. Executor reports and storage receipts preserve newer history and remain explicitly unverified. The asset menu preserves its pressed label during focus, opens on the first click and keeps native values and keyboard cancellation. Signing uses the displayed wallet selection.
+
+The isolated candidate passed 98 Node tests, 15 Wallet browser cases and two complete offline worker restart cases. Six selected mutation scenarios failed behavioral assertions. Separate Spec and Standards reviews cover the focused change. A fresh baseline-versus-renderer comparison matched 15 preview frames and preserved all three test accounts, historical captures and recordings. Source hashes and reproducible commands are in web/private-spend-verification.json.
+
+Preparation requires a server-only partner credential. Native ETH funding, deployed executor controls, automatic courier routing, funded private execution, independent settlement/refund, financial recovery and physical first-offline delivery remain unfinished. The legacy general form-controls test stopped at its old market readiness prerequisite; the focused menu regression passes. These checks use disposable providers, real cryptography and local browser storage. No live financial operation or deployment ran.
+
 # Durable encrypted private reports, November 11, 2026
 
 Private approval journals save encrypted provider observations and exact owner storage receipts. Duplicate reads reuse the same packet; older or conflicting updates cannot replace the latest report. A durable activity warning prevents a later pending report from reopening submission, including when conflicting evidence is rejected. Interrupted status checks remain blocked until reconciliation. Optional IndexedDB cancellation aborts the write without publishing a packet.

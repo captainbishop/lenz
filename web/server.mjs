@@ -18,6 +18,8 @@ import {createAccountRoute} from './account-relay.mjs';
 import {createAIRoute} from './ai-relay.mjs';
 import {AIUsageStore,aiConfigured,runAIWorker} from './ai-service.mjs';
 import {receiveRoute} from './receive-relay.mjs';
+import {createPrivateSpendRoute} from './private-spend-relay.mjs';
+const privateSpendRoute=createPrivateSpendRoute({apiKey:process.env.LENZ_PRIVATE_INTENTS_KEY});
 const accountOrigin=process.env.LENZ_ACCOUNT_ORIGIN??'http://localhost:4173';
 let accountRoute;
 const aiConfig={apiKey:process.env.NEARAI_API_KEY,model:process.env.LENZ_AI_MODEL};
@@ -36,6 +38,7 @@ http.createServer(async (req, res) => {
     if (!['127.0.0.1:4173',new URL(accountOrigin).host].includes(req.headers.host)) { res.writeHead(403); res.end('Use the Lenz app address'); return; }
     if(pathname.startsWith('/api/accounts/')){accountRoute??=createAccountRoute({origin:accountOrigin,store:new AccountStore(resolve(process.env.LENZ_ACCOUNT_DATA??'.account-data'))});await accountRoute(req,res);return;}
     if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
+    if (await privateSpendRoute(req, res)) return;
     if (await nameRoute(req, res)) return;
     if (await aiRoute(req, res)) return;
     if (await receiveRoute(req, res)) return;

@@ -1,3 +1,4 @@
+import {mountPrivateSpend} from './private-spend-ui.js';
 import { createWalletSession } from './evm-wallet.js';
 import { iconButton } from './wallet-actions.js';
 import { walletAmount } from './wallet-visibility.js';
@@ -47,6 +48,7 @@ export function mountEvmWallet() {
     dialog.close();
   }});
   mountEvmTransfers(session);
+  mountPrivateSpend(session, document.querySelector('#wallet-onboarding'));
   mountReceivingLinks(session);
   mountNetworkControls(session, networks, next => { selection = next; openConnect(); });
   const providers = [];

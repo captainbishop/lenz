@@ -1,5 +1,8 @@
 // Keep native form values and validation; present choices in the page's theme.
 const controls=new WeakMap();
+const renderers=new WeakMap();
+// Page-specific labels retain the native select's values and keyboard behavior.
+export function setChoiceRenderer(select,render){renderers.set(select,render);controls.get(select)?.sync();}
 let nextId=0,opened=null;
 const el=(tag,cls)=>{const n=document.createElement(tag);n.className=cls;return n;};
 function mount(select){
@@ -14,8 +17,16 @@ function mount(select){
   let active=-1,events=null,typed='',typedAt=0,invalid=false;
   const options=()=>[...select.options];
   const allowed=option=>!option.disabled&&!option.hidden&&!option.parentElement.disabled;
+  function paintLabel(label,option){
+    const render=renderers.get(select);
+    if(render&&option){
+      const painted=render(option);
+      // Preserve the pressed node when focus synchronizes an unchanged label.
+      if(label.childNodes.length!==1||!label.firstChild.isEqualNode(painted))label.replaceChildren(painted);
+    }else label.textContent=option?.label??'Choose';
+  }
   function sync(){
-    text.textContent=select.selectedOptions[0]?.label??'Choose';button.disabled=select.matches(':disabled');if(wrap.hidden!==select.hidden)wrap.hidden=select.hidden;
+    paintLabel(text,select.selectedOptions[0]);button.disabled=select.matches(':disabled');if(wrap.hidden!==select.hidden)wrap.hidden=select.hidden;
     button.setAttribute('aria-required',String(select.required));
     for(const attr of ['aria-describedby','aria-invalid']){const value=attr==='aria-invalid'&&invalid&&!select.validity.valid?'true':select.getAttribute(attr);if(value===null)button.removeAttribute(attr);else button.setAttribute(attr,value);}
     if(opened===api&&(button.disabled||wrap.hidden||!button.getClientRects().length))close();
@@ -46,7 +57,7 @@ function mount(select){
     sync();if(button.disabled||!button.getClientRects().length)return;opened?.close();opened=api;
     list.replaceChildren(...options().map((option,index)=>{
       const row=el('div','lenz-choice-option');row.id=id+'-option-'+index;row.dataset.index=index;row.setAttribute('role','option');row.setAttribute('aria-selected',String(option.selected));row.setAttribute('aria-disabled',String(!allowed(option)));row.hidden=option.hidden;
-      const label=el('span',''),tick=el('span','lenz-choice-tick');label.textContent=option.label;tick.setAttribute('aria-hidden','true');row.append(label,tick);
+      const label=el('span',''),tick=el('span','lenz-choice-tick');paintLabel(label,option);tick.setAttribute('aria-hidden','true');row.append(label,tick);
       row.onpointerdown=e=>e.preventDefault();row.onclick=e=>{e.preventDefault();e.stopPropagation();choose(index);};return row;
     }));
     list.hidden=false;if(list.hasAttribute('popover'))list.showPopover();place();button.setAttribute('aria-expanded','true');point(select.selectedIndex);button.focus({preventScroll:true});

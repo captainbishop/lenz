@@ -56,7 +56,7 @@
     "web/export-preview-videos.cjs": "a34be3377f7a1581ca762b7d4f707932c01580b01213acc3f48894158d600e4e",
     "web/record-preview-videos.cjs": "8322b9d744f9fcc1f19c5dbe92936587d97f15953e567c849070bfd52908dd23",
     "web/public/form-controls.css": "b3b31fd79d5b444ac286e3243901bd8aa12e9b353dde2b76e10e54de9c938d80",
-    "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+    "web/public/form-controls.js": "0851b696d622e6ea4f7567f698a4ee378529c6e3a7049e91f31d75c905805610",
     "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/account-backup.js": "17a940d76e5033ed1a51bc699c8c845dca2ed953daa2986818fc258631adbf36",
     "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
@@ -338,5 +338,15 @@
   "scope": "Art-directed DOM close-ups of verified Lenz flows, with encryption and file movement illustrated. Message text and payment amounts/statuses are checked against the saved signed replay. Lenz ID comes from a new disposable identity. These are silent explanations, not live transactions or a simulation of automatic offline transport.",
   "sourceReview": "web/private-outcome-verification.json",
   "sourceReviewedAt": "2026-11-10T23:44:41.547Z",
-  "reviewedAt": "2026-11-08T05:14:26.390Z"
+  "reviewedAt": "2026-11-08T05:14:26.390Z",
+  "sourceCompatibilityReviews": [
+    {
+      "file": "web/public/form-controls.js",
+      "before": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+      "after": "0851b696d622e6ea4f7567f698a4ee378529c6e3a7049e91f31d75c905805610",
+      "evidence": "web/private-spend-verification.json",
+      "framesMatched": 15,
+      "scope": "Current baseline and changed renderer produced identical replay frames. Original recordings and captures remain preserved."
+    }
+  ]
 }
