@@ -1,3 +1,17 @@
+# Exact unsigned memo review, November 12, 2026
+
+The local Zcash review screen can inspect authenticated payment and owned-change
+memos and record an explicit confirmation bound to the saved transaction and all
+memo bytes. Raw content remains transient; signing and sending remain unavailable.
+Technical fingerprints stay under Transaction details, and Lenz themes are preserved.
+
+Fresh verification passed 41 JS cases, 11 native cases, nine memo browser groups,
+nine output groups and eight expiry groups. Twelve theme/viewport combinations
+and enlarged text passed. [Evidence](../zcash/memo-review-verification.json) binds
+sources and the reviewed ignored native executable. Tests use public synthetic
+fixtures. Current inputs/witnesses, production signer recovery, submission and
+independent outcomes remain open.
+
 # Selected lending positions, November 12, 2026
 
 Markets now reads exact selected WETH/USDC reserve positions on Ethereum, Base

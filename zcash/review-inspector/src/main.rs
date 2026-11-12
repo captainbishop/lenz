@@ -1,4 +1,4 @@
-// Read-only transaction review. Effects mode accepts a viewing key over stdin.
+// Read-only transaction review. Effects and memo modes accept a viewing key over stdin.
 use std::{env, fs, io::{self, Read}, process};
 mod effects;
 #[cfg(test)]
@@ -33,16 +33,20 @@ fn main() {
     let result = (|| {
         if args.len() != 2 { return Err("Expected a transaction file and target block height"); }
         let effects_mode = args[0] == "--effects";
-        let file = if effects_mode { &args[1] } else { &args[0] };
+        let memos_mode = args[0] == "--memos";
+        let file = if effects_mode || memos_mode { &args[1] } else { &args[0] };
         let meta = fs::metadata(file).map_err(|_| "Cannot read transaction file")?;
         if !meta.is_file() || meta.len() > 1_048_576 { return Err("Unsupported transaction file"); }
-        let bytes = fs::read(file).map_err(|_| "Cannot read transaction file")?;
-        if effects_mode {
+        let mut bytes = Vec::new();
+        fs::File::open(file).map_err(|_| "Cannot read transaction file")?.take(1_048_577)
+            .read_to_end(&mut bytes).map_err(|_| "Cannot read transaction file")?;
+        if bytes.len() > 1_048_576 { return Err("Unsupported transaction file"); }
+        if effects_mode || memos_mode {
             let mut input = Vec::new();
             io::stdin().take(16_385).read_to_end(&mut input).map_err(|_| "Cannot read review terms")?;
             if input.len() > 16_384 { return Err("Review terms too large"); }
             let terms = serde_json::from_slice(&input).map_err(|_| "Invalid review terms")?;
-            effects::verify(&bytes, terms)
+            if memos_mode { effects::verify_memos(&bytes, terms) } else { effects::verify(&bytes, terms) }
         } else {
             let height = args[1].to_str().and_then(|s| s.parse::<u32>().ok()).ok_or("Invalid target height")?;
             inspect(&bytes, height)

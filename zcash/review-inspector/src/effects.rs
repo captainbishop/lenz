@@ -1,6 +1,7 @@
 use pczt::{Pczt, roles::verifier::{Verifier, OrchardError}};
 use zcash_keys::{address::Address, keys::UnifiedFullViewingKey};
 use zcash_protocol::consensus::TEST_NETWORK;
+use sha2::{Digest, Sha256};
 
 // Viewing keys arrive on stdin and are never returned or written to disk.
 #[derive(serde::Deserialize)]
@@ -13,6 +14,25 @@ pub struct Terms {
 }
 
 pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static str> {
+    verify_outputs(bytes, terms).map(|(effects, _, _)| effects)
+}
+
+pub fn verify_memos(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static str> {
+    let (mut effects, recipient_memo, change_memo) = verify_outputs(bytes, terms)?;
+    let result = effects.as_object_mut().ok_or("Missing review result")?;
+    result.insert("pcztSha256".into(), serde_json::json!(format!("{:x}", Sha256::digest(bytes))));
+    result.insert("memos".into(), serde_json::json!({
+        "recipient": { "hex": memo_hex(&recipient_memo) },
+        "change": { "hex": memo_hex(&change_memo) },
+    }));
+    Ok(effects)
+}
+
+fn memo_hex(memo: &[u8; 512]) -> String {
+    memo.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
+fn verify_outputs(bytes: &[u8], terms: Terms) -> Result<(serde_json::Value, [u8; 512], [u8; 512]), &'static str> {
     if terms.amount == 0 || terms.amount > 10_000_000 || terms.fee == 0 || terms.fee > 10_000 {
         return Err("Review amount or fee exceeds test bounds");
     }
@@ -32,10 +52,11 @@ pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static 
     if fvk.scope_for_address(&recipient).is_some() { return Err("Recipient must be the other test wallet"); }
     let mut verified = None;
     Verifier::new(transaction).with_ironwood::<&'static str, _>(|bundle| {
-        let check = || -> Result<(u64, u64), &'static str> {
+        let check = || -> Result<(u64, u64, [u8; 512], [u8; 512]), &'static str> {
             if !bundle.flags().spends_enabled() || !bundle.flags().outputs_enabled() { return Err("Payment inputs or outputs are disabled"); }
             bundle.verify_cross_address_restriction().map_err(|_| "Invalid cross-address binding")?;
             let (mut spent, mut paid, mut change, mut inputs, mut recipients, mut changes) = (0u64, 0u64, 0u64, 0, 0, 0);
+            let (mut recipient_memo, mut change_memo) = (None, None);
             for action in bundle.actions() {
                 action.verify_cv_net().map_err(|_| "Invalid value commitment")?;
                 action.spend().verify_nullifier(Some(fvk)).map_err(|_| "Input does not match wallet viewing key")?;
@@ -63,9 +84,11 @@ pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static 
                 }
                 if address == &recipient {
                     recipients += 1; paid = paid.checked_add(value).ok_or("Output overflow")?;
+                    recipient_memo = Some(recovered.2);
                 } else {
                     if fvk.scope_for_address(address) != Some(zip32::Scope::Internal) { return Err("Change is not owned by the sending wallet"); }
                     changes += 1; change = change.checked_add(value).ok_or("Change overflow")?;
+                    change_memo = Some(recovered.2);
                 }
             }
             if inputs != 1 || recipients != 1 || changes != 1 || change == 0 { return Err("Expected one real input, recipient and owned change"); }
@@ -73,15 +96,15 @@ pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static 
             let fee = spent.checked_sub(paid).and_then(|n| n.checked_sub(change)).ok_or("Value does not conserve")?;
             if fee != terms.fee { return Err("Fee differs from review"); }
             if i64::try_from(*bundle.value_sum()).ok() != Some(fee as i64) { return Err("Bundle balance differs from fee"); }
-            Ok((spent, change))
+            Ok((spent, change, recipient_memo.ok_or("Missing recipient memo")?, change_memo.ok_or("Missing change memo")?))
         };
         verified = Some(check().map_err(OrchardError::Custom)?); Ok(())
     }).map_err(|e| match e { OrchardError::Custom(reason) => reason, _ => "Invalid Ironwood bundle" })?;
-    let (spent, change) = verified.ok_or("Missing review result")?;
-    Ok(serde_json::json!({"status":"verified", "version":6, "pool":"ironwood",
+    let (spent, change, recipient_memo, change_memo) = verified.ok_or("Missing review result")?;
+    Ok((serde_json::json!({"status":"verified", "version":6, "pool":"ironwood",
         "amount":terms.amount.to_string(), "fee":terms.fee.to_string(), "change":change.to_string(),
         "inputValue":spent.to_string(), "recipient":terms.recipient,
-        "changeOwned":true, "commitmentsVerified":true, "noteEncryptionVerified":true, "canSign":false, "canSend":false}))
+        "changeOwned":true, "commitmentsVerified":true, "noteEncryptionVerified":true, "canSign":false, "canSend":false}), recipient_memo, change_memo))
 }
 
 fn unsigned_real_spend(value: u64, has_signature: bool) -> bool {

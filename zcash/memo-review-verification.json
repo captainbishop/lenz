@@ -1,0 +1,76 @@
+{
+  "checkedAt": "2026-11-12T09:03:56.764Z",
+  "baseCommit": "aeadc76019cda2698bf788abb56bdaf01402315d",
+  "sources": {
+    "web/public/chat-sw.js": "d1c9527f08dbba41967bfeccaa53a4e09fc25e2820baf7826915a287814481c7",
+    "web/public/zcash-lab.css": "2815185479b87fd2760545bc97aba2c3ff5691dd5ad2d5aac17b6b8ef53c0884",
+    "web/public/zcash-lab.html": "759378bf8a07f4c114b9d8d6acb14b68a33bd428f9a89b721f56e2f63baabb54",
+    "web/public/zcash-lab.js": "cf05900d49cef850cd819fbf0a7a66682ff390e4237f09ca2640071c46a53aa9",
+    "web/public/zcash-memos.js": "caa51f66acc0ad0ec8207d5775eba6e51aed18c0687a386c18d16360ee6e6df4",
+    "web/zcash-memos.test.cjs": "113d2b9ea49d21759111d2fd3cdb566eb6a1ce53660c4d5e72b445f42ef2ce79",
+    "web/zcash-relay.mjs": "42378bef08bf0e08fffc9f6586c6db69d5e1eabca45a6c95226dce997d5c04b2",
+    "web/zcash-relay.test.mjs": "feed7c176baad3cf8d5e64eacb5e7fab2e84fde654c06ad77d5c1242f7394764",
+    "zcash/payment-effects.mjs": "b5adb8c195341382f75ec7f75f8e9f81c879d27c94e51d3add45a8b6e4e1f0ca",
+    "zcash/payment-memos.mjs": "4ca7a40d5aae4eb3c77dc9ff7389d0fcb4cd697d54028382ad8eb0f293c88784",
+    "zcash/payment-memos.test.mjs": "2b86b73b4397a74d7547cc7913941ac608ead428ed3324a76a4505c4719c11c9",
+    "zcash/payment-review.mjs": "6fbb594f18a3998957eda09126065227f77cf001e7e620f05bc8d523efd3b3f4",
+    "zcash/review-inspector/Cargo.lock": "4147e138282bb9c555570f329f43127372c11b08e2e68ed19e978d4bb1326252",
+    "zcash/review-inspector/Cargo.toml": "6c222dbcc7c4f7a656ffe421c3c281d82004c240b74a0c98b5cd34b709dc7cd7",
+    "zcash/review-inspector/README.md": "a2df70d21dc32da9794faf3e7247d494822cee90b7b0a8cd56863e1834f2f8ae",
+    "zcash/review-inspector/build.json": "d3a597658045682ccfe222a6eac9f9bf49e0147471324c12f8522fc0b7b5be43",
+    "zcash/review-inspector/build.ps1": "7dca1231dbc08af03c854ceb34935470be40b2a626624ff9baa835c203209a52",
+    "zcash/review-inspector/src/effects.rs": "f002806cf8041391edaea4b008326f757f920cc7ea4aa813eae55af2f363ac8e",
+    "zcash/review-inspector/src/main.rs": "e864890cb888995d483b366cc39a31e2ca2eebc87f45e05070f947c38d6730ad",
+    "zcash/review-inspector/src/synthetic_tests.rs": "aef19b3bfb139ccfbb2558e011cfc8424c11169ffcc583e30a80683509e85f44"
+  },
+  "runtime": {
+    "path": "zcash/review-inspector/target/release/lenz-zcash-review-inspector.exe",
+    "sha256": "4314fa0e0057e2e72ae6402f5c891697a5f2197f3355e8cfe757c438db47d721"
+  },
+  "checks": {
+    "nodeCases": 41,
+    "nativeCases": 11,
+    "nativePins": 6,
+    "memoBrowserGroups": 9,
+    "outputBrowserGroups": 9,
+    "expiryBrowserGroups": 8,
+    "executedBehavioralChecks": 78,
+    "failed": 0,
+    "visualCombinations": 12,
+    "largeText": true,
+    "cacheResources": [
+      {
+        "worker": "sw.js",
+        "paths": 751
+      },
+      {
+        "worker": "chat-sw.js",
+        "paths": 780
+      }
+    ]
+  },
+  "behavior": [
+    "Explicit native memo inspection recovers authenticated recipient and owned-change memo bytes through full OVK/IVK APIs.",
+    "Native SHA-256 hashes the exact parsed PCZT bytes; service binds payment terms, both roles and all 512 bytes per memo.",
+    "Raw memo content remains transient; saved records keep bounded fingerprints and explicit review confirmation.",
+    "Changed/missing files, wrong account/ID, native hash swaps and interrupted inspection invalidate confirmation without deleting unsigned evidence.",
+    "Legacy records reopen unreviewed; restart never automatically inspects, signs, proves or sends.",
+    "Browser content uses textContent, distinguishes ZIP 302 formats, preserves BOM bytes and clears on lifecycle/account/offline cancellation.",
+    "Preserved Lenz theme links and Dim/Dark panel rules render the new surface; the app worker caches the shell and bypasses memo API responses."
+  ],
+  "retainedFailures": [
+    "Confirmed-status file fingerprints previously crowded primary wording; they now remain under Transaction details.",
+    "The older baseline lacked Dim panel/theme links; existing root theme improvements were preserved in this integration.",
+    "The first private visual probe selected the wrong parent class and then included hidden controls; corrected fixture observations passed without source changes.",
+    "The first native command assumed a copied toolchain in the memo worktree; the existing verified offline root toolchain was used instead."
+  ],
+  "limits": [
+    "Synthetic public seeds, inert unsigned fixture reviews and disposable Edge profiles; no actual native account, .testnet, user secret or wallet action.",
+    "Final integrated native tests and source/runtime pins establish these specific checks, not proof validity, current witness/anchor/spentness or synchronized ownership.",
+    "No signing, proving, submission, production recovery, independent settlement or full private offline DeFi readiness claim."
+  ],
+  "review": {
+    "spec": "Independent source-bound Spec/security review and actual HTTP close-cancellation probe cleared the candidate. Root rechecked integrated behavior and exact native pins.",
+    "standards": "Independent final Standards review cleared copy; root preserved and freshly verified the required theme/worker adaptation."
+  }
+}

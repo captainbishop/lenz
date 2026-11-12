@@ -5,6 +5,19 @@ import { createZcashRoute } from './zcash-relay.mjs';
 const req=(url='/api/zcash/status',input={wallet:'a'},changes={})=>Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]),{url,method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json'},...changes});
 const res=()=>({writeHead(status,headers){this.status=status;this.headers=headers;},end(body){this.body=JSON.parse(body);}});
 
+test('memo inspection and confirmation accept only bounded exact review identifiers and a fingerprint',async()=>{
+  const id='12345678-1234-1234-1234-123456789abc',binding='b'.repeat(64),calls=[];
+  const route=createZcashRoute(()=>assert.fail('no native wallet'),async(action,input)=>{calls.push([action,input]);return{review:null};});
+  for(const [action,input] of [['review-memos',{wallet:'a',id}],['review-memo-confirm',{wallet:'a',id,binding}]]) {
+    const out=res();await route(req('/api/zcash/'+action,input),out);assert.equal(out.status,200);assert.equal(out.headers['Cache-Control'],'no-store');
+  }
+  assert.deepEqual(calls,[['memos',{wallet:'a',id}],['memo-confirm',{wallet:'a',id,binding}]]);
+  for(const input of [{wallet:'a',id,memo:'private'},{wallet:'a',id,ufvk:'secret'},{wallet:'a',id,path:'foreign'},{wallet:'a',id,binding:'wrong'}]){
+    const out=res();await route(req('/api/zcash/review-memo-confirm',input),out);assert.equal(out.status,400);
+  }
+  assert.equal(calls.length,2);
+});
+
 test('unsigned review routes accept only exact wallet/amount or wallet/id payloads',async()=>{
   const calls=[],route=createZcashRoute(()=>assert.fail('no snapshot'),async(...args)=>{calls.push(args);return {review:null};});
   for(const [path,input]of [['review',{wallet:'a',amount:'0.01'}],['review-status',{wallet:'a'}],['review-discard',{wallet:'a',id:'12345678-1234-1234-1234-123456789abc'}]]){const out=res();await route(req('/api/zcash/'+path,input),out);assert.equal(out.status,200);assert.equal(out.headers['Cache-Control'],'no-store');}

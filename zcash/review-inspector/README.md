@@ -8,12 +8,14 @@ The `--effects PRIVATE_PCZT` mode accepts a bounded JSON object containing `ufvk
 
 The key never appears in arguments or output. Real input signatures are rejected; zero-value dummy signatures created by the I/O finalizer are permitted. See [output verification](../payment-effects.md) for the exact checks and remaining signing gates. This mode handles private viewing material in process memory, so the host and local bridge remain trusted. Native tests construct synthetic two-action PCZTs in memory from public test seeds; they do not open an account or submit a transaction. Builder and I/O-finalizer dependencies are enabled only for these tests.
 
+The `--memos PRIVATE_PCZT` mode accepts the same stdin terms and performs the same full verification. It also returns the authenticated recipient and owned change memos as exact lowercase hex, including all 512 bytes and their padding, plus `pcztSha256` computed over the bytes it parsed. Raw memos remain transient local bridge/UI data; only their role-bound fingerprints may be saved by the review service. Signing and sending remain disabled. SHA-256 uses the pinned `sha2` 0.10.9 dependency.
+
 Build from the repository root with the existing local Rust toolchain/cache:
 
 ```powershell
 ./zcash/review-inspector/build.ps1
 ```
 
-The script runs the locked test/build offline and writes source, manifest, lockfile and executable hashes to `build.json`. A fresh machine must first obtain Rust 1.99.1 and the pinned dependencies. Runtime binaries remain ignored under `target/`; the local bridge refuses a binary or source mismatch. The recorded Windows build does not establish another platform's behavior.
+The script runs the locked test/build offline and writes source, manifest, lockfile and executable hashes to `build.json`. `memoInspectionVersion: 1` identifies the memo-capable build; the bridge rejects an older build before requesting viewing material for memo inspection. A fresh machine must first obtain Rust 1.99.1 and the pinned dependencies. Runtime binaries remain ignored under `target/`; the local bridge refuses a binary or source mismatch. The recorded Windows build does not establish another platform's behavior.
 
 The November 1 lockfile expansion resolved 146 dependencies after an index refresh (147 entries including the inspector); the cached `inout` 0.2.3 release was yanked, and this inspector now resolves 0.2.5. The original wallet executable and its separate lockfile were unchanged. This is a build result, not a dependency security audit.
