@@ -1,3 +1,17 @@
+# Selected lending positions, November 12, 2026
+
+Markets now reads exact selected WETH/USDC reserve positions on Ethereum, Base
+and Arbitrum. Encrypted saved observations reopen offline. Repay and Withdraw
+amount reviews stay bounded to the observed values and expose no execution.
+Account changes, interrupted saves and conflicting same-block values fail closed.
+
+Fresh checks passed 25 Node cases, 17 browser checks and two full Markets
+journey/restart groups after the server stopped. Both worker resource lists
+resolve. [Evidence](../web/lending-position-verification.json) binds exact sources
+and retains the corrected defects and test-fixture failures. Provider observations
+are not independent chain evidence. First uncached offline distribution, physical
+devices, credit execution and financial recovery remain open.
+
 # Wallet welcome and offline setup, November 12, 2026
 
 Wallet now opens Tokens and Receive after a successful read-only connection.
