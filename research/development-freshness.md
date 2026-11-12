@@ -1,3 +1,18 @@
+# Workspace session foundation, November 12, 2026
+
+A standalone session library preserves the existing workspace, partitions its
+core state and rejects stale reads, saves and provider replies after session
+changes. Wallet Add wallet, switching and whole-app sign-out remain unconnected.
+Auxiliary stores, background/provider lifetimes and shared financial exclusions
+still require integration before those controls can become available.
+
+Sixteen public-interface browser groups passed on the final source, including
+blocked and interrupted migration, private-key pairing, cancelled transactions,
+cross-tab invalidation, retained recovered-access restrictions and full offline
+browser restart after the fixture server stopped. Tests use disposable identities
+and local provider fixtures. These checks do not establish full profile isolation,
+production financial recovery or physical-device acceptance.
+
 # Financial recovery review, November 12, 2026
 
 Wallet settings opens a read-only review of retained approvals, transfers and

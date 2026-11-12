@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-12T11:23:45.355Z",
+  "reviewedAt": "2026-11-12T12:13:34.399Z",
   "review": "research/development-freshness.md",
   "files": {
     ".gitignore": "58a135928336f74cfa9fe6754abdc8128fa6c74e68c9ce6f08c70ab330f95ae1",
@@ -372,7 +372,7 @@
     "research/crypto-step/step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
     "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
     "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
-    "research/development-freshness.md": "84318dbec45e28f4527ed263bd32ded659af2a5b5d993ef25f47c0b108dbaa04",
+    "research/development-freshness.md": "bcb4b8076a95d31d16e681d415b42f24227425396235af038368ede6324f5d78",
     "research/mobile-handover/CapsuleCrypto.swift": "ed0c84e7418b9294dbf94d4e9ce9e5dc70b6b3bf097803a8b2e518c49034e25c",
     "research/mobile-handover/CapsuleVectors.swift": "58f5ba0fe4d240d4eef40ac966087a1310492cd0df1408d210b86803fa9d4d8f",
     "research/mobile-handover/README.md": "9f010170efd2f0a35b4ff184e4f309bd2002c411dbba762cb20ae80ac211e236",
@@ -1653,6 +1653,7 @@
     "web/public/welcome.css": "ac005b8956a85313666b12769c8e53bda91dd7a5b6093847e96fc571515a0495",
     "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
     "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
+    "web/public/workspace-session.js": "4eb90bec18d9eeac3f3f8a806e23d52813837ac8e242bf22f6516a3dbcf41133",
     "web/public/zcash-lab.css": "2815185479b87fd2760545bc97aba2c3ff5691dd5ad2d5aac17b6b8ef53c0884",
     "web/public/zcash-lab.html": "759378bf8a07f4c114b9d8d6acb14b68a33bd428f9a89b721f56e2f63baabb54",
     "web/public/zcash-lab.js": "cf05900d49cef850cd819fbf0a7a66682ff390e4237f09ca2640071c46a53aa9",
@@ -1750,6 +1751,7 @@
     "web/wallet-visibility-browser-results.json": "4a4f9738e015c36ba4913d066649c25950039cd8c7bb88590bbd0ae0f0d18c47",
     "web/wallet-visibility-browser.test.cjs": "2c7fede0d8e39d40e780261173a7ac9a168698b978ed937cdee1b4c396657964",
     "web/worker-mutation-results.json": "fc2fc8c9c4b5e27cd9a9c8cea7ccf6891c18111fe1677e8c6fdd3d16f5341fc2",
+    "web/workspace-session-browser.test.cjs": "380478af6e59d211ccfe9fd7fe75e75234f4bd6f07c644cd12c745e54d56074c",
     "web/zcash-browser-results.json": "407d99157e966dd7e6c9812d6219542c22eb985f669d322d7934a0df3c230fe8",
     "web/zcash-browser.test.cjs": "502830810dc319c0d80f77f1d10b02c7bad07878c9ab93a572baa30b11f3413a",
     "web/zcash-companion-after-pczt-results.json": "d43fd59f812a1578ef60c2d90d4d106434ed65854522b431eaec88be6b051a08",
