@@ -1,3 +1,15 @@
+# Zcash encrypted output review, November 12, 2026
+
+The native unsigned review now authenticates payment and owned-change ciphertext
+against committed recipients and values using pinned pool-version domains. Earlier
+saved checks remain reviewable with an explicit encryption qualification. Signing
+and sending stay unavailable. Independent Spec and Standards reviews cleared the
+scope; integrated verification passed seven Rust tests, 37 Node cases and 11 Edge
+groups. Native and bridge guard alterations, interrupted offline cache upgrade
+and a locked release build also passed. [Evidence](../zcash/note-encryption-verification.json)
+records exact sources and limits. Current witnesses, signing, complete financial
+recovery, physical delivery and shielded DeFi routes remain open.
+
 # Cancelled chat restoration, November 12, 2026
 
 A pending chat restore now carries cancellation to the actual database write.

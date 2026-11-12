@@ -60,7 +60,9 @@ export function createPaymentReviewService({ directory = join(root, '.testnet', 
   };
   const save = async record => { const temporary = recordPath + '.tmp'; await writeFile(temporary, JSON.stringify(record)); await rename(temporary, recordPath); };
   const publicRecord = record => ({ id: record.id, wallet: record.wallet, state: record.state,
-    createdAt: record.createdAt, amount: String(record.value), ...record.summary, freshness: record.freshness ?? null, effects: record.effects ?? null, canSign: false, canSend: false });
+    createdAt: record.createdAt, amount: String(record.value), ...record.summary, freshness: record.freshness ?? null,
+    effects: record.effects?.status === 'verified' ? { ...record.effects, noteEncryptionVerified: record.effects.noteEncryptionVerified === true } : record.effects ?? null,
+    canSign: false, canSend: false });
   return async (action, input) => {
     if (!['prepare', 'status', 'discard', 'check', 'effects'].includes(action) || !['a', 'b'].includes(input?.wallet)) throw fail('Choose test wallet A or B.');
     if (busy) throw fail('A payment review is already running.', 409);

@@ -1,6 +1,8 @@
 // Read-only transaction review. Effects mode accepts a viewing key over stdin.
 use std::{env, fs, io::{self, Read}, process};
 mod effects;
+#[cfg(test)]
+mod synthetic_tests;
 use pczt::Pczt;
 use zcash_protocol::consensus::{BlockHeight, BranchId, TEST_NETWORK};
 

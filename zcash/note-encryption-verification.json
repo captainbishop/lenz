@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-12T03:15:40.158Z",
+  "baseCommit": "cdcd36629c70bc2cf0259e20b87130dd2389ad0d",
+  "sources": {
+    "web/public/chat-sw.js": "d12a70b18c82b9eab02b69218cb1e1e04de6e6b7bfa9b5188f0e850eeade99d6",
+    "web/public/zcash-lab.js": "52331fbdf2fbd439c2017cb54eaac6fbd2de133ef1de0d52f14f72e08f3d9d0f",
+    "web/zcash-review.test.cjs": "e0a60739550558c2c850c6db548f2ba5b02be1c913f81296fbb0c7250ab59e25",
+    "zcash/README.md": "bfe8c14ecb5d78f7a0afa100ee56301ff7e986a409fac366498cbbbe502db62f",
+    "zcash/payment-effects-mutations.mjs": "e74277c2b3c03815312d3e3b617cfb120ac708f8b90f4bd397ed9f0b5b321a93",
+    "zcash/payment-effects.md": "9997a33dae45ac2eb553c6cfecd7b016c7204ee906ee427d94fcbaeed43dfc94",
+    "zcash/payment-effects.mjs": "1e7f026bb3d7f69546a60b191ba47498e67da103c4e4d652378b88f3f73e0562",
+    "zcash/payment-effects.test.mjs": "a78c73f4f0e370d33eb96f6be785856291aa93039de1f9f841d9a182294a51d2",
+    "zcash/payment-review.mjs": "91ffd86721611886dbcc8666a168361126d424f06d0b839a8e610998726315b5",
+    "zcash/review-inspector/Cargo.lock": "b992aa043d2c757997ad359824c4003fa92153c0362c8f7a408dd9b08c609168",
+    "zcash/review-inspector/Cargo.toml": "956ed63c08568d1d6bc1a9d6620e8024281d4fcff21ad5a6983b11aa9bbe2108",
+    "zcash/review-inspector/README.md": "778ed4e9eae9ae5d2444ad8b52baf4a90ff1bb785214f152e1baf8d79ba7a32a",
+    "zcash/review-inspector/build.json": "82c0cfbf90b077df54ee8cbcc2a980320a097bb7d6b9c98400fc4348204ddbfc",
+    "zcash/review-inspector/build.ps1": "6b66c415a2c894de30b7bb9165fe5670794f9334e0457bcf2ead2722d5b2a37f",
+    "zcash/review-inspector/src/effects.rs": "46f9b2ce3893f50b30d000f20ed3285790c093098492c9320c89d6fde0ac0738",
+    "zcash/review-inspector/src/main.rs": "c24eaca05d5a07087660c25f33df444259cfd9c3ec83f8c1a787eca1bc6c5f57",
+    "zcash/review-inspector/src/synthetic_tests.rs": "b77bc54a0f5fa73b4ea8bb6ce21df6bacfb6cd7ac4f24adb5fa71fedcdb36894"
+  },
+  "checks": {
+    "nativeRustTests": 7,
+    "nodeCases": 37,
+    "fixtureBrowserGroups": 11,
+    "bridgeGuardAlterations": 7,
+    "nativeGuardAlterations": 3,
+    "interruptedOfflineCacheUpgrade": 1,
+    "lockedOfflineReleaseBuild": true
+  },
+  "behavior": [
+    "External outgoing viewing-key recovery verifies encrypted payment recipient/value.",
+    "Internal incoming viewing-key decryption verifies owned change; the pinned no-change-OVK policy remains.",
+    "Pinned bundle version selects the encryption domain; full authenticated recovery binds outputs to commitments.",
+    "New checks require noteEncryptionVerified true. Older saved checks reopen explicitly unverified for encryption without rewriting journals.",
+    "Signing and sending remain unavailable."
+  ],
+  "retainedFailures": [
+    "Original commitment checks accepted altered recipient/change encrypted fields.",
+    "Shared same-package Cargo mutation targets reused a stale mutant executable; private verification now cleans scoped package artifacts between runs."
+  ],
+  "limits": [
+    "Genuine synthetic unsigned PCZTs and disposable desktop fixture contexts only; no wallet, chain, physical device or financial operation.",
+    "Memo authentication is checked by decryption; memo approval, current unspent inputs/witnesses, production signing, submission recovery, restore/rescan and shielded DeFi routes remain open.",
+    "Both independent review axes found no remaining scoped findings. No new dependency advisory scan or external audit claim."
+  ]
+}

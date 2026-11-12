@@ -6,10 +6,10 @@ use zcash_protocol::consensus::TEST_NETWORK;
 #[derive(serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Terms {
-    ufvk: String,
-    recipient: String,
-    amount: u64,
-    fee: u64,
+    pub(super) ufvk: String,
+    pub(super) recipient: String,
+    pub(super) amount: u64,
+    pub(super) fee: u64,
 }
 
 pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static str> {
@@ -50,6 +50,17 @@ pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static 
                 let output = action.output();
                 let value = output.value().ok_or("Missing output value")?.inner();
                 let address = output.recipient().as_ref().ok_or("Missing output recipient")?;
+                // The native creator recovers payments with the external OVK, while
+                // internal change deliberately has no outgoing recovery channel.
+                let recovered = if address == &recipient {
+                    action.recover_output_with_ovk(&fvk.to_ovk(zip32::Scope::External), *bundle.bundle_version())
+                } else {
+                    action.decrypt_output_with_ivk(&fvk.to_ivk(zip32::Scope::Internal).prepare(), *bundle.bundle_version())
+                }.map_err(|_| "Unsupported note encryption domain")?
+                    .ok_or("Output note encryption could not be verified")?;
+                if recovered.1 != *address || recovered.0.value().inner() != value {
+                    return Err("Encrypted output differs from committed terms");
+                }
                 if address == &recipient {
                     recipients += 1; paid = paid.checked_add(value).ok_or("Output overflow")?;
                 } else {
@@ -70,7 +81,7 @@ pub fn verify(bytes: &[u8], terms: Terms) -> Result<serde_json::Value, &'static 
     Ok(serde_json::json!({"status":"verified", "version":6, "pool":"ironwood",
         "amount":terms.amount.to_string(), "fee":terms.fee.to_string(), "change":change.to_string(),
         "inputValue":spent.to_string(), "recipient":terms.recipient,
-        "changeOwned":true, "commitmentsVerified":true, "canSign":false, "canSend":false}))
+        "changeOwned":true, "commitmentsVerified":true, "noteEncryptionVerified":true, "canSign":false, "canSend":false}))
 }
 
 fn unsigned_real_spend(value: u64, has_signature: bool) -> bool {

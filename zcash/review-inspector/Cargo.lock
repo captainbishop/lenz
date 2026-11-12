@@ -108,6 +108,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "blake2s_simd"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2380c0236432f7b22a70229df30f218f5293870c056beb76f5ca068e3273a366"
+dependencies = [
+ "arrayvec",
+ "constant_time_eq",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -198,6 +208,7 @@ dependencies = [
  "cfg-if",
  "cipher",
  "cpufeatures 0.3.1",
+ "rand_core",
 ]
 
 [[package]]
@@ -432,6 +443,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "edd0f118536f44f5ccd48bcb8b111bdc3de888b58c74639dfb034a357d0f206d"
 
 [[package]]
+name = "equihash"
+version = "0.3.0"
+source = "git+https://github.com/zcash/librustzcash.git?rev=eb38d7a373661179dbc083a2fd58b3a6c9b25818#eb38d7a373661179dbc083a2fd58b3a6c9b25818"
+dependencies = [
+ "blake2b_simd",
+ "corez",
+]
+
+[[package]]
 name = "f4jumble"
 version = "0.1.2"
 source = "git+https://github.com/zcash/librustzcash.git?rev=eb38d7a373661179dbc083a2fd58b3a6c9b25818#eb38d7a373661179dbc083a2fd58b3a6c9b25818"
@@ -500,6 +520,18 @@ checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
 dependencies = [
  "typenum",
  "version_check",
+]
+
+[[package]]
+name = "getrandom"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "300e883d756b2e4ec94e02791f39b04b522276138852cfc41d9fb7e904106099"
+dependencies = [
+ "cfg-if",
+ "libc",
+ "r-efi",
+ "rand_core",
 ]
 
 [[package]]
@@ -654,10 +686,13 @@ dependencies = [
 name = "lenz-zcash-review-inspector"
 version = "0.1.0"
 dependencies = [
+ "orchard",
  "pczt",
+ "rand",
  "serde",
  "serde_json",
  "zcash_keys",
+ "zcash_primitives",
  "zcash_protocol",
  "zip32",
 ]
@@ -812,17 +847,27 @@ name = "pczt"
 version = "0.10.0-pre.2"
 source = "git+https://github.com/zcash/librustzcash.git?rev=eb38d7a373661179dbc083a2fd58b3a6c9b25818#eb38d7a373661179dbc083a2fd58b3a6c9b25818"
 dependencies = [
+ "blake2b_simd",
+ "bls12_381",
  "ff",
  "getset",
+ "jubjub",
  "nonempty",
  "orchard",
  "pasta_curves",
  "postcard",
+ "rand_core",
+ "redjubjub",
+ "sapling-crypto",
+ "secp256k1",
  "serde",
  "serde_with",
  "subtle",
  "zcash_note_encryption",
+ "zcash_primitives",
  "zcash_protocol",
+ "zcash_script",
+ "zcash_transparent",
  "zeroize",
 ]
 
@@ -894,6 +939,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "r-efi"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
+
+[[package]]
 name = "radium"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -905,6 +956,8 @@ version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "65c9fb96cbc91e3478eaae79a69fcd3f1ae4ad052e471fe6732fff548984b4af"
 dependencies = [
+ "chacha20",
+ "getrandom",
  "rand_core",
 ]
 
@@ -923,9 +976,22 @@ dependencies = [
  "blake2b_simd",
  "byteorder",
  "group",
+ "hex",
  "jubjub",
  "pasta_curves",
  "rand_core",
+ "zeroize",
+]
+
+[[package]]
+name = "redjubjub"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "19ff57b3369b472353110bea305ced2612a1380e2d2079dd26c200ed42064421"
+dependencies = [
+ "rand_core",
+ "reddsa",
+ "thiserror",
  "zeroize",
 ]
 
@@ -945,6 +1011,37 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4dd4211456b4172d7e44261920c25acf07367c4f04bb5f5d54fc21b090d9b159"
 dependencies = [
  "digest 0.11.3",
+]
+
+[[package]]
+name = "sapling-crypto"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a2cbdcfeef20006adf72699cd466f21fe349674277cc05d3fc9b7302db7b182"
+dependencies = [
+ "aes",
+ "bitvec",
+ "blake2b_simd",
+ "blake2s_simd",
+ "bls12_381",
+ "corez",
+ "ff",
+ "fpe",
+ "getset",
+ "group",
+ "hex",
+ "incrementalmerkletree",
+ "jubjub",
+ "lazy_static",
+ "memuse",
+ "rand",
+ "rand_core",
+ "redjubjub",
+ "subtle",
+ "zcash_note_encryption",
+ "zcash_spec",
+ "zeroize",
+ "zip32",
 ]
 
 [[package]]
@@ -1319,6 +1416,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "zcash_primitives"
+version = "0.31.0-pre.2"
+source = "git+https://github.com/zcash/librustzcash.git?rev=eb38d7a373661179dbc083a2fd58b3a6c9b25818#eb38d7a373661179dbc083a2fd58b3a6c9b25818"
+dependencies = [
+ "blake2b_simd",
+ "corez",
+ "equihash",
+ "ff",
+ "hex",
+ "incrementalmerkletree",
+ "jubjub",
+ "memuse",
+ "nonempty",
+ "orchard",
+ "rand_core",
+ "redjubjub",
+ "sapling-crypto",
+ "sha2 0.10.9",
+ "zcash_encoding",
+ "zcash_note_encryption",
+ "zcash_protocol",
+ "zcash_script",
+ "zcash_transparent",
+]
+
+[[package]]
 name = "zcash_protocol"
 version = "0.11.0-pre.1"
 source = "git+https://github.com/zcash/librustzcash.git?rev=eb38d7a373661179dbc083a2fd58b3a6c9b25818#eb38d7a373661179dbc083a2fd58b3a6c9b25818"
@@ -1368,6 +1491,7 @@ dependencies = [
  "hex",
  "nonempty",
  "ripemd 0.1.3",
+ "secp256k1",
  "sha2 0.10.9",
  "subtle",
  "zcash_encoding",

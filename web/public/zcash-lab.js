@@ -93,14 +93,14 @@ function validateEffects(value, next) {
   if (!Number.isFinite(Date.parse(value.checkedAt))) throw Error('Invalid output check.');
   if (['checking','unavailable'].includes(value.status)) return;
   for (const field of ['amount','fee','change','inputValue']) amount(value[field]);
-  if (value.status !== 'verified' || value.version !== 6 || value.pool !== 'ironwood' || value.changeOwned !== true || value.commitmentsVerified !== true || value.canSign !== false || value.canSend !== false ||
+  if (value.status !== 'verified' || value.version !== 6 || value.pool !== 'ironwood' || value.changeOwned !== true || value.commitmentsVerified !== true || typeof value.noteEncryptionVerified !== 'boolean' || value.canSign !== false || value.canSend !== false ||
     value.recipient !== next.address || value.amount !== next.amount || value.fee !== next.fee || value.change !== next.change || BigInt(value.inputValue) !== BigInt(next.amount) + BigInt(next.fee) + BigInt(next.change)) throw Error('Output check differs from this review.');
 }
 function effectsText(value) {
   if (!value) return 'Outputs and change ownership have not been checked.';
   if (value.status === 'checking') return 'An output check started but has no saved result. Check again.';
   if (value.status === 'unavailable') return 'The last output check failed. Do not rely on an earlier successful check.';
-  return `Recipient, amount, fee and commitments verified. Change belongs to the sending wallet. Checked ${new Date(value.checkedAt).toLocaleString()}. Input availability, current witnesses and expiry are separate checks; signing and sending remain unavailable.`;
+  return `Recipient, amount, fee and commitments verified. Change belongs to the sending wallet. ${value.noteEncryptionVerified ? 'Encrypted payment and change match their committed terms.' : 'Encrypted outputs have not been checked. Check again to verify them.'} Checked ${new Date(value.checkedAt).toLocaleString()}. Input availability, current witnesses and expiry are separate checks; signing and sending remain unavailable.`;
 }
 function validateFreshness(value) {
   if (value == null) return;

@@ -1,8 +1,12 @@
 {
-  "checkedAt": "2026-11-02T10:22:08.752Z",
+  "checkedAt": "2026-11-12T03:06:46.231Z",
   "results": [
     {
       "guard": "change ownership",
+      "rejected": true
+    },
+    {
+      "guard": "note encryption",
       "rejected": true
     },
     {
