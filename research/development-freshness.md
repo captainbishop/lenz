@@ -1,3 +1,20 @@
+# Funding arrival checks, November 12, 2026
+
+Wallet keeps the original deposit checkable after source confirmation. Check funding
+reads its provider status and saves an encrypted report separately from the source
+transaction. Reported arrivals/refunds stay unverified and cannot credit funds or
+resend a transfer. Invalid, conflicting and older reports preserve saved evidence;
+account replacement and cancellation at the actual write boundary prevent late saves.
+Amounts remain masked and offline reopening retains the original checked time.
+
+The candidate based on the private-history recovery commit passed 67 Node cases
+and 21 Edge funding/cache groups, including two full offline browser restarts.
+Independent reviews reproduced and verified the account/write races and impossible
+arrival-plus-refund report. [Verification](../web/private-funding-status-verification.json)
+records exact sources, the checked API interface, failures and limits. No live
+funding, independently verified settlement/refund, balance credit or physical-device
+delivery is established. Existing footage remains historical and unchanged.
+
 # Private request history recovery, November 12, 2026
 
 Automatic account backups retain validated private approvals, disclosure records,

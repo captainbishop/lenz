@@ -129,9 +129,18 @@ selection preserves the amount; changed accounts, closed reviews, stale quotes,
 storage failures and chat-only recovery block new prompts. Unknown wallet replies
 block repeat sends and can be reconciled against the original transaction.
 
+A finalized source-chain deposit remains checkable through **Check funding**.
+The read-only check asks NEAR Intents about that exact saved deposit, verifies
+the original quote and stores a separate encrypted provider report. Arrival and
+refund quantities stay unverified; the report never changes the source receipt,
+credits a balance or sends another transfer. Missing quantities remain unknown.
+The checked time and provider update remain visible after reopening offline.
+Older updates cannot replace newer evidence; conflicting updates, account changes,
+closed checks and failed writes preserve the saved history.
+
 A finalized source-chain deposit is not proof of private credit or a completed
-refund. Private settlement, deployed executor controls, broader funding assets
-and financial recovery remain unfinished. Browser data loss is not recovered by
+refund. Private settlement, broader funding assets and financial recovery remain
+unfinished. Browser data loss is not recovered by
 the local transfer journal. Cancel a wallet prompt if its review or deposit
 deadline passes; Lenz cannot prevent the wallet from sending later.
 
@@ -190,6 +199,7 @@ node --test web/intents-spend-outbox-browser.test.cjs web/intents-outcome-browse
 node --test web/private-spend-relay.test.mjs
 node --test web/private-spend-ui.test.cjs
 node --test web/private-funding.test.mjs web/private-funding-ui.test.cjs web/evm-transfer.test.mjs
+node --test web/private-funding-status.test.mjs
 ```
 
 Interfaces follow the official [OpenAPI specification](https://1click.chaindefuser.com/docs/v0/openapi.yaml),

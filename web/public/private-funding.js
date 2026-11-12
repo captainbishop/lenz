@@ -1,5 +1,6 @@
 import {verifyQuoteSignature} from './intents-vendor/quote.js';
 import {getAddress} from './evm-vendor/address.js';
+import {INTENTS_STATUSES} from './intents-status.js';
 
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const exact=(v,keys)=>v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
@@ -50,4 +51,39 @@ export function checkFundingTransfer(review,{now=review.createdAt}={}){
  const funding=checkPrivateFunding(review.funding,{now}),t=review.terms;
  assert(t.chainId===funding.chainId&&t.from===funding.owner&&t.asset==='native'&&t.recipient===funding.depositAddress&&t.to===funding.depositAddress&&t.data==='0x'&&BigInt(t.units)===BigInt(funding.amount)&&t.value===t.units,'Transfer differs from the reviewed funding route.');
  return funding;
+}
+
+// Reading an expired deposit preserves its original terms without reopening a
+// wallet approval. Recover only a review time that the signed quote permits.
+export function checkHistoricalFunding(offer,{now=Date.now(),verifySignature=verifyQuoteSignature}={}){
+ assert(Number.isSafeInteger(now)&&now>=0&&providerTime(offer?.quote?.timestamp),'Invalid saved funding time.');
+ const quoted=Date.parse(offer.quote.timestamp),reviewedAt=Math.max(0,quoted-30000,Date.parse(offer.terms?.refundDeadline)-86400000,Date.parse(offer.quote.quote?.deadline)-345600000);
+ assert(Number.isSafeInteger(reviewedAt)&&reviewedAt<=now,'Saved funding review has not opened.');
+ return checkPrivateFunding(offer,{now:reviewedAt,verifySignature});
+}
+
+export function checkFundingObservation(offer,input,{now=Date.now(),verifySignature=verifyQuoteSignature}={}){
+ const r=checkHistoricalFunding(offer,{now,verifySignature}),value=structuredClone(input),quoted=Date.parse(offer.quote.timestamp);
+ const keys=['type','quoteSignature','owner','chainId','asset','depositAddress','status','updatedAt','observedAt','amountIn','amountOut','refundedAmount','withdrawFee','settlementVerified','providerReportSigned'];
+ assert(exact(value,keys)&&value.type==='lenz/private-funding-status/v1'&&value.quoteSignature===offer.quote.signature&&value.owner===r.owner&&value.chainId===r.chainId&&value.asset===r.asset&&value.depositAddress===r.depositAddress&&INTENTS_STATUSES.includes(value.status),'Funding update belongs to another deposit.');
+ assert(Number.isSafeInteger(value.observedAt)&&value.observedAt>=quoted-30000&&value.observedAt<=now+60000&&time(value.updatedAt)&&Date.parse(value.updatedAt)>=quoted-60000&&Date.parse(value.updatedAt)<=value.observedAt+60000&&Date.parse(value.updatedAt)<=now+60000,'Invalid funding update time.');
+ for(const field of ['amountIn','amountOut','refundedAmount','withdrawFee'])assert(value[field]===null||quantity(value[field]),'Invalid funding result amount.');
+ assert(value.settlementVerified===false&&value.providerReportSigned===false,'A funding report is not verified settlement.');
+ if(value.amountIn!==null)assert(BigInt(value.amountIn)<=BigInt(r.amount),'Funding input exceeds the saved deposit.');
+ if(value.amountOut!==null)assert(BigInt(value.amountOut)<=BigInt(r.amount),'Funding output exceeds the saved deposit.');
+ if(value.withdrawFee!==null)assert(BigInt(value.withdrawFee)<=BigInt(r.withdrawFee),'Funding withdrawal fee exceeds the saved quote.');
+ if(value.status==='SUCCESS')assert(value.amountIn===r.amount&&quantity(value.amountOut)&&BigInt(value.amountOut)>=BigInt(r.amountOut),'Reported funding amount differs from the saved quote.');
+ if(value.refundedAmount!==null)assert(BigInt(value.refundedAmount)<=BigInt(r.amount),'Funding refund exceeds the saved deposit.');
+ if(value.amountOut!==null&&value.refundedAmount!==null){const total=BigInt(value.amountOut)+BigInt(value.refundedAmount);assert(total<=BigInt(r.amount)&&(value.amountIn===null||total<=BigInt(value.amountIn)),'Funding output and refund exceed the input deposit.');}
+ if(value.status==='REFUNDED')assert(quantity(value.refundedAmount),'Funding refund amount is unknown.');
+ return value;
+}
+
+const canonical=value=>JSON.stringify(value&&typeof value==='object'?Array.isArray(value)?value.map(v=>JSON.parse(canonical(v))):Object.fromEntries(Object.keys(value).sort().map(key=>[key,JSON.parse(canonical(value[key]))])):value);
+export function checkFundingStatusResponse(offer,response,options={}){
+ const r=checkHistoricalFunding(offer,options);
+ assert(response&&canonical(response.quoteResponse)===canonical(offer.quote),'Funding status changed the original quote.');
+ assert(providerTime(response.updatedAt)&&response.swapDetails&&typeof response.swapDetails==='object'&&!Array.isArray(response.swapDetails),'Invalid funding provider response.');
+ const d=response.swapDetails;
+ return checkFundingObservation(offer,{type:'lenz/private-funding-status/v1',quoteSignature:offer.quote.signature,owner:r.owner,chainId:r.chainId,asset:r.asset,depositAddress:r.depositAddress,status:response.status,updatedAt:new Date(Date.parse(response.updatedAt)).toISOString(),observedAt:options.now??Date.now(),amountIn:d.amountIn??null,amountOut:d.amountOut??null,refundedAmount:d.refundedAmount??null,withdrawFee:d.withdrawFee??null,settlementVerified:false,providerReportSigned:false},options);
 }

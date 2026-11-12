@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),http=require('node:http'),fs=require('nod
 
 async function fundingUI(run){
  const {managerKey,owner,now,signQuote}=await import('./intents-spend-fixture.mjs');
- const api={mode:'ready',calls:0,release:null,quoteAge:0};let origin;
+ const api={mode:'ready',calls:0,release:null,quoteAge:0,statusCalls:0,status:null,offer:null,statusDelay:false,statusRelease:null};let origin;
  const server=http.createServer(async(req,res)=>{
   const file=new URL(req.url,'http://localhost').pathname;
   res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.svg':'image/svg+xml'})[path.extname(file)]??'application/json');
@@ -15,7 +15,11 @@ async function fundingUI(run){
    const {fundingRequest}=await import('./public/private-funding.js');
    const quote=signQuote({quoteRequest:fundingRequest(terms,{now}),quote:{amountIn:terms.amount,minAmountIn:terms.amount,amountOut:'9900000000000000',minAmountOut:'9900000000000000',depositAddress:'0x'+'34'.repeat(20),deadline:terms.refundDeadline,refundFee:'1000',withdrawFee:'0'},timestamp:new Date(now-api.quoteAge).toISOString()});
    if(api.mode==='changed'){terms.owner='0x'+'22'.repeat(20);quote.quoteRequest.recipient=terms.owner;quote.quoteRequest.refundTo=terms.owner;signQuote(quote);}
-   res.end(JSON.stringify({state:'awaiting-funding-review',offer:{terms,quote}}));return;
+   api.offer={terms,quote};res.end(JSON.stringify({state:'awaiting-funding-review',offer:api.offer}));return;
+  }
+  if(file==='/api/private-spend/fund-status'){
+   let body='';for await(const c of req)body+=c;const input=JSON.parse(body);assert.deepEqual(input,{offer:api.offer});api.statusCalls++;if(api.statusDelay)await new Promise(resolve=>api.statusRelease=resolve);
+   res.end(JSON.stringify(api.status??{type:'lenz/private-funding-status/v1',quoteSignature:api.offer.quote.signature,owner,chainId:api.offer.terms.chainId,asset:api.offer.quote.quoteRequest.originAsset,depositAddress:'0x'+'34'.repeat(20),status:'SUCCESS',updatedAt:new Date(now-1000).toISOString(),observedAt:now,amountIn:'10000000000000000',amountOut:'9900000000000000',refundedAmount:null,withdrawFee:'0',settlementVerified:false,providerReportSigned:false}));return;
   }
   if(file.startsWith('/api/')){res.writeHead(503);res.end('{}');return;}
   try{res.end(await fs.readFile(path.join(__dirname,'public',file==='/fixture-quote.js'?'/intents-vendor/quote.js':file)));}catch{res.writeHead(404);res.end();}
@@ -47,7 +51,7 @@ async function fundingUI(run){
   const rows=()=>page.evaluate(async()=>(await import('/evm-transfer-store.js')).readTransfers());
   const sends=()=>page.evaluate(()=>fundingWallet.calls.filter(c=>c.method==='eth_sendTransaction').length);
   await run({page,context,api,owner,now,connect,open,prepare,reviewed,rows,sends});assert.deepEqual(errors,[]);
- }finally{api.release?.();await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+ }finally{api.release?.();api.statusRelease?.();await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
 }
 
 test('Wallet funding reviews the exact deposit and persists its signed quote before sending',()=>fundingUI(async f=>{
@@ -77,6 +81,77 @@ test('lost funding reply blocks repeats and matching finalized deposit never cla
  await f.prepare();await f.reviewed();await f.page.evaluate(()=>fundingWallet.mode='lost');await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Wallet response lost · check before trying again'));assert.equal(await f.sends(),1);assert(await f.page.locator('#private-funding-prepare').isDisabled());
  await f.page.locator('#private-funding-history input').fill('0x'+'ab'.repeat(32));await f.page.getByRole('button',{name:'Check transfer',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Transfer confirmed · arrival in Lenz not yet verified'));assert.equal(await f.sends(),1);
  const row=(await f.rows())[0];assert.equal(row.state,'confirmed');assert.equal(row.review.funding.terms.owner,f.owner);
+}));
+
+test('confirmed funding keeps the original deposit checkable and retains its unverified report',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.getByRole('button',{name:'Check transfer',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Transfer confirmed · arrival in Lenz not yet verified'));
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Reported arrival'));
+ const row=(await f.rows())[0];assert.equal(row.state,'confirmed');assert.equal(row.hash,'0x'+'ab'.repeat(32));assert.equal(row.fundingObservation.amountOut,'9900000000000000');assert.equal(row.fundingObservation.settlementVerified,false);assert.equal(await f.sends(),1);assert.equal(f.api.statusCalls,1);
+ await f.page.reload();await f.connect();await f.open();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Reported arrival'));
+ assert.match(await f.page.locator('#private-funding-history').innerText(),/Reported arrival · unverified/);assert.match(await f.page.locator('#private-funding-history').innerText(),/Checked/);assert.equal(await f.page.locator('#private-funding-amount').inputValue(),'');assert.equal(await f.sends(),0);
+}));
+
+test('a Lenz account change queued before a funding report commit cannot save the late report',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.evaluate(()=>{
+  const request=navigator.locks.request.bind(navigator.locks);let changed=false;
+  navigator.locks.request=(name,...args)=>{const callback=args.pop();return request(name,...args,async lock=>{
+   if(name==='lenz-evm-transfers-v1'&&!changed){changed=true;const store=await import('/chat-store.js'),p=await import('/peer-crypto.js');await store.updateState(async s=>{s.identity=await p.createIdentity('Other account');});}
+   return callback(lock);
+  });};
+ });
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-dialog').getAttribute('aria-busy')==='false');
+ assert.equal((await f.rows())[0].fundingObservation,undefined);assert.equal(await f.sends(),1);assert.match(await f.page.locator('#private-funding-feedback').innerText(),/account changed/);
+}));
+
+test('closing while the funding report database opens cannot save the late report',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.evaluate(()=>{
+  const open=indexedDB.open.bind(indexedDB),descriptor=Object.getOwnPropertyDescriptor(IDBRequest.prototype,'onsuccess');let count=0;
+  indexedDB.open=(name,...args)=>{const request=open(name,...args);if(name==='lenz-evm-transfers-v1'&&++count===3)Object.defineProperty(request,'onsuccess',{get(){return descriptor.get.call(request);},set(callback){descriptor.set.call(request,event=>{window.fundingWritePaused=true;window.releaseFundingWrite=()=>callback.call(request,event);});}});return request;};
+ });
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>window.fundingWritePaused);await f.page.locator('#private-funding-close').click();await f.page.evaluate(()=>releaseFundingWrite());
+ assert.equal((await f.rows())[0].fundingObservation,undefined);assert.equal(await f.sends(),1);
+}));
+
+test('closing during the funding report transaction aborts the pending write',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.evaluate(()=>{const put=IDBObjectStore.prototype.put;IDBObjectStore.prototype.put=function(...args){const request=put.apply(this,args);if(this.transaction.db.name==='lenz-evm-transfers-v1')document.querySelector('#private-funding-close').click();return request;};});
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>!document.querySelector('#private-funding-dialog').open);assert.equal((await f.rows())[0].fundingObservation,undefined);assert.equal(await f.sends(),1);
+}));
+
+test('older, conflicting and foreign funding reports cannot overwrite the saved source or checked evidence',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ const check=async()=>{await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-dialog').getAttribute('aria-busy')==='false');};
+ await check();const original=(await f.rows())[0],saved=original.fundingObservation;
+ for(const changes of [{status:'PROCESSING',updatedAt:new Date(f.now-2000).toISOString()},{status:'REFUNDED',refundedAmount:'9999999999999000'},{owner:'0x'+'22'.repeat(20)},{depositAddress:'0x'+'56'.repeat(20)},{asset:'nep141:arb.omft.near'},{withdrawFee:'1'},{amountOut:'9899999999999999'},{settlementVerified:true}]){
+  f.api.status={...saved,...changes};await check();const row=(await f.rows())[0];assert.deepEqual(row.fundingObservation,saved);assert.equal(row.state,'submitted');assert.equal(row.hash,original.hash);
+ }
+ f.api.status={...saved,status:'REFUNDED',amountOut:null,refundedAmount:'9999999999999000',updatedAt:new Date(f.now+1000).toISOString()};await check();assert.equal((await f.rows())[0].fundingObservation.status,'REFUNDED');assert.match(await f.page.locator('#private-funding-history').innerText(),/Reported refund · unverified/);assert.equal(await f.sends(),1);
+}));
+
+test('closing or changing a wallet during a funding read leaves previous evidence and amount entry intact',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.locator('#private-funding-amount').fill('0.02');f.api.statusDelay=true;await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-dialog').getAttribute('aria-busy')==='true');
+ await f.page.locator('#private-funding-close').click();f.api.statusRelease?.();await f.open();assert.equal(await f.page.locator('#private-funding-amount').inputValue(),'0.02');assert.equal((await f.rows())[0].fundingObservation,undefined);
+ f.api.statusRelease=null;await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await new Promise(resolve=>setTimeout(resolve,100));await f.page.evaluate(()=>{fundingWallet.owner='0x'+'22'.repeat(20);fundingWallet.emit('accountsChanged',[fundingWallet.owner]);});f.api.statusRelease?.();await new Promise(resolve=>setTimeout(resolve,100));assert.equal((await f.rows())[0].fundingObservation,undefined);assert.equal(await f.sends(),1);
+}));
+
+test('funding report masking and backward-clock history survive reopening without a new transfer',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Reported arrival'));const saved=(await f.rows())[0].fundingObservation;
+ await f.page.evaluate(()=>{localStorage.setItem('lenz-wallet-balances-hidden','true');dispatchEvent(new StorageEvent('storage',{key:'lenz-wallet-balances-hidden'}));fundingTime-=86400000;});
+ assert(!await f.page.locator('#private-funding-history').innerText().then(text=>text.includes('0.0099')));await f.page.locator('#private-funding-close').click();await f.open();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Reported arrival'));
+ assert.deepEqual((await f.rows())[0].fundingObservation,saved);assert.equal(await f.sends(),1);assert.equal(f.api.statusCalls,1);assert(await f.page.locator('#private-funding-history [aria-label="Amount hidden"]').count()>0);
+}));
+
+test('a failed funding report write retains prior encrypted history',()=>fundingUI(async f=>{
+ await f.prepare();await f.reviewed();await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Sent · waiting for confirmation'));
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-history').textContent.includes('Reported arrival'));const saved=(await f.rows())[0].fundingObservation;
+ f.api.status={...saved,status:'REFUNDED',amountOut:null,refundedAmount:'9999999999999000',updatedAt:new Date(f.now+1000).toISOString()};
+ await f.page.evaluate(()=>{const put=IDBObjectStore.prototype.put;IDBObjectStore.prototype.put=function(...args){if(this.transaction.db.name==='lenz-evm-transfers-v1')throw Error('Funding storage failed');return put.apply(this,args);};});
+ await f.page.getByRole('button',{name:'Check funding',exact:true}).click();await f.page.waitForFunction(()=>document.querySelector('#private-funding-dialog').getAttribute('aria-busy')==='false');assert.deepEqual((await f.rows())[0].fundingObservation,saved);assert.match(await f.page.locator('#private-funding-feedback').innerText(),/storage failed/);assert.equal(await f.sends(),1);
 }));
 test('closing during a wallet prompt preserves the late hash in the same saved attempt',()=>fundingUI(async f=>{
  await f.prepare();await f.reviewed();await f.page.evaluate(()=>fundingWallet.mode='delay');await f.page.locator('#private-funding-approve').click();await f.page.waitForFunction(()=>!!fundingWallet.release);await f.page.locator('#private-funding-close').click();await f.open();assert(await f.page.locator('#private-funding-prepare').isDisabled());
@@ -112,7 +187,7 @@ test('Arbitrum funding keeps its source chain through review and deposit history
 }));
 
 test('funding route and review reflow across themes, large text and keyboard dismissal',()=>fundingUI(async f=>{
- const output=path.join(require('node:os').tmpdir(),'lenz-native-funding-20261111','screenshots');await fs.mkdir(output,{recursive:true});await f.open();
+ const output=path.join(require('node:os').tmpdir(),'lenz-funding-status-20261112','screenshots');await fs.mkdir(output,{recursive:true});await f.open();
  for(const theme of ['light','dim','dark'])for(const width of [320,390,844,1280]){
   await f.page.setViewportSize({width,height:width===844?390:844});await f.page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);
   assert(await f.page.locator('#private-funding-dialog').evaluate(n=>n.scrollWidth<=n.clientWidth));assert(await f.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));

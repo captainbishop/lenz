@@ -1,4 +1,4 @@
-import {readState} from './chat-store.js';
+import {readState,readStateLocked} from './chat-store.js';
 import {requirePaymentAccess} from './chat-access.js';
 import {checkPrivateFunding,FUNDING_NETWORKS} from './private-funding.js';
 import {prepareTransfer,validateReview,amount,check} from './evm-transfer.js';
@@ -10,6 +10,7 @@ import {walletAmount} from './wallet-visibility.js';
 const el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const eth=value=>amount('0x'+BigInt(value).toString(16))+' ETH';
 const labels={awaiting_wallet:'Waiting for your wallet',submitted:'Sent · waiting for confirmation',unknown:'Wallet response lost · check before trying again',pending:'Waiting for confirmation',included:'Confirming transfer',confirmed:'Transfer confirmed · arrival in Lenz not yet verified',failed:'Transfer failed',declined:'Cancelled in wallet',not_sent:'Not sent'};
+const fundingLabels={KNOWN_DEPOSIT_TX:'Transfer noticed · arrival unverified',PENDING_DEPOSIT:'Waiting for transfer · arrival unverified',INCOMPLETE_DEPOSIT:'Transfer amount incomplete · arrival unverified',PROCESSING:'Transfer processing · arrival unverified',SUCCESS:'Reported arrival · unverified',REFUNDED:'Reported refund · unverified',FAILED:'Reported failure · outcome unverified'};
 
 export function mountPrivateFunding(session,{connect}={}){
  const button=el('button');button.id='private-funding-open';button.type='button';button.className='secondary';iconButton(button,'Add funds','M12 5v14M5 12h14');button.append(el('span','Add funds'));
@@ -21,7 +22,7 @@ export function mountPrivateFunding(session,{connect}={}){
  <form id="private-funding-form"><div class="private-funding-value"><label for="private-funding-amount">Amount</label><input id="private-funding-amount" inputmode="decimal" autocomplete="off" placeholder="0.00" maxlength="80" required><span>ETH</span></div>
  <label class="check"><input id="private-funding-consent" type="checkbox"><span>I understand this transfer is public. My address and amount will be visible.</span></label>
  <button id="private-funding-prepare" type="submit">Review transfer</button></form>
- <details id="private-funding-how"><summary>How this works</summary><p>Lenz handles the transfer between networks through NEAR Intents. ETH goes to a Confidential Intents account controlled by your wallet. Aurora may be used for some later actions.</p><p>Your wallet, network providers, Lenz and Intents operators can see your address and amount. Privacy is requested, but has not been independently verified.</p></details>
+ <details id="private-funding-how"><summary>How this works</summary><p>Lenz handles the transfer between networks through NEAR Intents. ETH goes to a Confidential Intents account controlled by your wallet. Aurora may be used for some later actions.</p><p>Your wallet, network providers, Lenz and Intents operators can see your address and amount. Privacy is requested, but has not been independently verified.</p><p>Check funding asks NEAR Intents about the original deposit. Its reported arrivals and refunds remain unverified.</p></details>
  <section id="private-funding-review" hidden><h3>Review transfer</h3><dl id="private-funding-terms"></dl><p class="quiet">Lenz still needs to verify that the money arrived. Privacy and refunds are not yet verified.</p><details><summary>Transfer details</summary><dl id="private-funding-exact"></dl><p>The expected amount is not a confirmed balance. A signed price estimate does not prove privacy, that funds arrived or that a refund completed. The refund-start time and privacy request are not covered by the signature.</p></details><button id="private-funding-approve" type="button">Confirm in wallet</button><button id="private-funding-edit" type="button" class="secondary">Edit amount</button></section>
  <p id="private-funding-feedback" role="status" class="wallet-feedback" aria-atomic="true"></p>
  <div class="section-heading"><h3>Recent transfers</h3><button id="private-funding-refresh" type="button" class="secondary">Refresh</button></div><ul id="private-funding-history"></ul>`;
@@ -61,12 +62,27 @@ export function mountPrivateFunding(session,{connect}={}){
    const title=el('summary');title.append(walletAmount(el('span'),eth(funding.amount)),el('span',' · '+FUNDING_NETWORKS[funding.chainId].name));details.append(title);
    for(const [label,value]of [['From',FUNDING_NETWORKS[funding.chainId].name+' · ETH'],['Your wallet',funding.owner],['Transfer address',funding.depositAddress],['Expected to arrive',eth(funding.amountOut)],['Refund can begin after',new Date(funding.refundDeadline).toLocaleString()],['Send before',new Date(funding.depositDeadline).toLocaleString()]])line(terms,label,value);
    details.append(terms);item.append(details,el('p',labels[row.state]));
+   if(row.fundingObservation){
+    const o=row.fundingObservation;item.append(el('p',fundingLabels[o.status]));
+    const observed=el('p');observed.className='quiet';observed.append(el('span','Checked '+new Date(o.observedAt).toLocaleString()+' · Provider update '+new Date(o.updatedAt).toLocaleString()));item.append(observed);
+    for(const [label,value]of [['Reported arrival',o.amountOut],['Reported refund',o.refundedAmount]])if(value!==null){const line=el('p',label+' · ');line.append(walletAmount(el('span'),eth(value)));item.append(line);}
+   }
    if(!['confirmed','failed','declined','not_sent'].includes(row.state)){
     const hash=el('input');hash.placeholder='Transaction ID from your wallet';hash.setAttribute('aria-label','Transaction ID from your wallet');hash.maxLength=66;hash.hidden=!!row.hash;
     const checkButton=el('button','Check transfer');checkButton.type='button';checkButton.className='secondary';checkButton.dataset.owner=funding.owner;checkButton.dataset.chain=funding.chainId;
     checkButton.disabled=busy||!navigator.onLine||!snapshot||snapshot.address!==funding.owner||snapshot.chainId!==funding.chainId;
     checkButton.onclick=()=>act(async signal=>{const original=session.capture();signal.throwIfAborted();await service.reconcile(original,row.id,hash.value.trim()||undefined);signal.throwIfAborted();});item.append(hash,checkButton);
    }
+   const fundingCheck=el('button','Check funding');fundingCheck.type='button';fundingCheck.className='secondary';fundingCheck.dataset.owner=funding.owner;fundingCheck.dataset.chain=funding.chainId;
+   fundingCheck.onclick=()=>act(async(signal,ticket)=>{
+    const original=session.capture(),identity=(await readState()).identity?.profile.id;
+    const guard=()=>{signal.throwIfAborted();original.assertCurrent();check(dialog.open&&ticket===generation,'Funding check closed or changed.');};
+    const lease={...original,assertCurrent:guard};
+    await service.observeFunding(lease,row.id,async(offer,{signal})=>{
+     const response=await fetch('/api/private-spend/fund-status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({offer}),cache:'no-store',credentials:'omit',redirect:'error',signal:AbortSignal.any([signal,AbortSignal.timeout(25000)])});
+     check(response.ok,'Funding update is unavailable. The saved transfer stays here.');const text=await response.text();check(text.length<=70000,'Funding update is too large.');guard();check((await readState()).identity?.profile.id===identity,'Lenz account changed.');guard();return JSON.parse(text);
+    },{signal,commit:write=>readStateLocked(async s=>{guard();check(s.identity?.profile.id===identity,'Lenz account changed.');return write();})});guard();$('private-funding-feedback').textContent='Update saved. Arrival and refunds remain unverified.';
+   });item.append(fundingCheck);
    $('private-funding-history').append(item);
   }
   if(!rows.some(r=>r.review.version===3))$('private-funding-history').append(el('li','Your transfers will appear here.'));

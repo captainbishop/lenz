@@ -1,0 +1,65 @@
+{
+  "verifiedAt": "2026-11-12T01:21:04.247Z",
+  "baseCommit": "6d38eb12d0c8a0784a81a00235d815f0eeff4aba",
+  "scope": "Read-only deposit-bound funding arrival/refund observations in Wallet",
+  "sourceFiles": {
+    "docs/private-spending.md": "7de635d7e01a6277c274d55e8208ce79e270c0bd14b65d3d9daece792e6cd447",
+    "integrations/intents-spend.mjs": "3d50e4afa7ab1b1960e53777bc4627690cc8fa6d980577f74043e6fb7aebe586",
+    "web/intents-cache-browser.test.cjs": "d4b0787b841c2d8b9ab82b792c4726a30edc983a23baeab3b9fab2eb2deb7159",
+    "web/private-funding-ui.test.cjs": "6e9a90c77e9298432c8628419d53dc3d43b50a524c836a369aa4e101ff9c6cd1",
+    "web/private-spend-relay.mjs": "5e3e3841371ce0c87373d39095a93f21a348dab817f710b8d4a1a97c80b1ae4b",
+    "web/public/evm-transfer-service.js": "82c4daa4647b144cb195f1b23e1cace178d0d55a6c7967ab39a587e2a2b3f906",
+    "web/public/evm-transfer-store.js": "808a778508f007fe26eb507b14afbd3398c1939115040a7584a4be64feace95c",
+    "web/public/intents-status.js": "c153ea972bc69ba1b251d1ea93307b65ac641d01cc9fc8c661defd86a7d59d05",
+    "web/public/private-funding-ui.js": "8ad23dffc850df21f5e689fa5be6fb985df8e4f38e276cbc04b4c1eaea5ef75f",
+    "web/public/private-funding.js": "adbf800f3f9b321d7d3eadfc2cfecd59b5c62eb3ce025d3fa7cdefeb845b1018",
+    "web/private-funding-status.test.mjs": "17780d3d0bde48a04c63c3e9af5b538f2429eca190a44e2e0b7e1d3645fed075",
+    "web/public/chat-sw.js": "f8ae3d507126bf2a38fdd2ffeda39872bcc61f0b2074128d02a529ddce1cfdb6",
+    "web/public/sw.js": "0dc3c190bc32add64ef5bc5fc00e3f50efb7b68173ade8f111407b19b2fb9f26"
+  },
+  "checks": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=spec",
+      "web/private-funding-status.test.mjs",
+      "web/private-funding.test.mjs",
+      "web/private-spend-relay.test.mjs",
+      "web/evm-transfer.test.mjs",
+      "web/intents-status.test.mjs",
+      "integrations/intents-spend.test.mjs",
+      "web/intents-spend.test.mjs",
+      "web/private-funding-ui.test.cjs",
+      "web/intents-cache-browser.test.cjs"
+    ],
+    "passed": 88,
+    "failed": 0,
+    "nodeCases": 67,
+    "fundingBrowserGroups": 19,
+    "fullOfflineRestartGroups": 2
+  },
+  "interface": {
+    "source": "https://1click.chaindefuser.com/docs/v0/openapi.yaml",
+    "checkedAt": "2026-11-12",
+    "sha256": "9a2e676682aa6dec6905c82f1b2cc0ec72eda97964369aa51ec35eb82ccac0a3",
+    "method": "GET",
+    "path": "/v0/status",
+    "binding": "Exact saved signed funding quote and original source-chain deposit"
+  },
+  "retainedFailures": [
+    "A finalized source transaction originally removed every check action; Refresh made no provider request.",
+    "An account replacement queued before transfer journal commit could save a late report; the account lock now covers the final encrypted commit.",
+    "Closing during transfer database opening could save a late report; cancellation now checks before put and aborts active transactions.",
+    "Arrival and refund quantities were individually bounded but their total could exceed the deposit; aggregate quantities now preserve conservation.",
+    "The failed-write refund fixture initially violated the new conservation rule before reaching storage; its unknown output now exercises the intended write failure.",
+    "The first integrated patch attempt required refreshing the freshly constructed Git index stat cache; no product files were changed by that failure.",
+    "Offline test installation initially lacked ignored generated vendor assets; the same pinned test runtime dependencies were supplied."
+  ],
+  "limits": [
+    "Disposable Edge profiles, synthetic wallet/provider responses and loopback service tests; no live financial operation.",
+    "Reports are unsigned provider observations: no settlement/refund proof, privacy guarantee, balance credit, reservation release or retry authority.",
+    "Source transaction state, hash and finalized receipt remain separate from the funding observation.",
+    "The bridge requires the server-only partner credential and existing loopback Host/Origin scope; remote authentication/deployment is unverified.",
+    "Local encrypted transfer history does not restore after browser data loss. Physical-device delivery and full financial reconciliation remain open."
+  ]
+}

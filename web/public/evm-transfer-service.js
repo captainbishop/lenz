@@ -1,9 +1,10 @@
 import {check,hash,validateReview,recheckTransfer,inspectTransfer} from './evm-transfer.js';
 import {readTransfers,updateTransfers,transferOpen} from './evm-transfer-store.js';
-import {checkFundingTransfer} from './private-funding.js';
+import {checkFundingTransfer,checkFundingObservation} from './private-funding.js';
+import {privateReportOrder} from './intents-report.js';
 const errorText=e=>(e instanceof Error?e.message:'Wallet reply unavailable.').slice(0,240);
 export function createTransferService({read=readTransfers,update=updateTransfers,timeoutMs=60000}={}){
- async function change(id,operation){return update(rows=>{const row=rows.find(r=>r.id===id);check(row,'Saved transfer not found.');operation(row);row.updatedAt=Date.now();return structuredClone(row);});}
+ async function change(id,operation){return update(rows=>{const row=rows.find(r=>r.id===id);check(row,'Saved transfer not found.');operation(row);row.updatedAt=Math.max(row.updatedAt,Date.now());return structuredClone(row);});}
  async function send(lease,review){
   review=validateReview(review);await recheckTransfer(lease,review);
   const id=crypto.randomUUID(),now=Date.now();
@@ -35,5 +36,19 @@ export function createTransferService({read=readTransfers,update=updateTransfers
   check(row.hash||observation.state!=='pending','Transaction is not yet included. Check the hash in your wallet and try again.');
   return change(id,current=>{check(!current.hash||current.hash===candidate,'Transaction hash changed.');if(current.observation&&current.observation.checkedAt>observation.checkedAt)return;current.hash=candidate;current.observation=observation;current.state=observation.state;current.error='';});
  }
- return Object.freeze({send,reconcile});
+ async function observeFunding(lease,id,reader,{signal,commit}={}){
+  const row=(await read()).find(r=>r.id===id);check(row?.review.version===3,'Saved funding transfer not found.');
+  const guard=()=>{signal?.throwIfAborted();lease.assertCurrent();check(row.review.terms.from===lease.identity.address&&row.review.terms.chainId===lease.identity.chainId,'Connect the original account and network.');};guard();
+  const checkWallet=async()=>{guard();const accounts=await lease.request('eth_accounts'),chain=await lease.request('eth_chainId');guard();check(accounts?.[0]?.toLowerCase()===lease.identity.address&&chain===lease.identity.chainId,'Wallet account or network changed.');};
+  const review=JSON.stringify(row.review),offer=structuredClone(row.review.funding);await checkWallet();
+  const value=await reader(offer,{signal});await checkWallet();const observation=checkFundingObservation(offer,value);
+  return update(rows=>{
+   guard();const current=rows.find(r=>r.id===id);check(current&&JSON.stringify(current.review)===review,'Saved funding review changed.');
+   const order=privateReportOrder(current.fundingObservation,observation);
+   if(order>0)current.fundingObservation=observation;
+   else if(order===0)current.fundingObservation.observedAt=Math.max(current.fundingObservation.observedAt,observation.observedAt);
+   current.updatedAt=Math.max(current.updatedAt,Date.now(),current.fundingObservation.observedAt);return structuredClone(current);
+  },{commit,signal,beforeWrite:guard});
+ }
+ return Object.freeze({send,reconcile,observeFunding});
 }
