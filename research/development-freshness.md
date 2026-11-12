@@ -1,3 +1,22 @@
+# Financial recovery review, November 12, 2026
+
+Wallet settings opens a read-only review of retained approvals, transfers and
+reservations. Encrypted reviews preserve older and conflicting observations.
+Missing or invalid sources remain explicit gaps; duplicate signed records
+coalesce, and an oversized source cannot hide records from another source.
+Custom-chain quantities retain exact base units without guessed ETH metadata.
+Failures use short labels with technical evidence under Details; test and demo
+records visibly have no cash value.
+
+Fresh verification passed six core/archive cases, 46 surrounding cases, 16
+browser groups and a custom-currency regression. Six removed guards were
+detected. The fuller Wallet separately passed all 16 browser groups and the
+currency regression. Tests use disposable local fixtures and include encrypted
+file merges, failed/cancelled writes, account changes, three themes, enlarged
+text and offline browser restart after server shutdown. All 33 recovery module
+dependencies are cached. Spending recovery, canonical funding/outcomes and
+exclusive financial signing authority remain incomplete.
+
 # Exact unsigned memo review, November 12, 2026
 
 The local Zcash review screen can inspect authenticated payment and owned-change
