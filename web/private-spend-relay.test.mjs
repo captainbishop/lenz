@@ -27,6 +27,20 @@ test('payment preparation rejects alternate assets, reduced minimums and slippag
  assert.equal(calls(),0);
 }));
 
+test('private swap preparation preserves chosen assets, output minimum and owner without taking a signature',async()=>{
+ let seen=null,route;const server=http.createServer(async(req,res)=>{if(!await route(req,res)){res.writeHead(404);res.end();}});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;
+ route=createPrivateSpendRoute({origin,apiKey:'test-partner',prepare:async value=>{seen=value;return {state:'awaiting-owner-review',offer:{terms:value}};}});
+ const swap={...terms,destinationAsset:'nep141:usdc.near',minOutput:'9000000',recipient:terms.owner};
+ const send=body=>fetch(origin+'/api/private-spend/swap-prepare',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify(body)});
+ try{
+  const response=await send(swap);assert.equal(response.status,200);assert.deepEqual((await response.json()).offer.terms,swap);assert.deepEqual(seen,swap);
+  seen=null;
+  for(const changes of [{destinationAsset:terms.originAsset},{recipient:terms.recipient},{minOutput:'0'},{slippageBps:1},{signedData:{payload:'never submit'}},{signingDeadline:terms.refundDeadline}])assert.equal((await send({...swap,...changes})).status,400);
+  assert.equal(seen,null);
+ }finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
+});
+
 test('native funding endpoint prepares only explicit ETH terms and rejects signatures',async()=>{
  let calls=0;const funding={owner:terms.owner,chainId:'0x1',amount:terms.amount,refundDeadline:terms.refundDeadline};
  let route;const server=http.createServer(async(req,res)=>{if(!await route(req,res)){res.writeHead(404);res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;

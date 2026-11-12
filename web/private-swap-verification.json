@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-11-12T03:37:49.047Z",
+  "baseCommit": "7fecbf02409398ef7cad91b472ef57b14d335193",
+  "sources": {
+    "docs/private-spending.md": "d710e6b35add0859ea5567e1a6867b2388557059179636d9250e07f5f1ffba10",
+    "integrations/intents-spend.test.mjs": "9e91bdaf8eb7caa2f4dfa9647b01b124da82be94494eb0dfb68c02b4ac3f146e",
+    "web/private-executor-ui.test.cjs": "f6f55c66036c1df2203ab719dd13159be9ac7e668dff4775b3210bd207f0788b",
+    "web/private-recovery-browser.test.cjs": "b13e577fa0f0d0253f328d7eb32bdf2dddeaeaf4cf06b45bac6b7ffad8aabdf7",
+    "web/private-spend-relay.mjs": "c721e94334016f2619f5f7a32082f592b4c0158406a27c94e3be7cd85f9ed8e5",
+    "web/private-spend-relay.test.mjs": "5cc6dc56b56369a17bffa811261ccbc3ccac70f2b9a4b8fac8abd42c9d07ad24",
+    "web/private-spend-ui.test.cjs": "52999479846829ddd059469e0100e5c866437455c5de151f7047a4370627f2d5",
+    "web/public/chat-sw.js": "dd70859e1bf5b67ada111de50d040e01e4bca71705148371b397ab2595317d8c",
+    "web/public/intents-spend-outbox.js": "1920fc457dd15f3001b672f7c4fa3b244e7e3cf10e08be6ecadcd5a22d3f0353",
+    "web/public/private-executor-ui.js": "7fdfc30585d23a0caa7d2282125e5b1ef7a35b0e32a1711925e0b58d98f12b26",
+    "web/public/private-spend-review.js": "2428f916492e3284548648956427d12e23988cb000fb395f820a1239407a9929",
+    "web/public/private-spend-ui.js": "9759a04f1c1d50fcaa620168157f0171ae878d02841283f3a4b4c810020a2803",
+    "web/public/private-spend.css": "0c7eacec15b66b7adaba79d9f42ede3c2729e526a1f79da954efaf88ffe4590c",
+    "web/public/sw.js": "f6fd4649241e931c42a851b674f0b933ef4ce0d70e05580e07e1f430b678b167"
+  },
+  "checks": {
+    "nodeCases": 56,
+    "browserCases": 42,
+    "totalPassed": 98,
+    "failed": 0,
+    "fullOfflineRecoveryRestarts": 3
+  },
+  "behavior": [
+    "Wallet reviews exact source/destination assets, integer quantities, owner output and explicit minimum.",
+    "Owner can sign the saved approval offline and share its encrypted request through the existing durable outbox.",
+    "Executor reviews exact distinct units and submits only the authenticated saved approval once; missing, invalid or duplicate metadata pauses submission.",
+    "Encrypted reports preserve destination quantities and remain unverified. Recovered financial access stays paused.",
+    "Cancelling Swap preserves a saved Pay review; deliberate New request still works for both actions.",
+    "Received Swap review, consent and submission use the correct action name."
+  ],
+  "review": {
+    "spec": "No remaining findings after mixed-action recovery and deterministic test synchronization.",
+    "standards": "No remaining violations after explicit Swap action naming."
+  },
+  "retainedFailures": [
+    "HTTP Swap preparation was absent, owner Swap button absent and executor restricted to native ETH.",
+    "Cancelling Swap hid the previous saved Pay review until reload.",
+    "The first mixed-action regression raced asynchronous rendering; it now waits for the visible form.",
+    "Fresh integration initially lacked ignored pinned Node dependency trees; existing runtimes were supplied without package changes."
+  ],
+  "liveBoundary": {
+    "quoteAndUnsignedGenerationAccepted": true,
+    "explicitEmptyAppFeesRequested": true,
+    "providerInjectedAppFeeBps": 20,
+    "feeGuardRejected": true,
+    "refundFee": "0",
+    "withdrawFee": "0",
+    "financialSubmissions": 0,
+    "scope": "Unfunded disposable provider quote/generation only; no signing, funding or execution."
+  },
+  "limits": [
+    "Synthetic providers/wallets and disposable desktop Edge contexts; no actual wallet or funded private execution.",
+    "Metadata is HTTPS provider data; reports cannot prove private finality/privacy/refund or credit funds.",
+    "Live fee policy, protected runtime configuration, external withdrawal/refund proof, full financial recovery and physical transport remain outstanding."
+  ]
+}

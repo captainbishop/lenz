@@ -195,3 +195,12 @@ test('caller edits during a status read cannot replace its original request',asy
  release(Response.json({quoteResponse:quote,status:'PROCESSING',updatedAt:new Date(now).toISOString(),swapDetails:{}}));
  const result=await pending;assert.equal(result.depositAddress,'ab'.repeat(32));assert.equal(result.settlementVerified,false);
 });
+
+test('cross-asset private preparation preserves the chosen output floor and exact unsigned deposit authority',async()=>{
+ const offer=fixture();offer.terms.destinationAsset=offer.quote.quoteRequest.destinationAsset='nep141:usdc.near';offer.terms.recipient=offer.quote.quoteRequest.recipient=owner;offer.terms.minOutput='25000000';offer.quote.quote.amountOut='27000000';offer.quote.quote.minAmountOut='26000000';signQuote(offer.quote);
+ const {signingDeadline,...input}=offer.terms,calls=[];
+ const options={apiKey:'synthetic',now:()=>now,verifySignature:verifier,fetcher:async(url,request)=>{calls.push({url,body:JSON.parse(request.body)});return Response.json(url.endsWith('/quote')?offer.quote:offer.generated);}};
+ const result=await prepareConfidentialSpend(input,options);assert.equal(result.review.amount,'10000000000000000');assert.equal(result.review.minAmountOut,'26000000');assert.equal(result.review.destinationAsset,'nep141:usdc.near');assert.equal(result.review.recipient,owner);assert.equal(result.offer.generated.intent.payload,offer.generated.intent.payload);
+ assert.deepEqual(calls.map(c=>c.url),['https://1click.chaindefuser.com/v0/quote','https://1click.chaindefuser.com/v0/generate-intent']);assert.equal(calls[1].body.type,'swap_transfer');assert.equal(calls[1].body.standard,'erc191');assert.equal(calls[1].body.signerId,owner);assert.equal(result.review.privacyVerified,false);
+ offer.quote.quote.minAmountOut='24000000';signQuote(offer.quote);await assert.rejects(prepareConfidentialSpend(input,options),/amount changed/);
+});

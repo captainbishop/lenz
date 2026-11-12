@@ -22,7 +22,7 @@ export function createConfidentialSpendOutbox({now=Date.now,verifySignature=veri
  function view(row){
   const terms=row.offer.terms,time=now();
   const status=row.report?'provider-reported':time>=Date.parse(terms.signingDeadline)?'expired-unresolved':row.acknowledgement?'executor-reported-stored':time+60000>=Date.parse(terms.refundDeadline)?'review-window-ended':row.sharedAt?'shared-unresolved':'queued';
-  return {id:row.id,owner:terms.owner,executor:row.executor.id,amount:terms.amount,originAsset:terms.originAsset,recipient:terms.recipient,signingDeadline:terms.signingDeadline,status,observation:structuredClone(row.report?.observation??null),settlementVerified:false};
+  return {id:row.id,owner:terms.owner,executor:row.executor.id,amount:terms.amount,originAsset:terms.originAsset,destinationAsset:terms.destinationAsset,minOutput:row.offer.quote.quote.minAmountOut,recipient:terms.recipient,signingDeadline:terms.signingDeadline,status,observation:structuredClone(row.report?.observation??null),settlementVerified:false};
  }
  async function read(s){
   assert(s.identity,'Create a Lenz profile first.');

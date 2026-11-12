@@ -1,9 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 
-async function fixture(run,{asset='nep141:eth.omft.near'}={}){
+async function fixture(run,{asset='nep141:eth.omft.near',swap=false}={}){
  const source=await import('./intents-spend-fixture.mjs'),offer=source.fixture(),{confidentialSignedData}=await import('./public/intents-spend.js');
  if(asset!==offer.terms.originAsset){offer.terms.originAsset=offer.terms.destinationAsset=asset;offer.quote.quoteRequest.originAsset=offer.quote.quoteRequest.destinationAsset=asset;const payload=JSON.parse(offer.generated.intent.payload);payload.intents[0].tokens={['imt:51e8f94d77b5e90dc9852ca6113771e11e8382ce69473a75e313e41665de7cbe:'+asset]:offer.terms.amount};offer.generated.intent.payload=JSON.stringify(payload);source.signQuote(offer.quote);}
+ if(swap){offer.terms.destinationAsset=offer.quote.quoteRequest.destinationAsset='nep141:usdc.near';offer.terms.minOutput='25000000';offer.quote.quote.amountOut='27000000';offer.quote.quote.minAmountOut='26000000';offer.terms.recipient=offer.quote.quoteRequest.recipient=source.owner;source.signQuote(offer.quote);}
  const signedData=confidentialSignedData(offer.generated.intent.payload,await source.wallet.signMessage(offer.generated.intent.payload),source.owner);
  delete offer.payload;
  const api={submitted:0,read:0,mode:'ready',status:'PENDING_DEPOSIT',release:null},errors=[];let bridge;
@@ -12,6 +13,7 @@ async function fixture(run,{asset='nep141:eth.omft.near'}={}){
   const file=new URL(req.url,'http://localhost').pathname;
   res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');
   if(file==='/intents-vendor/quote.js'){res.end(`import {verifyQuoteSignature as verify} from '/fixture-quote.js';export const verifyQuoteSignature=q=>verify(q,${JSON.stringify(source.managerKey)});`);return;}
+  if(file==='/api/receive/assets'&&swap){const token={assetId:'nep141:usdc.near',symbol:'USDC',blockchain:'near',decimals:6};res.end(JSON.stringify({tokens:api.catalogue==='missing'?[]:api.catalogue==='invalid'?[{...token,decimals:6.5}]:api.catalogue==='duplicate'?[token,{...token,decimals:18}]:[token]}));return;}
   if(file.startsWith('/api/')){res.writeHead(503);res.end('{}');return;}
   try{res.end(await fs.readFile(path.join(__dirname,'public',file==='/fixture-quote.js'?'/intents-vendor/quote.js':file)));}catch{res.writeHead(404);res.end();}
  });
@@ -19,7 +21,7 @@ async function fixture(run,{asset='nep141:eth.omft.near'}={}){
  bridge=(await import('./private-executor-relay.mjs')).createPrivateExecutorRoute({origin:base,apiKey:'synthetic',verifySignature:source.verifier,now:()=>api.now??source.now,submit:async(value,signed)=>{
   api.submitted++;assert.deepEqual(value,offer);assert.deepEqual(signed,signedData);if(api.mode==='delay')await new Promise(resolve=>api.release=resolve);if(api.mode==='lost')throw Error('Provider reply lost');
   return {state:'submitted',intentHash:'2'.repeat(44),depositAddress:offer.quote.quote.depositAddress,settlementVerified:false};
- },observe:async()=>{api.read++;if(api.mode==='delay-read')await new Promise(resolve=>api.release=resolve);return {type:'lenz/private-status/v1',depositAddress:offer.quote.quote.depositAddress,status:api.status,updatedAt:new Date((api.now??source.now)+api.read).toISOString(),observedAt:api.now??source.now,amountIn:api.status==='SUCCESS'?offer.terms.amount:null,amountOut:api.status==='SUCCESS'?offer.terms.amount:null,refundedAmount:null,withdrawFee:'0',settlementVerified:false,providerReportSigned:false};}});
+ },observe:async()=>{api.read++;if(api.mode==='delay-read')await new Promise(resolve=>api.release=resolve);return {type:'lenz/private-status/v1',depositAddress:offer.quote.quote.depositAddress,status:api.status,updatedAt:new Date((api.now??source.now)+api.read).toISOString(),observedAt:api.now??source.now,amountIn:api.status==='SUCCESS'?offer.terms.amount:null,amountOut:api.status==='SUCCESS'?offer.quote.quote.amountOut:null,refundedAmount:null,withdrawFee:'0',settlementVerified:false,providerReportSigned:false};}});
  const browser=await chromium.launch({channel:'msedge',headless:true});
  try{
   const contexts=await Promise.all([0,1].map(()=>browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block',acceptDownloads:true}))),[sender,page]=await Promise.all(contexts.map(c=>c.newPage()));
@@ -100,3 +102,20 @@ test('native ETH network labels use checked identifiers and unknown assets canno
   assert.equal(f.api.submitted,0);
  },{asset});
 });
+
+test('received private swap reviews distinct catalogue units, submits once and returns encrypted output',()=>fixture(async f=>{
+ await f.allow();await f.importRequest();await f.review();assert.match(await f.page.locator('#private-executor-terms').innerText(),/26 USDC/);assert(!await f.page.locator('#private-executor-submit').isDisabled());
+ assert.equal(await f.page.locator('#private-executor-review-title').innerText(),'Review swap');assert.equal(await f.page.locator('#private-executor-submit').innerText(),'Submit swap');assert.equal(await f.page.locator('#private-executor-consent-label').innerText(),'I checked this swap and agree to submit it.');
+ await f.page.locator('#private-executor-submit').click();await f.idle();assert.equal(f.api.submitted,1);assert(await f.page.locator('#private-executor-submit').isDisabled());
+ f.api.status='SUCCESS';await f.page.getByRole('button',{name:'Check update',exact:true}).click();await f.idle();
+ const download=f.page.waitForEvent('download');await f.page.getByRole('button',{name:'Save update',exact:true}).click();const file=await download,packet=JSON.parse(await fs.readFile(await file.path(),'utf8'));assert(!JSON.stringify(packet).includes('SUCCESS'));
+ await f.sender.evaluate(packet=>(async()=>{const store=await import('/chat-store.js'),outbox=(await import('/intents-spend-outbox.js')).confidentialSpendOutbox;await store.updateState(s=>outbox.acceptReport(s,packet.envelope.packet));})(),packet);
+ const row=(await f.sender.evaluate(async()=>(await import('/intents-spend-outbox.js')).confidentialSpendOutbox.list()))[0];assert.equal(row.observation.amountOut,'27000000');assert.equal(row.destinationAsset,'nep141:usdc.near');assert.equal(row.settlementVerified,false);
+ await f.page.reload();await f.open();await f.review();assert(await f.page.locator('#private-executor-submit').isDisabled());assert.equal(f.api.submitted,1);
+},{swap:true}));
+
+test('missing, malformed or duplicate swap asset metadata pauses submission and requires a fresh review',()=>fixture(async f=>{
+ await f.allow();await f.importRequest();await f.review();assert(!await f.page.locator('#private-executor-submit').isDisabled());
+ for(const catalogue of ['missing','invalid','duplicate']){f.api.catalogue=catalogue;await f.page.locator('#private-executor-refresh').click();await f.idle();await f.review();assert(await f.page.locator('#private-executor-consent').isDisabled());assert(await f.page.locator('#private-executor-submit').isDisabled());assert.match(await f.page.locator('#private-executor-terms').innerText(),/Asset details unavailable/);}
+ f.api.catalogue='ready';await f.page.locator('#private-executor-refresh').click();await f.idle();assert(await f.page.locator('#private-executor-submit').isDisabled());await f.review();assert(!await f.page.locator('#private-executor-submit').isDisabled());assert.equal(f.api.submitted,0);
+},{swap:true}));

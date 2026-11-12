@@ -4,7 +4,38 @@ The [spending adapter](../integrations/intents-spend.mjs) prepares an unfunded
 Confidential Intents quote, submits an explicitly signed transfer, and reads the
 original deposit's status. The [browser library](../web/public/intents-spend.js)
 checks the quote and generated payload before requesting the owner's signature.
-These libraries do not activate Wallet controls or an HTTP execution endpoint.
+Wallet controls and the local HTTP routes use these libraries with encrypted
+approval and executor journals.
+
+## Wallet swaps
+
+Wallet → Lenz funds → Swap lets the owner choose different source and destination
+assets, an exact input amount, a minimum receive amount and a verified executor.
+The output and any refund stay in the owner's Confidential Intents account.
+`/api/private-spend/swap-prepare` accepts this owner-directed swap separately from
+the same-asset Pay route. Both reject nonzero slippage and unsupported fees.
+The returned quote must meet the chosen minimum before a review can be saved.
+
+Source and destination units are retained in the encrypted review. A saved
+review can be approved offline and handed off through the existing encrypted
+outbox. Received requests require an allowed sender-owner pair and a fresh
+executor review. The executor uses the current HTTPS token catalogue to display
+amounts; missing, malformed or duplicate asset metadata pauses submission.
+Native ETH labels use the pinned chain identifiers. Exact asset IDs remain in
+the review details, and catalogue labels are not settlement evidence.
+
+Encrypted reports preserve the destination output separately from the original
+input. Account recovery retains the exact approval, output bounds and reports;
+unknown asset metadata is shown as integer base units. Recovered financial
+access remains paused. No report credits funds or proves a private refund.
+Withdrawal to an external wallet and independent private settlement remain open.
+
+The official [signed-intent flow](https://docs.near-intents.org/integration/distribution-channels/1click-api/quickstart/signed-intent-execution)
+uses `swap_transfer` for generation and submission and says Confidential Intents
+has no RPC path. The [NEAR privacy architecture](https://www.near.org/blog/how-confidential-intents-works)
+describes a permissioned private shard without a public RPC, API or explorer.
+These interfaces do not supply an independently checkable private balance or
+settlement proof to Lenz.
 
 The owner supplies the amount, assets, recipient, minimum output and refund time
 separately from the provider offer. Only an exact-input transfer between

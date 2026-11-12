@@ -6,13 +6,10 @@ import {validateEnvelope,wrapForCarrier} from './carrier-protocol.js';
 import {walletAmount} from './wallet-visibility.js';
 import {iconButton} from './wallet-actions.js';
 import {FUNDING_NETWORKS} from './private-funding.js';
+import {receiveAssets,receiveChain} from './receive-assets.js';
 
 const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
 const assetNetwork=asset=>Object.values(FUNDING_NETWORKS).find(network=>network.asset===asset);
-const amount=(value,asset)=>{
- const network=assetNetwork(asset);if(!network)return 'Asset amount unavailable';
- const n=value.padStart(19,'0'),fraction=n.slice(-18).replace(/0+$/,'');return n.slice(0,-18)+(fraction?'.'+fraction:'')+' ETH · '+network.name;
-};
 const line=(list,label,value)=>list.append(el('dt',label),el('dd',value));
 const status=row=>row.observation?'Provider reports '+row.observation.status.toLowerCase().replaceAll('_',' ')+' · completion unverified':({'submission-unknown':'Submission reply lost · check before trying again',submitted:'Submitted · completion unverified','not-submitted':'Not submitted',stored:'Saved here · not submitted','expired-unresolved':'Permission expired · completion unknown'}[row.status]??'Completion unknown');
 function failure(error){
@@ -39,32 +36,40 @@ export function mountPrivateExecutor(panel){
  <ul id="private-executor-policies"></ul><label class="check"><input id="private-executor-enabled" type="checkbox">Receive requests from allowed senders</label></details>
  <button id="private-executor-import" type="button" class="secondary">Open request file</button><input id="private-executor-file" type="file" accept="application/json,.json" hidden>
  <p id="private-executor-feedback" class="wallet-feedback" role="status" aria-atomic="true"></p>
- <section id="private-executor-review" hidden><h3>Review payment</h3><dl id="private-executor-terms"></dl>
+ <section id="private-executor-review" hidden><h3 id="private-executor-review-title">Review payment</h3><dl id="private-executor-terms"></dl>
  <details><summary>Transfer details</summary><dl id="private-executor-exact"></dl></details>
- <p class="quiet">Submission sends only this signed payment; no wallet signature is requested here.</p>
- <label class="check"><input id="private-executor-consent" type="checkbox">I checked this payment and agree to submit it.</label>
+ <p id="private-executor-submit-note" class="quiet">Submission sends only this signed payment; no wallet signature is requested here.</p>
+ <label class="check"><input id="private-executor-consent" type="checkbox"><span id="private-executor-consent-label">I checked this payment and agree to submit it.</span></label>
  <button id="private-executor-submit" type="button">Submit payment</button></section>
  <div class="section-heading"><h3>Saved requests</h3><button id="private-executor-refresh" class="secondary" type="button">Refresh</button></div>
  <p id="private-executor-connection" class="quiet"></p><ul id="private-executor-history"></ul><p id="private-executor-empty" class="quiet">Received requests will appear here.</p>`;
  document.body.append(dialog);const $=id=>dialog.querySelector('#'+id);
  iconButton($('private-executor-close'),'Close received requests','m6 6 12 12M18 6 6 18');iconButton($('private-executor-refresh'),'Refresh received requests','M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3');
- let busy=false,ready=false,identity=null,selected=null,summary={enabled:false,policies:[],requests:[]},controller=null,generation=0,view=0,access=false;
+ let busy=false,ready=false,identity=null,selected=null,summary={enabled:false,policies:[],requests:[]},controller=null,generation=0,view=0,access=false,assets=[];
+ const assetDetails=asset=>{const network=assetNetwork(asset);return network?{decimals:18,symbol:'ETH',network:network.name}:assets.find(token=>token.assetId===asset);};
+ function amount(value,asset){
+  const token=assetDetails(asset);if(!token)return 'Asset amount unavailable';
+  const n=value.padStart(token.decimals+1,'0'),fraction=token.decimals?n.slice(-token.decimals).replace(/0+$/,''):'';
+  return (token.decimals?n.slice(0,-token.decimals):n)+(fraction?'.'+fraction:'')+' '+token.symbol+' · '+(token.network??receiveChain(token.blockchain));
+ }
  function controls(){
   dialog.setAttribute('aria-busy',String(busy));for(const node of dialog.querySelectorAll('input,select,button:not(#private-executor-close)'))node.disabled=busy;
   $('private-executor-allow').disabled=busy||!access||!$('private-executor-sender').value;
   $('private-executor-enabled').disabled=busy||(!summary.enabled&&(!access||!summary.policies.length));
   $('private-executor-file').disabled=busy||!access||!summary.enabled;
   $('private-executor-import').disabled=$('private-executor-file').disabled;
-  const known=selected&&assetNetwork(selected.originAsset)&&assetNetwork(selected.destinationAsset);
+  const known=selected&&assetDetails(selected.originAsset)&&assetDetails(selected.destinationAsset);
   $('private-executor-consent').disabled=busy||!selected?.canSubmit||!known||!ready||!navigator.onLine;
   $('private-executor-submit').disabled=busy||!selected?.canSubmit||!known||!ready||!navigator.onLine||!$('private-executor-consent').checked;
   for(const button of $('private-executor-history').querySelectorAll('button[data-action]')){const row=summary.requests.find(r=>r.id===button.dataset.id);button.disabled=busy||(button.dataset.action==='check'&&(!ready||!navigator.onLine||!row?.canCheck));}
  }
  function review(row){
+  const action=row&&row.originAsset!==row.destinationAsset?'swap':'payment';
+  $('private-executor-review-title').textContent='Review '+action;$('private-executor-submit').textContent='Submit '+action;$('private-executor-consent-label').textContent='I checked this '+action+' and agree to submit it.';$('private-executor-submit-note').textContent='Submission sends only this signed '+action+'; no wallet signature is requested here.';
   selected=row;$('private-executor-review').hidden=!row;$('private-executor-consent').checked=false;$('private-executor-terms').replaceChildren();$('private-executor-exact').replaceChildren();if(!row){controls();return;}
   for(const [name,value]of [['From',row.senderName],['Owner',row.owner],['Send',amount(row.amount,row.originAsset)],['Recipient',row.recipient],['Receive at least',amount(row.minOutput,row.destinationAsset)],['Refund can begin after',new Date(row.refundDeadline).toLocaleString()],['Permission ends',new Date(row.signingDeadline).toLocaleString()],['Refund / withdrawal fee','0 / 0']])line($('private-executor-terms'),name,value);
   for(const [name,value]of [['Account type','Confidential Intents'],['Provider','NEAR Intents'],['Source asset',row.originAsset],['Destination asset',row.destinationAsset],['Deposit',row.depositAddress],['Refund-start time','Not covered by the quote signature'],['Confidentiality','Requested; not covered by the quote signature']])line($('private-executor-exact'),name,value);
-  if(!assetNetwork(row.originAsset)||!assetNetwork(row.destinationAsset)){line($('private-executor-exact'),'Send base units',row.amount);line($('private-executor-exact'),'Minimum output base units',row.minOutput);line($('private-executor-terms'),'Availability','Asset details unavailable. Submission paused.');}
+  if(!assetDetails(row.originAsset)||!assetDetails(row.destinationAsset)){line($('private-executor-exact'),'Send base units',row.amount);line($('private-executor-exact'),'Minimum output base units',row.minOutput);line($('private-executor-terms'),'Availability','Asset details unavailable. Submission paused.');}
   controls();
  }
  async function current(signal){signal?.throwIfAborted();const s=await readState();assert(s.identity?.profile.id===identity,'Executor account changed.');signal?.throwIfAborted();return s;}
@@ -93,7 +98,17 @@ export function mountPrivateExecutor(panel){
   catch(error){if(ticket===generation)$('private-executor-feedback').textContent=failure(error);}
   finally{if(ticket===generation){busy=false;controller=null;try{await refresh();}catch{review(null);}controls();}}
  }
- async function connection(signal){ready=false;if(navigator.onLine){try{ready=(await api('config',undefined,signal)).ready===true;}catch{signal?.throwIfAborted();}}}
+ async function connection(signal){
+  ready=false;assets=[];if(!navigator.onLine)return;
+  try{ready=(await api('config',undefined,signal)).ready===true;}catch{signal?.throwIfAborted();}
+  if(!ready)return;
+  try{
+   const response=await fetch('/api/receive/assets',{credentials:'omit',redirect:'error',cache:'no-store',signal:AbortSignal.any([AbortSignal.timeout(10000),...(signal?[signal]:[])])});
+   assert(response.ok,'Asset catalogue unavailable.');const text=await response.text();assert(text.length<=2000000,'Asset catalogue too large.');
+   const checked=receiveAssets(JSON.parse(text).tokens).filter(token=>/^nep141:[a-z0-9._-]{2,128}$/.test(token.assetId)&&token.decimals<=36);
+   await current(signal);assets=checked;
+  }catch{signal?.throwIfAborted();}
+ }
  open.onclick=async()=>{const ticket=++generation;controller=new AbortController();busy=true;ready=false;identity=null;review(null);$('private-executor-feedback').textContent='';dialog.showModal();controls();try{await refresh();await connection(controller.signal);if(ticket!==generation)return;await refresh();}catch(error){if(ticket===generation)$('private-executor-feedback').textContent=failure(error);}finally{if(ticket===generation){busy=false;controller=null;controls();}}};
  $('private-executor-policy').onsubmit=event=>{event.preventDefault();void act(async signal=>{
   const s=await current(signal);requirePaymentAccess(s.identity);const sender=$('private-executor-sender').value,owner=$('private-executor-owner').value.trim().toLowerCase();assert(s.contacts.some(c=>c.id===sender)&&!isRecoveredContact(s,sender),'Add and verify the approved sender first.');
@@ -107,7 +122,7 @@ export function mountPrivateExecutor(panel){
  $('private-executor-import').onclick=()=>$('private-executor-file').click();
  $('private-executor-consent').onchange=controls;
  $('private-executor-submit').onclick=()=>{const row=selected;if(!row||!$('private-executor-consent').checked)return;void act(async signal=>{
-  assert(ready&&navigator.onLine&&row.canSubmit&&assetNetwork(row.originAsset)&&assetNetwork(row.destinationAsset),'Check the saved request before submitting.');requirePaymentAccess((await current(signal)).identity);const result=await submitConfidentialRequest(row.id,(offer,signedData,{signal})=>api('submit',{offer,signedData},signal),{signal});$('private-executor-feedback').textContent=status(result);
+  assert(ready&&navigator.onLine&&row.canSubmit&&assetDetails(row.originAsset)&&assetDetails(row.destinationAsset),'Check the saved request before submitting.');requirePaymentAccess((await current(signal)).identity);const result=await submitConfidentialRequest(row.id,(offer,signedData,{signal})=>api('submit',{offer,signedData},signal),{signal});$('private-executor-feedback').textContent=status(result);
  });};
  $('private-executor-refresh').onclick=()=>act(async signal=>{await connection(signal);});
  function cancel(){generation++;view++;controller?.abort();controller=null;busy=false;selected=null;ready=false;review(null);}

@@ -31,7 +31,7 @@ async function fixture(run,{persistent=false,offerFactory=source=>source.fixture
   await sender.evaluate(()=>sync.backupNow());
   const queue=()=>sender.evaluate(x=>outbox.queue(x.offer,x.signed,x.executor),{offer,signed,executor:executorProfile});
   const report=async(id,{status='SUCCESS',updatedAt=source.now+1000,observedAt=source.now+1000}={})=>{
-   const value={type:'lenz/private-spend-report/v1',id,observation:{type:'lenz/private-status/v1',depositAddress:offer.quote.quote.depositAddress,status,updatedAt:new Date(updatedAt).toISOString(),observedAt,amountIn:status==='SUCCESS'?offer.terms.amount:null,amountOut:status==='SUCCESS'?offer.terms.amount:null,refundedAmount:null,withdrawFee:'0',settlementVerified:false,providerReportSigned:false}};
+   const value={type:'lenz/private-spend-report/v1',id,observation:{type:'lenz/private-status/v1',depositAddress:offer.quote.quote.depositAddress,status,updatedAt:new Date(updatedAt).toISOString(),observedAt,amountIn:status==='SUCCESS'?offer.terms.amount:null,amountOut:status==='SUCCESS'?offer.quote.quote.amountOut:null,refundedAmount:null,withdrawFee:'0',settlementVerified:false,providerReportSigned:false}};
    return executor.evaluate(async x=>peer.sealMessage((await store.readState()).identity,x.owner,x.value),{owner:ownerProfile,value});
   };
   const restartOffline=async()=>{await persistentContext.close();persistentContext=null;await browser.close();browser=null;server.closeAllConnections();await new Promise(resolve=>server.close(resolve));serving=false;persistentContext=await openPersistent();await persistentContext.setOffline(true);await persistentContext.addInitScript(time=>{window.recoveryNow=time;Date.now=()=>window.recoveryNow;},source.now);return persistentContext.pages()[0];};
@@ -208,3 +208,14 @@ test('recovered USDC history shows its exact saved quantity and asset after full
  for(const field of ['amountIn','minAmountIn','amountOut','minAmountOut'])offer.quote.quote[field]='1000000';source.signQuote(offer.quote);
  const payload=JSON.parse(offer.generated.intent.payload);payload.intents[0].tokens={['imt:51e8f94d77b5e90dc9852ca6113771e11e8382ce69473a75e313e41665de7cbe:'+asset]:'1000000'};offer.generated.intent.payload=JSON.stringify(payload);return offer;
 }}));
+
+test('private swap output and original authority survive account recovery and full offline restart',()=>fixture(async f=>{
+ const row=await f.queue(),packet=await f.report(row.id);await f.sender.evaluate(packet=>store.updateState(s=>outbox.acceptReport(s,packet)),packet);await f.sender.evaluate(()=>sync.backupNow());
+ await f.recovered.evaluate(()=>sync.retrieveAccount(material));
+ const snapshot=await f.recovered.evaluate(async()=>outbox.snapshot(await store.readState()));assert.deepEqual(snapshot.rows[0].signedData,f.signed);assert.deepEqual(snapshot.rows[0].offer,f.offer);
+ await f.recovered.evaluate(async()=>{const r=await navigator.serviceWorker.register('/chat-sw.js',{scope:'/money.html'}),w=r.installing??r.waiting??r.active;if(w.state!=='activated')await new Promise((resolve,reject)=>{const changed=()=>{if(w.state==='activated')resolve();if(w.state==='redundant')reject(Error('Offline cache failed'));};w.addEventListener('statechange',changed);changed();});});
+ const page=await f.restartOffline(),response=await page.goto(f.base+'/money.html');assert(response.fromServiceWorker());await page.locator('#private-spend-open').click();await page.locator('#private-spend-history li').waitFor();await page.locator('#private-spend-history summary').click();
+ assert.match(await page.locator('#private-spend-history').innerText(),/26000000 base units · nep141:usdc.near/);assert(await page.locator('#private-spend-approve').isDisabled());assert.equal(await page.locator('#private-spend-history button').count(),0);
+ const result=await page.evaluate(async()=>{const s=await(await import('/chat-store.js')).readState(),rows=await(await import('/intents-spend-outbox.js')).confidentialSpendOutbox.list();return {rows,access:s.identity.access};});
+ assert.equal(result.rows[0].amount,'10000000000000000');assert.equal(result.rows[0].destinationAsset,'nep141:usdc.near');assert.equal(result.rows[0].observation.amountOut,'27000000');assert.equal(result.rows[0].settlementVerified,false);assert.equal(result.access,'lenz/recovered-chat/v1');
+},{persistent:true,offerFactory:source=>{const offer=source.fixture();offer.terms.destinationAsset=offer.quote.quoteRequest.destinationAsset='nep141:usdc.near';offer.terms.recipient=offer.quote.quoteRequest.recipient=source.owner;offer.terms.minOutput='25000000';offer.quote.quote.amountOut='27000000';offer.quote.quote.minAmountOut='26000000';source.signQuote(offer.quote);return offer;}}));

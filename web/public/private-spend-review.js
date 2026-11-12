@@ -18,16 +18,16 @@ async function read(s){
  return draft;
 }
 export async function readPrivateReview(){return read(await readState());}
-export async function savePrivateReview(offer,executor,identity,{signal,token}={}){
+export async function savePrivateReview(offer,executor,identity,{signal,token,destinationToken=token}={}){
  const value={offer:structuredClone(offer),executor:structuredClone(executor),checkedAt:Date.now(),identity};
- const selected=receiveAssets([token])[0],review=checkConfidentialSpend(value.offer);await validateProfile(value.executor);
- assert(selected.assetId===review.originAsset&&selected.assetId===review.destinationAsset,'Asset details belong to another private payment.');
+ const selected=receiveAssets(token?.assetId===destinationToken?.assetId?[token]:[token,destinationToken]),review=checkConfidentialSpend(value.offer);await validateProfile(value.executor);
+ assert(selected[0].assetId===review.originAsset&&selected[selected.length-1].assetId===review.destinationAsset,'Asset details belong to another private request.');
  await updateState(async s=>{
   assert(s.identity?.profile.id===identity,'Lenz account changed. Review again.');requirePaymentAccess(s.identity);
   assert(executor.id!==identity&&!isRecoveredContact(s,executor.id)&&s.contacts.some(p=>p.id===executor.id&&p.signingPublic===executor.signingPublic&&p.boxPublic===executor.boxPublic),'Choose a verified executor contact.');
-  const previous=await read(s),assets=previous?.assets??[],existing=assets.find(t=>t.assetId===selected.assetId);
-  assert(!existing||existing.decimals===selected.decimals&&existing.blockchain===selected.blockchain,'Asset units or network changed. Review its source first.');
-  value.assets=[...assets.filter(t=>t.assetId!==selected.assetId),selected];assert(value.assets.length<=64,'Saved asset list is full.');
+  const previous=await read(s),assets=previous?.assets??[];
+  for(const token of selected){const existing=assets.find(t=>t.assetId===token.assetId);assert(!existing||existing.decimals===token.decimals&&existing.blockchain===token.blockchain,'Asset units or network changed. Review its source first.');}
+  value.assets=[...assets.filter(t=>!selected.some(token=>token.assetId===t.assetId)),...selected];assert(value.assets.length<=64,'Saved asset list is full.');
   const raw=bytes(value);assert(raw.length<=70000,'Private review is too large.');
   s.privateReviewKey??=await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']);
   const iv=crypto.getRandomValues(new Uint8Array(12)),ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(s)},s.privateReviewKey,raw);

@@ -1,3 +1,16 @@
+# Private cross-asset Swap, November 12, 2026
+
+Wallet adds an owner-directed Swap through the existing offline approval,
+encrypted handoff, executor and outcome path. Source/destination quantities and
+minimums remain distinct through recovery. Pay reviews survive cancelled Swap;
+received swaps use explicit action labels. Integrated verification passed 56
+Node cases and 42 Edge cases, including full offline restarts. Independent
+Spec and Standards findings are closed. [Evidence](../web/private-swap-verification.json)
+records exact sources, failures and limits. A real unfunded quote/generation
+check still receives a provider fee despite an explicitly empty fee list; the
+current approval guard rejects that unsupported policy. Funded execution,
+independent private finality, exits and complete financial recovery remain open.
+
 # Zcash encrypted output review, November 12, 2026
 
 The native unsigned review now authenticates payment and owned-change ciphertext

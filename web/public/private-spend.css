@@ -45,6 +45,10 @@
 #private-spend-dialog .private-asset-label{display:inline-flex;align-items:center;gap:8px;max-width:100%}#private-spend-dialog .private-asset-label img{flex:none;width:24px;height:24px}
 #private-spend-dialog .private-payment-value{padding:16px 0}
 #private-spend-dialog .private-payment-value input{font-size:clamp(32px,6vw,48px);font-variant-numeric:tabular-nums}
+#private-spend-dialog .private-swap-route{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:16px;align-items:center;border-block:1px solid var(--line);padding:8px 0;margin:24px 0}
+#private-spend-dialog .private-swap-route>div{min-width:0}#private-spend-dialog .private-swap-route .private-payment-value input{font-size:clamp(26px,5vw,36px)}
+#private-spend-dialog #private-spend-route-arrow svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;color:var(--muted)}
+@media(max-width:380px){#private-spend-dialog .private-swap-route{gap:8px}#private-spend-dialog .private-swap-route .lenz-choice-button{font-size:14px}}
 #private-spend-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px 24px;margin:24px 0;font-variant-numeric:tabular-nums}
 #private-spend-dialog dt{color:var(--muted);font-size:14px}#private-spend-dialog dd{margin:0;text-align:right;overflow-wrap:anywhere;min-width:0}
 #private-spend-dialog button{min-height:44px}#private-spend-dialog :is(#private-spend-approve,#private-spend-prepare){width:100%;min-height:48px;margin-top:16px}

@@ -1,16 +1,19 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 
-async function uiFixture(run){
+async function uiFixture(run,{swap=false}={}){
  const {fixture,managerKey,wallet,now,signQuote}=await import('./intents-spend-fixture.mjs'),api={prepared:0,mode:'ready',release:null};
  const server=http.createServer(async(req,res)=>{
   const file=new URL(req.url,'http://localhost').pathname;
   res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');
   if(file==='/intents-vendor/quote.js'){res.end(`import {verifyQuoteSignature as verify} from '/fixture-quote.js';export const verifyQuoteSignature=q=>verify(q,${JSON.stringify(managerKey)});`);return;}
-  if(file==='/api/receive/assets'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({tokens:[{assetId:'nep141:eth.omft.near',symbol:'ETH',blockchain:'eth',decimals:18}]}));return;}
-  if(file==='/api/private-spend/prepare'){
+  if(file==='/api/receive/assets'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({tokens:[{assetId:'nep141:eth.omft.near',symbol:'ETH',blockchain:'eth',decimals:18},...(swap?[{assetId:'nep141:usdc.near',symbol:'USDC',blockchain:'near',decimals:6}]:[])]}));return;}
+  if(file==='/api/private-spend/prepare'||file==='/api/private-spend/swap-prepare'){
    let body='';for await(const c of req)body+=c;const chosen=JSON.parse(body),offer=fixture();
-   assert.equal(chosen.amount,'10000000000000000');assert.equal(chosen.minOutput,chosen.amount);assert.equal(chosen.recipient,offer.terms.recipient);offer.terms.minOutput=chosen.minOutput;
+   assert.equal(chosen.amount,'10000000000000000');
+   if(swap){assert.equal(file,'/api/private-spend/swap-prepare');assert.equal(chosen.destinationAsset,'nep141:usdc.near');assert.equal(chosen.minOutput,'25000000');assert.equal(chosen.recipient,offer.terms.owner);offer.terms.destinationAsset=chosen.destinationAsset;offer.terms.recipient=chosen.recipient;offer.quote.quoteRequest.destinationAsset=chosen.destinationAsset;offer.quote.quoteRequest.recipient=chosen.recipient;offer.quote.quote.amountOut='27000000';offer.quote.quote.minAmountOut='26000000';signQuote(offer.quote);}
+   else {assert.equal(chosen.minOutput,chosen.amount);assert.equal(chosen.recipient,offer.terms.recipient);}
+   offer.terms.minOutput=chosen.minOutput;api.offer=offer;
    api.prepared++;if(api.mode==='delay')await new Promise(r=>api.release=r);
    if(api.mode==='unavailable'){res.writeHead(503);res.end('{}');return;}
    if(api.mode==='changed'){offer.terms.recipient='0x'+'33'.repeat(20);offer.quote.quoteRequest.recipient=offer.terms.recipient;signQuote(offer.quote);}
@@ -157,4 +160,26 @@ test('asset and signer menus retain exact native values and keyboard cancellatio
  const signer=f.page.getByRole('combobox',{name:'Your wallet',exact:true});await signer.press('ArrowDown');await signer.press('End');await signer.press('Enter');
  assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'1');assert.equal(await signer.innerText(),'Second wallet');
  await signer.press('Enter');await signer.press('Home');await signer.press('Escape');assert.equal(await f.page.locator('#private-spend-signer').inputValue(),'1');assert.equal(await signer.getAttribute('aria-expanded'),'false');assert(await signer.evaluate(n=>n===document.activeElement));assert.equal(await f.signed(),0);
+}));
+test('Wallet prepares a private swap, signs offline and retains distinct asset units in saved history',()=>uiFixture(async f=>{
+ await f.page.locator('#private-spend-close').click();await f.page.locator('#private-swap-open').click();
+ await f.page.waitForFunction(()=>document.querySelector('#private-spend-destination').options.length===2);
+ await f.page.locator('#private-spend-destination').selectOption('nep141:usdc.near',{force:true});
+ await f.page.locator('#private-spend-amount').fill('0.01');await f.page.locator('#private-spend-minimum').fill('25');await f.page.locator('#private-spend-prepare').click();await f.reviewed();
+ assert.equal(f.api.prepared,1);assert.equal(await f.signed(),0);const text=await f.page.locator('#private-spend-review').innerText();assert.match(text,/0\.01 ETH/);assert.match(text,/26 USDC/);assert.match(text,/Swap/);
+ assert.match(text,/From network\s+Ethereum/);assert.match(text,/To network\s+NEAR/);assert.equal(await f.page.locator('#private-spend-dialog').evaluate(n=>n.scrollWidth<=n.clientWidth),true);
+ if(process.env.LENZ_SWAP_EVIDENCE){await fs.mkdir(process.env.LENZ_SWAP_EVIDENCE,{recursive:true});await f.page.locator('#private-spend-dialog').evaluate(n=>n.scrollTop=0);for(const width of [390,1280])for(const theme of ['light','dark']){await f.page.setViewportSize({width,height:900});await f.page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme);await f.page.screenshot({path:path.join(process.env.LENZ_SWAP_EVIDENCE,`swap-${theme}-${width}.png`)});}await f.page.setViewportSize({width:390,height:844});}
+ const draft=await f.page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview());assert.equal(draft.assets.length,2);assert.equal(draft.offer.terms.minOutput,'25000000');
+ await f.context.setOffline(true);await f.page.locator('#private-spend-approve').click();await f.page.waitForFunction(()=>document.querySelector('#private-spend-history').textContent.includes('Waiting for delivery'));
+ const row=(await f.rows())[0];assert.equal(row.destinationAsset,'nep141:usdc.near');assert.equal(row.minOutput,'26000000');assert.equal(row.settlementVerified,false);assert.equal(await f.signed(),1);
+ const download=f.page.waitForEvent('download');await f.page.getByRole('button',{name:'Save request',exact:true}).click();const file=await download,textFile=await fs.readFile(await file.path(),'utf8');assert(!textFile.includes('usdc.near'));assert(!textFile.includes('secp256k1:'));
+ await f.context.setOffline(false);await f.page.reload();await f.open();await f.page.locator('#private-spend-history summary').click();assert.match(await f.page.locator('#private-spend-history').innerText(),/26 USDC/);assert(await f.page.locator('#private-spend-approve').isDisabled());
+},{swap:true}));
+
+test('cancelling Swap preserves an existing Pay review across both action buttons',()=>uiFixture(async f=>{
+ await f.prepare();await f.reviewed();const before=await f.page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview());
+ await f.page.locator('#private-spend-close').click();await f.open();assert(await f.page.locator('#private-spend-review').isVisible());
+ await f.page.locator('#private-spend-close').click();await f.page.locator('#private-swap-open').click();await f.page.locator('#private-spend-form').waitFor();
+ assert(await f.page.locator('#private-spend-review').isHidden());await f.page.locator('#private-spend-close').click();await f.open();
+ assert(await f.page.locator('#private-spend-review').isVisible());assert.deepEqual(await f.page.evaluate(async()=>(await import('/private-spend-review.js')).readPrivateReview()),before);assert.equal(f.api.prepared,1);assert.equal(await f.signed(),0);
 }));
