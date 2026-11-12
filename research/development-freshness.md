@@ -1,3 +1,21 @@
+# Private request history recovery, November 12, 2026
+
+Automatic account backups retain validated private approvals, disclosure records,
+receipts and provider updates. Same-ID sign-in restores readable payment history
+with fresh local encryption and continued payment restrictions. Device merges
+retain newer evidence and reject conflicting owner nonces. ETH quantities retain
+network labels; assets without display metadata show exact base units and asset ID.
+
+The isolated candidate passed 66 account, approval, status, executor HTTP and
+recovery tests, including 14 Edge recovery groups and full offline browser restarts.
+Three deliberate guard-removal scenarios were detected; one removes two redundant
+validation guards. [Verification](../web/private-recovery-verification.json) records
+source hashes, retained failures and tested limits. Provider reports remain
+unverified. Financial reconciliation, independent settlement/refund evidence and
+physical-device delivery remain incomplete. Existing recordings remain unchanged
+and are checked against their exact source revision. Two freshness tests cover
+current-source drift and historical-source/media validation.
+
 # Received private requests, November 11, 2026
 
 Wallet now exposes exact sender-owner consent, encrypted request intake, separate

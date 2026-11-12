@@ -6,6 +6,7 @@ import {createChatRestorer} from './chat-restore.js';
 import {RECOVERED_CHAT} from './chat-access.js';
 import {unlockLocalBackup} from './account-keys.js';
 import {stageIdentityRecovery,isChatArchiveType} from './identity-recovery.js';
+import {confidentialSpendOutbox} from './intents-spend-outbox.js';
 const empty=s=>keysAre(s,['identity','contacts','messages'])&&s.identity===null&&s.contacts.length===0&&s.messages.length===0;
 const receiptOrder=packet=>JSON.stringify([packet.id,packet.iv,packet.ciphertext,packet.signature]);
 const makeSync=(m,revision=0,hash='')=>({type:'lenz/account-sync/v1',accountId:m.accountId,authority:m.authority,backupKey:m.backupKey,deviceKey:m.deviceKey,phraseBox:m.phraseBox,revision,digest:hash,version:1,savedVersion:0,pending:null,status:'pending',savedAt:null});
@@ -22,7 +23,7 @@ export async function retrieveAccount(material){
   assert(empty(await readState()),'This browser already has an account.');
   const result=await accountRequest(material,'read'),value=await openAccountBackup(material,result),sync=makeSync(material,result.revision,result.digest);sync.savedVersion=1;sync.status='saved';sync.savedAt=result.savedAt;
   if(isChatArchiveType(value.chat.type)){
-    await updateState(state=>{assert(empty(state),'This browser already has an account.');state.identity=value.recovered.identity;state.identity.access=RECOVERED_CHAT;state.contacts=value.recovered.contacts;state.messages=value.recovered.messages;state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;},{markBackup:false});
+    await updateState(async state=>{assert(empty(state),'This browser already has an account.');state.identity=value.recovered.identity;state.identity.access=RECOVERED_CHAT;state.contacts=value.recovered.contacts;state.messages=value.recovered.messages;state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;if(Object.hasOwn(value,'privateSpend'))await confidentialSpendOutbox.restore(state,value.privateSpend);},{markBackup:false});
   }else{
     const stage=createChatRestorer({read:readState,update:fn=>updateState(async state=>{const result=await fn(state);state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;return result;},{markBackup:false})});
     await(await stage(material.phrase,new File([JSON.stringify(value.chat)],'backup.json'))).install();
@@ -58,7 +59,9 @@ async function reconcileBackup(sync,{request,metadata}){
     state.contacts=[...contacts.values()];state.messages=[...messages.values()];state.contactRecoveries=[...updates.values()];
     if(!dirty)state.identity.profile=remote.recovered.identity.profile;
     const contents=({profile,contacts,messages},links)=>JSON.stringify([profile,[...contacts].sort((a,b)=>a.id.localeCompare(b.id)),messages.map(r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null]).sort((a,b)=>a[0].id.localeCompare(b[0].id)),[...links].sort((a,b)=>a.from.id.localeCompare(b.from.id))]);
-    const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages},remote.contactRecoveries);
+    const remotePrivate=remote.privateSpend??{type:'lenz/private-spend-history/v1',identity:state.identity.profile.id,rows:[]},mergedPrivate=await confidentialSpendOutbox.restore(state,remotePrivate);
+    const canonical=value=>JSON.stringify(value,(_,v)=>v&&!Array.isArray(v)&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(key=>[key,v[key]])):v);
+    const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages},remote.contactRecoveries)||canonical(mergedPrivate)!==canonical(remotePrivate);
     current.revision=latest.revision;current.digest=latest.digest;current.pending=null;current.version++;current.status=changed?'pending':'saved';current.savedAt=latest.savedAt;if(!changed)current.savedVersion=current.version;
   });
   if(typeof BroadcastChannel==='function'){const channel=new BroadcastChannel('proof-u-chat-refresh');channel.postMessage('changed');channel.close();}

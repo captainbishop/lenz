@@ -1,6 +1,6 @@
 const DB = 'proof-u-private-chat-v1';
 const KEY = 'workspace';
-const backupContent=state=>JSON.stringify([state.identity?.profile,state.contacts,state.messages?.map(record=>[record.packet,record.receiptToShare??null,record.receivedReceipt??null]),state.recoveredChat?.archive,state.contactRecoveries??[]]);
+const backupContent=state=>JSON.stringify([state.identity?.profile,state.contacts,state.messages?.map(record=>[record.packet,record.receiptToShare??null,record.receivedReceipt??null]),state.recoveredChat?.archive,state.contactRecoveries??[],state.privateSpendBox??null]);
 function database() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB, 1);

@@ -6,7 +6,10 @@ import {requirePaymentAccess} from './chat-access.js';
 import {PRIVATE_REPORT_ACK,PRIVATE_REPORT_RESERVE,checkPrivateReportPacket,checkPrivateReport,checkPrivateReportAck,privateReportOrder} from './intents-report.js';
 
 const DOMAIN='lenz/private-spend-outbox/v1',MAX_BYTES=2000000,MAX_ROWS=32,RECEIPT_RESERVE=8192;
+const SNAPSHOT='lenz/private-spend-history/v1';
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const ordered=value=>Array.isArray(value)?value.map(ordered):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,ordered(value[key])])):value;
+const canonical=value=>JSON.stringify(ordered(value));
 const aad=s=>bytes([DOMAIN,s.identity.profile.id]);
 export const confidentialApprovalSlot=review=>[JSON.parse(review.payload).verifying_contract,review.owner,JSON.parse(review.payload).nonce].join(':');
 export const confidentialApprovalId=payload=>digest([DOMAIN,payload]);
@@ -28,7 +31,10 @@ export function createConfidentialSpendOutbox({now=Date.now,verifySignature=veri
   assert(s.privateSpendKey&&keysAre(box,['iv','ciphertext'])&&typeof box.ciphertext==='string'&&box.ciphertext.length<=MAX_BYTES*2,'Private approval storage is incomplete or too large.');
   const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(box.iv),additionalData:aad(s)},s.privateSpendKey,unhex(box.ciphertext));
   const rows=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw));
-  assert(Array.isArray(rows)&&rows.length<=MAX_ROWS,'Invalid private approval history.');
+  return validate(s,rows);
+ }
+ async function validate(s,rows){
+  assert(Array.isArray(rows)&&rows.length<=MAX_ROWS&&bytes(rows).length<=MAX_BYTES,'Invalid private approval history.');
   const ids=new Set(),slots=new Set();
   for(const row of rows){
    const fields=['id','slot','offer','signedData','executor','checkedAt','envelope','sharedAt'];if(Object.hasOwn(row,'acknowledgement'))fields.push('acknowledgement');
@@ -53,9 +59,13 @@ export function createConfidentialSpendOutbox({now=Date.now,verifySignature=veri
   }
   return rows;
  }
- async function save(s,rows){
+ function checkCapacity(rows){
   const raw=bytes(rows),reserve=rows.reduce((total,r)=>total+(r.sharedAt===null?16:0)+(r.acknowledgement?0:RECEIPT_RESERVE)+Math.max(0,PRIVATE_REPORT_RESERVE-bytes(r.report??null).length),0);
   assert(raw.length+16+reserve<=MAX_BYTES,'Private approval storage is full. Existing approvals remain saved.');
+  return raw;
+ }
+ async function save(s,rows){
+  const raw=checkCapacity(rows);
   s.privateSpendKey??=await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']);
   const iv=crypto.getRandomValues(new Uint8Array(12));
   const ciphertext=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(s)},s.privateSpendKey,raw);
@@ -68,6 +78,27 @@ export function createConfidentialSpendOutbox({now=Date.now,verifySignature=veri
  }
  return Object.freeze({
   async list(){return(await read(await readState())).map(view);},
+  async snapshot(s){return {type:SNAPSHOT,identity:s.identity.profile.id,rows:structuredClone((await read(s)).sort((a,b)=>a.id.localeCompare(b.id)))};},
+  async validateSnapshot(s,input){
+   const value=structuredClone(input);
+   assert(keysAre(value,['type','identity','rows'])&&value.type===SNAPSHOT&&value.identity===s.identity?.profile.id,'Private history belongs to another Lenz account.');
+   await validate(s,value.rows);checkCapacity(value.rows);
+   value.rows.sort((a,b)=>a.id.localeCompare(b.id));return value;
+  },
+  async restore(s,input){
+   const value=await this.validateSnapshot(s,input),local=await read(s),before=canonical([...local].sort((a,b)=>a.id.localeCompare(b.id))),rows=new Map(local.map(row=>[row.id,row]));
+   for(const incoming of value.rows){
+    const existing=rows.get(incoming.id);
+    if(!existing){assert(![...rows.values()].some(row=>row.slot===incoming.slot),'Private nonce histories disagree.');rows.set(incoming.id,incoming);continue;}
+    for(const field of ['id','slot','offer','signedData','executor','checkedAt','envelope'])assert(canonical(existing[field])===canonical(incoming[field]),'Private approval histories disagree.');
+    const shared=[existing.sharedAt,incoming.sharedAt].filter(time=>time!==null);existing.sharedAt=shared.length?Math.min(...shared):null;
+    if(incoming.acknowledgement&&(!existing.acknowledgement||canonical(incoming.acknowledgement)<canonical(existing.acknowledgement)))existing.acknowledgement=incoming.acknowledgement;
+    if(incoming.report){const order=privateReportOrder(existing.report?.observation,incoming.report.observation);if(order>0||order===0&&canonical(incoming.report)<canonical(existing.report))existing.report=incoming.report;}
+   }
+   const merged=[...rows.values()].sort((a,b)=>a.id.localeCompare(b.id));await validate(s,merged);checkCapacity(merged);
+   if(canonical(merged)!==before)await save(s,merged);
+   return {type:SNAPSHOT,identity:s.identity.profile.id,rows:structuredClone(merged)};
+  },
   async courierItems(s){
    let access=true;try{requirePaymentAccess(s.identity);}catch{access=false;}
    return(await read(s)).flatMap(row=>[

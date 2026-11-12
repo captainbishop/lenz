@@ -10,6 +10,7 @@ import {iconButton} from './wallet-actions.js';
 import {walletAmount} from './wallet-visibility.js';
 import {setChoiceRenderer} from './form-controls.js';
 import {mountPrivateExecutor} from './private-executor-ui.js';
+import {FUNDING_NETWORKS} from './private-funding.js';
 
 const el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 const units=(value,decimals)=>{const padded=value.padStart(decimals+1,'0'),fraction=decimals?padded.slice(-decimals).replace(/0+$/,''):'';return (decimals?padded.slice(0,-decimals):padded)+(fraction?'.'+fraction:'');};
@@ -34,7 +35,7 @@ export function mountPrivateSpend(session,before){
  iconButton(panel.querySelector('#private-spend-open'),'Pay from private funds','M6 18 18 6M6 6h12v12');panel.querySelector('#private-spend-open').append(el('span','Pay'));
  const dialog=el('dialog');dialog.id='private-spend-dialog';dialog.setAttribute('aria-labelledby','private-spend-title');
  dialog.innerHTML=`<div class="dialog-top"><h2 id="private-spend-title">Pay from Lenz</h2><button id="private-spend-close" class="secondary wallet-close" type="button"></button></div>
- <p class="quiet">Pay with funds already in Lenz. Use Add funds in Wallet if needed.</p>
+ <p id="private-spend-intro" class="quiet">Pay with funds already in Lenz. Use Add funds in Wallet if needed.</p>
  <form id="private-spend-form">
   <label for="private-spend-recipient">Recipient’s Lenz account</label><input id="private-spend-recipient" autocomplete="off" spellcheck="false" placeholder="0x…" required>
   <label for="private-spend-asset">Asset</label><select id="private-spend-asset" required></select>
@@ -53,7 +54,7 @@ export function mountPrivateSpend(session,before){
  <p id="private-spend-feedback" class="wallet-feedback" role="status" aria-atomic="true"></p>
  <div class="section-heading"><h3>Saved requests</h3><button id="private-spend-refresh" type="button" class="secondary">Refresh</button></div>
  <ul id="private-spend-history"></ul><p id="private-spend-empty" class="quiet">Your payment requests will appear here.</p>
- <label for="private-spend-update">Open a payment update</label><input id="private-spend-update" type="file" accept="application/json,.json">`;
+ <details><summary>Open an update file</summary><label for="private-spend-update">Payment update</label><input id="private-spend-update" type="file" accept="application/json,.json"></details>`;
  document.body.append(dialog);const $=id=>dialog.querySelector('#'+id);
  iconButton($('private-spend-close'),'Close','m6 6 12 12M18 6 6 18');
  iconButton($('private-spend-refresh'),'Refresh saved payment requests','M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3');
@@ -82,9 +83,16 @@ export function mountPrivateSpend(session,before){
  const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('proof-u-chat-refresh'):null;
  channel?.addEventListener('message',()=>{if(dialog.open&&!busy)void refresh().catch(e=>{$('private-spend-feedback').textContent=feedback(e);});});
  function line(host,label,value){const description=el('dd');if(value instanceof Node)description.append(value);else description.textContent=value;host.append(el('dt',label),description);}
- function assetAmount(value,asset){const token=savedAssets.find(t=>t.assetId===asset)??tokens.find(t=>t.assetId===asset);return token?units(value,token.decimals)+' '+token.symbol:'Asset details unavailable';}
+ function assetAmount(value,asset){
+  const token=savedAssets.find(t=>t.assetId===asset)??tokens.find(t=>t.assetId===asset);
+  if(token)return units(value,token.decimals)+' '+token.symbol;
+  const network=Object.values(FUNDING_NETWORKS).find(n=>n.asset===asset);
+  return network?units(value,18)+' ETH · '+network.name:value+' base units · '+asset;
+ }
  function paintReview(){
-  $('private-spend-form').hidden=!!draft;$('private-spend-review').hidden=!draft;if(!draft)return;
+  $('private-spend-title').textContent=paymentAccess?'Pay from Lenz':'Payment history';
+  $('private-spend-intro').hidden=!paymentAccess;
+  $('private-spend-form').hidden=!!draft||!paymentAccess;$('private-spend-review').hidden=!draft;if(!draft)return;
   const r=checkConfidentialSpend(draft.offer,{now:draft.checkedAt});$('private-spend-terms').replaceChildren();$('private-spend-exact').replaceChildren();
   const token=draft.assets?.find(t=>t.assetId===r.destinationAsset)??tokens.find(t=>t.assetId===r.destinationAsset);
   line($('private-spend-terms'),'Account type','Lenz funds');line($('private-spend-terms'),'Network',token?receiveChain(token.blockchain):'Details unavailable');
@@ -106,7 +114,7 @@ export function mountPrivateSpend(session,before){
    details.append(title);
    for(const [label,value]of [['Recipient',row.recipient],['Owner',row.owner],['Completing contact',s.contacts.find(c=>c.id===row.executor)?.name??row.executor],['Permission ends',new Date(row.signingDeadline).toLocaleString()]])line(terms,label,value);
    details.append(terms);item.append(details,el('p',report?'Provider reports '+report.toLowerCase().replaceAll('_',' ')+' · completion not yet verified':labels[row.status]??'Pending · completion not yet verified'));
-   if(['queued','shared-unresolved'].includes(row.status)){
+   if(paymentAccess&&['queued','shared-unresolved'].includes(row.status)){
     const button=el('button','Save request');button.type='button';button.className='secondary';button.onclick=()=>act(async(signal)=>{
      requirePaymentAccess((await readState()).identity);const packet=await confidentialSpendOutbox.handoff(row.id,{signal}),current=await readState();
      assert(current.identity?.profile.id===s.identity.profile.id,'Lenz account changed. Review again.');requirePaymentAccess(current.identity);
@@ -134,7 +142,8 @@ export function mountPrivateSpend(session,before){
    if(navigator.onLine){const response=await fetch('/api/receive/assets',{cache:'no-store',credentials:'omit',redirect:'error',signal:AbortSignal.timeout(5000)});if(response.ok){const result=await response.json();if(ticket!==version||!dialog.open)return;tokens=receiveAssets(result.tokens).filter(t=>/^nep141:[a-z0-9._-]{2,128}$/.test(t.assetId)&&t.decimals<=36);}}
    if(ticket!==version||!dialog.open)return;
    $('private-spend-asset').replaceChildren();for(const token of tokens){const option=el('option',token.symbol+' · '+receiveChain(token.blockchain));option.value=token.assetId;$('private-spend-asset').append(option);}
-   await refresh();if(!session.snapshot&&!draft)$('private-spend-feedback').textContent='Connect an external wallet to prepare a request.';
+   await refresh();if(!paymentAccess)$('private-spend-feedback').textContent='Recovered history. Financial access remains paused.';
+   else if(!session.snapshot&&!draft)$('private-spend-feedback').textContent='Connect an external wallet to prepare a request.';
   }catch(error){$('private-spend-feedback').textContent=feedback(error);}finally{control();}
  };
  $('private-spend-form').onsubmit=event=>{event.preventDefault();void act(async signal=>{

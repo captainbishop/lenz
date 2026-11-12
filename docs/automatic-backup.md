@@ -14,7 +14,7 @@ contact successors stop the merge. Concurrent profile/contact-label edits retain
 the local edit during reconciliation; this is not a collaborative text editor.
 Message/contact collections merge by identity; deletion is not propagated.
 
-**Backed up** means the current local chat revision has a matching durable
+**Backed up** means the current local account revision has a matching durable
 acknowledgement. **Waiting to back up** means local changes remain unsaved at the
 service. An interrupted upload retries its exact persisted ciphertext. Two tabs
 in one browser share an upload lock; separate devices use revision checks.
@@ -60,7 +60,8 @@ one-use nonce, revision, prior digest and archive digest. Challenges expire afte
 60 seconds. This is possession-based application authentication after local
 passkey verification, not server-enforced passkey verification on every write.
 
-AES-GCM encrypts the chat archive and accepted contact-continuity links. Its
+AES-GCM encrypts the chat archive, accepted contact-continuity links and validated
+owner-side private request history. Its
 authenticated header binds account, revision and prior digest. The service sees
 the separate backup public identity, archive size, timing, revisions and network
 metadata. It does not receive readable chat profiles, text, phrases or private
@@ -87,9 +88,12 @@ merged as one ordinary passkey account.
 Sign-in cannot replace an occupied browser account, including one created while
 retrieval was in progress. New passkey accounts restore the same chat identity;
 legacy accounts restore their authorized chat successor. Both restored forms
-apply chat-only access restrictions. Financial vaults, payment messages, balances,
-reservations and pending instructions are excluded. External wallets retain their
-own keys. Copying a chat account does not reconcile financial obligations or
+apply chat-only access restrictions. Same-ID backups also retain validated private
+approvals, disclosure records, receipts and provider updates as restricted history.
+Financial vaults, chat payment messages, balances, reservations, receiver permissions
+and executor submission journals are excluded. Existing signed approvals retain
+their original cryptographic authority. External wallets retain their own keys.
+Copying a chat account does not reconcile financial obligations or
 authorize duplicated spending. These restrictions are application policy, not
 cryptographic revocation or exclusive device ownership.
 

@@ -51,11 +51,16 @@ if (record) {
   console.log(`Freshness record matches ${bytes.size} ${staged ? 'staged' : 'working-tree'} inputs across ${groups.length} areas.`);
 }
 const provenance = JSON.parse(bytes.get('web/preview-recording.json'));
+if (provenance.sourceRevision !== undefined) {
+  assert(/^[a-f0-9]{40}$/.test(provenance.sourceRevision), 'Invalid recorded source revision.');
+  git('rev-parse', '--verify', provenance.sourceRevision + '^{commit}');
+}
 for (const [file, expected] of Object.entries(provenance.sourceFiles)) {
-  assert.equal(current[file], expected, `Recorded app source changed: ${file}. Review and refresh the affected videos.`);
+  const actual = provenance.sourceRevision ? hash(git('show', provenance.sourceRevision + ':' + file)) : current[file];
+  assert.equal(actual, expected, `Recorded app source changed: ${file}. Review and refresh the affected videos.`);
 }
 for (const video of provenance.videos) {
   assert.equal(current[video.file], video.sha256, `Video changed: ${video.file}. Record and verify it.`);
   assert.equal(current[video.poster], video.posterSha256, `Poster changed: ${video.poster}. Record and verify it.`);
 }
-console.log('Recorded app source, video and poster hashes match.');
+console.log(provenance.sourceRevision ? 'Recorded source revision, video and poster hashes match; footage is historical.' : 'Recorded app source, video and poster hashes match.');

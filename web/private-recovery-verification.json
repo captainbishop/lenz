@@ -1,0 +1,69 @@
+{
+  "verifiedAt": "2026-11-12T01:03:12.386Z",
+  "baseCommit": "b503517517d9086a031a026885e1d6ac30702342",
+  "scope": "Encrypted private request history in automatic account backup and same-ID recovery",
+  "sourceFiles": {
+    "web/public/intents-spend-outbox.js": "54412372f723679ad1d4228c3e01132ad551f28ac3e14a7c83cb564f46d22f89",
+    "web/public/account-backup.js": "b7ab68ad472b5957b5298aab20de5debb0e2266d449558af9a710857391f35de",
+    "web/public/account-sync.js": "51378c1bd465d64c3211ddba317144869172179f5f575dcc45885d2fe1a8eb06",
+    "web/public/chat-store.js": "2024978aa6baf3c88c76ee3d1ed7fe810fd5df8b008c829f03351af2da01ca03",
+    "web/public/private-spend-ui.js": "5c58bdb926f08a87abe6c8f55d85c4180eaf5a720685d6318a58fc969f264d53",
+    "web/private-recovery-browser.test.cjs": "f55f61f110e1f5edd00f1b48504c328faee2fde4bdb7c606ab7e781855d47395",
+    "docs/private-spending.md": "1021fd307dd2752ea0ba6079388677aaa9e2e3e9c0be742599f3efa1364466aa",
+    "web/public/chat-sw.js": "1fdbc58c13be0f816d172e43775e45059f8c5fec973fcd1a7a99140b83b400a1",
+    "web/public/sw.js": "1e4ec75834daf66a07a534593f471a8a766af43817bdca26ff34fdbb53d49cc6",
+    "docs/identity-recovery.md": "fb8d05822f8fd9c864ed3a9127b7fe8d40fb759c81beca7d4a27bb823299590f",
+    "docs/automatic-backup.md": "34846ca9c88e28bee9ca0d2fade5b1abbc20382a3ad566c37068442057d22842",
+    "tooling/check-freshness.mjs": "1204e90df110df80e0107302b14c274f56d160ca6a549cfbb0cc44ed2c8951a6",
+    "tooling/check-freshness.test.mjs": "70e2259ff4523651939b4b7401736e2cf9ab383d7c241ccec130d30aae7ebcc9",
+    "web/preview-recording.json": "7125842ace42f3120623971a2a2273f26fe51bee6628b0f6a7fb461d2cdcb345"
+  },
+  "checks": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=spec",
+      "web/account-backup.test.mjs",
+      "web/identity-recovery.test.mjs",
+      "web/intents-spend.test.mjs",
+      "web/intents-status.test.mjs",
+      "web/private-executor-relay.test.mjs",
+      "web/private-recovery-browser.test.cjs"
+    ],
+    "passed": 66,
+    "failed": 0,
+    "recoveryBrowserGroups": 14,
+    "guardScenarios": [
+      {
+        "name": "present-history-validation-paired",
+        "detected": true,
+        "exitCode": 1
+      },
+      {
+        "name": "recovered-payment-access",
+        "detected": true,
+        "exitCode": 1
+      },
+      {
+        "name": "newest-provider-evidence",
+        "detected": true,
+        "exitCode": 1
+      }
+    ],
+    "freshnessTests": 2
+  },
+  "limits": [
+    "Disposable Edge profiles, synthetic wallet/provider responses and a loopback account service. No real financial operation.",
+    "Recovered accounts retain application payment restrictions; existing signatures retain their original cryptographic authority.",
+    "Provider updates are unverified observations. No settlement/refund proof, balance credit, complete liability recovery or key revocation is established.",
+    "Financial vaults, chat payment messages, balances, reservations, receiver permissions and executor submission journals are excluded.",
+    "Unknown asset metadata displays the original base-unit quantity and asset ID. Physical-device delivery, first-offline installation and hosted durability remain unverified."
+  ],
+  "retainedFailures": [
+    "Normal sign-in originally returned no private requests despite a saved approval.",
+    "A standalone archive-validation guard removal was not detected because restoration independently validates it; removing both property-presence guards is detected.",
+    "A supported USDC request originally lost its visible quantity and asset label after offline recovery; a focused regression now verifies the exact base-unit fallback.",
+    "Earlier test fixtures needed the pinned generated offline proof dependencies; corrected test-only runtime files are retained outside the repository.",
+    "The commit gate initially required new footage for changed recorded-source fingerprints. Historical source revision checks preserve the existing footage without treating it as current feature evidence."
+  ]
+}

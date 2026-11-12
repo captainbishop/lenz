@@ -366,5 +366,6 @@
       "framesCompared": 15,
       "scope": "Read-only replay differs only by message-status and delivery-confirmation wording. Signed payment states and all other DOM content are unchanged. Existing illustrative videos and historical captures are preserved."
     }
-  ]
+  ],
+  "sourceRevision": "b503517517d9086a031a026885e1d6ac30702342"
 }

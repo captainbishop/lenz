@@ -72,6 +72,12 @@ history with per-message keys and an old-key-authorized successor link. Its
 restore flow installs that successor only into an empty account. This identity module
 rejects an archive whose keys differ from the supplied phrase's derived keys.
 
+Same-ID automatic account backup additionally preserves validated owner-side
+[private request history](private-spending.md#recovering-saved-requests).
+Those records use separate account encryption and remain restricted after
+sign-in. They are not part of the chat archive format and do not restore funds,
+executor permissions or prove that every outstanding liability is known.
+
 ## Verification
 
 Run `node web/verify-identity-recovery.mjs` with the existing Playwright dependency

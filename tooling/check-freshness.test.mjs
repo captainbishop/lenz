@@ -44,3 +44,63 @@ test('freshness catches hidden component drift, new files, staged differences an
     await rm(resolved, { recursive: true });
   }
 });
+
+test('pinned recording sources remain historical while current and staged media stay checked', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'lenz-freshness-'));
+  const run = (exe, args) => spawnSync(exe, args, { cwd: directory, windowsHide: true, encoding: 'utf8' });
+  const put = async (file, value) => { await mkdir(dirname(join(directory, file)), { recursive: true }); await writeFile(join(directory, file), value); };
+  const hash = value => createHash('sha256').update(value).digest('hex');
+  const gate = (...args) => run(process.execPath, ['tooling/check-freshness.mjs', ...args]);
+  const recording = {
+    sourceFiles: { 'web/public/chat.js': hash('original app'), 'web/public/account-sync.js': hash('original sync') },
+    videos: [{ file: 'web/public/previews/chat.mp4', sha256: hash('original video'), poster: 'web/public/previews/chat.webp', posterSha256: hash('original poster') }],
+  };
+  const saveRecording = value => put('web/preview-recording.json', JSON.stringify(value));
+  try {
+    assert.equal(run('git', ['init', '-q']).status, 0);
+    await put('.gitattributes', '* -text\n');
+    await put('tooling/check-freshness.mjs', await readFile(new URL('./check-freshness.mjs', import.meta.url)));
+    await put('research/development-freshness.md', 'Fixture review');
+    await put('web/public/chat.js', 'original app'); await put('web/public/account-sync.js', 'original sync');
+    await put('web/public/previews/chat.mp4', 'original video'); await put('web/public/previews/chat.webp', 'original poster');
+    await saveRecording(recording);
+    assert.equal(gate('--record').status, 0);
+    assert.equal(run('git', ['add', '.']).status, 0);
+    const commit = run('git', ['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'Original recording fixture']);
+    assert.equal(commit.status, 0, commit.stderr);
+    const revision = run('git', ['rev-parse', 'HEAD']); assert.equal(revision.status, 0, revision.stderr);
+    recording.sourceRevision = revision.stdout.trim(); assert.match(recording.sourceRevision, /^[a-f0-9]{40}$/);
+    await saveRecording(recording); await put('web/public/chat.js', 'current app'); await put('web/public/account-sync.js', 'current sync');
+    for (const args of [['--record'], []]) {
+      const result = gate(...args); assert.equal(result.status, 0, result.stderr); assert.match(result.stdout, /footage is historical/);
+    }
+    assert.equal(run('git', ['add', '.']).status, 0);
+    const staged = gate('--staged'); assert.equal(staged.status, 0, staged.stderr); assert.match(staged.stdout, /footage is historical/);
+    for (const file of Object.keys(recording.sourceFiles)) {
+      const bad = structuredClone(recording); bad.sourceFiles[file] = '0'.repeat(64); await saveRecording(bad);
+      const result = gate('--record'); assert.notEqual(result.status, 0); assert.match(result.stderr, /Recorded app source changed/);
+    }
+    for (const sourceRevision of ['HEAD', null, '0'.repeat(40)]) {
+      await saveRecording({ ...recording, sourceRevision });
+      const result = gate('--record'); assert.notEqual(result.status, 0, 'invalid or nonexistent source revision must fail');
+      if (sourceRevision !== '0'.repeat(40)) assert.match(result.stderr, /Invalid recorded source revision/);
+    }
+    await saveRecording(recording);
+    for (const [file, original, error] of [['web/public/previews/chat.mp4', 'original video', /Video changed/], ['web/public/previews/chat.webp', 'original poster', /Poster changed/]]) {
+      await put(file, 'altered media');
+      const result = gate('--record'); assert.notEqual(result.status, 0); assert.match(result.stderr, error);
+      assert.equal(run('git', ['add', '.']).status, 0);
+      const stagedDrift = gate('--staged'); assert.notEqual(stagedDrift.status, 0); assert.match(stagedDrift.stderr, error);
+      await put(file, original);
+    }
+    const unpinned = structuredClone(recording); delete unpinned.sourceRevision; await saveRecording(unpinned);
+    const currentMismatch = gate('--record'); assert.notEqual(currentMismatch.status, 0); assert.match(currentMismatch.stderr, /Recorded app source changed/);
+    await saveRecording(recording);
+    assert.equal(gate('--record').status, 0); assert.equal(gate().status, 0);
+    assert.equal(run('git', ['add', '.']).status, 0); assert.equal(gate('--staged').status, 0);
+  } finally {
+    const resolved = await realpath(directory), parent = await realpath(tmpdir());
+    assert.equal(dirname(resolved), parent); assert(resolved.includes('lenz-freshness-'));
+    await rm(resolved, { recursive: true });
+  }
+});

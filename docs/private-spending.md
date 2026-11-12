@@ -135,6 +135,26 @@ and financial recovery remain unfinished. Browser data loss is not recovered by
 the local transfer journal. Cancel a wallet prompt if its review or deposit
 deadline passes; Lenz cannot prevent the wallet from sending later.
 
+## Recovering saved requests
+
+Automatic account backup preserves the owner's validated private requests,
+original signed approvals, disclosure records and encrypted provider updates.
+Passkey sign-in restores this history under the same Lenz ID with a fresh,
+nonextractable local encryption key. Private-only history changes schedule backup.
+Older account backups remain readable. Private history backup requires the
+original Lenz ID to be recoverable.
+
+Device synchronization retains unresolved requests and the newest checked
+provider update. Conflicting approvals for one nonce stop synchronization.
+Recovery keeps payment preparation, signing and request sharing blocked in the
+app. Receiving permissions and executor submission history are not restored.
+The history establishes neither complete liabilities nor settlement, refund,
+lost-device revocation or safe financial recovery. Previously signed approvals
+retain their original cryptographic authority until their actual deadline.
+
+Run `node --test web/private-recovery-browser.test.cjs` with the existing
+Playwright dependency available.
+
 ## Received requests
 
 Wallet’s Lenz funds panel opens **Received requests**. The receiving contact
