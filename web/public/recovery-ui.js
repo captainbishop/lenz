@@ -63,7 +63,7 @@ $('#restore-chat').onclick=async()=>{
   finally{installing=false;for(const id of ['close-history','create-tab','open-tab'])$('#'+id).disabled=false;$('#restore-chat').disabled=!restoreReview||!$('#restore-chat-consent').checked;}
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const open=!$('#open-panel').hidden;show(open?'open':'create',false);}});
-addEventListener('pagehide',clear);addEventListener('keydown',event=>{if(event.key==='Escape')show($('#open-panel').hidden?'create':'open');});
+addEventListener('pagehide',()=>{restoreReview?.cancel();clear();});addEventListener('keydown',event=>{if(event.key==='Escape')show($('#open-panel').hidden?'create':'open');});
 themeIcon(document.querySelector('#theme-toggle'));
 $('#save-backup-offline').onclick=async()=>{
   $('#save-backup-offline').disabled=true;$('#backup-cache-status').textContent='Saving…';

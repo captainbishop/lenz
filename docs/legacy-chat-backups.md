@@ -13,7 +13,8 @@ Opening history does not change the account. In an empty browser, **Restore chat
 installs the authenticated successor after explicit confirmation. An existing
 account can view history but cannot be replaced. Closing history, switching
 actions, pressing Escape or hiding the page clears visible secrets and cancels
-an unconfirmed review. Once a confirmed save starts, it runs to completion.
+an unconfirmed review. Leaving the page cancels a pending installation, including an active database
+write. An installation already committed remains saved.
 JavaScript cannot guarantee erasure of strings or garbage-collected memory.
 
 Restored conversations open in Conversations. Original messages are labelled

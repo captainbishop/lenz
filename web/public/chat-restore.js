@@ -32,10 +32,10 @@ export function createChatRestorer({read=readState,update=updateState}={}){
     }
     const previewHistory=structuredClone(restored.history);
     for(const {packet} of restored.messages??[]){const peer=restored.contacts.find(p=>p.id===(packet.from===identity.profile.id?packet.to:packet.from));previewHistory.push({packet,payload:await openMessage(identity,peer,packet)});}
-    let active=true;
+    let active=true;const controller=new AbortController();
     return {
       preview:{...structuredClone(value),history:previewHistory,ownIds:[restored.sourceProfile.id,identity.profile.id]},canInstall:empty(await read()),identityChanged:identity.profile.id!==restored.sourceProfile.id,
-      cancel(){active=false;},
+      cancel(){active=false;controller.abort(Error('Restore was cancelled.'));},
       async install(){
         assert(active,'Open the backup again before restoring.');
         return update(state=>{
@@ -44,7 +44,7 @@ export function createChatRestorer({read=readState,update=updateState}={}){
           state.identity=structuredClone(identity);state.contacts=structuredClone(restored.contacts);state.messages=structuredClone(restored.messages??[]);
           if(recoveredChat)state.recoveredChat=structuredClone(recoveredChat);
           return structuredClone(identity.profile);
-        });
+        },{signal:controller.signal});
       },
     };
   };

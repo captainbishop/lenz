@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-12T02:30:49.016Z",
+  "baseCommit": "1c6cc7ffa649ae3b47f01fda53ddf41a94586686",
+  "sources": {
+    "web/public/chat-restore.js": "edfd26f1b303e6cc69edb3417eede3a63750c52de45cc77c8113e9b32db7cad2",
+    "web/public/recovery-ui.js": "fc4657a95465fc4db4415d6ff03dba32ab3a08f2554e4930480cd71ed1d406be",
+    "web/public/chat-sw.js": "9f285741614fd47b433c21928b90d602532b43cc8ee6957e8d4c3bb03390fcb0",
+    "web/public/sw.js": "ba9672bd7ecbeb0e8fd0e109a371651be0093144c92a79ff6587c2c930e47079",
+    "web/verify-chat-restore.mjs": "f8af6298d86df0da26b67997b501a0175e66dd2bcdb8dcda7ee44e19c2e458fb",
+    "web/chat-restore-cancellation-browser.test.cjs": "fab31ddc30fa9e58686f48de156e98fd23d5623ccfcf7113fbde28e30cf0cf65",
+    "web/chat-restore-verification.json": "956601799a692d340b63d5ceca4b8aa44bbcd5ba5c8a17e30645213a2b1a7950",
+    "docs/legacy-chat-backups.md": "3b3ba692e840a58ef84f1fc9c8b14f3549609efaa1828ddafcd20a2c0a03256f"
+  },
+  "checks": {
+    "command": "node --test web/chat-restore-cancellation-browser.test.cjs web/chat-restore.test.mjs web/identity-recovery.test.mjs web/account-backup.test.mjs web/legacy-recovery.test.mjs",
+    "nodeCases": 45,
+    "browserGroups": 5,
+    "nodeRunnerPassed": 46,
+    "failed": 0,
+    "existingGuardAlterations": 13,
+    "newGuardAlterations": 2
+  },
+  "behavior": [
+    "Cancellation during IndexedDB opening or active writes leaves the account empty after reload.",
+    "Recovery page exit cancels a pending install. Actual navigation and Back preserve an empty account.",
+    "Fresh same-ID chat-only restore succeeds with payment controls disabled."
+  ],
+  "review": {
+    "spec": "No scoped findings; independent five-group browser and 45-case Node runs.",
+    "standards": "No scoped violations or actionable smells; related lifecycle documentation corrected."
+  },
+  "retainedFailures": [
+    "Original code installed identity after cancellation during database opening or an active write.",
+    "Surrounding baseline helper lacked generated offline assets and later used an obsolete composer selector; its current root helper was supplied only for that broader run."
+  ],
+  "limits": [
+    "Disposable desktop Edge profiles and synthetic deterministic lifecycle gates; no physical-device, financial revocation, funded recovery or transport claim.",
+    "Completed installations remain committed; cancellation changes no key, packet or payment authority.",
+    "Full key lifecycle and conflict-safe financial recovery remain outstanding."
+  ]
+}

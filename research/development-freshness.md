@@ -1,3 +1,14 @@
+# Cancelled chat restoration, November 12, 2026
+
+A pending chat restore now carries cancellation to the actual database write.
+Leaving recovery aborts an unfinished installation; an already committed install
+remains saved. Fresh verification passed 45 Node cases and five Edge groups,
+including active transactions, reload and actual navigation/Back. Independent
+Spec and Standards reviews cleared the narrow scope; lifecycle documentation
+now matches the cancellation boundary. [Evidence](../web/chat-restore-cancellation-verification.json)
+records exact sources, retained failures and tested limits. This does not add
+financial revocation, complete key recovery or physical-device evidence.
+
 # Funding arrival checks, November 12, 2026
 
 Wallet keeps the original deposit checkable after source confirmation. Check funding

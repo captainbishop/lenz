@@ -9,7 +9,7 @@ const hashFiles=async()=>Object.fromEntries(await Promise.all(files.map(async f=
 const sources=await hashFiles(),base=run(['--test','web/chat-restore.test.mjs']);assert.equal(base.status,0,base.stdout+base.stderr);
 const mutations=[
  ['restore-state-check','chat-restore.js','LENZ_CHAT_RESTORE_MODULE',"assert(empty(state),",'assert(true,'],
- ['restore-cancellation','chat-restore.js','LENZ_CHAT_RESTORE_MODULE','cancel(){active=false;}', 'cancel(){}'],
+ ['restore-cancellation','chat-restore.js','LENZ_CHAT_RESTORE_MODULE',"cancel(){active=false;controller.abort(Error('Restore was cancelled.'));}", 'cancel(){}'],
  ['queued-cancellation','chat-restore.js','LENZ_CHAT_RESTORE_MODULE',"assert(active,'Restore was cancelled.');",''],
  ['restored-access-mode','chat-restore.js','LENZ_CHAT_RESTORE_MODULE','identity.access=RECOVERED_CHAT;',''],
  ['unknown-signing-domain','chat-access.js','LENZ_CHAT_ACCESS_MODULE',"if(!isRecoveredChat(identity)||(!archiveDigest&&(!Array.isArray(value)||!domains.includes(value[0]))))requirePaymentAccess(identity);",''],
@@ -30,6 +30,6 @@ for(const [guard,file,env,from,to]of mutations){
  assert.equal(result.status,1,guard+' escaped the tests');assert.match(result.stdout+result.stderr,/ERR_ASSERTION/,guard+' failed without an assertion');detected.push(guard);console.log('DETECTED '+guard);
 }
 assert.deepEqual(await hashFiles(),sources,'Sources changed during verification');
-const tests=Number(base.stdout.match(/tests (\d+)/)?.[1]);assert.equal(tests,9);
+const tests=Number(base.stdout.match(/tests (\d+)/)?.[1]);assert.equal(tests,10);
 await writeFile(new URL('web/chat-restore-verification.json',root),JSON.stringify({checkedAt:new Date().toISOString(),nodeTests:tests,guardAlterations:detected,sources,scope:'Chat-only installation, encrypted history, trusted contact updates and application payment guards. Guard removals are local tests, with overlapping signing/service/vault enforcement. No cryptographic revocation, financial reconciliation, live settlement or external audit.'},null,2)+'\n');
 console.log(JSON.stringify({nodeTests:tests,guardAlterations:detected.length}));

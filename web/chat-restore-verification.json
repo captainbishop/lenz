@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-04T19:26:28.780Z",
-  "nodeTests": 9,
+  "checkedAt": "2026-11-12T01:55:42.664Z",
+  "nodeTests": 10,
   "guardAlterations": [
     "restore-state-check",
     "restore-cancellation",
@@ -17,18 +17,18 @@
     "contact-payment"
   ],
   "sources": {
-    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
-    "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
+    "web/public/chat-restore.js": "edfd26f1b303e6cc69edb3417eede3a63750c52de45cc77c8113e9b32db7cad2",
     "web/public/contact-recovery.js": "3a78de51028c0920a9915ee1df8a0fc791866303a023c62a093f948e5f38870c",
     "web/public/near-protocol.js": "729c1ecc6badac347d7b308874b5d774b3389c33e1dd3cee663f67631c3ffd20",
     "web/public/near-payment-service.js": "95969b0e47f90a5a5c11903086e7d22f79f234a316789503d10b1f76006c7d64",
-    "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
+    "web/public/recovery-service.js": "aa4c568af4f138c4b82e199a3fd6ba9ddafdad1657323d6c01d7317ee453956e",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
-    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
+    "web/public/chat-store.js": "2024978aa6baf3c88c76ee3d1ed7fe810fd5df8b008c829f03351af2da01ca03",
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
-    "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
-    "web/chat-restore.test.mjs": "b2ff9bde76e34fd051fb6253715c7c1a41dfc9db6b571e56efab1fd9eb8158a6",
-    "web/verify-chat-restore.mjs": "f15668f9d1d7046e407e3061c6a686645f9af634619d67a016211a45fcbc85f5"
+    "web/public/identity-recovery.js": "9b91681b02515d801462641e7604f66b634743b3f1347fdd64d05308f99aab1a",
+    "web/chat-restore.test.mjs": "9a0c7c6c7c6b143e47940634f0983d8d4c4566fe0edbdb31a7616c711b6885b1",
+    "web/verify-chat-restore.mjs": "f8af6298d86df0da26b67997b501a0175e66dd2bcdb8dcda7ee44e19c2e458fb"
   },
   "scope": "Chat-only installation, encrypted history, trusted contact updates and application payment guards. Guard removals are local tests, with overlapping signing/service/vault enforcement. No cryptographic revocation, financial reconciliation, live settlement or external audit."
 }
