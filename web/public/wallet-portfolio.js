@@ -3,7 +3,7 @@ import {iconButton,walletIcon} from './wallet-actions.js';
 const $=selector=>document.querySelector(selector);
 
 // Reuse the mounted wallet controls so changing views never changes authority or funds.
-export function mountWalletPortfolio(){
+export function mountWalletPortfolio(walletSession){
  const portfolio=document.createElement('section');portfolio.id='wallet-portfolio';
  portfolio.innerHTML=`<div class="wallet-tab-bar" role="tablist" aria-label="Wallet sections">
   <button id="wallet-tab-tokens" type="button" role="tab" aria-controls="wallet-panel-tokens" aria-selected="true">Tokens</button>
@@ -108,9 +108,10 @@ export function mountWalletPortfolio(){
  }
  addEventListener('hashchange',fromLocation);addEventListener('popstate',fromLocation);fromLocation();
  return {render(hasIdentity){
+  offline.hidden=!hasIdentity;
   const wallet=$('#connected-wallet');
   // Connecting an external wallet is still available before creating a Lenz profile.
-  if(hasIdentity){if(wallet.parentElement!==$('#wallet-panel-tokens'))$('#wallet-panel-tokens').prepend(wallet);}
+  if(hasIdentity||!!walletSession.snapshot){if(wallet.parentElement!==$('#wallet-panel-tokens'))$('#wallet-panel-tokens').prepend(wallet);}
   else if(wallet.parentElement!==$('#wallet-onboarding').parentElement)$('#wallet-onboarding').before(wallet);
  }};
 }

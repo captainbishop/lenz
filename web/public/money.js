@@ -33,8 +33,15 @@ async function action(operation) {
   } finally { busy = false; $('main').setAttribute('aria-busy', 'false'); }
 }
 async function render() {
-  const state = await readState(), hasIdentity = !!state.identity;
-  $('#wallet-onboarding').hidden = hasIdentity; $('#wallet-content').hidden = $('#my-profile').hidden = !hasIdentity;
+  const state = await readState(), hasIdentity = !!state.identity, walletReady = hasIdentity || !!evmWallet.snapshot;
+  $('#wallet-onboarding').hidden = walletReady; $('#wallet-content').hidden = !walletReady; $('#my-profile').hidden = !hasIdentity;
+  document.body.classList.toggle('wallet-entry', !walletReady);
+  $('#wallet-entry-connect').disabled = false;
+  $('#wallet-entry-connect').firstChild.textContent = navigator.onLine ? 'Connect wallet ' : 'Start offline ';
+  $('#wallet-onboarding .welcome-choices h2').textContent = navigator.onLine ? 'Start with your wallet' : 'Start here, offline';
+  $('#wallet-onboarding .welcome-description').textContent = navigator.onLine ? 'Connect to see your balances and receive money.' : 'Create a profile on this device without internet or a passkey.';
+  $('#wallet-entry-status').textContent = navigator.onLine ? 'You approve payments separately in your wallet.' : 'Your profile stays here. You can turn on chat backup later.';
+
   portfolio.render(hasIdentity);
   await renderProfile(state.identity?.profile); await renderNearWallet(state); if (!hasIdentity) return;
   await renderWalletTokens();
@@ -93,8 +100,10 @@ mountWalletActions({addRecipient:scan=>{
 }});
 for(const id of ['near-send','near-receive','near-fund']){const button=$('#'+id),label=document.createElement('span');label.textContent=button.getAttribute('aria-label');button.append(label);}
 if($('#wallet-content'))mountWalletTokens({action});
-mountEvmWallet();
-const portfolio=mountWalletPortfolio();
+const evmWallet=mountEvmWallet();
+const portfolio=mountWalletPortfolio(evmWallet);
+$('#wallet-entry-connect').onclick=()=>navigator.onLine?evmWallet.openConnect():location.assign('/account.html?next=wallet');
+addEventListener('lenz-evm-session',()=>{if(!busy)render().catch(error=>status(error.message,true));});
 $('#add-contact').addEventListener('close',()=>{
   if(sendAfterContact){sendAfterContact=false;openNearSend();}
   $('#add-title').textContent='Add a person';
@@ -102,4 +111,4 @@ $('#add-contact').addEventListener('close',()=>{
 themeIcon(document.querySelector('#theme-toggle'));
 $('#wallet-settings-actions').addEventListener('click',event=>{if(event.target.closest('button'))$('.wallet-settings').open=false;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('.wallet-settings').open){$('.wallet-settings').open=false;$('.wallet-settings summary').focus();}});
-try { await loadNearConfig(); await render(); status('Your wallet is ready.', false, { transient: true }); } catch (error) { status(error.message, true); }
+try { await loadNearConfig(); await render(); if(!document.body.classList.contains('wallet-entry'))status('Your wallet is ready.', false, { transient: true });else status(''); } catch (error) { status(error.message, true); }

@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-11-12T05:22:39.712Z",
+  "baseCommit": "ceca73eb7889c28ca125fb29ff0fc0aa58a1a273",
+  "sources": {
+    "web/public/welcome.css": "ac005b8956a85313666b12769c8e53bda91dd7a5b6093847e96fc571515a0495",
+    "web/public/money.html": "cf998ef36ddbf53a88c45371dfe77dd9387d950a1f6ad186c43516e07cb27ef7",
+    "web/public/money.css": "31e323d15f8eee0a7f500f44273327a5d2a6a88e0b5aa5f0e82babd4cf0d8440",
+    "web/public/money.js": "4bf9415d943ed26cb5c73d20332b4e0279c69529057524bf47543813449a3a0e",
+    "web/public/evm-wallet-ui.js": "c52cbf0a9ce12a0e8a19038ad82c0b86b5ee67fb9d4173b82694470292d5c1be",
+    "web/public/wallet-portfolio.js": "3e28877445278489e90c73ba9ae88d6f25f34f012f00c022185d88a41634a0f6",
+    "web/public/account.html": "85fb555979f5a0f22c98405e6dc5670759e9e54b47119faa082ea2fe54eb4477",
+    "web/public/account.css": "21afe337a663d8bfe8f79c1d7970bec00030f3b4af367a516a4c6a8265b99970",
+    "web/public/account-ui.js": "169d863dac09defa84145461c76b9ed8c8e09bfeaaa80e5f950815ac9dae105c",
+    "web/onboarding-journey-browser.test.cjs": "fccbb87e8c7d657be86b79e5adfa7a0b8890f039078e3993ea82dce30fb16c20",
+    "web/account-backup-browser.test.cjs": "4408656c3b0a5359bf0700a7dc318e33b015f342c6a38e064e44ba96256b7af2",
+    "web/public/chat-sw.js": "34b695070bab563ad46c98e772a63ef1c67e4f4353ff765def2b50e727dd4d32",
+    "web/public/sw.js": "aa1825b50370c422ebbc468a0190338e3b9e8a6529883df7e8ba4d026ea83abd"
+  },
+  "checks": {
+    "nodeCases": 28,
+    "journeyGroups": 10,
+    "backupGroups": 13,
+    "fullServerOfflineRestartGroups": 2,
+    "behavioralPassed": 53,
+    "failed": 0,
+    "visualCombinations": 36,
+    "additionalTargetAndTextStressCombinations": 24
+  },
+  "behavior": [
+    "Successful read-only wallet connection immediately opens Tokens and Receive without creating a Lenz identity.",
+    "Cancelled and declined wallet permissions preserve welcome and saved state, including late replies.",
+    "Offline arrival offers Start offline; local setup and Enter save the identity before opening Wallet.",
+    "Passkey creation and sign-in continue to the requested destination; recovered financial controls remain restricted.",
+    "Failed storage retains the name and form; unavailable account service leaves sign-in retryable.",
+    "Saved app files, welcome styles and shared profile reopen through two full offline browser restarts after the web server is stopped."
+  ],
+  "retainedFailures": [
+    "Wallet connection previously remained at entry.",
+    "Offline primary action was disabled and Enter selected online passkey creation.",
+    "Sign in had a 21px-high target; it now has a 48px minimum.",
+    "The two-tab backup test observed only the first page requests; it now observes the whole browser context.",
+    "The full server fixture initially lacked its ignored NEAR dependency runtime, then used an origin rejected by its Host guard, then waited for a profile name hidden in the existing Conversations layout. These test setup failures were corrected without changing the server or chat source."
+  ],
+  "limits": [
+    "Disposable desktop Edge providers/passkeys/identities; installed phone wallet/passkey and physical transport remain unverified.",
+    "App files were installed from an available loopback server before offline restart; first uncached offline distribution remains unresolved.",
+    "Chat backup does not restore funded signing authority or all liabilities.",
+    "No funding, live financial signature, execution, independent private settlement or production readiness claim."
+  ],
+  "review": {
+    "standards": "Target size and duplicate rule corrected; final narrow review recorded separately.",
+    "spec": "Requested handoff, offline local setup, preservation and recovery restrictions verified through actual browser journeys."
+  }
+}

@@ -115,4 +115,5 @@ export function mountEvmWallet() {
   // bfcache must not revive a provider session without a fresh account check.
   addEventListener('pageshow', event => { if (event.persisted) session.disconnect(); });
   if (!navigator.onLine) session.disconnect('Offline.');
+  return {get snapshot(){return session.snapshot;},openConnect:()=>{selection=null;openConnect();}};
 }

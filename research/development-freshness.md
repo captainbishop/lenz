@@ -1,3 +1,20 @@
+# Wallet welcome and offline setup, November 12, 2026
+
+Wallet now opens Tokens and Receive after a successful read-only connection.
+The welcome and profile setup pages share Lenz themes and clear Back/Continue
+paths. Offline arrival offers Start offline; device-only creation saves before
+opening Wallet, including keyboard submission. Storage/service failures retain
+the form and entered name. Recovered financial access remains paused.
+
+Fresh verification passed 28 Node cases, 10 journey groups, 13 backup groups
+and two full browser restart groups after the authentic web server stopped.
+Thirty-six visual combinations and additional target/text stress checks covered
+the entry regions. The two-tab backup test now counts requests from both tabs.
+[Evidence](../web/onboarding-journey-verification.json) binds exact sources and
+retained failures. Files were installed before disconnection; uncached offline
+distribution, physical devices, full financial recovery and private settlement
+remain open. No live financial operation ran.
+
 # Private cross-asset Swap, November 12, 2026
 
 Wallet adds an owner-directed Swap through the existing offline approval,
