@@ -62,16 +62,22 @@ function checkedSnapshot(value){
 }
 const additionalData=id=>encoder.encode('lenz-account-performance-v1:'+id);
 const DB='lenz-account-performance-v1';
-async function record(value){
+async function record(value,{key='saved',signal}={}){
  const db=await new Promise((resolve,reject)=>{const request=indexedDB.open(DB,1);request.onupgradeneeded=()=>request.result.createObjectStore('history');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});
- try{return await new Promise((resolve,reject)=>{const tx=db.transaction('history',value?'readwrite':'readonly'),store=tx.objectStore('history'),request=value?store.put(value,'saved'):store.get('saved');tx.oncomplete=()=>resolve(request.result);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error??Error('History could not be saved.'));});}finally{db.close();}
+ try{signal?.throwIfAborted();return await new Promise((resolve,reject)=>{
+  const tx=db.transaction('history',value?'readwrite':'readonly'),store=tx.objectStore('history');let request;
+  const abort=()=>{try{tx.abort();}catch{}},cleanup=()=>signal?.removeEventListener('abort',abort);signal?.addEventListener('abort',abort,{once:true});
+  tx.oncomplete=()=>{cleanup();resolve(request.result);};tx.onerror=()=>{cleanup();reject(signal?.reason??tx.error);};tx.onabort=()=>{cleanup();reject(signal?.reason??tx.error??Error('History could not be saved.'));};
+  try{signal?.throwIfAborted();request=value?store.put(value,key):store.get(key);}catch(error){cleanup();abort();reject(error);}
+ });}finally{db.close();}
 }
-export async function savedPerformance(state=undefined){
- state??=await readState();const saved=await record();if(!saved||saved.owner!==owner(state))return[];
+async function decodePerformance(saved,expectedOwner,aad=additionalData(expectedOwner)){
+ if(!saved||saved.owner!==expectedOwner)return[];
  check(saved.box instanceof ArrayBuffer&&saved.box.byteLength<=4000000&&saved.iv instanceof Uint8Array&&saved.iv.length===12);
- const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:saved.iv,additionalData:additionalData(saved.owner)},saved.key,saved.box),rows=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw));
- check(Array.isArray(rows)&&rows.length<=8&&new Set(rows.map(r=>r.account)).size===rows.length);return rows.map(checkedSnapshot);
+ const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:saved.iv,additionalData:aad},saved.key,saved.box);
+ try{const rows=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw));check(Array.isArray(rows)&&rows.length<=8&&new Set(rows.map(r=>r.account)).size===rows.length);return rows.map(checkedSnapshot);}finally{new Uint8Array(raw).fill(0);}
 }
+export async function savedPerformance(state=undefined){state??=await readState();return decodePerformance(await record(),owner(state));}
 export async function savePerformance(snapshot,expectedOwner,current=()=>true){
  checkedSnapshot(snapshot);
  check(navigator.locks,'This browser cannot safely save history.');
@@ -84,4 +90,40 @@ export async function savePerformance(snapshot,expectedOwner,current=()=>true){
   const box=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:additionalData(expectedOwner)},key,plain);
   check(owner(await readState())===expectedOwner&&current(),'Account changed. Load history again.');await record({owner:expectedOwner,key,iv,box});
  });
+}
+
+/** The adapter captures a workspace lease; the original singleton remains recovery evidence. */
+export function createPerformanceStore(workspace){
+ check(workspace&&typeof workspace.workspaceId==='string'&&typeof workspace.readState==='function'&&typeof workspace.readStateLocked==='function','Open a workspace before saving history.');
+ const workspaceId=workspace.workspaceId,key=id=>['workspace',workspaceId,id],aad=id=>encoder.encode(JSON.stringify([DB,workspaceId,id]));
+ async function checkedRetained(saved,id,data,exact=false){
+  if(saved===undefined)return {saved,rows:[]};
+  check(saved&&typeof saved==='object'&&!Array.isArray(saved)&&Object.keys(saved).sort().join(',')==='box,iv,key,owner'&&typeof saved.owner==='string'&&(saved.owner==='guest'||/^[0-9a-f]{64}$/.test(saved.owner)),'Saved history could not be read.');
+  check(saved.key instanceof CryptoKey&&saved.key.type==='secret'&&!saved.key.extractable&&saved.key.algorithm.name==='AES-GCM'&&saved.key.algorithm.length===256&&saved.key.usages.includes('encrypt')&&saved.key.usages.includes('decrypt'),'Saved history key could not be read.');
+  check(!exact||saved.owner===id,'Saved history belongs to another profile.');
+  // Older shared slots can name another owner; authenticate their contents before returning an empty current history.
+  const rows=await decodePerformance(saved,saved.owner,data(saved.owner));
+  return {saved,rows:saved.owner===id?rows:[]};
+ }
+ async function retained(id,signal){
+  const scoped=await record(undefined,{key:key(id),signal});if(scoped!==undefined)return checkedRetained(scoped,id,aad,true);
+  const previous=await record(undefined,{key:['workspace',workspaceId],signal});if(previous!==undefined)return checkedRetained(previous,id,aad);
+  return checkedRetained(workspaceId==='legacy'?await record(undefined,{signal}):undefined,id,additionalData);
+ }
+ async function read({signal}={}){
+  const state=await workspace.readState({signal}),id=owner(state),value=await retained(id,signal);
+  return workspace.readStateLocked(current=>{check(owner(current)===id,'Account changed. Load history again.');return value.rows;},{signal});
+ }
+ async function save(snapshot,{signal,current=()=>true}={}){
+  const value=checkedSnapshot(structuredClone(snapshot));check(navigator.locks,'This browser cannot safely save history.');
+  return workspace.readStateLocked((state,{signal:activeSignal})=>navigator.locks.request(DB,{signal:activeSignal},async()=>{
+   activeSignal.throwIfAborted();check(current(),'Account changed. Load history again.');const id=owner(state),previous=await retained(id,activeSignal);
+   const rows=previous.rows.filter(row=>row.account!==value.account);rows.push(value);while(rows.length>8)rows.shift();
+   const plain=encoder.encode(JSON.stringify(rows.map(({performance,...row})=>row)));check(plain.byteLength<=3999984,'History is too large to save on this device.');
+   const encryptionKey=previous.saved?.owner===id?previous.saved.key:await crypto.subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']),iv=crypto.getRandomValues(new Uint8Array(12));let box;
+   try{box=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(id)},encryptionKey,plain);}finally{plain.fill(0);}
+   activeSignal.throwIfAborted();check(current(),'Account changed. Load history again.');await record({owner:id,key:encryptionKey,iv,box},{key:key(id),signal:activeSignal});
+  }),{signal});
+ }
+ return Object.freeze({read,save});
 }

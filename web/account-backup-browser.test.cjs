@@ -13,7 +13,11 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   browser=await chromium.launch({channel:'msedge',headless:true});const current=await page(),{p,context,cdp,authenticatorId}=current;
   for(const screen of ['money','chat']){await p.goto(base+'/'+screen+'.html');await p.locator('.account-entry').waitFor();assert(await p.locator(screen==='money'?'#wallet-name':'#name').isHidden());await p.locator('.account-entry').click();await p.locator('#account-create').waitFor();}pass('Wallet and Conversations open account sign-in first, with device-only profiles under optional controls');
   await p.setViewportSize({width:390,height:844});for(const theme of ['light','dark']){await p.evaluate(t=>document.documentElement.dataset.theme=t,theme);await p.screenshot({path:path.join(reportDirectory,'evidence','account-start-'+theme+'.png'),fullPage:true});}await p.setViewportSize({width:1280,height:900});
-  await p.locator('#account-create-name').fill('Amina');await p.locator('#account-create').click();await p.locator('#account-protected').waitFor();await saved(p);const first=await state(p),id=first.identity.profile.id,accountId=first.accountSync.accountId;
+  const returnToChat=new URL(p.url()).searchParams.get('next')==='chat';
+  await p.locator('#account-create-name').fill('Amina');await p.locator('#account-create').click();
+  if(returnToChat){await p.waitForURL(base+'/chat.html');await p.locator('#my-name').filter({hasText:'Amina'}).waitFor();}else await p.locator('#account-protected').waitFor();
+  await saved(p);const first=await state(p),id=first.identity.profile.id,accountId=first.accountSync.accountId;
+  if(returnToChat){await p.goto(base+'/account.html?next=chat');await p.locator('#account-protected').waitFor();}
   assert(!JSON.stringify(first.accountSync).includes('phrase":"'));assert.equal(await p.locator('input[type=file],textarea').count(),0);const counter=(await cdp.send('WebAuthn.getCredentials',{authenticatorId})).credentials[0].signCount;pass('native passkey PRF creates an account and completes encrypted backup without a phrase or file workflow');
   await p.locator('.account-continue').click();await p.locator('#my-name').filter({hasText:'Amina'}).waitFor();
   const receiptPeer=await(await import(pathToFileURL(path.join(root,'peer-crypto.js')).href)).createIdentity('Bola');

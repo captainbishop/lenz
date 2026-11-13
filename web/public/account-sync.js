@@ -10,11 +10,27 @@ import {confidentialSpendOutbox} from './intents-spend-outbox.js';
 const empty=s=>keysAre(s,['identity','contacts','messages'])&&s.identity===null&&s.contacts.length===0&&s.messages.length===0;
 const receiptOrder=packet=>JSON.stringify([packet.id,packet.iv,packet.ciphertext,packet.signature]);
 const makeSync=(m,revision=0,hash='')=>({type:'lenz/account-sync/v1',accountId:m.accountId,authority:m.authority,backupKey:m.backupKey,deviceKey:m.deviceKey,phraseBox:m.phraseBox,revision,digest:hash,version:1,savedVersion:0,pending:null,status:'pending',savedAt:null});
-export async function accountRequest(sync,operation,{archive=null,expected=0,previous=''}={},fetcher=fetch){
-  async function post(path,body){const r=await fetcher('/api/accounts/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store',signal:AbortSignal.timeout(15000)}),value=await r.json();if(!r.ok)throw Object.assign(Error(value.error??'Backup is unavailable.'),{code:value.code,status:r.status});return value;}
+function waitForBackup(pending,signal){
+  return new Promise((resolve,reject)=>{
+    const cleanup=()=>signal.removeEventListener('abort',abort),abort=()=>{cleanup();reject(signal.reason);};
+    Promise.resolve(pending).then(value=>{cleanup();resolve(value);},error=>{cleanup();reject(error);});
+    signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();
+  });
+}
+// A bound dispatcher must invoke the callback inside its session fence and wait
+// for the reply outside it. The default retains ordinary single-profile behavior.
+export async function accountRequest(sync,operation,{archive=null,expected=0,previous='',signal,dispatch=invoke=>invoke()}={},fetcher=fetch){
+  signal?.throwIfAborted();
+  async function post(path,body){
+    const active=AbortSignal.any([AbortSignal.timeout(15000),...(signal?[signal]:[])]);
+    const r=await waitForBackup(dispatch(()=>{active.throwIfAborted();return fetcher('/api/accounts/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store',signal:active});}),active);
+    active.throwIfAborted();const value=await waitForBackup(r.json(),active);active.throwIfAborted();
+    if(!r.ok)throw Object.assign(Error(value.error??'Backup is unavailable.'),{code:value.code,status:r.status});return value;
+  }
   const {nonce}=await post('challenge',{accountId:sync.accountId,operation});assert(typeof nonce==='string'&&/^[a-f0-9]{64}$/.test(nonce),'Invalid backup challenge.');
-  const terms=[ACCOUNT_REQUEST,location.origin,operation,sync.accountId,nonce,expected,previous,await digest(archive)];
-  return post(operation,{profile:sync.authority.profile,nonce,expected,previous,archive,signature:await signValue(sync.authority,terms)});
+  const terms=[ACCOUNT_REQUEST,location.origin,operation,sync.accountId,nonce,expected,previous,await digest(archive)];signal?.throwIfAborted();
+  const signature=await signValue(sync.authority,terms);signal?.throwIfAborted();
+  return post(operation,{profile:sync.authority.profile,nonce,expected,previous,archive,signature});
 }
 export async function setUpAccount(material,expectedIdentity=null){
   await updateState(state=>{assert((state.identity?.profile.id??null)===expectedIdentity,'This browser account changed during setup.');assert(!state.accountSync,'Backup is already set up in this browser.');if(!state.identity){assert(empty(state),'This browser has saved account data.');state.identity=material.identity;}state.accountSync=makeSync(material);},{markBackup:false});
@@ -29,13 +45,14 @@ export async function retrieveAccount(material){
     await(await stage(material.phrase,new File([JSON.stringify(value.chat)],'backup.json'))).install();
   }
 }
-async function reconcileBackup(sync,{request,metadata}){
+async function reconcileBackup(sync,{request,metadata,check}){
   const latest=await request(sync,'read',{expected:sync.revision,previous:sync.digest});
   try{
   if(latest.revision===sync.revision){assert(latest.digest===sync.digest,'Backup revision does not match.');return;}
   assert(latest.revision>sync.revision,'Backup service returned an older account.');
-  const phrase=await unlockLocalBackup(sync),material={...sync,phrase,identity:await stageIdentityRecovery(phrase,'Lenz account')};
-  const remote=await openAccountBackup(material,latest);material.phrase='';
+  const phrase=await unlockLocalBackup(sync);check();
+  const material={...sync,phrase,identity:await stageIdentityRecovery(phrase,'Lenz account')};check();
+  let remote;try{remote=await openAccountBackup(material,latest);}finally{material.phrase='';}check();
   await metadata(async state=>{
     const current=state.accountSync;assert(current?.accountId===sync.accountId&&current.revision===sync.revision,'Account changed during synchronization.');
     assert(isChatArchiveType(remote.chat.type)&&!state.recoveredChat&&remote.recovered.identity.profile.id===state.identity.profile.id,'These device histories need a verified transfer.');
@@ -64,39 +81,70 @@ async function reconcileBackup(sync,{request,metadata}){
     const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages},remote.contactRecoveries)||canonical(mergedPrivate)!==canonical(remotePrivate);
     current.revision=latest.revision;current.digest=latest.digest;current.pending=null;current.version++;current.status=changed?'pending':'saved';current.savedAt=latest.savedAt;if(!changed)current.savedVersion=current.version;
   });
-  if(typeof BroadcastChannel==='function'){const channel=new BroadcastChannel('proof-u-chat-refresh');channel.postMessage('changed');channel.close();}
-  }catch(error){await metadata(state=>{if(state.accountSync?.accountId===sync.accountId&&state.accountSync.revision===sync.revision)state.accountSync.status='conflict';});throw error;}
+  check();if(typeof BroadcastChannel==='function'){const channel=new BroadcastChannel('proof-u-chat-refresh');channel.postMessage('changed');channel.close();}
+  }catch(error){check();await metadata(state=>{if(state.accountSync?.accountId===sync.accountId&&state.accountSync.revision===sync.revision)state.accountSync.status='conflict';});throw error;}
 }
-export function createBackupRunner({read=readState,update=updateState,request=accountRequest,capture=createAccountBackup}={}){
+// Request adapters receive cancellation and dispatch in their fourth argument;
+// storage adapters must keep the signal effective through their commit.
+const backupRequest=(sync,operation,options,context)=>accountRequest(sync,operation,{...options,...context});
+export function createBackupRunner({read=readState,update=updateState,request=backupRequest,capture=createAccountBackup,signal:parentSignal,dispatch}={}){
+  const controller=new AbortController(),signal=parentSignal?AbortSignal.any([parentSignal,controller.signal]):controller.signal;
+  // accountRequest reserves its fourth argument for an optional fetch implementation.
+  const send=request===accountRequest?backupRequest:request;
   let inflight=null;
-  const metadata=fn=>update(fn,{markBackup:false});
+  const check=()=>signal.throwIfAborted();
+  const metadata=async fn=>{check();const value=await waitForBackup(update(async state=>{check();const result=await fn(state);check();return result;},{markBackup:false,signal}),signal);check();return value;};
+  const requestCurrent=async(sync,operation,options)=>{check();const value=await waitForBackup(send(sync,operation,options,{signal,dispatch}),signal);check();return value;};
   async function run(){
-    const state=await read(),s=state.accountSync;if(!s||s.status==='conflict')return;
-    if(s.savedVersion===s.version&&!s.pending){await reconcileBackup(s,{request,metadata});return;}
+    check();const state=await waitForBackup(read(),signal);check();const s=state.accountSync;if(!s||s.status==='conflict')return;
+    if(s.savedVersion===s.version&&!s.pending){await reconcileBackup(s,{request:requestCurrent,metadata,check});return;}
     const accountId=s.accountId;
     try{
       let pending=s.pending;
-      if(!pending){const archive=await capture(state);pending={archive,version:s.version,expected:s.revision,previous:s.digest};
+      if(!pending){const archive=await waitForBackup(capture(state),signal);check();pending={archive,version:s.version,expected:s.revision,previous:s.digest};
         await metadata(current=>{assert(current.accountSync?.accountId===accountId&&current.accountSync.revision===s.revision,'Account changed during backup.');if(current.accountSync.pending)pending=current.accountSync.pending;else current.accountSync.pending=pending;});}
       await metadata(current=>{if(current.accountSync?.accountId===accountId)current.accountSync.status='uploading';});globalThis.dispatchEvent?.(new Event('lenz-backup-status'));
-      const result=await request(s,'write',pending);
+      const result=await requestCurrent(s,'write',pending);
       assert(result.revision===pending.expected+1&&result.digest===await digest(pending.archive)&&Number.isSafeInteger(result.savedAt),'Backup acknowledgement does not match.');
       await metadata(current=>{const c=current.accountSync;assert(c?.accountId===accountId&&c.pending?.version===pending.version&&c.pending?.expected===pending.expected,'Account changed during backup.');c.revision=result.revision;c.digest=result.digest;c.savedVersion=pending.version;c.pending=null;c.savedAt=result.savedAt;c.status=c.version===c.savedVersion?'saved':'pending';});
     }catch(error){
-      if(error.code==='CONFLICT'){try{await reconcileBackup(s,{request,metadata});return;}catch(conflict){await metadata(current=>{if(current.accountSync?.accountId===accountId)current.accountSync.status='conflict';});throw conflict;}}
+      check();if(error.code==='CONFLICT'){try{await reconcileBackup(s,{request:requestCurrent,metadata,check});return;}catch(conflict){check();await metadata(current=>{if(current.accountSync?.accountId===accountId)current.accountSync.status='conflict';});throw conflict;}}
       await metadata(current=>{if(current.accountSync?.accountId===accountId)current.accountSync.status='pending';});throw error;
     }
   }
-  return ()=>inflight??=(async()=>{try{return await run();}finally{inflight=null;}})();
+  return Object.assign(async()=>{check();return inflight??=(async()=>{try{return await run();}finally{inflight=null;}})();},{signal,stop:()=>controller.abort(Error('Account backup stopped.'))});
 }
 const runBackup=createBackupRunner();
-export const backupNow=()=>navigator.locks.request('lenz-account-backup',runBackup);
-let started=false,timer;
-export function startAccountSync(){
-  if(started)return;started=true;
-  const schedule=(delay=600)=>{clearTimeout(timer);timer=setTimeout(async()=>{if(!navigator.onLine)return;let again=false;try{await backupNow();const s=(await readState()).accountSync;again=s?.status==='pending'&&s.version>s.savedVersion;}catch{}finally{dispatchEvent(new Event('lenz-backup-status'));schedule(again?600:30000);}},delay);};
-  addEventListener('lenz-account-changed',()=>schedule());addEventListener('online',()=>schedule(0));
-  addEventListener('pagehide',()=>clearTimeout(timer));addEventListener('pageshow',()=>schedule(0));
-  const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('lenz-account-sync'):null;channel?.addEventListener('message',()=>schedule());
-  schedule(0);
+let activeSync=null;
+async function lockedBackup(run){run.signal.throwIfAborted();return navigator.locks.request('lenz-account-backup',{signal:run.signal},run);}
+export const backupNow=()=>activeSync?activeSync.backupNow():lockedBackup(runBackup);
+export function stopAccountSync(){runBackup.stop();activeSync?.stop();}
+export function startAccountSync(options={}){
+  if(activeSync&&!activeSync.signal.aborted)return activeSync;
+  runBackup.stop();
+  const controller=new AbortController(),signal=options.signal?AbortSignal.any([options.signal,controller.signal]):controller.signal;
+  const create=()=>createBackupRunner({...options,signal}),read=options.read??readState;
+  let runner=create(),timer,suspended=false;
+  const live=()=>!signal.aborted&&!suspended;
+  const schedule=(delay=600)=>{
+    if(!live())return;clearTimeout(timer);
+    timer=setTimeout(async()=>{
+      const started=runner;if(!live()||!navigator.onLine)return;let again=false;
+      try{
+        await lockedBackup(started);if(!live()||started!==runner)return;
+        const s=(await waitForBackup(read(),started.signal)).accountSync;
+        again=s?.status==='pending'&&s.version>s.savedVersion;
+      }catch{}finally{if(live()&&started===runner){dispatchEvent(new Event('lenz-backup-status'));schedule(again?600:30000);}}
+    },delay);
+  };
+  const changed=()=>schedule(),online=()=>schedule(0);
+  const hide=()=>{suspended=true;clearTimeout(timer);runner.stop();};
+  const show=()=>{if(signal.aborted)return;if(suspended){runner=create();suspended=false;}schedule(0);};
+  const listeners=[['lenz-account-changed',changed],['online',online],['pagehide',hide],['pageshow',show]];
+  const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('lenz-account-sync'):null;
+  const cleanup=()=>{clearTimeout(timer);runner.stop();for(const [event,listener]of listeners)removeEventListener(event,listener);channel?.removeEventListener('message',changed);channel?.close();signal.removeEventListener('abort',cleanup);};
+  for(const [event,listener]of listeners)addEventListener(event,listener);channel?.addEventListener('message',changed);
+  signal.addEventListener('abort',cleanup,{once:true});if(signal.aborted)cleanup();
+  activeSync=Object.freeze({signal,stop:()=>controller.abort(Error('Account backup stopped.')),backupNow:async()=>{signal.throwIfAborted();assert(!suspended,'Account backup is suspended.');return lockedBackup(runner);}});
+  schedule(0);return activeSync;
 }

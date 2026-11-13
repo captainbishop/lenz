@@ -1,4 +1,29 @@
 
+# Workspace request and backup lifetimes, November 13, 2026
+
+Workspace dispatch fences request invocation and rejects results after local
+session invalidation. Backup workers stop on cancellation or page suspension,
+retain uncertain archives and recreate their runner on a valid page restoration.
+The normal account request remains compatible with explicit runner injection.
+Trading history uses owner-specific workspace records and preserves earlier
+raw/scoped observations. Malformed saved history cannot become an empty result
+or be replaced by a new observation.
+
+The selected source passed 69 automated checks: 34 Node cases and 35 Edge
+groups covering dispatch, performance storage, full account backup/recovery
+and the existing account overview. Offline restart, interrupted storage, late
+replies, encrypted upload contents and duplicate backup revisions were checked
+with disposable accounts. Removed guards were detected for request injection,
+dispatch context, commit cancellation and history ownership. The backup test
+checks the requested return destination before reading the new account.
+
+Worker revisions refresh the mounted backup code. Workspace-bound factories
+remain unmounted; complete store isolation, provider/transport cleanup, shared
+financial exclusions, Wallet profile controls and physical-device acceptance
+remain required. These checks do not establish settlement, recovered financial
+authority, remote passkey synchronization or hosted backup durability.
+
+
 # Workspace storage, November 13, 2026
 
 The unmounted workspace store binds reads and writes to one local session.
