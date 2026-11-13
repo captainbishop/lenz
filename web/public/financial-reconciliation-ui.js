@@ -4,7 +4,7 @@ import {mergeFinancialReviews,financialConflicts} from './financial-reconciliati
 import {savedFinancialReview,saveFinancialReview,financialReviewFile,mergeFinancialReviewFile} from './financial-reconciliation-store.js';
 import {walletAmount} from './wallet-visibility.js';
 const root=document.createElement('section');root.id='financial-review';root.className='financial-review';root.setAttribute('aria-labelledby','financial-review-title');
-root.innerHTML='<div class="financial-heading"><div><h2 id="financial-review-title" tabindex="-1">Financial recovery</h2><p>Spending recovery is incomplete. Keep unresolved records.</p></div><span class="financial-state">Review only</span></div><div class="financial-actions"><button id="financial-read" type="button" class="primary">Read retained records</button><button id="financial-reopen" type="button">Open saved review</button><button id="financial-cancel" type="button" hidden>Clear review</button></div><p id="financial-status" role="status" aria-live="polite"></p><details id="financial-error-details" hidden><summary>Details</summary><p id="financial-error"></p></details><div id="financial-content" hidden><div class="financial-saved"><p id="financial-date"></p><button id="financial-save" type="button">Save review</button></div><div id="financial-rows"></div><details class="financial-gaps"><summary id="financial-gap-summary">Missing evidence</summary><ul id="financial-gaps"></ul></details></div><details class="financial-files"><summary>Review files</summary><p class="financial-note">Encrypted files need the same Lenz account keys. Keep your account backup separately.</p><button id="financial-download" type="button" disabled>Download review</button><label class="financial-file" for="financial-file">Open encrypted review<input id="financial-file" type="file" accept=".json,application/json"></label></details>';
+root.innerHTML='<div class="financial-heading"><div><h2 id="financial-review-title" tabindex="-1">Financial recovery</h2><p>Spending recovery is incomplete. Keep unresolved records.</p></div><span class="financial-state">Review only</span></div><div class="financial-actions"><button id="financial-read" type="button" class="primary">Read retained records</button><button id="financial-reopen" type="button">Open saved review</button><button id="financial-cancel" type="button" hidden>Clear review</button></div><p id="financial-status" role="status" aria-live="polite"></p><details id="financial-error-details" hidden><summary>Details</summary><p id="financial-error"></p></details><div id="financial-content" hidden><div class="financial-saved"><p id="financial-date"></p></div><div id="financial-rows"></div><details class="financial-gaps"><summary id="financial-gap-summary">Missing evidence</summary><ul id="financial-gaps"></ul></details></div><details class="financial-files"><summary>Review files</summary><p class="financial-note">Encrypted files need the same Lenz account keys. Keep your account backup separately.</p><button id="financial-download" type="button" disabled>Download review</button><label class="financial-file" for="financial-file">Open encrypted review<input id="financial-file" type="file" accept=".json,application/json"></label></details>';
 document.querySelector('main').append(root);
 const $=s=>root.querySelector(s),el=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n;};
 let review=null,generation=0,controller=null;
@@ -27,7 +27,7 @@ function stateLabel(row){
 function clear(message=''){
  generation++;controller?.abort();controller=null;review=null;$('#financial-content').hidden=true;$('#financial-rows').replaceChildren();$('#financial-gaps').replaceChildren();$('#financial-file').value='';$('#financial-status').textContent=message;$('#financial-error-details').hidden=true;$('#financial-error').textContent='';buttons(false);
 }
-function buttons(busy){for(const id of ['read','reopen','save','download'])$('#financial-'+id).disabled=busy||(['save','download'].includes(id)&&!review);$('#financial-file').disabled=busy;$('#financial-cancel').textContent=busy?'Cancel':'Clear review';$('#financial-cancel').hidden=!busy&&!review;}
+function buttons(busy){for(const id of ['read','reopen','download'])$('#financial-'+id).disabled=busy||(id==='download'&&!review);$('#financial-file').disabled=busy;$('#financial-cancel').textContent=busy?'Cancel':'Clear review';$('#financial-cancel').hidden=!busy&&!review;}
 function render(){
  const conflicts=new Set(financialConflicts(review));$('#financial-content').hidden=false;$('#financial-date').textContent=`Retained review · ${new Date(review.createdAt).toLocaleString()} · ${review.rows.length} records`;
  const list=$('#financial-rows');list.replaceChildren();
@@ -43,21 +43,25 @@ function render(){
  $('#financial-gap-summary').textContent=`Missing evidence · ${new Set(review.gaps.map(gap=>gap.domain)).size}`;
  $('#financial-gaps').replaceChildren(...review.gaps.map(gap=>el('li',`${gapNames[gap.domain]}: ${reason[gap.reason]}.`)));
 }
-async function run(message,operation){
+async function run(message,operation,{save=false,success}={}){
  controller?.abort();controller=new AbortController();const signal=controller.signal,own=++generation;buttons(true);$('#financial-status').textContent=message;$('#financial-error-details').hidden=true;$('#financial-error-details').open=false;$('#financial-error').textContent='';
- try{const result=await operation(signal);signal.throwIfAborted();if(own!==generation)return;review=result;render();}
- catch(error){if(own===generation){$('#financial-status').textContent='This review could not be opened or saved. Keep your existing records.';$('#financial-error').textContent=error.message;$('#financial-error-details').hidden=false;}}
+ let saving=false;
+ try{
+  const result=await operation(signal);signal.throwIfAborted();if(own!==generation)return;review=result;render();
+  if(save){saving=true;$('#financial-status').textContent='Saving encrypted review…';const saved=await saveFinancialReview(result,{signal});signal.throwIfAborted();if(own!==generation)return;review=saved;render();}
+  $('#financial-status').textContent=success;
+ }
+ catch(error){if(own===generation){$('#financial-status').textContent=saving?'Review opened, but this device could not save it. Keep your existing records.':'This review could not be opened or saved. Keep your existing records.';$('#financial-error').textContent=error.message;$('#financial-error-details').hidden=false;}}
  finally{if(own===generation){buttons(false);controller=null;}}
 }
 $('#financial-read').onclick=()=>run('Reading retained records…',async signal=>{
- const next=await readFinancialReview({signal}),saved=await savedFinancialReview({signal});let result=saved?mergeFinancialReviews(saved,next):next;if(review)result=mergeFinancialReviews(review,result);$('#financial-status').textContent='Retained evidence read.';return result;
-});
-$('#financial-reopen').onclick=()=>run('Opening saved review…',async signal=>{const saved=await savedFinancialReview({signal});if(!saved)throw Error('No review is saved for this Lenz account.');$('#financial-status').textContent='Saved review opened.';return review?mergeFinancialReviews(saved,review):saved;});
-$('#financial-save').onclick=()=>run('Saving encrypted review…',async signal=>{const result=await saveFinancialReview(review,{signal});$('#financial-status').textContent='Encrypted review saved on this device.';return result;});
+ const next=await readFinancialReview({signal}),saved=await savedFinancialReview({signal});let result=saved?mergeFinancialReviews(saved,next):next;if(review)result=mergeFinancialReviews(review,result);return result;
+},{save:true,success:'Retained evidence saved encrypted on this device.'});
+$('#financial-reopen').onclick=()=>run('Opening saved review…',async signal=>{const saved=await savedFinancialReview({signal});if(!saved)throw Error('No review is saved for this Lenz account.');return review?mergeFinancialReviews(saved,review):saved;},{success:'Saved review opened.'});
 $('#financial-download').onclick=()=>run('Encrypting review…',async signal=>{
- const archive=await financialReviewFile(review,{signal});signal.throwIfAborted();const url=URL.createObjectURL(new Blob([JSON.stringify(archive)],{type:'application/json'})),a=el('a','');a.href=url;a.download='lenz-financial-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#financial-status').textContent='Download requested. Open the saved file to check it.';return review;
-});
-$('#financial-file').onchange=()=>{const file=$('#financial-file').files[0];if(file)run('Checking encrypted review…',async signal=>{const result=await mergeFinancialReviewFile(file,review,{signal});$('#financial-file').value='';$('#financial-status').textContent='File merged for review. No spending authority restored.';return result;});};
+ const archive=await financialReviewFile(review,{signal});signal.throwIfAborted();const url=URL.createObjectURL(new Blob([JSON.stringify(archive)],{type:'application/json'})),a=el('a','');a.href=url;a.download='lenz-financial-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return review;
+},{success:'Download requested. Open the saved file to check it.'});
+$('#financial-file').onchange=()=>{const file=$('#financial-file').files[0];if(file)run('Checking encrypted review…',async signal=>{const result=await mergeFinancialReviewFile(file,review,{signal});signal.throwIfAborted();$('#financial-file').value='';return result;},{save:true,success:'File merged and saved encrypted. No spending authority restored.'});};
 $('#financial-cancel').onclick=()=>clear();
 addEventListener('pagehide',()=>clear());document.addEventListener('visibilitychange',()=>{if(document.hidden)clear();});addEventListener('keydown',event=>{if(event.key==='Escape')clear();});
 addEventListener('lenz-account-changed',()=>clear('Account changed. Read the retained records again.'));

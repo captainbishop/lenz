@@ -1,6 +1,6 @@
 import {validateNameResult,changedNameAddress} from './name-results.js';
 const $=id=>document.getElementById(id),key='lenz-name-check-v1';
-let busy=false,last=null;
+let busy=false,last=null,generation=0,controller=null;
 const request=()=>{
   const name=$('name-input').value,selected=$('name-system').value;
   const system=selected==='auto'?(/\.(near|testnet)$/.test(name)?'near':'ens'):selected;
@@ -9,6 +9,8 @@ const request=()=>{
 };
 const same=(a,b)=>a && a.system===b.system && a.network===b.network && a.name===b.name;
 function status(message,error=false){$('name-status').textContent=message;$('name-status').dataset.error=String(error);}
+function setBusy(value){busy=value;$('main').setAttribute('aria-busy',String(value));for(const id of ['name-check','name-input','name-system','name-network','name-forget'])$(id).disabled=value;}
+function cancel(){if(!busy)return;generation++;controller?.abort();controller=null;setBusy(false);status('Lookup interrupted. Run a new lookup.',true);}
 function help(){const r=request();$('name-route').textContent=r.system==='near'?'NEAR · '+(r.network==='mainnet'?'Mainnet':'Testnet'):'ENS · Aurora '+(r.network==='mainnet'?'Mainnet':'Testnet');}
 function render(record,saved=false,changed=false){
   const r=record.result,found=['address_found','account_found'].includes(r.state);
@@ -25,19 +27,19 @@ function render(record,saved=false,changed=false){
   }
 }
 function remember(record){
-  if(!$('name-remember').checked || !record.result.block)return;
+  if(!record.result.block)return;
   try{localStorage.setItem(key,JSON.stringify(record));$('name-forget').hidden=false;}
   catch{status('Lookup finished, but this browser could not save the result.',true);}
 }
-for(const id of ['name-input','name-system','name-network'])$(id).addEventListener('input',()=>{$('name-result').hidden=true;status('');help();});
-$('name-forget').onclick=()=>{try{localStorage.removeItem(key);$('name-forget').hidden=true;$('name-remember').checked=false;status('Saved check forgotten.');}catch{status('This browser could not remove the saved check.',true);}};
+for(const id of ['name-input','name-system','name-network'])$(id).addEventListener('input',()=>{cancel();$('name-result').hidden=true;status('');help();});
+$('name-forget').onclick=()=>{try{localStorage.removeItem(key);$('name-forget').hidden=true;status('Saved check forgotten.');}catch{status('This browser could not remove the saved check.',true);}};
 $('name-form').onsubmit=async event=>{
   event.preventDefault();if(busy)return;const input=request();
   if(!navigator.onLine){if(last && same(last.request,input))render(last,true);status('Offline. Reconnect to refresh this result.',true);return;}
-  busy=true;$('main').setAttribute('aria-busy','true');for(const id of ['name-check','name-input','name-system','name-network','name-remember','name-forget'])$(id).disabled=true;
+  const ticket=++generation,abort=new AbortController();controller=abort;const valid=()=>ticket===generation&&navigator.onLine&&!document.hidden&&same(request(),input);setBusy(true);
   if(last && same(last.request,input))render(last,true);else $('name-result').hidden=true;status('Looking up name…');
   try{
-    const response=await fetch('/api/names/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),cache:'no-store',signal:AbortSignal.timeout(25000)});
+    const response=await fetch('/api/names/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),cache:'no-store',signal:AbortSignal.any([abort.signal,AbortSignal.timeout(25000)])});
     if(!response.ok)throw Error('Could not check this name. Try again.');
     if(!response.body)throw Error('The name service returned no data.');
     const reader=response.body.getReader(),chunks=[];let size=0;
@@ -45,17 +47,19 @@ $('name-form').onsubmit=async event=>{
     finally{await reader.cancel();reader.releaseLock();}
     const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
     const result=validateNameResult(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)),input);
+    if(!valid())return;
     if(['unavailable','unverified'].includes(result.state))throw Error(result.state==='unavailable'?'Name service unavailable. Previous result not refreshed.':'Could not verify the reply. Previous result not refreshed.');
     const changed=last && changedNameAddress(last.result,result),record={request:input,result};render(record,false,changed);last=record;
     status('');remember(record);
-  }catch(error){if(last && same(last.request,input))render(last,true);status(error.name==='TimeoutError'?'Lookup timed out. Previous result not refreshed.':error.message,true);$('name-status').focus();}
-  finally{busy=false;$('main').setAttribute('aria-busy','false');for(const id of ['name-check','name-input','name-system','name-network','name-remember','name-forget'])$(id).disabled=false;}
+  }catch(error){if(!valid())return;if(last && same(last.request,input))render(last,true);status(error.name==='TimeoutError'?'Lookup timed out. Previous result not refreshed.':error.message,true);$('name-status').focus();}
+  finally{if(ticket===generation){controller=null;setBusy(false);}}
 };
+addEventListener('pagehide',cancel);addEventListener('offline',cancel);document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
 try{
   const saved=localStorage.getItem(key);
   if(saved){const record=JSON.parse(saved);record.result=validateNameResult(record.result,record.request);if(!record.result.block)throw Error('No saved observation');last=record;
     $('name-system').value='auto';$('name-network').value=record.request.network;$('name-input').value=record.request.name;
-    $('name-remember').checked=true;$('name-forget').hidden=false;render(record,true);status('');}
+    $('name-forget').hidden=false;render(record,true);status('');}
 }catch{status('The saved check could not be read. Run a new lookup.',true);$('name-forget').hidden=false;}
 help();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/chat-sw.js').catch(()=>status('Offline storage unavailable. Keep this page open.',true));

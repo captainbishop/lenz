@@ -1,3 +1,20 @@
+
+# Automatic private-read saving, November 12, 2026
+
+Explicitly loaded lending positions and retained financial evidence save encrypted
+on this device. Checked recovery-file merges preserve conflicting copies and
+remain unreconciled, with no spending authority. Verified public name observations
+save locally. Separate manual save controls are removed; encrypted file export
+remains deliberate. Cache revisions deliver the corrected modules, and duplicate
+financial dependencies no longer prevent Conversations cache installation.
+
+Fresh checks on the selected candidate covered 57 browser groups and 19 Node cases.
+They include failed storage, cancelled reads and writes, account changes,
+historical offline reopening, and retained source journals and access restrictions.
+Tests use disposable identities, local provider fixtures and installed runtimes.
+These results do not establish physical-device behavior, private settlement,
+production financial recovery, or complete workspace isolation.
+
 # Workspace session foundation, November 12, 2026
 
 A standalone session library preserves the existing workspace, partitions its
