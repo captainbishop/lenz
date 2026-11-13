@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/near/intents",
+  "revision": "16d04f6ec4401263f8914638710260da50bb46b0",
+  "tag": "defuse/v0.4.5",
+  "license": "MIT",
+  "rustc": "1.99.1",
+  "target": "wasm32-unknown-unknown",
+  "features": ["contract"],
+  "rustflags": "--cfg near -C target-feature=-bulk-memory,-reference-types,-multivalue",
+  "artifacts": {
+    "defuse.wasm": {
+      "bytes": 1454759,
+      "sha256": "9c385736268b5240e8000169401b1d700393367cc5de74e3a9b627624b4005db"
+    },
+    "defuse_poa_token.wasm": {
+      "bytes": 240673,
+      "sha256": "bcac83483ad6d8bbec302060a8ceac6bd83151cb3c8ed1ce17685bb59a87636d"
+    }
+  }
+}

@@ -20,9 +20,11 @@ import {AIUsageStore,aiConfigured,runAIWorker} from './ai-service.mjs';
 import {receiveRoute} from './receive-relay.mjs';
 import {createPrivateSpendRoute} from './private-spend-relay.mjs';
 import {createPrivateExecutorRoute} from './private-executor-relay.mjs';
+import {createNearIntentHttpRoute} from './intent-near-http.mjs';
 const privateSpendRoute=createPrivateSpendRoute({apiKey:process.env.LENZ_PRIVATE_INTENTS_KEY});
 const privateExecutorRoute=createPrivateExecutorRoute({apiKey:process.env.LENZ_PRIVATE_INTENTS_KEY});
 const accountOrigin=process.env.LENZ_ACCOUNT_ORIGIN??'http://localhost:4173';
+const nearIntentRoute=createNearIntentHttpRoute({origin:accountOrigin,stateDir:process.env.LENZ_NEAR_INTENT_DATA,deployerKeyFile:process.env.LENZ_NEAR_INTENT_RELAYER_KEY,deploymentStateFile:process.env.LENZ_NEAR_INTENT_DEPLOYMENT});
 let accountRoute;
 const aiConfig={apiKey:process.env.NEARAI_API_KEY,model:process.env.LENZ_AI_MODEL};
 const aiIds=(process.env.LENZ_AI_ACCOUNTS??'').split(',').filter(Boolean);
@@ -42,6 +44,7 @@ http.createServer(async (req, res) => {
     if(pathname==='/carrier-config.json' && req.method==='GET') { res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({version:1,carriers}));return; }
     if (await privateSpendRoute(req, res)) return;
     if (await privateExecutorRoute(req, res)) return;
+    if (await nearIntentRoute(req, res)) return;
     if (await nameRoute(req, res)) return;
     if (await aiRoute(req, res)) return;
     if (await receiveRoute(req, res)) return;

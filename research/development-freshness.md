@@ -1593,3 +1593,9 @@ execution remain unconnected. The ID card keeps its QR and sharing actions in a
 compact theme-aware layout. See `web/market-action-verification.json` for the
 source-bound checks and tested limits. Existing illustrated homepage recordings
 retain their recorded layouts; no video or poster was changed.
+
+## NEAR testnet intent execution, November 13
+
+The testnet relay checks the pinned verifier and token code, administrative keys, token issuer, funded balances, exact NEP-413 authorization and final asynchronous receipts. Signed transactions are saved before submission; reconciliation reads the original transaction without signing or broadcasting again. Funding requires an explicit signed request. Local HTTP access checks the host, origin, request size and rate, and returns sanitized configuration errors. Runtime keys and journals must be supplied outside the repository. Directory checks require a parent path segment; a repository child named like parent traversal is rejected. An unconfigured relay preserves existing HTTPS and LAN app startup.
+
+The isolated source candidate passed 29 Node tests covering exact authorization, tampering, failed receipts, interrupted submission, bounded funding and HTTP access. Deployment scripts passed syntax checks. These local tests use disposable signatures and controlled RPC responses. Actual testnet journeys were checked separately; their private wallet records and signed artifacts are excluded from source. The browser UI and other private payment routes retain their separate integration checks.
