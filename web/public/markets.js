@@ -1,3 +1,4 @@
+import {startOfflineAccess} from './offline-access.js';
 import {marketLogo} from './market-logo.js';
 import {MARKET_SOURCES,marketSource} from './evm-markets.js';
 import {CHAINS} from './defi-catalog.js';
@@ -26,7 +27,7 @@ const predictionsTarget=document.createElement('section');predictionsTarget.id='
 const predictions=mountPredictions(predictionsTarget);
 const sectionHeading=workspaceHeading({title:'Lending',kind:'credit'});sectionHeading.element.hidden=true;$('.market-body').before(sectionHeading.element);
 let openingMarket=null;
-const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),saveSources:()=>localStorage.setItem(storageKey,JSON.stringify([...data.values()])),forgetSources:()=>{localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);$('#market-live').checked=false;$('#market-live').onchange();}});
+const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),forgetSources:forgetMarkets});
 function openMarket(view,id){$('#market-search').value='';$('#market-network').value='';category=view;openingMarket=id??null;if(['credit','liquidity'].includes(view))selected=id??null;for(const b of $('#market-filters').children)b.setAttribute('aria-pressed',String(b.dataset.category===view));render();live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(view));$('#main').scrollIntoView({block:'start'});}
 const shape=row=>JSON.stringify([row.id,row.status,row.assets,row.feePips,row.sizeDecimals,row.maxLeverage]);
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
@@ -52,10 +53,10 @@ function sourceStatus(){
     const snapshot=data.get(p),label=failures.has(p)?(snapshot?'Refresh failed · earlier data retained':'Unavailable'):snapshot?`${state(snapshot)} · ${snapshot.evidence.blockTimestamp?'block '+age(snapshot.evidence.blockTimestamp):age(snapshot.observedAt)}`:busy||liveState==='updating'?'Reading…':'Not loaded';
     node.append(el('small',label,failures.has(p)?'read-error':undefined));return node;
   }));
-  $('#refresh-markets').disabled=busy||liveState==='updating'||!navigator.onLine;$('#save-markets').disabled=busy||!data.size;
+  $('#refresh-markets').disabled=busy||liveState==='updating'||!navigator.onLine;
   $('#market-live').disabled=busy;
   $('#refresh-markets').hidden=$('#market-live').checked||['all','prices','degen','spot','perpetuals','predictions'].includes(category);
-  $('#save-markets').hidden=$('#market-live').checked;
+
   if(!data.size)$('#market-status').textContent=busy||liveState==='updating'?'Loading markets…':!navigator.onLine?'No saved markets.':failures.size?'Markets unavailable. Try refreshing.':'Load markets to see prices.';
   const stale=[...data.values()].some(s=>state(s)!=='Recently read');
   $('#live-status').textContent=!navigator.onLine?'Offline':!$('#market-live').checked?'Paused':document.hidden?'Paused':failures.size?'Retrying · Earlier data':stale&&liveState==='live'?'Stale · Retrying':liveState==='live'?'Live':liveState==='retrying'?'Retrying · Earlier data':'Connecting…';
@@ -142,7 +143,7 @@ async function readMarkets(signal){
 function acceptMarkets(results){
   for(const {provider,snapshot}of results){if(snapshot){data.set(provider,snapshot);saved.delete(provider);failures.delete(provider);}else failures.add(provider);}
   render(true);
-  if($('#market-live').checked&&data.size)try{localStorage.setItem(liveStorageKey,JSON.stringify([...data.values()]));$('#snapshot-status').textContent='Market data saved on this device.';}catch{$('#snapshot-status').textContent='Market data could not be saved.';}
+  if(results.some(result=>result.snapshot))try{localStorage.setItem(liveStorageKey,JSON.stringify([...data.values()]));$('#snapshot-status').textContent='Market data saved on this device.';}catch{$('#snapshot-status').textContent='Market data could not be saved.';}
   if(failures.size)throw Error('Some market feeds unavailable');
 }
 const live=liveRead({period:2000,read:readMarkets,accept:acceptMarkets,status:value=>{liveState=value;sourceStatus();}});
@@ -150,33 +151,21 @@ $('#market-live').onchange=()=>{try{localStorage.setItem('lenz-market-live-mode'
 $('#refresh-markets').onclick=async()=>{
   if(busy||!navigator.onLine)return;if($('#market-live').checked){live.wake();return;}
   const ticket=++manualGeneration;manualController=new AbortController();busy=true;failures.clear();sourceStatus();
-  try{const results=await readMarkets(manualController.signal);if(ticket===manualGeneration&&navigator.onLine)acceptMarkets(results);}catch{}finally{if(ticket===manualGeneration){busy=false;manualController=null;sourceStatus();}}
+  try{const results=await readMarkets(manualController.signal);if(ticket===manualGeneration&&navigator.onLine&&!document.hidden)acceptMarkets(results);}catch{}finally{if(ticket===manualGeneration){busy=false;manualController=null;sourceStatus();}}
 };
 $('#market-search').addEventListener('input',render);
 $('#market-network').addEventListener('change',()=>render());
 for(const button of $('#market-filters').children){button.setAttribute('aria-pressed',String(button.dataset.category===category));button.onclick=()=>{category=button.dataset.category;for(const sibling of button.parentNode.children)sibling.setAttribute('aria-pressed',String(sibling===button));render();live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(category));};}
-$('#save-markets').onclick=()=>{
-  try{localStorage.setItem(storageKey,JSON.stringify([...data.values()]));$('#snapshot-status').textContent=`Saved ${data.size} sources on this device.`;}
-  catch{$('#snapshot-status').textContent='Could not save data. Try again.';}
-};
-$('#forget-markets').onclick=()=>{
-  try{$('#market-live').checked=false;$('#market-live').onchange();localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);localStorage.removeItem('lenz-pool-price-v1');localStorage.removeItem('lenz-market-tape-v1');oraclePrices.clear();for(const p of saved)data.delete(p);saved.clear();$('#snapshot-status').textContent='Saved data removed.';render();}
+function forgetMarkets(){
+  try{manualGeneration++;manualController?.abort();manualController=null;busy=false;$('#market-live').checked=false;$('#market-live').onchange();localStorage.removeItem(storageKey);localStorage.removeItem(liveStorageKey);localStorage.removeItem('lenz-pool-price-v1');localStorage.removeItem('lenz-market-tape-v1');oraclePrices.clear();data.clear();saved.clear();$('#snapshot-status').textContent='Saved data removed.';render();}
   catch{$('#snapshot-status').textContent='Could not remove saved data.';}
 };
+$('#forget-markets').onclick=forgetMarkets;
 themeIcon(document.querySelector('#theme-toggle'));
 
 function connectionChanged(){if(!navigator.onLine){manualGeneration++;manualController?.abort();manualController=null;busy=false;}live.wake();data.size?readStates():render();}
-addEventListener('online',connectionChanged);addEventListener('offline',connectionChanged);document.addEventListener('visibilitychange',()=>live.wake());addEventListener('pagehide',()=>{live.stop();manualGeneration++;manualController?.abort();});setInterval(()=>{if(!document.hidden)readStates();},10000);render();
+addEventListener('online',connectionChanged);addEventListener('offline',connectionChanged);document.addEventListener('visibilitychange',()=>{if(document.hidden){manualGeneration++;manualController?.abort();manualController=null;busy=false;sourceStatus();}live.wake();});addEventListener('pagehide',()=>{live.stop();manualGeneration++;manualController?.abort();});setInterval(()=>{if(!document.hidden)readStates();},10000);render();
 try{$('#market-live').checked=localStorage.getItem('lenz-market-live-mode')!=='off';}catch{$('#market-live').checked=true;}
 live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(category));
 dispatchEvent(new Event('market-live-change'));
-if('serviceWorker' in navigator){
-  try{
-    const registration=await navigator.serviceWorker.register('/sw.js'),worker=registration.installing??registration.waiting??registration.active;
-    if(!worker)throw Error('No offline worker');
-    if(worker.state!=='activated')await new Promise((resolve,reject)=>{const changed=()=>{if(worker.state==='activated'){worker.removeEventListener('statechange',changed);resolve();}if(worker.state==='redundant'){worker.removeEventListener('statechange',changed);reject(Error('Cache failed'));}};worker.addEventListener('statechange',changed);changed();});
-    const channel=new MessageChannel();await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{channel.port1.close();reject(Error('Cache check timed out'));},10000);channel.port1.onmessage=({data})=>{clearTimeout(timer);channel.port1.close();data.complete?resolve():reject(Error('Cache incomplete'));};worker.postMessage({type:'home-status'},[channel.port2]);});
-    $('#home-cache-status').textContent='Page available offline · Market data saved separately';
-  }
-  catch{$('#home-cache-status').textContent='Offline page unavailable';}
-}
+startOfflineAccess($('#home-cache-status'));

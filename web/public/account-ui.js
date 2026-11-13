@@ -1,3 +1,4 @@
+import {startOfflineAccess} from './offline-access.js';
 import {readState,updateState} from './chat-store.js';
 import {createIdentity} from './peer-crypto.js';
 import {useAccountPasskey} from './account-keys.js';
@@ -51,4 +52,4 @@ $('#account-development').hidden=!['localhost','127.0.0.1'].includes(location.ho
 await render();
 if(location.hostname==='127.0.0.1'){$('#account-address-note').hidden=false;const url=new URL(location.href);url.hostname='localhost';$('#account-address').href=url.href;}
 else{startAccountSync();}
-void saveOffline().catch(()=>{});
+startOfflineAccess();

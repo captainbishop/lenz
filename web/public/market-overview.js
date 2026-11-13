@@ -12,15 +12,15 @@ const volume=value=>Number(value).toLocaleString(undefined,{notation:'compact',m
 const savedKey='lenz-hyperliquid-catalog-v1';
 const artwork=kind=>{const img=sectionArtwork(kind);img.classList.add('overview-artwork');return img;};
 
-export function mountMarketOverview(target,{open,snapshots,refreshSources,saveSources,forgetSources}){
+export function mountMarketOverview(target,{open,snapshots,refreshSources,forgetSources}){
   let visible=false,catalog=null,controller=null,timer=null,error='',notice='';
   const automatic=()=>document.querySelector('#market-live')?.checked===true;
   let wasAutomatic=automatic();
   const allowed=()=>visible&&navigator.onLine&&!document.hidden;
   target.className='market-overview';
   const hero=workspaceHeading({title:'Market overview',description:'Activity across spot, perpetuals and DeFi.'}),heading=hero.element;heading.classList.add('overview-heading');
-  const actions=hero.actions,refresh=action('Refresh overview',()=>{void load();void refreshSources();}),save=action('Save overview offline',()=>{try{if(catalog)localStorage.setItem(savedKey,JSON.stringify(catalog));saveSources();notice='Saved on this device.';}catch{notice='Could not save on this device.';}paintStatus();}),forget=action('Remove saved overview',()=>{try{localStorage.removeItem(savedKey);forgetSources();notice='Saved overview removed.';}catch{notice='Could not remove saved overview.';}paintStatus();});
-  for(const [b,path]of [[refresh,'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 3M4 16l2 3a7 7 0 0 0 12-2'],[save,'M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5'],[forget,'M4 7h16M9 7V3h6v4M6 7l1 14h10l1-14M10 11v6M14 11v6']]){b.setAttribute('aria-label',b.textContent);b.title=b.textContent;b.textContent='';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),p=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');p.setAttribute('d',path);svg.append(p);b.append(svg);actions.append(b);}
+  const actions=hero.actions,refresh=action('Refresh overview',()=>{void load();void refreshSources();}),forget=action('Remove saved overview',()=>{try{cancel();catalog=null;localStorage.removeItem(savedKey);forgetSources();notice='Saved overview removed.';}catch{notice='Could not remove saved overview.';}paintStatus();});
+  for(const [b,path]of [[refresh,'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 3M4 16l2 3a7 7 0 0 0 12-2'],[forget,'M4 7h16M9 7V3h6v4M6 7l1 14h10l1-14M10 11v6M14 11v6']]){b.setAttribute('aria-label',b.textContent);b.title=b.textContent;b.textContent='';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),p=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');p.setAttribute('d',path);svg.append(p);b.append(svg);actions.append(b);}
   actions.classList.add('overview-actions');
   const status=node('p',undefined,'overview-status');status.setAttribute('role','status');
   const counts=node('nav',undefined,'overview-counts');counts.setAttribute('aria-label','Market coverage');
@@ -28,11 +28,11 @@ export function mountMarketOverview(target,{open,snapshots,refreshSources,saveSo
   target.append(heading,status,counts,panels,venues);
   const pulse=document.createElement('div');counts.before(pulse);let context;context=mountMarketContext(pulse,{changed:paintStatus});
   refresh.addEventListener('click',()=>context.refresh());
-  save.addEventListener('click',()=>{try{context.save();}catch{notice='Could not save market pulse.';paintStatus();}});
+
   forget.addEventListener('click',()=>context.forget());
 
   function paintStatus(){
-    refresh.disabled=Boolean(controller)||!navigator.onLine;save.disabled=!catalog&&![...snapshots()].length&&!context?.hasSnapshot();
+    refresh.disabled=Boolean(controller)||!navigator.onLine;
     status.textContent=[catalog?`${navigator.onLine?'Snapshot':'Offline snapshot'} · ${new Date(catalog.observedAt).toLocaleString()}`:navigator.onLine?'Loading market overview…':'No saved overview on this device.',controller?'Refreshing…':'',catalog?.unavailable.length?'Some markets unavailable':'',error,notice].filter(Boolean).join(' · ');
   }
   function section(title,subtitle,view,kind=view){
@@ -72,7 +72,7 @@ export function mountMarketOverview(target,{open,snapshots,refreshSources,saveSo
   function schedule(){clearTimeout(timer);if(allowed()&&automatic())timer=setTimeout(()=>void load(),60000);}
   async function load(){
     if(!allowed()||controller)return;clearTimeout(timer);const abort=new AbortController();controller=abort;error='';notice='';paintStatus();
-    try{const response=await fetch('/api/markets/hyper-catalog',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify({privacy:'public'}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(45000)])});if(!response.ok)throw Error();const value=checkedHyperliquidCatalog(await response.json());if(controller!==abort||!allowed())return;catalog=value;paint();}
+    try{const response=await fetch('/api/markets/hyper-catalog',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify({privacy:'public'}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(45000)])});if(!response.ok)throw Error();const value=checkedHyperliquidCatalog(await response.json());if(controller!==abort||!allowed())return;catalog=value;try{const raw=JSON.stringify(value);if(raw.length>8*1024*1024)throw Error();localStorage.setItem(savedKey,raw);notice='Saved on this device.';}catch{notice='Could not save on this device.';}paint();}
     catch{if(controller===abort&&!abort.signal.aborted){error=catalog?'Refresh unavailable; showing the earlier snapshot.':'Overview unavailable. Try refreshing.';paint();}}
     finally{if(controller===abort){controller=null;paintStatus();schedule();}}
   }

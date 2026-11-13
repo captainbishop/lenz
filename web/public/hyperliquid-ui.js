@@ -10,7 +10,7 @@ import {mountHyperliquidTrading,clearHyperliquidTrading} from './hyperliquid-ord
 
 const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
 const button=(text,action)=>{const e=node('button',text);e.type='button';e.onclick=action;return e;};
-const utilityPaths={refresh:'M20 7v5h-5 M4 17v-5h5 M6.1 7a7 7 0 0 1 11.6-2L20 8 M4 16l2.3 3A7 7 0 0 0 18 17',save:'M12 3v12 M7 10l5 5 5-5 M5 16v5h14v-5',remove:'M4 7h16 M9 7V3h6v4 M6 7l1 14h10l1-14 M10 11v6 M14 11v6',previous:'M15 5l-7 7 7 7',next:'M9 5l7 7-7 7'};
+const utilityPaths={refresh:'M20 7v5h-5 M4 17v-5h5 M6.1 7a7 7 0 0 1 11.6-2L20 8 M4 16l2.3 3A7 7 0 0 0 18 17',remove:'M4 7h16 M9 7V3h6v4 M6 7l1 14h10l1-14 M10 11v6 M14 11v6',previous:'M15 5l-7 7 7 7',next:'M9 5l7 7-7 7'};
 function iconButton(label,icon,action){
   const b=button('',action),svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');
   b.className='hyper-icon-button';b.setAttribute('aria-label',label);b.title=label;svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');path.setAttribute('d',utilityPaths[icon]);svg.append(path);b.append(svg);return b;
@@ -26,8 +26,8 @@ export function mountHyperliquid(target){
   const request=()=>hyperliquidRequest({marketId:`hypercore:${selected.kind}:${selected.sides[side]?.coin??selected.coin}`,interval,privacy:'public'});
   target.classList.add('hyper-workspace');
   const hero=workspaceHeading({title:'Markets',description:'Explore supported trading markets.'}),intro=hero.element,heading=hero.title,description=hero.description;intro.classList.add('hyper-heading');
-  const refresh=iconButton('Refresh markets','refresh',()=>void loadCatalog()),save=iconButton('Save offline','save',()=>{try{localStorage.setItem(savedKey,JSON.stringify(catalog));saveError='Catalogue saved on this device.';}catch{saveError='Could not save on this device.';}catalogStatus();}),forget=iconButton('Remove saved','remove',()=>{try{localStorage.removeItem(savedKey);saveError='Saved catalogue removed.';}catch{saveError='Could not remove saved data.';}catalogStatus();});
-  const actions=hero.actions;actions.classList.add('hyper-actions');actions.append(refresh,save,forget);
+  const refresh=iconButton('Refresh markets','refresh',()=>void loadCatalog()),forget=iconButton('Remove saved','remove',()=>{catalogAbort?.abort();try{localStorage.removeItem(savedKey);saveError='Saved catalogue removed.';}catch{saveError='Could not remove saved data.';}catalogStatus();});
+  const actions=hero.actions;actions.classList.add('hyper-actions');actions.append(refresh,forget);
   const status=node('p',undefined,'hyper-status');status.setAttribute('role','status');
   const controls=node('div',undefined,'hyper-controls'),query=node('input');query.type='search';query.placeholder='Search tokens, questions or venues';query.maxLength=100;query.setAttribute('aria-label','Search trading markets');query.oninput=()=>{missingSelection=false;search=query.value.toLowerCase().trim();page=0;renderList();};
   const venues=node('select');venues.setAttribute('aria-label','Trading venue');venues.onchange=()=>{missingSelection=false;venue=venues.value;page=0;renderList();};controls.append(query,venues);
@@ -45,7 +45,7 @@ export function mountHyperliquid(target){
   }});
 
   function catalogStatus(){
-    save.disabled=!catalog;refresh.disabled=Boolean(catalogAbort)||!navigator.onLine;
+    refresh.disabled=Boolean(catalogAbort)||!navigator.onLine;
     const message=catalog?`${navigator.onLine?'Read':'Offline catalogue'} ${new Date(catalog.observedAt).toLocaleString()}${catalog.unavailable.length?' · Some sources unavailable':''}`:navigator.onLine?'Loading markets…':'No saved markets.';
     status.textContent=message+(saveError?' · '+saveError:'');
   }
@@ -118,7 +118,7 @@ export function mountHyperliquid(target){
     try{
       const response=await fetch('/api/markets/hyper-catalog',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify({privacy:'public'}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(45000)])});
       if(!response.ok)throw Error();const value=checkedHyperliquidCatalog(await response.json());if(abort.signal.aborted)return;
-      catalog=value;loaded=true;updateDirectory();
+      catalog=value;loaded=true;try{const raw=JSON.stringify(value);if(raw.length>8*1024*1024)throw Error();localStorage.setItem(savedKey,raw);saveError='Saved on this device.';}catch{saveError='Could not save markets on this device.';}updateDirectory();
     }catch{if(!abort.signal.aborted)saveError=catalog?'Refresh unavailable · earlier catalogue retained.':'Markets unavailable. Try refreshing.';}
     finally{if(catalogAbort===abort)catalogAbort=null;catalogStatus();}
   }

@@ -25,15 +25,15 @@ function probability(outcome){
  const meter=el('span',undefined,'prediction-meter'),fill=el('span');meter.setAttribute('aria-hidden','true');fill.style.width=(outcome.probability??0)*100+'%';meter.append(fill);line.append(meter);return line;
 }
 export function mountPredictions(target){
- let visible=false,provider='',category='All events',search='',sort='activity',limit=18,selected=null,timer=null,generation=0,detailSnapshot=null;
+ let visible=false,provider='',category='All events',search='',sort='activity',limit=18,selected=null,timer=null,generation=0,detailSnapshot=null,saveError='';
  const snapshots=new Map(),failures=new Set(),controllers=new Map();
  const automatic=()=>document.querySelector('#market-live')?.checked===true;
  const allowed=()=>visible&&navigator.onLine&&!document.hidden;
  target.classList.add('prediction-workspace');
  const discovery=el('div'),hero=workspaceHeading({title:'Predictions',kind:'predictions',description:'Polymarket, Kalshi and Hyperliquid.'});
- const refresh=button('↻',()=>load(true)),save=button('↓',()=>{try{localStorage.setItem(savedKey,JSON.stringify([...snapshots.values()]));status.textContent='Events saved on this device.';}catch{status.textContent='Could not save events on this device.';}});
- refresh.setAttribute('aria-label','Refresh events');refresh.title='Refresh events';save.setAttribute('aria-label','Save events offline');save.title='Save events offline';hero.actions.append(refresh,save);
- for(const [b,d]of [[refresh,'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 3M4 16l2 3a7 7 0 0 0 12-2'],[save,'M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5']]){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');path.setAttribute('d',d);svg.append(path);b.replaceChildren(svg);}
+ const refresh=button('↻',()=>load(true));
+ refresh.setAttribute('aria-label','Refresh events');refresh.title='Refresh events';hero.actions.append(refresh);
+ for(const [b,d]of [[refresh,'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 3M4 16l2 3a7 7 0 0 0 12-2']]){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS('http://www.w3.org/2000/svg','path');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');path.setAttribute('d',d);svg.append(path);b.replaceChildren(svg);}
  const status=el('p',undefined,'prediction-status');status.setAttribute('role','status');
  const controls=el('div',undefined,'prediction-controls'),query=el('input');query.type='search';query.placeholder='Search events';query.setAttribute('aria-label','Search events');query.maxLength=100;query.oninput=()=>{search=query.value.trim().toLowerCase();limit=18;paint();};
  const markets=el('select');markets.setAttribute('aria-label','Prediction market');for(const [key,name] of [['','All markets'],...Object.entries(PREDICTION_PROVIDERS)]){const o=el('option',name);o.value=key;markets.append(o);}markets.onchange=()=>{provider=markets.value;limit=18;paint();};
@@ -48,10 +48,11 @@ export function mountPredictions(target){
  const hyper=mountHyperliquid(nativeMarket);
  const dialog=el('dialog',undefined,'prediction-dialog');dialog.setAttribute('aria-label','Prediction event details');dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
  target.append(discovery,native,dialog);
+ function save(){try{localStorage.setItem(savedKey,JSON.stringify([...snapshots.values()]));saveError='';}catch{saveError='Could not save events on this device.';}}
  function allEvents(){return [...snapshots.values()].flatMap(s=>s.events);}
  function paintStatus(){
-  refresh.hidden=automatic()&&!failures.size&&navigator.onLine;refresh.disabled=controllers.size>0||!navigator.onLine;save.disabled=snapshots.size===0;
-  status.textContent=!navigator.onLine?'Offline · Showing saved events':controllers.size?'Updating events…':failures.size?'Some sources could not refresh. Earlier events are marked saved.':'';
+  refresh.hidden=automatic()&&!failures.size&&navigator.onLine;refresh.disabled=controllers.size>0||!navigator.onLine;
+  status.textContent=(!navigator.onLine?'Offline · Showing saved events':controllers.size?'Updating events…':failures.size?'Some sources could not refresh. Earlier events are marked saved.':'')+(saveError?' · '+saveError:'');
   if(dialog.open&&detailSnapshot){const p=detailSnapshot.provider,newer=snapshots.get(p)?.observedAt>detailSnapshot.observedAt,saved=!navigator.onLine||failures.has(p)||newer||Date.now()-detailSnapshot.observedAt>120000;dialog.querySelector('.prediction-card-source').textContent=`${PREDICTION_PROVIDERS[p]} · Read ${stamp(detailSnapshot.observedAt)}${saved?' · Saved':''}${newer?' · Newer prices available; reopen this event.':''}`;}
   const nativeAction=dialog.querySelector('[data-native-market]');if(nativeAction)nativeAction.disabled=!navigator.onLine;
  }
@@ -109,7 +110,7 @@ export function mountPredictions(target){
   await Promise.all(Object.keys(PREDICTION_PROVIDERS).map(async id=>{
    if(controllers.has(id)||!force&&snapshots.has(id)&&Date.now()-snapshots.get(id).observedAt<60000)return;
    const c=new AbortController();controllers.set(id,c);paintStatus();
-   try{const res=await fetch('/api/markets/predictions',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify({provider:id,privacy:'public'}),signal:AbortSignal.any([c.signal,AbortSignal.timeout(25000)])});if(!res.ok)throw Error();const raw=await res.text();if(raw.length>8*1024*1024)throw Error();const value=JSON.parse(raw),snapshot=checkedPredictions(value);if(snapshot.provider!==id)throw Error();if(ticket!==generation||!allowed())return;if(snapshot.observedAt>=(snapshots.get(id)?.observedAt??0))snapshots.set(id,snapshot);if(value.stale)failures.add(id);else failures.delete(id);}
+   try{const res=await fetch('/api/markets/predictions',{method:'POST',credentials:'omit',headers:{'content-type':'application/json'},body:JSON.stringify({provider:id,privacy:'public'}),signal:AbortSignal.any([c.signal,AbortSignal.timeout(25000)])});if(!res.ok)throw Error();const raw=await res.text();if(raw.length>8*1024*1024)throw Error();const value=JSON.parse(raw),snapshot=checkedPredictions(value);if(snapshot.provider!==id)throw Error();if(ticket!==generation||!allowed())return;if(snapshot.observedAt>=(snapshots.get(id)?.observedAt??0))snapshots.set(id,snapshot);if(value.stale)failures.add(id);else failures.delete(id);save();}
    catch{if(ticket===generation&&!c.signal.aborted)failures.add(id);}
    finally{if(ticket===generation){controllers.delete(id);paint();}}
   }));

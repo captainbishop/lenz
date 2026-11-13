@@ -10,7 +10,7 @@ import { requestAutomaticDelivery } from './delivery-mode.js';
 import { isTrade } from './trade-model.js';
 import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, prepareDeliveryReceipt, deliveryAcknowledged } from './delivery-receipts.js';
-import { saveOffline } from './save-offline.js';
+import {startOfflineAccess} from './offline-access.js';
 import { isNearPayment } from './near-payment-service.js';
 import { loadChatMoney, mountChatMoney, renderChatMoney, renderNearPaymentCard, chatNearContract } from './near-chat.js';
 const $ = selector => document.querySelector(selector);
@@ -224,10 +224,7 @@ $('#open-message').onclick = () => action(async () => {
   $('#incoming').value = ''; $('#incoming-file').value = ''; status(received.kind === DELIVERY_RECEIPT ? duplicate ? 'This receipt is already saved.' : 'Receipt received from your contact. Payment confirmation is separate.' : duplicate ? 'This message was already opened. No duplicate was added.' : received.kind === 'lenz-near-payment-v1' ? 'Payment received. You can pass it onward offline. Connect to confirm it.' : 'Message opened. Message check passed.');
   $('#handover').close();
 });
-$('#prepare-offline').onclick = () => action(async () => {
-  await saveOffline();
-  status('Conversation files saved. Reload once, then this page can open without its server. Browser storage can still be cleared.');
-});
+startOfflineAccess($('#chat-cache-status'));
 channel?.addEventListener('message', () => { if (!busy) render().catch(error => status(error.message, true)); });
 try { await loadChatMoney(); } catch { $('#chat-wallet-note').textContent = 'Test dollars are unavailable. Private messages still work.'; }
 try { await render(); status('Private chat is ready.'); }

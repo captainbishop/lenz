@@ -2,7 +2,7 @@
 // chat-send-20261110-r1
 // recovery-receipts-20261110-r2
 // Preview recording revision: f163cd3a4cba36be88b3dadd938a578c5aa7d9e42a67a5aa6909808dc8ff21da
-// Market shell revision: private-autosave-20261112-r1
+// Market shell revision: automatic-upgrade-20261113-r2
 importScripts('/media-range.js');
 const CACHE = 'proof-u-web-demo-v1';
 const PATHS = ["/carrier-protocol.js",'/intents-spend.js','/wallet-prompt.js','/intents-status.js','/intents-spend-outbox.js','/intents-courier.js','/intents-report.js','/intents-vendor/quote.js','/intents-vendor/codecs.js','/workspace-layout.css', './previews/timelines.json', './media-range.js', './vendor/ffjavascript-worker.js', './', './index.html', './home.css', './home.js', './home-interactive.js', './home-videos.js', './home-defi.js', './home-defi.css', './routes.html', './routes.css', './routes.js', './route-draft-ui.js', './route-draft-form.js', './defi-route-drafts.js', './defi-route-quote.js', './defi-route-plan.js', './chat-store.js', './peer-crypto.js', './profile-display.js', './markets.html', './markets.css', './markets.js', './oracle-feeds.js', './oracle-prices-ui.js', './oracle-prices.css', './market-live.js', './pool-price.js', './pool-price-ui.js', './theme-icon.js', './perp-terminal.js', './market-tape.js', './terminal.css', './defi-surfaces.css', './defi-surfaces.js', './evm-markets.js', './market-snapshot.js', './market-quote.js', './market-quote-ui.js', './defi-catalog.js', './app-theme.js', './previews/defi-light.mp4', './previews/defi-light.webp', './previews/defi-dark.mp4', './previews/defi-dark.webp', './previews/chat-light.mp4', './previews/chat-light.webp', './previews/chat-dark.mp4', './previews/chat-dark.webp', './previews/wallet-light.mp4', './previews/wallet-light.webp', './previews/wallet-dark.mp4', './previews/wallet-dark.webp', './previews/profile-light.mp4', './previews/profile-light.webp', './previews/profile-dark.mp4', './previews/profile-dark.webp', './payment-demo.html', './style.css', './app.js', './wallet.js', './protocol.js', './prover.js', './proof-worker.js', './capsule.js', './config.js', './vendor/ffjavascript.js', './vendor/snarkjs.js', './vendor/poseidon.js', './vendor/poseidon_constants_opt.js', './assets/step.wasm', './assets/step.zkey', './tests.html', './browser-tests.js', './manifest.webmanifest', './brand/mark.svg', './brand/mark-reverse.svg', './brand/mark-black.svg', './brand/mark-white.svg', './brand/icon.svg', './brand/icon-32.png', './brand/icon-180.png', './brand/icon-192.png', './brand/icon-512.png', './brand/icon-1024.png', './brand/logo.svg', './brand/logo-reverse.svg', './brand/logo.png', './brand/brand-card.svg', './brand/brand-card.png', './brand/index.html', './brand/preview.css', '/hyperliquid-order.js', '/hyperliquid-trading.js', '/hyperliquid-order-store.js', '/hyperliquid-execution.js', '/hyperliquid-order-ui.js', '/hyperliquid-order.css', '/hyperliquid-vendor/msgpack.js', '/hyperliquid-vendor/LICENSE.txt', '/hyperliquid-vendor/NOTICE.txt', '/profile-card.css'];
@@ -42,6 +42,7 @@ PATHS.push('/private-executor-ui.js');BRAND_SHELL.push('/private-executor-ui.js'
 const LENDING_POSITION_PATHS=["/lending-position.js","/lending-position-store.js","/lending-position-ui.js","/lending-position.css"];
 PATHS.push(...LENDING_POSITION_PATHS.filter(p=>!PATHS.includes(p)));
 BRAND_SHELL.push(...LENDING_POSITION_PATHS.filter(p=>!BRAND_SHELL.includes(p)));
+PATHS.push('/offline-access.js');BRAND_SHELL.push('/offline-access.js');
 self.addEventListener('install', event => event.waitUntil((async () => {
   // Refresh cached document/worker policies while retaining already prepared proof assets.
   await (await caches.open(CACHE)).addAll([...BRAND_SHELL, './tests.html', './prover.js', './vendor/ffjavascript.js', './vendor/ffjavascript-worker.js'].map(path => new Request(path, { cache: 'reload' })));
@@ -49,6 +50,12 @@ self.addEventListener('install', event => event.waitUntil((async () => {
 })()));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('message', event => {
+  if(event.data?.type==='prepare-home'){
+    event.waitUntil((async()=>{
+      try{await(await caches.open(CACHE)).addAll(BRAND_SHELL.map(path=>new Request(path,{cache:'reload'})));event.ports[0]?.postMessage({complete:true});}
+      catch{event.ports[0]?.postMessage({complete:false});}
+    })());return;
+  }
   if (event.data?.type === 'home-status') {
     event.waitUntil((async () => {
       const cache = await caches.open(CACHE);

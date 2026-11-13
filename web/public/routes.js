@@ -1,3 +1,4 @@
+import {startOfflineAccess} from './offline-access.js';
 import {themeIcon} from './theme-icon.js';
 import {listRouteDrafts,attachRouteQuote,removeRouteDraft,routeDraftStatus} from './defi-route-drafts.js';
 import {checkedMarketQuote} from './market-quote.js';
@@ -77,7 +78,4 @@ $('#reload-drafts').onclick=reload;
 themeIcon(document.querySelector('#theme-toggle'));
 addEventListener('offline',()=>{invalidate();if($('#route-action-status'))$('#route-action-status').textContent='Offline · Saved draft retained.';update();});addEventListener('online',update);setInterval(update,1000);
 await reload();
-if('serviceWorker' in navigator){try{const registration=await navigator.serviceWorker.register('/sw.js');await navigator.serviceWorker.ready;
-  const worker=registration.installing??registration.waiting??registration.active;if(worker?.state!=='activated')await new Promise((resolve,reject)=>{const changed=()=>{if(worker.state==='activated'){worker.removeEventListener('statechange',changed);resolve();}if(worker.state==='redundant')reject(Error('Cache failed'));};worker.addEventListener('statechange',changed);changed();});
-  const channel=new MessageChannel();await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Cache timeout')),10000);channel.port1.onmessage=({data})=>{clearTimeout(timer);channel.port1.close();data.complete?resolve():reject(Error('Cache incomplete'));};worker.postMessage({type:'home-status'},[channel.port2]);});$('#route-cache-status').textContent='Drafts available offline · Quotes need a connection.';
-}catch{$('#route-cache-status').textContent='Offline page unavailable';}}
+startOfflineAccess($('#route-cache-status'));

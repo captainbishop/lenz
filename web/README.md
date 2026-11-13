@@ -12,7 +12,7 @@ The homepage uses illustrated replays of tested application flows, keyboard-oper
 
 Open /name-lab.html to check ENS records for Aurora or a native NEAR account.
 The [naming integration](../aurora/names.md) supports both themes, explicit
-network options and opt-in saved results marked as past observations offline.
+network options and automatically saved verified results marked as past observations offline.
 The name suffix selects NEAR mainnet or testnet automatically. ENS defaults to
 Aurora testnet; its destination network is under Options & privacy.
 It does not link contacts, sign or send payments, or enable account recovery.
@@ -36,7 +36,7 @@ Edit profile changes the display name, one of four symbols, or an optional photo
 
 Photos are centre-cropped to 128×128 JPEG locally and re-encoded without the original metadata. Remote URLs and SVG uploads are rejected. Public contact files carry the photo; compact QR cards carry the name, symbol and public keys. An updated contact card requires source confirmation before replacing the existing contact with the same keys. Profile metadata is a label confirmed by the user, not a cryptographic assertion of someone's real-world identity.
 
-Save offline on either screen caches both wallet and chat and registers their page scopes. The homepage uses a separate lightweight shell cache. The original proof experiment is `/payment-demo.html`.
+Lenz saves application files automatically on this device. Wait for Ready offline before disconnecting. Each feature retains its checked observations separately; saved observations are historical. Encrypted backup export remains deliberate. The original proof experiment is `/payment-demo.html`.
 
 Clearing site data loses this prototype's account. Recovery and device transfer are not implemented. Current private keys are nonextractable, and old wallet snapshots cannot safely be made spendable without handling later spends and outstanding authorizations. See [behavior and safety boundaries](../docs/behavior.md).
 
@@ -50,7 +50,7 @@ Previously saved demo cards remain readable and exportable in their original enc
 
 The encrypted trade vault has a nonextractable AES-GCM key. Chat uses P-256 signatures, static ECDH and AES-GCM; it has no forward secrecy. Contact names are labels, not identity proofs. Clearing browser storage loses the keys. Copied or rolled-back storage and hidden remote conflicts remain outside the local reservation guarantee.
 
-Use Save for offline use, then reload. The chat cache is separate from the older proof wallet. All application and QR dependencies are local. A browser’s initial download needs a secure origin (localhost or HTTPS). Physical phone, camera, BLE and native share-sheet compatibility have not been established on this Windows host.
+Wait for Ready offline, then reload. The chat cache is separate from the older proof wallet. All application and QR dependencies are local. A browser’s initial download needs a secure origin (localhost or HTTPS). Physical phone, camera, BLE and native share-sheet compatibility have not been established on this Windows host.
 
 ## Checks
 

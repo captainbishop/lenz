@@ -2,7 +2,7 @@ import {readState} from './chat-store.js';
 import {prepareChatBackup} from './recovery-service.js';
 import {stageChatRestore} from './chat-restore.js';
 import {themeIcon} from './theme-icon.js';
-import {saveOffline} from './save-offline.js';
+import {startOfflineAccess} from './offline-access.js';
 import {isRecoveredChat} from './chat-access.js';
 const $=s=>document.querySelector(s),el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
 let generation=0,prepared=null,history=null,busy=false,restoreReview=null,installing=false;
@@ -65,9 +65,5 @@ $('#restore-chat').onclick=async()=>{
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const open=!$('#open-panel').hidden;show(open?'open':'create',false);}});
 addEventListener('pagehide',()=>{restoreReview?.cancel();clear();});addEventListener('keydown',event=>{if(event.key==='Escape')show($('#open-panel').hidden?'create':'open');});
 themeIcon(document.querySelector('#theme-toggle'));
-$('#save-backup-offline').onclick=async()=>{
-  $('#save-backup-offline').disabled=true;$('#backup-cache-status').textContent='Saving…';
-  try{await saveOffline();$('#backup-cache-status').textContent='Page saved for offline use.';}
-  catch{$('#backup-cache-status').textContent='Could not save offline. Retry when connected.';}finally{$('#save-backup-offline').disabled=false;}
-};
+startOfflineAccess($('#backup-cache-status'));
 try{const state=await readState();$('#backup-account').textContent=state.identity?.profile.name??'No account in this browser';$('#saved-phrase-field').hidden=!isRecoveredChat(state.identity);if(!state.identity)show('open',false);}catch{show('open',false);status('Could not read the account in this browser. You can still open a backup.');}

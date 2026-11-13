@@ -6,7 +6,7 @@ import { mountProfilePanels } from './profile-panels.js';
 import { setupProfile } from './profile-ui.js';
 import { renderProfile, setupContacts } from './contact-ui.js';
 import { paintAvatar, privateName } from './profile-display.js';
-import { saveOffline } from './save-offline.js';
+import {startOfflineAccess} from './offline-access.js';
 import { themeIcon } from './theme-icon.js';
 import {mountWalletActions} from './wallet-actions.js';
 import {mountWalletTokens,renderWalletTokens} from './wallet-tokens.js';
@@ -67,7 +67,7 @@ setupContacts({ action, status, selectExisting:()=>sendAfterContact, select:asyn
   await render();$('#near-recipient').value=id;status('');
   if(sendAfterContact){sendAfterContact=false;openNearSend(id);}
 } });
-$('#prepare-money-offline').onclick = () => action(async () => { await saveOffline(); status('Wallet and conversation files saved for offline use.'); });
+startOfflineAccess($('#money-cache-status'));
 channel?.addEventListener('message', () => { if (!busy) render().catch(error => status(error.message, true)); });
 mountNearWallet({ action, status });
 // Keep the existing payment controls and handlers; compose them for the wallet.

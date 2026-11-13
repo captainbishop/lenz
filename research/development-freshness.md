@@ -1,4 +1,22 @@
 
+# Automatic offline saving, November 13, 2026
+
+Main app entries prepare their offline files automatically and display readiness.
+Validated public market reads save locally; cancelled or removed reads cannot
+restore saved data. Storage failures remain visible. Chat backup export remains
+deliberate and existing identities and encrypted conversations remain intact.
+
+The selected candidate passed 28 browser cases and groups: app installation,
+upgrade from the previous committed app, synthetic cache transitions, interrupted
+downloads, missing-file repair, first-entry offline restarts, public-market
+retention, storage failures and cancellation. Existing worker registrations are
+explicitly updated before retrying unsupported readiness checks. These checks
+use disposable Edge profiles and local provider fixtures. Earlier timing and
+upgrade failures are retained in the local review record; this evidence makes
+no installation-time or physical-device guarantee. Financial freshness, private
+settlement and full profile isolation are outside this change.
+
+
 # Automatic private-read saving, November 12, 2026
 
 Explicitly loaded lending positions and retained financial evidence save encrypted
