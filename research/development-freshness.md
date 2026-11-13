@@ -1,4 +1,23 @@
 
+# Workspace storage, November 13, 2026
+
+The unmounted workspace store binds reads and writes to one local session.
+Lending observations and financial recovery reviews have separate encrypted
+workspace records. Legacy evidence is retained. Cancelled writes, stale session
+results, conflicting observations and damaged records reject without replacing
+retained evidence. Guest observations stay separate when a Lenz identity is added.
+
+The selected source passed 87 disposable Edge checks across session migration,
+workspace updates, private storage and existing lending/recovery interfaces,
+including full browser/server shutdown and offline reopening. Historical save
+code and scoped saves complete without a lock cycle. Independent review findings
+were corrected and rechecked. Guard changes exercised ownership, cancellation,
+read fencing and lock separation. These factories are not mounted in the app;
+profile selection still requires the remaining stores, provider/transport
+lifecycles, shared financial exclusions and journey verification. This change
+does not establish financial authority, settlement or physical-device behavior.
+
+
 # Automatic offline saving, November 13, 2026
 
 Main app entries prepare their offline files automatically and display readiness.

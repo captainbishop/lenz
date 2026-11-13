@@ -116,9 +116,9 @@ export async function watchWorkspaceSession(lease){
 export async function listWorkspaces(){return lock(()=>transaction(['lifecycle','workspaces'],'readonly',(tx,done,fail)=>{
  const meta=tx.objectStore('lifecycle').get(META);meta.onsuccess=()=>{try{ready(meta.result);const rows=tx.objectStore('workspaces').getAll();rows.onsuccess=()=>done(rows.result.map(({id,kind,profileId,name})=>({id,kind,profileId,name})));}catch(error){fail(error);}};
 }));}
-export async function readWorkspace(lease){return lock(()=>transaction(['lifecycle','workspaces'],'readonly',(tx,done,fail)=>{
+export async function readWorkspace(lease,{signal}={}){return lock(()=>transaction(['lifecycle','workspaces'],'readonly',(tx,done,fail)=>{
  const meta=tx.objectStore('lifecycle').get(META);meta.onsuccess=()=>{try{current(meta.result,lease);const r=tx.objectStore('workspaces').get(lease.workspaceId);r.onsuccess=()=>{try{assert(r.result,'The workspace cannot be read.');done({state:r.result.state,revision:r.result.revision});}catch(error){fail(error);}};}catch(error){fail(error);}};
-}));}
+},{signal}));}
 export async function stageWorkspace(input,lease,{signal}={}){
  const state=structuredClone(input);signal?.throwIfAborted();await validateState(state);signal?.throwIfAborted();
  const identity=state.identity,id=identity?'profile:'+identity.profile.id:'external:'+randomId(),row={id,kind:identity?'profile':'external',profileId:identity?.profile.id??null,name:identity?.profile.name??'External wallet',revision:0,state};
@@ -126,12 +126,14 @@ export async function stageWorkspace(input,lease,{signal}={}){
   const meta=tx.objectStore('lifecycle').get(META);meta.onsuccess=()=>{try{current(meta.result,lease,{active:false});const store=tx.objectStore('workspaces'),rows=store.getAll();rows.onsuccess=()=>{try{assert(!rows.result.some(r=>r.id===id||identity&&r.profileId===row.profileId),'This profile is already saved.');store.add(row);done(id);}catch(error){fail(error);}};}catch(error){fail(error);}};
  },{signal}));
 }
-/** Keep the session fence through a caller's dependent storage commit. Never await a provider or network request here. */
-export async function readWorkspaceLocked(lease,operation){return lock(async()=>{
+/** Hold the fence through dependent storage or synchronous request invocation. Never await providers/network or call workspace updates here. */
+export async function readWorkspaceLocked(lease,operation,{signal}={}){return lock(async()=>{
  const value=await transaction(['lifecycle','workspaces'],'readonly',(tx,done,fail)=>{
   const meta=tx.objectStore('lifecycle').get(META);meta.onsuccess=()=>{try{current(meta.result,lease);const r=tx.objectStore('workspaces').get(lease.workspaceId);r.onsuccess=()=>{try{assert(r.result,'The workspace cannot be read.');done({state:r.result.state,revision:r.result.revision});}catch(error){fail(error);}};}catch(error){fail(error);}};
- });
- return operation(value.state);
+ },{signal});
+ signal?.throwIfAborted();const result=await operation(value.state);signal?.throwIfAborted();
+ await transaction('lifecycle','readonly',(tx,done,fail)=>{const r=tx.objectStore('lifecycle').get(META);r.onsuccess=()=>{try{current(r.result,lease);done();}catch(error){fail(error);}};},{signal});
+ return result;
 });}
 export async function commitWorkspace(lease,input,{signal}={}){
  const snapshot=structuredClone(input);assert(Number.isSafeInteger(snapshot?.revision)&&snapshot.revision>=0,'Reopen the workspace before saving.');signal?.throwIfAborted();await validateState(snapshot.state);signal?.throwIfAborted();

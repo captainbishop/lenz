@@ -37,3 +37,46 @@ export async function mergeFinancialReviewFile(file,retained,{signal}={}){
  const incoming=await openFinancialReview(identity,JSON.parse(text)),saved=await savedFinancialReview({signal});
  let value=saved?mergeFinancialReviews(saved,incoming):incoming;if(retained)value=mergeFinancialReviews(value,retained);await assertFinancialAccount(identity,signal);return value;
 }
+
+/** A retained legacy archive is read only by its original workspace and is never overwritten. */
+export function createFinancialReviewStore(workspace){
+ assert(workspace&&typeof workspace.workspaceId==='string'&&typeof workspace.readState==='function'&&typeof workspace.readStateLocked==='function','Open a workspace before saving recovery evidence.');
+ const key=['workspace',workspace.workspaceId];
+ const identityOf=state=>{assert(state.identity,'Open a Lenz account first.');return state.identity;};
+ const sameIdentity=(state,identity)=>{
+  const current=identityOf(state);
+  assert(current.profile.id===identity.profile.id&&current.profile.boxPublic===identity.profile.boxPublic&&current.profile.signingPublic===identity.profile.signingPublic,'Lenz account changed. Open its saved review again.');
+ };
+ async function retained(identity,signal){
+  const scoped=await record(key,undefined,signal);
+  const archive=scoped===undefined&&workspace.workspaceId==='legacy'?await record(identity.profile.id,undefined,signal):scoped;
+  return archive===undefined?null:openFinancialReview(identity,archive);
+ }
+ async function read({signal}={}){
+  const identity=identityOf(await workspace.readState({signal})),value=await retained(identity,signal);
+  return workspace.readStateLocked(state=>{sameIdentity(state,identity);return value;},{signal});
+ }
+ async function save(input,{signal}={}){
+  const review=checkedFinancialReview(input);assert(navigator.locks,'Web Locks are required to save recovery evidence safely.');
+  // Legacy saves hold DB while waiting for the session fence; scoped records use a separate lock.
+  return workspace.readStateLocked((state,{signal:activeSignal})=>navigator.locks.request(DB+':workspace',{signal:activeSignal},async()=>{
+   const identity=identityOf(state);assert(identity.profile.id===review.identity,'Financial review belongs to another Lenz account.');
+   const previous=await retained(identity,activeSignal),merged=previous?mergeFinancialReviews(previous,review):review;
+   const archive=await sealFinancialReview(identity,merged);activeSignal.throwIfAborted();await record(key,archive,activeSignal);return merged;
+  }),{signal});
+ }
+ async function file(input,{signal}={}){
+  const review=checkedFinancialReview(input),identity=identityOf(await workspace.readState({signal}));
+  const archive=await sealFinancialReview(identity,review);
+  return workspace.readStateLocked(state=>{sameIdentity(state,identity);return archive;},{signal});
+ }
+ async function mergeFile(file,retainedReview,{signal}={}){
+  assert(file&&Number.isSafeInteger(file.size)&&file.size>0&&file.size<=4001024,'Choose an encrypted financial review under 4 MB.');
+  const retainedCopy=retainedReview?checkedFinancialReview(retainedReview):null,identity=identityOf(await workspace.readState({signal}));
+  const text=await file.text();signal?.throwIfAborted();assert(new TextEncoder().encode(text).length<=4001024,'Financial review file is too large.');
+  const incoming=await openFinancialReview(identity,JSON.parse(text)),saved=await read({signal});
+  let value=saved?mergeFinancialReviews(saved,incoming):incoming;if(retainedCopy)value=mergeFinancialReviews(value,retainedCopy);
+  return workspace.readStateLocked(state=>{sameIdentity(state,identity);return value;},{signal});
+ }
+ return Object.freeze({read,save,file,mergeFile});
+}
