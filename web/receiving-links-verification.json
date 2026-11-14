@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T06:02:50.901Z",
+  "checkedAt": "2026-11-05T11:42:02.690Z",
   "runtime": "v24.21.0",
   "passed": 69,
   "failed": 0,
@@ -20,11 +20,11 @@
     "web/legacy-recovery.test.mjs": "ec69c12fe4d1100224ddf05ce5428e5720cacd5a2e6abc36da30beb6f0c5f6e0",
     "web/public/receiving-instructions.js": "0e8e6271c652ad086b634b8e5a9aa68c68461e939c1f08dbafab20788a2cce96",
     "web/public/payment-recipient.js": "560632ec9746bf221f9c3311f83da45f9cf59576eed9ef8bed333ca3bac635ea",
-    "web/public/receiving-link-ui.js": "204cc221f47376e054e3e6b9f2946f0a2b8cacddda91a7e64a9e38ab1823dd56",
+    "web/public/receiving-link-ui.js": "f4646f2e2b86206c2cb3283c90612004031370065c653a6c64c747a9a81bf7a2",
     "web/public/evm-wallet.js": "834f6b7460b020604d67db3726f334214788c1c5d670515796c0c35bff7aa21a",
-    "web/public/evm-wallet-ui.js": "4cc8c5675f47c15c03f61bd41ec7821e8cf115eed3550b36fdea122c5b8353f3",
-    "web/public/evm-transfer.js": "578fde4c60da92dad9d517ab515e3252dbe3ccb4c14b15c3c0e47feddd6c8e29",
-    "web/public/evm-transfer-ui.js": "b5aba4a4537377e097ff38fa3480695dd911f744fc4ba3baf319b71cb4232e0f",
+    "web/public/evm-wallet-ui.js": "beb1b7da47166f48458040e663c5818ba8a9a0ece74f8b7022f0ff0245129031",
+    "web/public/evm-transfer.js": "af756a72e6cffbc0e1213c2d358196017d7b0355fde47d0d58773326dbf8a2b2",
+    "web/public/evm-transfer-ui.js": "3c1a09b2e4db5a4de3c4e95ae7292d7a84fd7dcdf777d8b589a29c4d2876319f",
     "web/public/evm-transfer-service.js": "155179a9092779b3ca8c086fcb6025680b5c9af7e2ebea42d79fee8b5aa00412",
     "web/public/evm-transfer-store.js": "783e76119d7f316807ebbbe645c8db62be0d5c19cbf7d4dbb816e2c3f3458abb",
     "web/public/evm-networks.js": "6fbf1302bfe8729e98b7b1e23776b345468e4e3d56e2055db75d67ee786105ef",
@@ -33,7 +33,7 @@
     "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/evm-vendor/offline-budget.js": "6e14f681077313b40e4aa1551001613122a6143cd040837334b24070d0577244",
     "web/public/money.css": "c7a94c512b5367b0572f4b4acc39d9eb2979407f508b21841c70736f65acee7d",
-    "web/public/chat-sw.js": "b46c046dc686799220123df8b01d417f5645559d73b79027378d14301604f337",
+    "web/public/chat-sw.js": "f5bd9cfd0466610a5d55e039a4103bee408126eb6571d6f6fdf031ce235ab6f8",
     "web/verify-receiving-links.mjs": "5f8f3caca1b05346d79bc18828edd3f3da8535a9056d1c510c70e68a42266caa"
   }
 }

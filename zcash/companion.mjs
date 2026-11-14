@@ -3,7 +3,32 @@ import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
 const execute = promisify(execFile);
+export function createNativeWalletReader({walletRoot}) {
+  assert(typeof walletRoot==='string' && walletRoot.length>0,'Choose an explicit native wallet directory');
+  return async (action,wallet,{signal}={}) => {
+    assert(['info','sync','balance','address'].includes(action) && ['a','b'].includes(wallet),'Unsupported native wallet read');
+    const lock=JSON.parse(await readFile(new URL('./source-lock.json',import.meta.url)));
+    const executable=fileURLToPath(new URL('../tooling/zcash-devtool/target/release/zcash-devtool.exe',import.meta.url));
+    const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+    assert.equal(sha(await readFile(executable)),lock.windowsExeSha256,'Native wallet executable changed');
+    assert.equal(sha(await readFile(new URL('../tooling/zcash-devtool/Cargo.lock',import.meta.url))),lock.cargoLockSha256,'Native wallet dependencies changed');
+    const directory=join(walletRoot,wallet),configuration=await readFile(join(directory,'keys.toml'),'utf8');
+    assert(/^network\s*=\s*"test"\s*$/m.test(configuration),'Refusing a non-testnet native wallet');
+    const commands={info:['get-info','--server','zecrocks'],sync:['sync','--server','zecrocks'],balance:['balance','--json'],address:['list-addresses','--receiver','orchard']};
+    try {
+      const {stdout}=await execute(executable,['wallet','-w',directory,...commands[action]],{windowsHide:true,timeout:action==='sync'?900000:75000,maxBuffer:1048576,signal});
+      const value={ok:true,network:'test',wallet,action};
+      if(action==='info'){value.info=JSON.parse(stdout);assert.equal(value.info.chain_name,'test');}
+      else if(action==='balance')value.balance=JSON.parse(stdout);
+      else if(action==='address'){value.orchardAddress=stdout.match(/^Receiver\(orchard\): (utest1\S+)$/m)?.[1];assert(value.orchardAddress);}
+      return value;
+    } catch { throw Object.assign(Error('The configured local testnet wallet could not complete this check.'),{status:503}); }
+  };
+}
 export async function readNativeWallet(action, wallet) {
   assert(['info', 'sync', 'balance', 'address'].includes(action), 'Unsupported companion action');
   assert(['a', 'b'].includes(wallet), 'Unknown test wallet');

@@ -24,7 +24,7 @@ Other selected fields include assets, amount, receiving/refund accounts, deadlin
 
 [Verification](verification-results.json) records twenty affected Node tests and two detected guard removals. Test quotes are signed with disposable local Ed25519 keys using Node crypto and checked through the actual official SDK. These are cryptographic fixtures, not signatures issued by the live provider. Source and lock hashes are recorded.
 
-The fresh [live confidential preview](../intents-results.json) still returned **HTTP 401**. No live confidential quote or its provider signature was verified in the recorded check. The partner key remains missing; no deposit, account funding or transaction was attempted. The older mainnet/testnet route incompatibility remains separate from credentials.
+The older [live confidential preview](../intents-results.json) records **HTTP 401** before partner access. On November 9, separately retained local checks accepted basic and advanced confidential dry quotes and verified their provider signatures with this SDK. The [account adapter](../../docs/confidential-account.md) documents the advanced receiving scope. No key, user-session token or private account record is kept in this directory. No deposit, account funding or transaction was attempted; the mainnet/testnet route incompatibility and unsigned confidentiality field remain separate limits.
 
 From this directory, run `npm ci --ignore-scripts` to restore dependencies. From the repository root:
 

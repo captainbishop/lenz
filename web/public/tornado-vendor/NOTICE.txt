@@ -1,0 +1,1 @@
+Tornado v2.1 browser witness/proof runtime. snarkjs 0.1.20 and websnark (GPL-3.0-or-later); circomlib and fixed-merkle-tree (GPL-3.0). Source is reproducibly built by web/build-tornado-prover.mjs from the pinned dependency revisions. The released proving artifacts are fetched only on demand and are not bundled here. See COPYING.txt and dependency-LICENSES.txt.

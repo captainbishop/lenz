@@ -1,4 +1,3 @@
-import {startOfflineAccess} from './offline-access.js';
 import {readState,updateState} from './chat-store.js';
 import {createIdentity} from './peer-crypto.js';
 import {useAccountPasskey} from './account-keys.js';
@@ -6,6 +5,7 @@ import {setUpAccount,retrieveAccount,backupNow,startAccountSync} from './account
 import {privateName} from './profile-display.js';
 import {themeIcon} from './theme-icon.js';
 import {saveOffline} from './save-offline.js';
+import {startOfflineAccess} from './offline-access.js';
 const $=s=>document.querySelector(s),params=new URLSearchParams(location.search),next=params.get('next')==='wallet'?'/money.html':'/chat.html',localAddress=location.hostname==='127.0.0.1';let busy=false,renderedIdentity=null;
 $('.account-continue').href=next;$('.account-continue').firstChild.textContent=next==='/money.html'?'Open wallet ':'Open conversations ';
 if(new URLSearchParams(location.search).has('next'))$('.account-heading').after($('#account-settings'));

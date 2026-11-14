@@ -17,6 +17,12 @@ function mount(select){
   let active=-1,events=null,typed='',typedAt=0,invalid=false;
   const options=()=>[...select.options];
   const allowed=option=>!option.disabled&&!option.hidden&&!option.parentElement.disabled;
+  function sync(){
+    paintLabel(text,select.selectedOptions[0]);button.disabled=select.matches(':disabled');if(wrap.hidden!==select.hidden)wrap.hidden=select.hidden;
+    button.setAttribute('aria-required',String(select.required));
+    for(const attr of ['aria-describedby','aria-invalid']){const value=attr==='aria-invalid'&&invalid&&!select.validity.valid?'true':select.getAttribute(attr);if(value===null)button.removeAttribute(attr);else button.setAttribute(attr,value);}
+    if(opened===api&&(button.disabled||wrap.hidden||!button.getClientRects().length))close();
+  }
   function paintLabel(label,option){
     const render=renderers.get(select);
     if(render&&option){
@@ -24,12 +30,6 @@ function mount(select){
       // Preserve the pressed node when focus synchronizes an unchanged label.
       if(label.childNodes.length!==1||!label.firstChild.isEqualNode(painted))label.replaceChildren(painted);
     }else label.textContent=option?.label??'Choose';
-  }
-  function sync(){
-    paintLabel(text,select.selectedOptions[0]);button.disabled=select.matches(':disabled');if(wrap.hidden!==select.hidden)wrap.hidden=select.hidden;
-    button.setAttribute('aria-required',String(select.required));
-    for(const attr of ['aria-describedby','aria-invalid']){const value=attr==='aria-invalid'&&invalid&&!select.validity.valid?'true':select.getAttribute(attr);if(value===null)button.removeAttribute(attr);else button.setAttribute(attr,value);}
-    if(opened===api&&(button.disabled||wrap.hidden||!button.getClientRects().length))close();
   }
   function point(index){
     active=index;for(const node of list.children)node.classList.toggle('is-active',Number(node.dataset.index)===index);

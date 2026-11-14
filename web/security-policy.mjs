@@ -1,3 +1,4 @@
+import {HYPERLIQUID} from './public/hyperliquid-environment.js';
 // Applies to the local web server. Production hosting must send equivalent headers.
 import { carrierOrigin } from './public/carrier-protocol.js';
 import { relayOrigin } from './public/nostr-protocol.js';
@@ -11,7 +12,8 @@ export function securityHeaders(pathname, carriers = [], relays = []) {
       "style-src 'self' 'unsafe-inline'", "img-src 'self' data: blob:",
       "font-src 'self'", "media-src 'self'", "manifest-src 'self'", "worker-src 'self' blob:",
       "connect-src 'self'" + (connectedLab ? ' https://test.rpc.fastnear.com' : '') +
-        (pathname === '/markets.html' ? ' https://api.hyperliquid.xyz' : '') +
+        (['/money.html','/wallet-lab.html'].includes(pathname) ? ' https://1click.chaindefuser.com https://free.rpc.fastnear.com' : '') +
+        (['/markets.html','/account.html'].includes(pathname) ? ' '+HYPERLIQUID.api : '') +
         (['/chat.html','/money.html'].includes(pathname) && carriers.length ? ' '+carriers.join(' ') : '') +
         (['/chat.html','/money.html'].includes(pathname) && relays.length ? ' '+relays.join(' ') : ''),
       "frame-src 'none'", "frame-ancestors 'none'", "object-src 'none'",

@@ -3,10 +3,10 @@ import {CANDLE_INTERVALS,checkedBookLevels,checkedCandleValues} from './market-t
 const check=value=>{if(!value)throw Error('Invalid Hyperliquid feed');};
 
 export function checkedHyperliquidEvent(value,expected,{now=Date.now()}={}){
-  const request=hyperliquidRequest(expected),coin=request.marketId.split(':').slice(2).join(':'),duration=CANDLE_INTERVALS[request.interval];
+  const request=hyperliquidRequest(expected),coin=request.marketId.split(':').slice(3).join(':'),duration=CANDLE_INTERVALS[request.interval];
   const candle=(c,earliest)=>{
     check(c?.coin===coin&&c.interval===request.interval&&Number.isSafeInteger(c.time)&&c.time%duration===0&&c.time>=earliest&&c.time<=now+5000);
-    return {coin,interval:request.interval,time:c.time,...checkedCandleValues(c,{allowZero:request.marketId.startsWith('hypercore:outcome:')})};
+    return {coin,interval:request.interval,time:c.time,...checkedCandleValues(c,{allowZero:request.marketId.startsWith('hypercore:testnet:outcome:')})};
   };
   const bookTime=t=>{check(Number.isSafeInteger(t)&&t>=now-30000&&t<=now+5000);return t;};
   if(value?.kind==='snapshot'){

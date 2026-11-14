@@ -24,7 +24,7 @@ export function createMeteorWallet(host = window) {
       revision++; transport.cancel();
       host.localStorage.removeItem(ACCOUNT_KEY);
     },
-    signAndSendTransaction(transaction) {
+    signAndSendTransaction(transaction, { beforeSign } = {}) {
       // Copy before asynchronous preparation; the review cannot change in flight.
       const tx = structuredClone(transaction), call = tx.actions?.[0];
       if (tx.network !== 'testnet' || !account(tx.signerId) || !account(tx.receiverId) ||
@@ -46,6 +46,9 @@ export function createMeteorWallet(host = window) {
         const placeholder = KeyPair.fromRandom('ed25519').getPublicKey(), p = call.params;
         const encoded = encodeTransaction(createTransaction(tx.signerId, placeholder, tx.receiverId, 0n,
           [actions.functionCall(p.methodName, p.args, BigInt(p.gas), BigInt(p.deposit))], hash));
+        await beforeSign?.();
+        signal.throwIfAborted();
+        if (tx.signerId !== host.localStorage.getItem(ACCOUNT_KEY)) throw new Error('The selected wallet changed. Review the return again.');
         return { transactions: host.btoa(String.fromCharCode(...encoded)) };
       });
     },

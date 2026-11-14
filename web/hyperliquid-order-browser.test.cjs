@@ -15,7 +15,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
       }};window.changeFixtureAccount=()=>events.get('accountsChanged')?.(['0x'+'22'.repeat(20)]);window.ethereum=window.fixtureProvider;
     },{address:signer.address.toLowerCase()});
     await page.route('**/api/markets/**',async route=>{if(route.request().url().includes('hyperliquid/catalog'))return route.fulfill({json:catalog});return route.fulfill({status:503,json:{error:'Fixture data unavailable'}});});
-    await page.route('https://api.hyperliquid.xyz/**',async route=>{
+    await page.route('https://api.hyperliquid-testnet.xyz/**',async route=>{
       const body=route.request().postDataJSON();let value;
       if(route.request().url().endsWith('/exchange')){
         submitted.push(body);
@@ -43,13 +43,13 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     await page.route('**/api/markets/indices',route=>route.fulfill({json:{}}));
     await page.goto(base+'/markets.html?view=spot');
     // The catalogue endpoint is same-origin; match its actual route without network access.
-    if(!await page.locator('.hyper-action').count())await page.evaluate(value=>{localStorage.setItem('lenz-hyperliquid-catalog-v1',JSON.stringify(value));},catalog).then(()=>page.reload());
+    if(!await page.locator('.hyper-action').count())await page.evaluate(value=>{localStorage.setItem('lenz-hyperliquid-testnet-catalog-v2',JSON.stringify(value));},catalog).then(()=>page.reload());
     await page.locator('.hyper-workspace:visible [data-market-id="spot:107"]').click();
     await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();
     await page.getByText(/Available 1000 USDC/).waitFor();assert.equal(submitted.length,0);checks.push('Market selection survives wallet connection; connecting never signs or submits');
     assert(await page.locator('#hyper-order-review').isDisabled());await page.locator('#hyper-order-privacy').selectOption('public');
     await page.locator('#hyper-order-size').fill('1');await page.locator('#hyper-order-price').fill('20');
-    await account('balances');await page.getByText('Funding details',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.getByText('Funding details',{exact:true}).click();await trade();assert.equal(await page.locator('#hyper-order-size').inputValue(),'1');assert.equal(signatures,0);checks.push('Markets, Trade and Account preserve draft identity and refresh balances without signing');await page.locator('[data-category="all"]').click();await page.locator('[data-category="spot"]').click();await page.getByText(/Available 1000 USDC/).waitFor();
+    await account('balances');await page.locator('.hyper-workspace:visible').getByText('Test funds',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.locator('.hyper-workspace:visible').getByText('Test funds',{exact:true}).click();await trade();assert.equal(await page.locator('#hyper-order-size').inputValue(),'1');assert.equal(signatures,0);checks.push('Markets, Trade and Account preserve draft identity and refresh balances without signing');await page.locator('[data-category="all"]').click();await page.locator('[data-category="spot"]').click();await page.getByText(/Available 1000 USDC/).waitFor();
     assert.equal(await page.locator('#hyper-order-size').inputValue(),'1');assert.equal(await page.locator('#hyper-order-price').inputValue(),'20');assert.equal(await page.locator('#hyper-order-privacy').inputValue(),'public');checks.push('Category navigation preserves the exact market draft and privacy choice');
     await page.locator('#hyper-order-review').click();
     await page.getByRole('button',{name:'Back',exact:true}).click();assert.equal(signatures,0);checks.push('Review and back preserve the chosen market and terms without signing');
@@ -62,7 +62,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     await page.reload();await trade();await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();await account();await page.locator('.hyper-saved-order').getByText('Cancelled',{exact:true}).waitFor();checks.push('Encrypted activity survives reload and reconnect');
     const recovery=await page.evaluate(async()=>{
       const {resolveOrderMarket,prepareOrder}=await import('/hyperliquid-order.js'),{reserveOrderAttempt,readHyperOrders,recordOrderState,updateHyperOrders}=await import('/hyperliquid-order-store.js'),{refreshTradingOrder}=await import('/hyperliquid-execution.js');
-      const account=(await readHyperOrders())[0].review.account,market=resolveOrderMarket({id:'spot:107',kind:'spot',coin:'@107',quote:{index:0,symbol:'USDC'}},{spot:{tokens:[{index:0,name:'USDC',szDecimals:8},{index:150,name:'HYPE',szDecimals:2}],universe:[{index:107,name:'@107',tokens:[150,0]}]},perps:{}});
+      const account=(await readHyperOrders())[0].review.account,market=resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'spot:107',kind:'spot',coin:'@107',quote:{index:0,symbol:'USDC'}},{spot:{tokens:[{index:0,name:'USDC',szDecimals:8},{index:150,name:'HYPE',szDecimals:2}],universe:[{index:107,name:'@107',tokens:[150,0]}]},perps:{}});
       const funds={mode:'disabled',fee:'0.0007',spot:[{token:0,total:'1000',hold:'0'}]};
       const review=prepareOrder(market,account,{side:'buy',size:'1',price:'20',reduceOnly:false},funds);
       const attempt=await reserveOrderAttempt(review);
@@ -73,7 +73,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
     await trade();await page.locator('#hyper-order-privacy').selectOption('public');await page.locator('#hyper-order-size').fill('1');await page.locator('#hyper-order-price').fill('20');
     signMode='late';await page.locator('#hyper-order-review').click();await page.getByRole('button',{name:'Confirm order in wallet',exact:true}).click();await page.waitForFunction(()=>window.fixtureSigning===true);await page.evaluate(()=>window.changeFixtureAccount());await page.waitForTimeout(400);assert.equal(submitted.length,2);checks.push('Account changes during approval invalidate the signature before exchange dispatch');
     await page.getByRole('button',{name:'Connect wallet',exact:true}).click();await page.getByRole('button',{name:'Browser wallet',exact:true}).click();await page.getByText(/Available 1000 USDC/).waitFor();
-    accountMode='portfolioMargin';await page.getByText('Funding details',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.getByText('Trading for this account mode is not connected in Lenz yet.',{exact:true}).waitFor();assert(await page.locator('#hyper-order-review').isDisabled());checks.push('Unsupported account modes fail closed without showing guessed spendable funds');
+    accountMode='portfolioMargin';await page.locator('.hyper-workspace:visible').getByText('Test funds',{exact:true}).click();await page.getByRole('button',{name:'Refresh funds',exact:true}).click();await page.getByText('Trading for this account mode is not connected in Lenz yet.',{exact:true}).waitFor();assert(await page.locator('#hyper-order-review').isDisabled());checks.push('Unsupported account modes fail closed without showing guessed spendable funds');
     accountMode='disabled';signMode='normal';
     positions=[{position:{coin:'BTC',szi:'0.25',entryPx:'90',unrealizedPnl:'2.5',liquidationPx:'55',marginUsed:'12.5'}}];
     await page.locator('[data-category="perpetuals"]').click();
@@ -134,12 +134,12 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
         const funds={mode:'disabled',fee:'0.0007',spot:[{token:0,total:'1000',hold:'0'}]},review=prepareOrder(market,account,{side:'buy',size:'1',price:'20',reduceOnly:false},funds);
         const row=await reserveOrderAttempt(review);await recordOrderState(row.id,'open',{state:'open',remaining:'1',filled:'0',oid:123,statusTime:50});await recordOrderState(row.id,'unknown');if((await readHyperOrders()).find(o=>o.id===row.id).state!=='open')throw Error('Local status replaced exchange observation');results.push('A delayed local submission response cannot replace an observed open order');
         const actualFetch=window.fetch;let count=0;
-        window.fetch=async(url,options)=>{if(String(url).endsWith('/info')&&JSON.parse(options.body).type==='orderStatus'){
+        window.fetch=async(url,options)=>{if(String(url).endsWith('/info')&&JSON.parse(options.body).type==='userFillsByTime')return new Response(JSON.stringify([{coin:'@107',side:'B',px:'20',sz:'1',oid:123,tid:123,hash:'0x'+'ab'.repeat(32),time:Date.now(),fee:'0.001',feeToken:'HYPE'}]));if(String(url).endsWith('/info')&&JSON.parse(options.body).type==='orderStatus'){
           const old=count++===0;await new Promise(r=>setTimeout(r,old?80:5));return new Response(JSON.stringify({status:'order',order:{order:{coin:'@107',side:'B',limitPx:'20',sz:old?'1':'0',origSz:'1',oid:123,timestamp:1,cloid:row.id},status:old?'open':'filled',statusTimestamp:old?100:200}}));
         }return actualFetch(url,options);};
         try{await Promise.all([refreshTradingOrder(row),refreshTradingOrder(row)]);}finally{window.fetch=actualFetch;}
         const after=(await readHyperOrders()).find(o=>o.id===row.id);if(after.state!=='filled'||after.observation.filled!=='1')throw Error('Status regressed');results.push('Older status responses cannot reverse fills or completed orders');
-        const perp=resolveOrderMarket({id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{perps:{collateralToken:0,universe:[{name:'BTC',szDecimals:5,maxLeverage:20}]}}),perpFunds={mode:'disabled',fee:'0.00045',spot:[],perp:{withdrawable:'1000',assetPositions:[]},leverage:{type:'isolated',value:2},markPrice:'100'};
+        const perp=resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{perps:{collateralToken:0,universe:[{name:'BTC',szDecimals:5,maxLeverage:20}]}}),perpFunds={mode:'disabled',fee:'0.00045',spot:[],perp:{withdrawable:'1000',assetPositions:[]},leverage:{type:'isolated',value:2},markPrice:'100'};
         const p=prepareOrder(perp,account,{side:'buy',size:'1',price:'100',reduceOnly:false},perpFunds);let signs=0,dispatches=0;
         try{await executeTradingOrder(p,{identity:{address:account},assertCurrent(){},async signHyperliquid(){signs++;}},{read:async()=>({market:perp,funds:{...perpFunds,leverage:{type:'cross',value:2}}}),submit:async()=>{dispatches++;}});throw Error('Mode switch was accepted');}catch(e){if(!e.message.includes('changed'))throw e;}
         if(signs||dispatches)throw Error('Unreviewed margin mode reached signer');results.push('A margin-mode change requires renewed review before signing');

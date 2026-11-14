@@ -1,10 +1,10 @@
 {
-  "browser": "156.0.4314.58",
+  "browser": "157.0.4341.42",
   "passed": 5,
   "failed": 0,
   "checks": [
     "restored homepage and real interface previews fit desktop and narrow layouts",
-    "feature panels support keyboard navigation; theme and reduced-motion controls work",
+    "feature panels support keyboard navigation; click-cycle theme and device reduced-motion preference work; Open wallet is at the right",
     "sections respond to interaction throughout the page",
     "homepage links to wallet and original proof experiment",
     "complete homepage opens from cache while an uncached request fails"

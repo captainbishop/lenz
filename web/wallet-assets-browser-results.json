@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-11-05T12:19:16.919Z",
+  "checks": [
+    "native assets have logos and unread amounts; Activity is secondary; hide-zero retains unread balances",
+    "assets fit phone, landscape and desktop in both themes"
+  ],
+  "scope": "Disposable profile; no external wallet or user data."
+}

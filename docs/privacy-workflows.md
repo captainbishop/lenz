@@ -1,5 +1,11 @@
 # Privacy across Lenz workflows
 
+The current mounted testnet paths and observer boundaries are documented in
+[testnet integrations](testnet-integrations.md). Native Zcash now reuses Wallet
+Send and Activity; the original Tornado browser prover underpins fixed pool
+membership proofs for Aurora Swap/private Supply. Final ordinary-wallet
+execution and recovery acceptance remain separate from component tests.
+
 Privacy requirements apply through quote, approval, handoff, execution and
 recovery. A private request must stop when a required leg is public or unknown.
 An encrypted request does not change the visibility of its eventual transaction.
@@ -14,8 +20,8 @@ the operation. Complete carrier execution and verified return remain open.
 | Offline tUSD | Encrypted wallet/outbox; signed onward transfer; atomic reservations and duplicate/conflict checks | Public NEAR testnet settlement exposes amounts/accounts. Shielded settlement, restoration and device migration remain open. |
 | Public DeFi | Separate consent for public estimates; private objectives cannot bind to them; executor disclosure is signed | Encrypted delivery is not private execution. Full action-specific effects, fees, connected execution and recovery are incomplete. |
 | Token watchlist | Explicit address-sharing consent; encrypted saved account/balance snapshots | Queries expose the requested contract/account to the network provider. Watching grants no ownership or signing authority. |
-| Zcash | Native testnet transfer evidence and bounded unsigned transaction review | Product signer approval, complete input/witness and note-encryption validation, recovery/rescan and shielded value routes remain open. |
-| Tornado Classic | Local comparison of native-asset withdrawal calldata, approved terms and supplied pool observations | No deployed pool registry, verified proof, prover, note vault, relayer, submission or recovery connection. |
+| Zcash | Native testnet evidence, actual output/change/expiry review and mounted Wallet Send/Activity with configured local custody | Final original-request execution/recovery acceptance; browser archives do not restore native keys; broader shielded value routes remain open. |
+| Tornado Classic | Original v2.1 browser prover, hash-pinned artifacts and fixed testnet pool/route verification for Aurora Swap and private Supply | Small-pool anonymity, final ordinary-wallet acceptance and broader supported routes; recipient, amounts and subsequent DeFi activity remain public. |
 
 ## Zcash and social payments
 
@@ -65,7 +71,8 @@ reserved funds. Reconcile ambiguous submission before retrying; never replace a
 private path with a public one to clear a queue. Social identities must not be
 inserted into public memos or transaction metadata.
 
-The next integration steps are a reviewed pool/prover registry and encrypted note
-storage for Tornado, bounded native approval for Zcash, then recipient-specific
-encrypted handoff with durable submission/recovery evidence. These are current
-integration requirements, not completed product capabilities.
+The original local comparison adapter remains a narrower boundary than the
+mounted testnet routes. Their current pool/prover pins, encrypted note storage,
+native approval and original-request journals are described in
+[testnet integrations](testnet-integrations.md). Final canonical outcomes,
+physical-device transport and production recovery require separate evidence.

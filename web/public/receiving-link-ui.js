@@ -3,6 +3,9 @@ import {isRecoveredChat} from './chat-access.js';
 import {receivingTerms,signReceivingInstruction,receivingLink} from './receiving-instructions.js';
 import {transferAssets} from './evm-transfer.js';
 import {WALLET_NETWORKS} from './evm-networks.js';
+import {assetLabel} from './asset-icon.js';
+import {setChoiceRenderer} from './form-controls.js';
+import {iconButton} from './wallet-actions.js';
 
 export function mountReceivingLinks(session){
  const $=id=>document.getElementById(id),dialog=$('evm-receive-dialog');
@@ -11,12 +14,15 @@ export function mountReceivingLinks(session){
  const summary=document.createElement('summary');summary.textContent='Wallet payment link';panel.prepend(summary);
  const choice=document.createElement('div');choice.id='evm-receiving-asset-field';choice.innerHTML='<label for="evm-receiving-asset">Asset</label><select id="evm-receiving-asset"></select>';$('evm-receive-network').after(choice);
  dialog.append(panel);let generation=0,busy=false,timer=null;
+ iconButton($('evm-copy-link'),'Copy receiving link','M8 8h12v13H8zM16 8V3H3v13h5');$('evm-copy-link').classList.add('wallet-copy');
+ setChoiceRenderer($('evm-receiving-asset'),option=>assetLabel(option.label,{contract:option.value==='native'?null:option.value,network:session.snapshot?.network.key,trusted:option.value==='native'}));
  function clear(){generation++;clearTimeout(timer);$('evm-link-result').hidden=true;$('evm-create-link').hidden=false;$('evm-receiving-link-text').value='';$('evm-link-status').textContent='';}
  async function refresh(){
   clear();panel.open=false;const ticket=generation,snapshot=session.snapshot;panel.hidden=choice.hidden=true;
   if(!dialog.open||!snapshot||!Object.hasOwn(WALLET_NETWORKS,snapshot.chainId))return;
   choice.hidden=false;$('evm-receiving-asset').replaceChildren();
   for(const asset of transferAssets(snapshot.chainId)){const option=document.createElement('option');option.value=asset.id;option.textContent=asset.symbol;$('evm-receiving-asset').append(option);}
+  $('evm-receiving-asset').value=dialog.dataset.asset||'native';
   const state=await readState();if(ticket!==generation||session.snapshot!==snapshot||!dialog.open)return;
   panel.hidden=!state.identity||isRecoveredChat(state.identity);
   $('evm-create-link').disabled=busy;

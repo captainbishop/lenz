@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-04T14:27:44.656Z",
-  "browser": "156.0.4314.58",
+  "checkedAt": "2026-11-08T11:03:44.616Z",
+  "browser": "157.0.4341.42",
   "passed": 7,
   "failed": 0,
   "checks": [
@@ -8,7 +8,7 @@
     "changed inputs clear results, late responses stay discarded and excessive USDC precision fails before any request",
     "changed quote terms are rejected and expired results disappear",
     "offline state and revoked public consent clear the estimate",
-    "Hyperliquid sell estimate uses the chosen instrument and retains fee/margin limits",
+    "leaving Liquidity disposes its quote; returning starts with fresh consent and can quote again",
     "both quote themes fit phone, landscape, tablet and desktop",
     "failed requests and offline reload retain no quote or wallet state; unrelated storage is preserved"
   ],

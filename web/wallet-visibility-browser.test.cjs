@@ -1,3 +1,4 @@
+const {walletClick}=require('./wallet-test-ui.cjs');
 const {openWalletSection}=require('./wallet-test-ui.cjs');
 const {selectRecipient,openIncoming}=require('./wallet-test-ui.cjs');
 async function walletSettings(p){if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();}
@@ -5,6 +6,7 @@ async function walletSettings(p){if(await p.locator('.wallet-settings').count()&
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
  const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[],base='http://127.0.0.1:4173';
+ const screenshots=process.env.LENZ_WALLET_EVIDENCE_DIR||path.join(__dirname,'evidence');await fs.mkdir(screenshots,{recursive:true});
  try{
   const context=await browser.newContext({permissions:['clipboard-read','clipboard-write'],viewport:{width:1280,height:900}}),page=await context.newPage();
   page.on('pageerror',e=>errors.push(e.message));await context.route('**/api/**',r=>r.abort());
@@ -36,9 +38,9 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await other.locator('#toggle-balances').click();await page.waitForFunction(()=>document.querySelector('#near-total').textContent==='10.345');
   await other.locator('#toggle-balances').click();await page.waitForFunction(()=>document.querySelector('#near-total').textContent==='••••');await other.close();
   await page.evaluate(()=>{const c=new BroadcastChannel('proof-u-chat-refresh');c.postMessage('changed');c.close();});
-  await page.waitForTimeout(200);assert.equal(await page.locator('#near-total').innerText(),'••••');assert.equal(await snapshot(),before);
+  await page.waitForTimeout(200);assert.equal(await page.locator('#near-total').textContent(),'••••');assert.equal(await snapshot(),before);
   checks.push('keyboard toggle masks available, payment and saved-swap amounts; tabs and rerenders preserve the preference and vault');
-  await openWalletSection(page,'people');await page.locator('#show-card').click();const id=await page.locator('#my-lenz-id').inputValue();
+  await openWalletSection(page,'people');await walletClick(page,'show-card');const id=await page.locator('#my-lenz-id').inputValue();
   await page.locator('#copy-lenz-id').click();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),id);
   await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async data=>{window.sharedId=data;}}));await page.locator('#share-card').click();
   assert.deepEqual(await page.evaluate(()=>window.sharedId),{title:'My Lenz ID',text:id});
@@ -47,25 +49,25 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   for(const theme of ['light','dark'])for(const width of [320,375,1280]){
    await page.setViewportSize({width,height:900});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);
    for(const button of ['share-card','copy-lenz-id','save-qr']){
-    const node=page.locator('#'+button);assert(await node.getAttribute('aria-label'));assert.equal(await node.innerText(),'');const box=await node.boundingBox();assert(box.width>=48&&box.height>=48);
+    const node=page.locator('#'+button);assert(await node.getAttribute('aria-label'));assert.match(await node.innerText(),/^(Share|Copy ID|Save QR)$/);const box=await node.boundingBox();assert(box.width>=48&&box.height>=48);
    }
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   }
   await page.locator('[data-close=share-contact]').click();
-  checks.push('share/copy/download icons retain accessible names, 48px targets, clipboard text and PNG output in both themes at 320/375/1280px');
-  await ready(page);await page.locator('#near-send').click();await selectRecipient(page,{label:'Bola'});await page.locator('#near-send-amount').fill('999');
+  checks.push('share/copy/download controls retain accessible names, 48px targets, clipboard text and PNG output in both themes at 320/375/1280px');
+  await ready(page);await walletClick(page,'near-send');await selectRecipient(page,{label:'Bola'});await page.locator('#near-send-amount').fill('999');
   assert.equal(await page.locator('#near-send-amount').inputValue(),'999');await page.locator('#near-send-form button[type=submit]').click();
   await page.waitForFunction(()=>document.querySelector('#status').classList.contains('error'));const error=await page.locator('#status').innerText();assert(error);
   await page.waitForTimeout(4000);assert.equal(await page.locator('#status').innerText(),error);assert.equal(await snapshot(),before);await page.locator('[data-close=near-send-dialog]').click();
   checks.push('a later payment error survives the readiness timer; entered transaction amounts stay visible and failed sends preserve the vault');
   await walletSettings(page);await page.locator('#prepare-money-offline').click();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('files saved'));
   await context.setOffline(true);await page.reload();await page.waitForFunction(()=>document.querySelector('#status').textContent==='Your wallet is ready.');
-  assert.equal(await page.locator('#near-total').innerText(),'••••');assert.equal(await snapshot(),before);
+  assert.equal(await page.locator('#near-total').textContent(),'••••');assert.equal(await snapshot(),before);
   for(const theme of ['light','dark']){
    await page.setViewportSize({width:375,height:812});await page.evaluate(t=>document.documentElement.dataset.theme=t,theme);await page.waitForFunction(()=>document.querySelector('#status').textContent==='');
-   await page.screenshot({path:path.join(__dirname,'evidence/wallet-hidden-'+theme+'.png'),fullPage:true});
+   await page.screenshot({path:path.join(screenshots,'wallet-hidden-'+theme+'.png'),fullPage:true});
   }
-  await page.locator('#toggle-balances').click();assert.equal(await page.locator('#near-total').innerText(),'10.345');assert.equal(await snapshot(),before);
+  await page.locator('#toggle-balances').click();assert.equal(await page.locator('#near-total').textContent(),'10.345');assert.equal(await snapshot(),before);
   checks.push('offline reload retains masking and exactly restores shown amounts without changing keys, history or reserved money');
   assert.deepEqual(errors,[]);checks.forEach(c=>console.log('PASS '+c));
   await fs.writeFile(path.join(__dirname,'wallet-visibility-browser-results.json'),JSON.stringify({checkedAt:new Date().toISOString(),browser:browser.version(),passed:checks.length,failed:0,checks,errors,scope:'Disposable Windows Edge profiles, local fixture root and saved-swap reservation; API requests blocked. UI masking only, no funding, chain privacy, device recovery or iPhone evidence.'},null,2)+'\n');

@@ -1,30 +1,53 @@
 {
-  "checkedAt": "2026-11-05T03:27:06.881Z",
+  "checkedAt": "2026-11-05T14:33:30.096Z",
   "sources": {
-    "web/public/degen-ui.js": "6efd4e3cebedb85ecbe3785f654892361eb834576490f86b444d52296c54c7b8",
-    "web/public/degen-trades.js": "1e5a9f4bdb76827d0d7e923f51e6a709a6a070542ff7eff451179b49048f96e3",
-    "web/public/degen-http.js": "87a4abc281f8f28016628cff350554a06431952e433c94f182ad32188abe670c",
-    "web/public/degen-model.js": "45b50b6bfab6014b0b21344a57fffc635faaadd5dc85ae29db37a7c093842c63",
+    "web/public/degen-ui.js": "64271316004098504dd95e8e3a2518ae0faaa26bc9587837db6dc42a5a3f5415",
+    "web/public/degen-trades.js": "de5354b7efc1dd11244c6b51199c7914d38879042fddaeb5c1fb9b3005e83b9b",
+    "web/public/degen-http.js": "dc12fa73b9fdee6593397fd9b02a50b73c9064e406eac494d37ee497bda52d73",
+    "web/public/degen-model.js": "5d5c1ed39812cf2a65ee816278d22d4e3f7bc0a2bd8e9cba570c9528c33a4a40",
     "web/public/degen-chart.js": "1f3d5949e759d3b0df905c0aea9e6fe1cbfcd83669ae9775e305a5917dcd5487",
     "web/public/chart-indicators.js": "6244792f589fcea3351932f2840223e6d1c23f199d18e727eae1f0dd334f755b",
     "web/public/chart-vendor/lightweight-charts.js": "1bb1ee79f9d4dd17261b53d930f7a8995748276f80e7ba0e24412b5068062f5f",
-    "web/public/degen.css": "8a3f001ebf79d779b83d047dbb6bead787a85ddfd03460b4771d5774c126f436",
-    "web/public/markets.js": "120ceea77e1a9f38cb4ec92b12f6ae268bd71f04cbaf6e85b2dd3891b36dd3a2",
-    "web/public/markets.html": "44695a278a3c954f63a60bfb4d4d224b1854415a9b1e0d71dc05b4e6f1480ef3",
-    "web/public/sw.js": "2bcc396a60f022983df57a28a3989d900d4800ab79b919c4b963e670606d23b7",
-    "web/degen-relay.mjs": "f278dfe37fce61a49b671d900a64b13b9b7624134a4e58420b29100494802652",
+    "web/public/degen.css": "31e750a219f7818eeba837f0edad56f5f96c39fdf0931141197a0fa8ee3273dd",
+    "web/public/markets.js": "2563b3a072215d97d866c610de12e6697aee06d32d1465fb12aaed8e3cfe326d",
+    "web/public/markets.html": "cbccc40c09e3f5a026915c62a76f93b43231a578e0e561d8678b5a8f494894bc",
+    "web/public/sw.js": "901196e0553dbf4458f8340ac6f9a4413d38f984c83b0656a11eac991b50e897",
+    "web/degen-relay.mjs": "2837aac62b30ae17c224699db5c5b6445d333b6d13e691190cc8e42f401d34db",
     "web/degen-history.mjs": "d08d4fcbe44e0449d2c275b0aaad00313d1ca0659eeb290da293ed06b1e67ac7",
-    "integrations/degen-discovery.mjs": "3918600194b7ea0b57728df729aaad813ed70ba530f24893168f995c965d9c1f",
-    "web/degen-live.test.cjs": "5ff1e06927fa79cc34ff0e79fae2449854fcf765fbb16f7b7b2b5f05dc480b7b"
+    "integrations/degen-discovery.mjs": "370bd9e0b7d062806f0ad30f686b5f5a7a35702e6b194b610f5676b06df04f57",
+    "web/degen-live.test.cjs": "078804016056785f159cf89f4d4ad645bc17787c7c0108abab1ded8da97be795"
   },
   "live": {
     "tokens": 20,
     "candles": 300,
-    "state": "20 tokens · 261s ago · Saved",
-    "token": "AMD",
-    "chartState": "Saved 11/5/2026, 4:23:38 AM · Retrying in 7s",
+    "state": "20 tokens · 0s ago",
+    "token": "SISI276",
+    "chartState": "3:32:21 PM · Last candle 11/5/2026, 3:30:00 PM",
+    "pairs": [
+      {
+        "token": "SISI276",
+        "candles": 300,
+        "trades": 60,
+        "chartState": "3:32:21 PM · Last candle 11/5/2026, 3:30:00 PM",
+        "tradeState": "Updated 3:32:21 PM"
+      },
+      {
+        "token": "HIHIGH",
+        "candles": 300,
+        "trades": 60,
+        "chartState": "Saved candles · 3:32:23 PM",
+        "tradeState": "Updated 3:33:25 PM"
+      },
+      {
+        "token": "JEANPHIL",
+        "candles": 300,
+        "trades": 60,
+        "chartState": "3:33:26 PM · Last candle 11/5/2026, 3:30:00 PM",
+        "tradeState": "Updated 3:33:28 PM"
+      }
+    ],
     "trades": 60,
-    "tradeState": "Updated 4:27:06 AM"
+    "tradeState": "Updated 3:32:21 PM"
   },
   "offlineReload": true,
   "scope": "Disposable Edge with public provider data and actual root service-worker offline reload; no user account or financial requests."

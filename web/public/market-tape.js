@@ -1,3 +1,4 @@
+import {HYPERLIQUID} from './hyperliquid-environment.js';
 import {immutable} from './defi-catalog.js';
 import {canonicalAmount,requireQuote as check} from './market-quote.js';
 export const CANDLE_INTERVALS=immutable({'1m':60000,'5m':300000,'15m':900000,'30m':1800000,'1h':3600000,'4h':14400000,'1d':86400000,'1w':604800000});
@@ -24,7 +25,7 @@ export function checkedCandleValues(c,{allowZero=false}={}){
 export function checkedTape(value,expected,{now=Date.now()}={}){
   const request=tapeRequest(expected),coin=request.marketId.split(':').slice(2).join(':'),duration=CANDLE_INTERVALS[request.interval];
   check(value?.version===1&&value.kind==='market-tape'&&value.executable===false&&JSON.stringify(tapeRequest(value.request))===JSON.stringify(request),'Market data changed.');
-  check(value.source==='https://api.hyperliquid.xyz/info'&&Number.isSafeInteger(value.observedAt)&&value.observedAt<=now+5000&&value.observedAt>=now-30000,'Market data expired.');
+  check(value.source===HYPERLIQUID.info&&Number.isSafeInteger(value.observedAt)&&value.observedAt<=now+5000&&value.observedAt>=now-30000,'Market data expired.');
   check(Number.isSafeInteger(value.bookTime)&&value.bookTime>=now-30000&&value.bookTime<=now+5000,'Order book expired.');
   check(value.expiresAt===Math.min(value.observedAt+30000,value.bookTime+30000)&&value.expiresAt>now,'Order book expired.');
   const levels=checkedBookLevels(value.levels);

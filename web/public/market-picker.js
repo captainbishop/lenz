@@ -1,4 +1,5 @@
-import {marketLogo} from './market-logo.js';
+import {assetPriceCard} from './asset-price-card.js';
+import {assetIcon} from './asset-icon.js';
 const el=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
 export function mountMarketPicker(button,onSelect){
   button.type='button';button.setAttribute('aria-label','Select market');button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls','market-picker');
@@ -22,7 +23,7 @@ export function mountMarketPicker(button,onSelect){
     const query=search.value.trim().toLowerCase();visible=items.filter(item=>(item.label+' '+item.detail).toLowerCase().includes(query));
     list.replaceChildren(...visible.map((item,index)=>{
       const option=el('button',undefined,'picker-option');option.type='button';option.tabIndex=-1;option.id='market-picker-option-'+index;option.dataset.id=item.id;option.setAttribute('role','option');option.setAttribute('aria-selected',String(item.id===selected));
-      const text=el('span');text.append(el('strong',item.label),el('small',item.detail));text.querySelector('strong').prepend(marketLogo({kind:'spot',name:item.label.split(/[ /]/)[0],coin:item.label}));const marker=el('span',undefined,'picker-selected');marker.setAttribute('aria-hidden','true');option.append(text,marker);option.onclick=()=>choose(item.id);return option;
+      const text=el('span');text.append(el('strong',item.label),el('small',item.detail));text.querySelector('strong').prepend(assetIcon({symbol:item.symbol??item.label.split(/[ /]/)[0],trusted:true,venue:item.venue}));const marker=el('span',undefined,'picker-selected');marker.setAttribute('aria-hidden','true');option.append(assetPriceCard({name:item.label,symbol:item.asset?.symbol??item.symbol,contract:item.asset?.id,network:item.network??item.asset?.chainId,subtitle:item.detail,referencePrice:true,quote:'USD'}).element,marker);option.onclick=()=>choose(item.id);return option;
     }));
     empty.hidden=visible.length>0;active(visible.some(item=>item.id===activeId)?activeId:visible.find(item=>item.id===selected)?.id??visible[0]?.id??null,false);
   }
@@ -41,7 +42,7 @@ export function mountMarketPicker(button,onSelect){
   const desktop=matchMedia('(min-width:761px)');desktop.addEventListener('change',()=>{if(desktop.matches&&dialog.open){dismiss(false);document.querySelector('#market-rows [aria-pressed="true"]')?.focus({preventScroll:true});}});
   return {
     update(next,current){
-      items=next;selected=current;label.textContent=items.find(item=>item.id===selected)?.label??'Select market';button.disabled=!items.length;
+      items=next;selected=current;const item=items.find(item=>item.id===selected);label.className='asset-label';label.replaceChildren(...(item?[assetIcon({symbol:item.symbol??item.label.split(/[ /]/)[0],trusted:true,venue:item.venue}),document.createTextNode(item.label)]:[document.createTextNode('Select market')]));button.disabled=!items.length;
       const key=JSON.stringify([items,selected]);if(key!==lastKey&&dialog.open)paint();lastKey=key;
     },
     close(){if(dialog.open)dismiss(false);},

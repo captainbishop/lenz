@@ -128,3 +128,82 @@ index 49c13f9..b78dfc5 100644
                      KeyRef::Orchard { index } => {
                          signer
                              .sign_orchard(
+diff --git a/src/commands/pczt/create.rs b/src/commands/pczt/create.rs
+index 2679a32..53b3490 100644
+--- a/src/commands/pczt/create.rs
++++ b/src/commands/pczt/create.rs
+@@ -25,6 +25,7 @@ use zcash_client_backend::{
+ };
+ use zcash_client_sqlite::{WalletDb, util::SystemClock};
+ use zcash_protocol::{
++    consensus::BlockHeight,
+     ShieldedPool,
+     memo::{Memo, MemoBytes},
+     value::Zatoshis,
+@@ -33,6 +34,16 @@ use zip321::{Payment, TransactionRequest};
+ 
+ use crate::{commands::select_account, config::WalletConfig, data::get_db_paths, error};
+ 
++fn bounded_expiry(target: u32, blocks: Option<u32>) -> Result<Option<BlockHeight>, anyhow::Error> {
++    let Some(blocks) = blocks else { return Ok(None); };
++    if !(40..=120).contains(&blocks) || target==0 || target>=500_000_000 {
++        return Err(anyhow!("Expiry must be between 40 and 120 blocks from a valid proposal target"));
++    }
++    let height = target.checked_add(blocks).filter(|height|*height<500_000_000)
++        .ok_or_else(||anyhow!("The requested transaction expiry exceeds the supported block-height range"))?;
++    Ok(Some(BlockHeight::from_u32(height)))
++}
++
+ // Options accepted for the `pczt create` command
+ #[derive(Debug, Args)]
+ pub(crate) struct Command {
+@@ -61,11 +72,31 @@ pub(crate) struct Command {
+     #[arg(default_value_t = 10000000)]
+     min_split_output_value: u64,
+ 
++    /// Set expiry 40 through 120 blocks after the proposal target height.
++    #[arg(long, value_parser=clap::value_parser!(u32).range(40..=120))]
++    expiry_blocks: Option<u32>,
++
+     /// Path to a file to which to write the PCZT. If not provided, writes to stdout.
+     #[arg(long)]
+     output: Option<PathBuf>,
+ }
+ 
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn explicit_expiry_preserves_the_bounded_window_before_pczt_finalization() {
++        assert_eq!(bounded_expiry(4_620_200,Some(120)).unwrap(),Some(BlockHeight::from_u32(4_620_320)));
++        assert_eq!(bounded_expiry(4_620_200,Some(40)).unwrap(),Some(BlockHeight::from_u32(4_620_240)));
++        assert_eq!(bounded_expiry(4_620_200,None).unwrap(),None);
++    }
++    #[test]
++    fn unsupported_expiry_windows_and_height_overflow_are_rejected() {
++        for blocks in [0,39,121,u32::MAX] { assert!(bounded_expiry(4_620_200,Some(blocks)).is_err()); }
++        for target in [0,499_999_900,500_000_000,u32::MAX] { assert!(bounded_expiry(target,Some(120)).is_err()); }
++    }
++}
++
+ impl Command {
+     pub(crate) async fn run(self, wallet_dir: Option<String>) -> Result<(), anyhow::Error> {
+         let config = WalletConfig::read(wallet_dir.as_ref())?;
+@@ -122,6 +153,7 @@ impl Command {
+         )
+         .map_err(error::Error::from)?;
+ 
++        let expiry = bounded_expiry(u32::from(proposal.min_target_height()),self.expiry_blocks)?;
+         let pczt = create_pczt_from_proposal(
+             &mut db_data,
+             &params,
+@@ -130,8 +162,7 @@ impl Command {
+             account.id(),
+             OvkPolicy::Sender,
+             &proposal,
+-            // Use the builder-derived expiry and a standard Orchard-pool bundle.
+-            None,
++            expiry,
+             zcash_primitives::transaction::builder::BundlePadding::DEFAULT,
+         )
+         .map_err(error::Error::from)?;

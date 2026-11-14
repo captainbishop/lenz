@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import {createDegenScheduler} from '../web/degen-scheduler.mjs';
-const {degenRequest,tokenLinkRequest,groupTokens,checkedMarket,checkedCandles,checkedTrades,checkedNetworks,chainReference}=await import(process.env.LENZ_DEGEN_MODEL_MODULE??'../web/public/degen-model.js');
+const {degenRequest,tokenLinkRequest,groupTokens,checkedMarket,checkedDiscovery,checkedCandles,checkedTrades,checkedNetworks,chainReference}=await import(process.env.LENZ_DEGEN_MODEL_MODULE??'../web/public/degen-model.js');
 const {normalizeDiscovery,normalizeTrades,discoveryURL,readDegen,readDegenCandles}=await import(process.env.LENZ_DEGEN_READER_MODULE??'./degen-discovery.mjs');
 const {createDegenRoute}=await import(process.env.LENZ_DEGEN_RELAY_MODULE??'../web/degen-relay.mjs');
 import {dexFixture,geckoFixture,candleFixture,networkFixture,tradeFixture,pool,token} from './degen-fixtures.mjs';
@@ -33,3 +33,20 @@ test('quote-token buy and sell amounts follow the selected token rather than the
 test('trade amounts and directions are bound to the selected token',async()=>{const result=await readDegen(tradeRequest,{fetchImpl:async(url,options)=>{assert.equal(new URL(url).pathname,`/api/v2/networks/base/pools/${pool}/trades`);assert.equal(options.redirect,'error');return Response.json(tradeFixture());}});assert.deepEqual(result.trades.map(t=>[t.side,t.amount,t.usd,t.price]),[['sell',125,2.5,.02],['buy',100,2,.02]]);assert.equal(result.executable,false);assert(!JSON.stringify(result).includes('from_token_address'));for(const field of ['from_token_address','kind']){const raw=tradeFixture();raw.data[0].attributes[field]='changed';assert.throws(()=>normalizeTrades(raw,tradeRequest));}});
 test('trade events reject substitution, conflicting duplicates, invalid amounts and future dates',()=>{const now=Date.now(),raw=tradeFixture(token,now),good=normalizeTrades(raw,tradeRequest,now);raw.data.push(structuredClone(raw.data[0]));assert.equal(normalizeTrades(raw,tradeRequest,now).trades.length,2);raw.data[2].attributes.volume_in_usd='999';assert.throws(()=>normalizeTrades(raw,tradeRequest,now),/Conflicting/);assert.throws(()=>checkedTrades({...good,request:{...tradeRequest,pool:'another'}},tradeRequest));assert.throws(()=>checkedTrades({...good,observedAt:now+120000},tradeRequest));for(const changes of [{amount:0},{price:-1},{usd:null},{address:'DifferentToken'},{time:now+120000}])assert.throws(()=>checkedTrades({...good,trades:[{...good.trades[0],...changes}]},tradeRequest));assert.throws(()=>checkedTrades({...good,trades:[good.trades[0],good.trades[0]]},tradeRequest));});
 test('provider throttle headers support seconds and dates without inventing a minute-long pause',async()=>{const r={provider:'geckoterminal',kind:'feed',feed:'trending'};for(const header of [null,'12',new Date(Date.now()+20000).toUTCString()]){await assert.rejects(readDegen(r,{fetchImpl:async()=>new Response('',{status:429,headers:header?{'Retry-After':header}:{}})}),error=>{assert.equal(error.providerRetryAfter,header!==null);assert(error.retryAfterMs>0&&error.retryAfterMs<=20000);if(!header)assert.equal(error.retryAfterMs,5000);if(header==='12')assert.equal(error.retryAfterMs,12000);return true;});}});
+
+test('feed pagination binds the selected page and rejects unbounded or cross-kind requests',async()=>{
+ const feed={provider:'geckoterminal',kind:'feed',feed:'trending',network:'base',page:2};
+ assert.equal(discoveryURL(feed).searchParams.get('page'),'2');assert.match(discoveryURL(feed).pathname,/networks\/base\/trending_pools$/);
+ assert.equal(degenRequest(feed).page,2);for(const page of [0,11,1.5,'2'])assert.throws(()=>degenRequest({...feed,page}));
+ assert.throws(()=>degenRequest({provider:'dexscreener',kind:'search',query:'token',page:2}));
+ const result=await readDegen(feed,{fetchImpl:async()=>new Response(JSON.stringify({data:[],included:[]}))});assert.equal(result.request.page,2);assert.equal(result.hasMore,false);
+ assert.deepEqual(checkedDiscovery(result,feed).request,feed);
+ assert.throws(()=>checkedDiscovery({...result,request:{...feed,page:3}},feed),/Invalid/);
+});
+test('HTTP pagination keeps page caches separate and rejects pages outside the supported range',()=>withRoute(async(post,count)=>{
+ const feed={provider:'geckoterminal',kind:'feed',feed:'trending'};
+ assert.equal((await post(feed)).status,200);
+ const second=await post({...feed,page:2});assert.equal(second.status,200);assert.equal(second.body.request.page,2);assert.equal(count(),2);
+ assert.equal((await post({...feed,page:2})).status,200);assert.equal(count(),2);
+ assert.equal((await post({...feed,page:11})).status,400);assert.equal(count(),2);
+}));

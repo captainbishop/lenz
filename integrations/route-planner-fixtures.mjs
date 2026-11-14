@@ -3,7 +3,7 @@ export const NOW = 1800000000000;
 const near = {chainId:'near:mainnet',kind:'nep141',id:'fixture-token.near',decimals:6};
 const base = {chainId:'eip155:8453',kind:'erc20',id:'0x1111111111111111111111111111111111111111',decimals:6};
 const output = {...base,id:'0x2222222222222222222222222222222222222222'};
-const venue = {chainId:'hypercore:mainnet',kind:'venue',id:'USDC',decimals:6};
+const venue = {chainId:'hypercore:testnet',kind:'venue',id:'USDC',decimals:6};
 const owner = '0x3333333333333333333333333333333333333333';
 const fee = asset => ({asset,amount:'1000'});
 const limits = {deadline:NOW+600000,minReceive:'900000',maxFees:[fee(near),fee(base)]};

@@ -10,12 +10,12 @@ const publicRoot=path.join(__dirname,'public');
 const mime=file=>({'.js':'text/javascript','.html':'text/html','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2'})[path.extname(file)]??'application/octet-stream';
 async function journey(run,{storageFailure=false}={}){
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'lenz-public-auto-save-'));
- const discovery=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json')));
+ const discovery=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'))));
  let available=true,context,requests=[],override=null;
- const now=Date.now(),catalog={version:1,observedAt:now,unavailable:[],rows:[{id:'spot:1',kind:'spot',coin:'@1',venue:'HyperCore',name:'Fixture Coin / USDC',quote:{index:0,symbol:'USDC'},price:'42',previousPrice:'40',volume:'12345',openInterest:null,funding:null,sides:[],description:''}]};
+ const now=Date.now(),catalog={version:2,environment:'testnet',chainId:'hypercore:testnet',observedAt:now,unavailable:[],rows:[{environment:'testnet',chainId:'hypercore:testnet',id:'spot:1',kind:'spot',coin:'@1',venue:'HyperCore',name:'Fixture Coin / USDC',quote:{index:0,symbol:'USDC'},price:'42',previousPrice:'40',volume:'12345',openInterest:null,funding:null,sides:[],description:''}]};
  const assets={version:1,provider:'coingecko',observedAt:now,assets:[{key:'BTC',id:'bitcoin',name:'Bitcoin',price:12345,change:2,change7d:7,marketCap:1234567,volume:1234,supply:100,history:Array.from({length:168},()=>12345),updatedAt:now}]};
- const lending={version:1,provider:'hyperliquid',observedAt:now,executable:false,rows:[{id:'hyperlend:0',tokenIndex:0,symbol:'USDC',supplyAPR:3.25,borrowAPR:6.5,availableLiquidity:'1000',totalSupplied:'2000',totalBorrowed:'1000',ltvBps:7500,utilization:.5,price:'1',executable:false}]};
- const prediction=(provider,hydrated=true,id='opened')=>({version:1,provider,observedAt:now,events:provider==='polymarket'?[{id:provider+':'+id,provider,title:id==='opened'?'Opened fixture event':'Unopened fixture event',category:'Crypto',volume:100,volumeUnit:'USD',hydrated,observedAt:now,description:'Public event preview',markets:hydrated?[{id:'m1',title:'Fixture outcome',question:'Will the fixture resolve?',rules:'Fixture resolution rules',basis:'Market price',outcomes:[{name:'Yes',probability:.7},{name:'No',probability:.3}]}]:[]}]:[],nextCursor:null});
+ const lending={version:2,environment:'testnet',chainId:'hypercore:testnet',provider:'hyperliquid',observedAt:now,executable:false,rows:[{id:'hyperlend:0',tokenIndex:0,symbol:'USDC',supplyAPR:3.25,borrowAPR:6.5,availableLiquidity:'1000',totalSupplied:'2000',totalBorrowed:'1000',ltvBps:7500,utilization:.5,price:'1',executable:false}]};
+ const prediction=(provider,hydrated=true,id='opened')=>({version:provider==='hyperliquid'?2:1,...(provider==='hyperliquid'?{environment:'testnet',chainId:'hypercore:testnet'}:{}),provider,observedAt:now,events:provider==='polymarket'?[{id:provider+':'+id,provider,title:id==='opened'?'Opened fixture event':'Unopened fixture event',category:'Crypto',volume:100,volumeUnit:'USD',hydrated,observedAt:now,description:'Public event preview',markets:hydrated?[{id:'m1',title:'Fixture outcome',question:'Will the fixture resolve?',rules:'Fixture resolution rules',basis:'Market price',outcomes:[{name:'Yes',probability:.7},{name:'No',probability:.3}]}]:[]}]:[],nextCursor:null});
  const fixtures=(pathname,body)=>{
   if(pathname==='/api/markets/hyper-catalog')return catalog;
   if(pathname==='/api/markets/assets')return assets;
@@ -162,6 +162,6 @@ test('removed overview data clears the screen and an explicit refresh saves it a
   assert.equal(await page.evaluate(()=>localStorage.getItem('lenz-market-context-v1')),null);
   await page.getByRole('button',{name:'Refresh overview',exact:true}).click();
   await page.waitForFunction(()=>localStorage.getItem('lenz-market-context-v1'));
-  assert.ok(await page.evaluate(()=>localStorage.getItem('lenz-hyperliquid-catalog-v1')));
+  assert.ok(await page.evaluate(()=>localStorage.getItem('lenz-hyperliquid-testnet-catalog-v2')));
  });
 });

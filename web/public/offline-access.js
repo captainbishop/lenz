@@ -6,7 +6,7 @@ function activated(worker) {
  return new Promise((resolve,reject)=>{
   const finish=error=>{clearTimeout(timer);worker.removeEventListener('statechange',changed);error?reject(error):resolve(worker);};
   const changed=()=>{if(worker.state==='activated')finish();else if(worker.state==='redundant')finish(Error('Offline saving was interrupted.'));};
-  const timer=setTimeout(()=>finish(Error('Offline saving is taking longer than expected.')),60000);
+  const timer=setTimeout(()=>finish(Error('Offline saving is taking longer than expected.')),180000);
   worker.addEventListener('statechange',changed);changed();
  });
 }

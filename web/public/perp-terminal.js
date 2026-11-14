@@ -1,3 +1,4 @@
+import {assetIcon} from './asset-icon.js';
 import {drawDegenCandles as drawCandles,clearDegenCandles as clearChart} from './degen-chart.js';
 import {mountMarketQuote} from './market-quote-ui.js';
 import {checkedTape,tapeRequest,CANDLE_INTERVALS} from './market-tape.js';
@@ -17,7 +18,7 @@ export function updatePerpMetrics(panel,row,snapshot){
 export function mountPerpTerminal(panel,row,snapshot){
   clearPerpTerminal();panel.classList.add('perp-terminal');
   const head=el('div',undefined,'terminal-head'),instrument=el('div',undefined,'terminal-instrument');
-  const name=el('div');name.append(el('p','Hyperliquid','terminal-overline'),el('h2',row.instrument+' / USD'));instrument.append(name);head.append(instrument,el('strong',number(row.markPrice),'terminal-price'));panel.replaceChildren(head);
+  const name=el('div');name.append(el('p','Hyperliquid','terminal-overline'),el('h2',row.instrument+' / USD'));name.querySelector('h2').prepend(assetIcon({symbol:row.instrument,trusted:true,venue:'hyperliquid'}));instrument.append(name);head.append(instrument,el('strong',number(row.markPrice),'terminal-price'));panel.replaceChildren(head);
   const metricsDetails=el('details',undefined,'terminal-details');metricsDetails.append(el('summary','Market details'));
   const metrics=el('dl',undefined,'terminal-metrics');for(const[k,v]of [['Mark',number(row.markPrice)],['Oracle',number(row.oraclePrice)],['Funding',(Number(row.funding)*100).toFixed(5)+'%'],['Open interest',number(row.openInterest)+' '+row.instrument]]){const cell=el('div');cell.append(el('dt',k),el('dd',v));metrics.append(cell);}metricsDetails.append(metrics);
   const grid=el('div',undefined,'terminal-grid'),chart=el('section',undefined,'terminal-chart'),book=el('section',undefined,'terminal-book'),ticket=el('section',undefined,'terminal-ticket');grid.append(chart,book,ticket);panel.append(grid);

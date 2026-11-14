@@ -5,12 +5,12 @@ import {resolveOrderMarket,prepareOrder,orderTypedData,inspectOrder,checkedOrder
 const spot={tokens:[{index:0,name:'USDC',szDecimals:8},{index:150,name:'HYPE',szDecimals:2}],universe:[{index:107,name:'@107',tokens:[150,0]}]};
 const perps={universe:[{name:'BTC',szDecimals:5,maxLeverage:40}],collateralToken:0};
 const account='0x1111111111111111111111111111111111111111';
-const market=()=>resolveOrderMarket({id:'spot:107',kind:'spot',coin:'@107',quote:{index:0,symbol:'USDC'}},{spot,perps});
+const market=()=>resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'spot:107',kind:'spot',coin:'@107',quote:{index:0,symbol:'USDC'}},{spot,perps});
 const input={side:'buy',size:'1.25',price:'20',reduceOnly:false};
 const balance={spot:[{token:0,coin:'USDC',total:'100',hold:'0'}],perp:null,fee:'0.001',mode:'disabled'};
 
 test('position summary keeps exact market, direction and unavailable risk values distinct',()=>{
-  const m=resolveOrderMarket({id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
+  const m=resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
   const position={coin:'BTC',szi:'-0.125',entryPx:'100',unrealizedPnl:'-2.5',liquidationPx:null,marginUsed:'8'};
   const funds={perp:{assetPositions:[{position:{...position,coin:'xyz:BTC',szi:'5'}},{position}]}};
   assert.deepEqual(orderPosition(m,funds),{side:'short',size:'0.125',entryPrice:'100',pnl:'-2.5',liquidationPrice:null,margin:'8'});
@@ -28,13 +28,13 @@ test('selected spot pair becomes one bounded order on that exact HyperCore marke
   assert.equal(review.expiresAt,1700000060000);
 });
 test('market mismatch, wrong collateral, precision and insufficient funds cannot reach review',()=>{
-  assert.throws(()=>resolveOrderMarket({id:'spot:108',kind:'spot',coin:'@107',quote:{index:0}},{spot,perps}),/changed|unavailable/);
+  assert.throws(()=>resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'spot:108',kind:'spot',coin:'@107',quote:{index:0}},{spot,perps}),/changed|unavailable/);
   assert.throws(()=>prepareOrder(market(),account,{...input,size:'1.234'},balance),/decimal/);
   assert.throws(()=>prepareOrder(market(),account,input,{...balance,spot:[{token:0,coin:'USDC',total:'25',hold:'0'}]}),/fund/);
   assert.throws(()=>prepareOrder(market(),account,input,{...balance,mode:'portfolioMargin'}),/account mode/);
 });
 test('perpetual review preserves existing leverage and permits only actual position reductions',()=>{
-  const m=resolveOrderMarket({id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
+  const m=resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
   const state={...balance,markPrice:'50000',perp:{withdrawable:'50',assetPositions:[{position:{coin:'BTC',szi:'0.01',leverage:{type:'cross',value:2}}}]} };
   const review=prepareOrder(m,account,{side:'sell',size:'0.001',price:'50000',reduceOnly:true},state);
   assert.equal(review.action.orders[0].r,true);
@@ -42,7 +42,7 @@ test('perpetual review preserves existing leverage and permits only actual posit
   assert.throws(()=>prepareOrder(m,account,{side:'buy',size:'0.001',price:'50000',reduceOnly:true},state),/reduce/);
 });
 test('perpetual collateral estimate accounts for mark price and margin mode',()=>{
-  const m=resolveOrderMarket({id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
+  const m=resolveOrderMarket({environment:'testnet',chainId:'hypercore:testnet',id:'perp::0',kind:'perp',coin:'BTC',quote:{index:0,symbol:'USDC'}},{spot,perps});
   const funds={...balance,markPrice:'100',leverage:{type:'cross',value:2},perp:{withdrawable:'1000',assetPositions:[]}};
   const review=prepareOrder(m,account,{side:'sell',size:'10',price:'1',reduceOnly:false},funds);
   assert.equal(review.spend,'501');assert.equal(review.marginMode,'cross');assert.equal(review.markPrice,'100');

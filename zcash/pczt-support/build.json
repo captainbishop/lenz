@@ -1,14 +1,16 @@
 {
-  "checkedAt": "2026-10-31T13:02:27.149Z",
+  "checkedAt": "2026-11-14T19:32:38.6189979Z",
   "sourceRevision": "0b3436bb8d235c67cd36b800cb45a7b1b489c415",
   "librustzcashRevision": "eb38d7a373661179dbc083a2fd58b3a6c9b25818",
   "cargoLockSha256": "43473efade4c90ac6f905e97dda34846e4b46f2a7bc1e6906a9ee2464b4e6e5a",
   "originalWindowsExeSha256": "d992d5fdc8fd29ef31600d0bc8740a1f29a2d05215c683a960de42bd5a63bb6b",
-  "windowsExeSha256": "1a0167b2fd9970d6dabaff08b683d024f5c1d890591365032a4c3097befa9a2c",
-  "patchSha256": "0e813cb3f3258e0a64098a0797c74de3f53638fb50528dc65632942631763f89",
+  "windowsExeSha256": "f5f8415e70a3b899ccd6e0917a6268f7667ee316daab2404a6cd12b1e997c7d1",
+  "patchSha256": "15d317e173703ba902dace9602c0e5377e5607e57bcdd1494202895940352835",
   "signerSourceSha256": "d4e300f1dda7534e5622632c11b4fee485a327d4aa59b45f7bc94901a76865fa",
   "manifestSha256": "e644900fa815ecf5562a42a1700115a23950b0847122b16efd305cf6e9dc7fc0",
   "rust": "1.99.1-x86_64-pc-windows-msvc",
   "command": "cargo +1.99.1 build --manifest-path tooling/zcash-devtool/Cargo.toml --bin lenz-zcash-pczt --release --locked --offline",
-  "scope": "Experimental bounded testnet PCZT signer. Original bridge executable unchanged. No production safety claim."
+  "scope": "Experimental bounded testnet PCZT signer and explicit 40 through 120 block expiry for new unsigned preparations. Original bridge executable unchanged. No production safety claim.",
+  "expiryWindowVersion": 1,
+  "createSourceSha256": "7b041ef5d34da0ff8f2e1eae7e9682a1bf0699c576550fd0a11e646cb11dfbe5"
 }

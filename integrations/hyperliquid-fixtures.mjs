@@ -1,5 +1,5 @@
 export function hyperliquidFixtureFetcher(url,options){
-  if(url!=='https://api.hyperliquid.xyz/info')throw Error('Unexpected source');
+  if(url!=='https://api.hyperliquid-testnet.xyz/info')throw Error('Unexpected source');
   const request=JSON.parse(options.body),now=Date.now(),coin=request.coin??request.req?.coin;
   let value;
   switch(request.type){

@@ -2,6 +2,7 @@ import { Interface } from 'ethers';
 // Fixed read/simulation ABI. All calls use eth_call; no transaction builder.
 const abi = new Interface([
   'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)',
   'function description() view returns (string)',
   'function latestRoundData() view returns (uint80,int256,uint256,uint256,uint80)',
   'function getPool(address,address,uint24) view returns (address)',
@@ -10,6 +11,11 @@ const abi = new Interface([
   'function slot0() view returns (uint160,int24,uint16,uint16,uint16,uint8,bool)',
   'function getReservesList() view returns (address[])',
   'function getConfiguration(address) view returns (uint256)',
+  'function getReserveData(address) view returns (tuple(tuple(uint256) configuration,uint128 liquidityIndex,uint128 currentLiquidityRate,uint128 variableBorrowIndex,uint128 currentVariableBorrowRate,uint128 currentStableBorrowRate,uint40 lastUpdateTimestamp,uint16 id,address aTokenAddress,address stableDebtTokenAddress,address variableDebtTokenAddress,address interestRateStrategyAddress,uint128 accruedToTreasury,uint128 unbacked,uint128 isolationModeTotalDebt))',
+  'function getVirtualUnderlyingBalance(address) view returns (uint128)',
+  'function totalSupply() view returns (uint256)',
+  'function UNDERLYING_ASSET_ADDRESS() view returns (address)',
+  'function POOL() view returns (address)',
   'function factory() view returns (address)', 'function WETH9() view returns (address)',
   'function quoteExactInputSingle((address tokenIn,address tokenOut,uint256 amountIn,uint24 fee,uint160 sqrtPriceLimitX96)) returns (uint256,uint160,uint32,uint256)',
 ]);

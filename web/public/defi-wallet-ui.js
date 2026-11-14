@@ -3,8 +3,10 @@ import { randomId, assert } from './peer-crypto.js';
 import { paintAvatar } from './profile-display.js';
 import { displayUnits, units } from './near-protocol.js';
 import { PUBLIC_TESTNET_DISCLOSURE } from './defi-request.js';
-import { approveDefiSwap, defiHandoff, recordDefiStorageReceipt } from './defi-wallet.js';
+import { approveDefiSwap, defiHandoff, recordDefiReply, checkDefiSwap } from './defi-wallet.js';
 import { sendDefiRequest } from './defi-delivery.js';
+import {courierSummary} from './nearby-courier.js';
+import {mountDefiRefund} from './defi-refund-ui.js';
 
 const $=s=>document.querySelector(s),el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
 function download(envelope){
@@ -12,12 +14,13 @@ function download(envelope){
   const link=el('a');link.href=url;link.download=`lenz-request-${envelope.id}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 export function mountDefiApproval({config,run,notice,wrapped}) {
+  const refund=mountDefiRefund({config,run,notice});
   let contacts=[],draft=null,approving=false;
   const controls=el('div');controls.className='defi-choice';
-  controls.innerHTML='<label for="defi-method">Executor</label><select id="defi-method"><option value="self">Me, when online</option><option value="contact">Lenz contact</option></select><div id="defi-contact-choice" hidden><label for="defi-contact">Contact</label><select id="defi-contact"><option value="">Choose a person</option></select><p class="quiet">Confirm this contact runs a Lenz executor.</p></div>';
+  controls.innerHTML='<label for="defi-method">Who will make the swap?</label><select id="defi-method"><option value="self">Me, when online</option><option value="contact">Lenz contact</option></select><div id="defi-contact-choice" hidden><label for="defi-contact">Contact</label><select id="defi-contact"><option value="">Choose a person</option></select><p class="quiet">Check that this person has set up Lenz to make swaps for you.</p></div>';
   $('#rhea-form button[type="submit"]').before(controls);
   const panel=el('dialog');panel.id='defi-approval';panel.setAttribute('aria-labelledby','defi-approval-title');
-  panel.innerHTML='<div class="dialog-top"><h2 id="defi-approval-title">Approve this swap</h2><button id="defi-back" type="button" class="secondary">Back</button></div><div class="defi-person"><span class="avatar" aria-hidden="true"></span><strong id="defi-person-name"></strong></div><dl id="defi-terms"></dl><p>No extra executor fee is authorized. Rhea pool fees affect the rate; the minimum above still applies. The executor pays the network fee.</p><p>This person can read your swap, amounts, receiving wallet and included payment history. Execution is public on NEAR testnet. Carriers see routing IDs, times and file sizes. This route does not provide private settlement.</p><p>The amount stays set aside until the swap is resolved, even after its time limit. Approval cannot be recalled once shared.</p><label class="defi-consent" for="defi-consent"><input id="defi-consent" type="checkbox">I verified this person’s contact card and agree to these terms and disclosures.</label><button id="defi-approve" type="button" disabled>Approve and save</button><p class="wallet-feedback error" role="status"></p>';
+  panel.innerHTML='<div class="dialog-top"><h2 id="defi-approval-title">Approve this swap</h2><button id="defi-back" type="button" class="secondary">Back</button></div><div class="defi-person"><span class="avatar" aria-hidden="true"></span><strong id="defi-person-name"></strong></div><dl id="defi-terms"></dl><p>You agree to no extra fee for this person. Trading fees are included in the rate; your minimum still applies. This person pays the network fee.</p><p>This person can read your swap, amounts, receiving wallet and included payment history. The swap is public on the NEAR test network. People passing it along can see who it is from and for, delivery times and file sizes. The payment itself is not private.</p><p>The amount stays set aside until the swap is resolved, even after its time limit. Approval cannot be recalled once shared.</p><label class="defi-consent" for="defi-consent"><input id="defi-consent" type="checkbox">I checked this person’s contact card and agree to the terms above.</label><button id="defi-approve" type="button" disabled>Approve and save</button><p class="wallet-feedback error" role="status"></p>';
   document.body.append(panel);
   const method=$('#defi-method'),contact=$('#defi-contact'),consent=$('#defi-consent'),approve=$('#defi-approve');
   method.onchange=()=>{const asked=method.value==='contact';$('#defi-contact-choice').hidden=!asked;contact.required=asked;$('#rhea-form button[type="submit"]').textContent=asked?'Review request':'Save swap';};
@@ -32,7 +35,7 @@ export function mountDefiApproval({config,run,notice,wrapped}) {
         const current=await readState();
         assert(current.contacts.some(p=>p.id===draft.executor.id),'This contact was removed. Go back and choose again');
         await approveDefiSwap(draft.config,draft.executor,draft.swap,draft.consent);
-        draft=null;panel.close();notice('Request saved. Share its encrypted file or send it through carriers. Your money is set aside.');
+        draft=null;panel.close();notice('Request saved. Send it with someone nearby or share the request file. Your money is set aside.');
       }finally{approving=false;approve.disabled=!consent.checked;$('#defi-back').disabled=false;consent.disabled=false;approve.textContent='Approve and save';}
     });
   };
@@ -53,24 +56,41 @@ export function mountDefiApproval({config,run,notice,wrapped}) {
       consent.checked=false;approve.disabled=true;panel.querySelector('.wallet-feedback').textContent='';
       $('#rhea-dialog').close();panel.showModal();return true;
     },
-    render(row,order){
-      const a=order.defi,expired=Date.now()>=a.request.expiresAt;
+    async deliveries(){try{return (await courierSummary({defiConfig:config()})).outgoing;}catch{return []; }},
+    render(row,order,deliveries=[]){
+      const a=order.defi,expired=Date.now()>=a.request.expiresAt,checked=a.checkedOutcome;
+      const resolved=checked?.state==='observed',blocked=resolved||checked?.state==='conflicted';
+      const courier=deliveries.find(job=>job.messageId===a.packet.id),courierStatus=courier?.status==='with-courier'?'With nearby contact · awaiting receipt':courier?.status==='waiting'?'Waiting for nearby contact':courier?.status==='unavailable'?'Nearby delivery unavailable':null;
       const person=el('span');person.className='defi-person';const avatar=el('span');avatar.className='avatar';avatar.setAttribute('aria-hidden','true');paintAvatar(avatar,a.executor);person.append(avatar,el('span','For '+a.executor.name));row.append(person);
-      row.querySelector('.near-state').textContent=a.storageReceipt?'Executor acknowledged · execution unverified':expired?'Approval window ended · money held':a.storedBy?.length?'Carrier stored · executor unconfirmed':'Approved · ready to share';
-      row.append(el('small','Delivery does not confirm execution. This money remains set aside. Results and refunds need separate verification.'));
+      const outcome=checked?.state==='observed'?(checked.order.stage==='complete'?'Swap complete':order.returnReceipt?'Refund returned to Lenz':'Refund in receiving wallet')
+        :checked?.state==='conflicted'?'Conflicting payment · needs review':checked?.state==='needs_review'?'Needs review'
+        :checked?.state==='pending'?'Last check · swap in progress':checked?.state==='ready'?'Last check · awaiting execution':null;
+      const awaitingCheck=a.executorUpdate && a.checkedUpdateId!==a.executorUpdate.id && !blocked;
+      row.querySelector('.near-state').textContent=awaitingCheck?'Update received · awaiting verification':outcome??(a.storageReceipt?'Received · completion not confirmed':expired?'Time limit ended · money set aside':courierStatus??(a.storedBy?.length?'Sent · awaiting receipt':'Approved · ready to share'));
+      if(!order.returnReceipt)row.append(el('small',resolved?'Confirmed in your receiving wallet. This does not add money to your Lenz balance.':'Your money stays set aside until the swap or refund is confirmed.'));
       const button=(text,fn)=>{const b=el('button',text);b.type='button';b.className='secondary';b.onclick=()=>run(fn);row.append(b);return b;};
-      const share=button('Save encrypted request',async()=>download(await defiHandoff(config(),a.request.id,{envelope:true})));share.disabled=expired;
-      const send=button('Send through carriers',async()=>{
-        const response=await fetch('/carrier-config.json');assert(response.ok,'Carrier configuration unavailable');
+      const check=button('Check swap',async()=>{
+        check.disabled=true;check.dataset.rheaBusy='true';
+        try{const result=await checkDefiSwap(config(),a.request.id);notice(result.state==='observed'?(result.order.stage==='complete'?'Swap confirmed.':'Refund confirmed in your receiving wallet.'):'Swap checked. Your money remains set aside.');}
+        finally{delete check.dataset.rheaBusy;check.disabled=!navigator.onLine;}
+      });check.dataset.rheaOnline='';check.disabled=!navigator.onLine;
+      if(resolved){if(checked.order.stage==='refunded')refund.render(row,order);return;}
+      const share=button('Save request file',async()=>download(await defiHandoff(config(),a.request.id,{envelope:true})));share.disabled=expired||blocked;
+      const nearby=button('Send with someone nearby',async()=>dispatchEvent(new Event('lenz-nearby-open')));nearby.disabled=expired||blocked||!!a.storageReceipt;
+      const send=button('Send over internet',async()=>{
+        const response=await fetch('/carrier-config.json');assert(response.ok,'Internet delivery is unavailable');
         const result=await sendDefiRequest(config(),a.request.id,await response.json());
-        notice(`Stored by ${result.carriers} carrier${result.carriers===1?'':'s'}. Execution is still unverified.`);
-      });send.disabled=expired||!navigator.onLine;send.dataset.defiSend='';send.dataset.defiExpiry=String(a.request.expiresAt);
+        notice(`Sent to ${result.carriers} delivery service${result.carriers===1?'':'s'}. The swap is not confirmed yet.`);
+      });send.disabled=expired||blocked||!navigator.onLine;send.dataset.defiSend='';send.dataset.defiExpiry=String(blocked?0:a.request.expiresAt);
       const receipt=el('input');receipt.type='file';receipt.accept='.json,application/json';receipt.hidden=true;row.append(receipt);
-      button('Open executor receipt',()=>{}).onclick=()=>{receipt.value='';receipt.click();};
+      button('Open update file',()=>{}).onclick=()=>{receipt.value='';receipt.click();};
       receipt.onchange=()=>run(async()=>{
-        const file=receipt.files[0];if(!file)return;assert(file.size<=204800,'This receipt file is too large');
-        await recordDefiStorageReceipt(config(),a.request.id,JSON.parse(await file.text()));
-        notice('Executor receipt saved. It confirms storage only; execution is still unverified.');
+        const file=receipt.files[0];if(!file)return;assert(file.size<=204800,'This update file is too large');
+        const text=await file.text();let packet;
+        try{packet=JSON.parse(text);}catch{throw Error('Invalid Lenz update file');}
+        assert(packet && typeof packet==='object' && !Array.isArray(packet),'Invalid Lenz update file');
+        await recordDefiReply(config(),a.request.id,packet);
+        notice('Update file checked.');
       });
     },
   };

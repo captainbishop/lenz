@@ -18,7 +18,7 @@ const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:
  ];
  const detected=[];
  for(const [name,file,find,replacement,pattern]of mutations){const source=baseline.get(file);assert(source.includes(find),name+' target missing');await fs.writeFile(path.join(dir,'public',file),source.replace(find,replacement));const result=run(['--test','--test-name-pattern='+pattern,path.join(dir,'evm-transfer.test.mjs')]);await fs.writeFile(path.join(dir,'public',file),source);assert.notEqual(result.code,0,name+' survived');assert.match(result.output,/AssertionError|ERR_ASSERTION/);detected.push(name);}
- const ui=await fs.readFile(path.join(__dirname,'public/evm-transfer-ui.js'),'utf8'),changed=ui.replace('dialog.open&&ticket===version','true');assert.notEqual(changed,ui);
+ const ui=await fs.readFile(path.join(__dirname,'public/evm-transfer-ui.js'),'utf8'),changed=ui.replace("check(dialog.open&&ticket===version,'Transfer review closed or changed.');",'');assert.notEqual(changed,ui);
  const mutationPath=path.join(dir,'ui-mutation.json');await fs.writeFile(mutationPath,JSON.stringify({file:'evm-transfer-ui.js',source:changed}));
  const mutant=run(['web/evm-transfer-browser.test.cjs'],{...process.env,LENZ_TRANSFER_MUTATION:mutationPath});assert.notEqual(mutant.code,0,'closed-review survived');assert.match(mutant.output,/AssertionError|ERR_ASSERTION/);detected.push('closed-review');
  const browser=run(['web/evm-transfer-browser.test.cjs']);assert.equal(browser.code,0,browser.output);

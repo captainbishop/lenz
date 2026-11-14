@@ -1,3 +1,4 @@
+import {HYPERLIQUID} from './public/hyperliquid-environment.js';
 import {readMarketTape} from '../integrations/market-tape.mjs';
 import {tapeRequest} from './public/market-tape.js';
 import {checkedMarketEvent} from './public/market-stream-data.js';
@@ -14,14 +15,14 @@ export function createMarketStreamLimits({clock=Date.now}={}){
 // Public reads only; the caller cannot supply an upstream URL or an account.
 export function createMarketStream({read=readMarketTape,Socket=WebSocket,clock=Date.now,parse=tapeRequest,checkEvent=checkedMarketEvent,includeTrades=false,limits=createMarketStreamLimits({clock})}={}){
   return {subscribe(input,accept,end=()=>{}){
-    const request=parse(input),coin=request.marketId.split(':').slice(2).join(':');
+    const request=parse(input),coin=request.marketId.split(':').slice(request.marketId.startsWith('hypercore:')?3:2).join(':');
     const release=limits.acquire();let stopped=false,socket,timer,lastMessage=clock();const abort=new AbortController();
     const stop=()=>{if(stopped)return;stopped=true;release();abort.abort();clearInterval(timer);socket?.close();};
     const fail=()=>{if(stopped)return;stop();end();};
     Promise.resolve().then(()=>read(request,{signal:abort.signal})).then(tape=>{
       if(stopped)return;
       accept(checkEvent({kind:'snapshot',tape},request,{now:clock()}));
-      socket=new Socket('wss://api.hyperliquid.xyz/ws');
+      socket=new Socket(HYPERLIQUID.socket);
       socket.addEventListener('open',()=>{
         if(stopped)return;
         for(const subscription of [{type:'candle',coin,interval:request.interval},{type:'l2Book',coin},...(includeTrades?[{type:'trades',coin}]:[])])socket.send(JSON.stringify({method:'subscribe',subscription}));

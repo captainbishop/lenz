@@ -39,7 +39,7 @@ async function snapshot(page) {
       await importCard(a, await profile(b)); await importCard(b, original);
       await a.evaluate(async () => { const { updateState } = await import('/chat-store.js'); const { enableDemoMoney } = await import('/trade-service.js'); await updateState(enableDemoMoney); });
       await a.locator('#message').fill('Keep this conversation through my profile change.');
-      await a.locator('#prepare-message').click(); await status(a, 'Message saved and encrypted');
+      await a.locator('#prepare-message').click(); await status(a, 'Message saved. Choose how to share it.');
       await a.locator('[data-close="handover"]').click(); before = await snapshot(a);
     });
     await check('name and symbol edits preserve account keys, encrypted history and an archived demo vault exactly', async () => {

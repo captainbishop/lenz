@@ -1,0 +1,17 @@
+# Account activity
+
+Account keeps its funds selector, connection and balance-visibility controls in a compact top bar. Summary figures sit beside a persistent P&L chart, with full-width Balances, Positions, Open orders and History tabs below. All four tabs use the same funds selection. Changing funds clears the previous wallet's displayed data. Profile setup and backup controls sit below the account view.
+
+Lenz funds show available test dollars owned by the current profile. Notes belonging to recipients are excluded. Account follows Wallet's local update signal, so changes made in another tab refresh the displayed Lenz funds. Saved swaps appear in History with their actual saved status. Delivery confirmation does not mark a swap complete. Profit and loss, open positions and open-order tracking for Lenz swaps are not available yet.
+
+An external wallet connection reads its address and native balance through the existing wallet session. Loading trading history is a separate user action. It reads public Hyperliquid information for that address without signing or submitting anything. The current coverage is default USDC perpetual markets; spot, builder markets, other collateral and other protocols are outside these totals.
+
+The displayed P&L sums realized close P&L less trading fees across the available fills in the requested 30-day period. Funding payments and open-position gains are excluded. Open-position P&L is shown separately in Positions. Win and loss rates count closing fills before fees, including partial closes; break-even fills remain in the denominator. Filled trades counts fills, not complete position round trips. Volume uses actual fill price and size. A 2,000-fill response is labelled partial. Displayed history uses the returned period, so a saved period is never described as the current month.
+
+Positions and open orders are read independently of order-submission responses. Missing saved position/order data is unavailable; an empty checked array means none were reported. Entry, liquidation and limit prices retain their decimal precision. This Account view does not place, cancel or close orders.
+
+Trading history is encrypted in a separate local IndexedDB store, scoped to the current Lenz identity or guest session. It is excluded from chat backup and payment state. Up to eight external accounts and four MB can be saved. Guests can still create or restore a profile afterward; their old guest history is not shown under the new identity. There is no claim of protection against code running in the same browser origin.
+
+The Account page prepares its own offline shell. Saved history, positions and orders can be viewed offline, with the saved time shown. Refresh remains an explicit action after reconnection. Identity changes, wallet changes and late cache reads cannot restore another selection's data. Hiding amounts also removes the P&L chart, including when the preference changes in another tab.
+
+Checks: `node --test web/account-performance.test.mjs` and `node web/account-activity-browser.test.cjs`. The browser checks use disposable Edge profiles, synthetic wallet providers and fixture responses. They cover guest account setup, offline reload, source switching, delayed responses, ownership, masking, keyboard tabs and mobile themes. Real wallet compatibility, live performance reconciliation, physical devices and private settlement remain separate validation requirements.

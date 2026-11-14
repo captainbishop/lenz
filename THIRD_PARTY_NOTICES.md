@@ -57,3 +57,24 @@ Git commits, imply endorsement or extend an upstream audit to this application.
 Native Hyperliquid action encoding uses @msgpack/msgpack 3.1.2 (ISC). The pinned
 browser bundle, notice and license are in `web/public/hyperliquid-vendor/`; its
 reproducible build and input hashes are in `web/hyperliquid-tools/`.
+
+## Original Intents and Tornado components
+
+The testnet verifier and test-token build use the original
+[NEAR Intents source](https://github.com/near/intents/tree/16d04f6ec4401263f8914638710260da50bb46b0)
+(MIT). [Revision, compiler and artifact hashes](contracts/intents-testnet/source-lock.json)
+identify that build. Lenz's route, signing, recovery and receipt checks are
+separate integration code.
+
+The Tornado v2.1 browser runtime uses original circuit/proving artifacts and
+pinned snarkjs, websnark, circomlib and fixed-merkle-tree code. These include GPL
+licenses and retain their [notice](web/public/tornado-vendor/NOTICE.txt),
+[GPL text](web/public/tornado-vendor/COPYING.txt) and
+[dependency licenses](web/public/tornado-vendor/dependency-LICENSES.txt).
+[Build provenance and artifact handling](web/tornado-prover.md) document their
+scope; the root MIT license does not relicense these components.
+
+Aurora account transaction encoding uses the pinned ethers/noble stack (MIT).
+Its [notice](web/public/evm-vendor/AURORA-ACCOUNT-NOTICE.txt) accompanies the
+browser bundle. Compatibility and upstream code do not imply endorsement or
+an inherited security audit.

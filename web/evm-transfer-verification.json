@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-04T15:05:17.532Z",
+  "checkedAt": "2026-11-05T11:42:32.048Z",
   "nodeTests": 25,
-  "browserGroups": 6,
+  "browserGroups": 7,
   "guardAlterations": [
     "public-consent",
     "nonce-recheck",
@@ -14,20 +14,20 @@
     "closed-review"
   ],
   "sources": {
-    "web/public/evm-wallet.js": "2e0f2899fd531dfadf2ca511bef066b1b5dbddab08c443868b7d36ac43cfed51",
+    "web/public/evm-wallet.js": "834f6b7460b020604d67db3726f334214788c1c5d670515796c0c35bff7aa21a",
     "web/public/evm-networks.js": "6fbf1302bfe8729e98b7b1e23776b345468e4e3d56e2055db75d67ee786105ef",
-    "web/public/evm-transfer.js": "8636a85b654cdc9501dd8d8c8dd559a242698f41b38986a55ef7226f6bd09990",
+    "web/public/evm-transfer.js": "af756a72e6cffbc0e1213c2d358196017d7b0355fde47d0d58773326dbf8a2b2",
     "web/public/evm-transfer-store.js": "783e76119d7f316807ebbbe645c8db62be0d5c19cbf7d4dbb816e2c3f3458abb",
     "web/public/evm-transfer-service.js": "155179a9092779b3ca8c086fcb6025680b5c9af7e2ebea42d79fee8b5aa00412",
     "web/public/evm-markets.js": "0bad2e26f083e4bec4dc789fee042170e1c923dd011700ef42cacae594557fec",
     "web/public/defi-catalog.js": "28c89b96470572d795a9ff006fb384b88b03bf55a5fb089eda73dee26200ab22",
     "web/public/evm-vendor/address.js": "22fcdd10cfbc893795ff30e234810027707b46da4cc69cf69963bb9fee0e15cc",
-    "web/public/evm-transfer-ui.js": "65652da38785dc5922b0310783d62939ab8ed858d7c5c095d07f920e1132f995",
+    "web/public/evm-transfer-ui.js": "3c1a09b2e4db5a4de3c4e95ae7292d7a84fd7dcdf777d8b589a29c4d2876319f",
     "web/evm-wallet.test.mjs": "5766b8106c33c1b7208fac5c4982be015243f0f07181505f60b7bb574a4228ed",
     "web/evm-transfer.test.mjs": "00178da57dd521d430fc8de3f29c7fc7d3a7bdd6ae8d778da8baeaa64c18928c",
     "web/evm-transfer-fixtures.mjs": "da6784e765db783775be392c5043d17d166f50bd46af9b6fa227bacd0d039ab3",
-    "web/evm-transfer-browser.test.cjs": "d9be9685b2e1b9f5188134df1192c887d59bb2f08c23ceec4e63edb0376e8df1",
-    "web/verify-evm-transfer.cjs": "52e59ea8c19867552b5c352946fa8cd9a4a07903ea470a86b3c4c42b60d30ee8",
+    "web/evm-transfer-browser.test.cjs": "e0b0afb1f7d89a598890e85d4dea5b3d114b7f923586be1149f9a163467cfbd9",
+    "web/verify-evm-transfer.cjs": "aa64e79446b18bd398b56b0780004af7ed48f6f24e920e58faaa4acfa460d4fc",
     "aurora/evm-wallet-send.test.mjs": "7f0b9eda0a4098480aba9b11118fe7ad4bfb5f19a881dda3fe202eb27c9da9a9",
     "web/build-evm-address.mjs": "8c5329cc1428130d66ce3db0f183b4f7b8d7598333b0ede8c2d2f5bbdb3405cb",
     "web/evm-address-build.json": "783a25a5e523025dfb80c835302e5acb199a15df610c4bfdc46f26f92bb6e09f"

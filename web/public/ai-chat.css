@@ -4,7 +4,7 @@
 #ai-chat-dialog[open]{display:flex;flex-direction:column;gap:20px}
 #ai-messages:empty{display:none}
 #ai-compose .ai-consent{font-weight:400}
-:root[data-theme=dark] #ai-chat-dialog{background:#20382b}
+:root:is([data-theme=dark],[data-theme=dim]) #ai-chat-dialog{background:var(--theme-panel)}
 .ai-chat-heading{display:flex;gap:8px;align-items:center;flex-shrink:0}.ai-chat-heading>div{flex:1}.ai-chat-heading h2{font:500 24px 'Segoe UI',sans-serif;margin:0}.ai-chat-heading p{margin:6px 0 0;font-size:13px;color:var(--muted)}.ai-chat-heading button{display:grid;place-items:center;width:44px;min-height:44px;padding:10px;background:transparent;color:inherit;border:0}
 #ai-messages{overflow-y:auto;min-height:40px;max-height:45dvh;overscroll-behavior:contain}.ai-message{padding:16px 0;border-bottom:1px solid var(--line)}.ai-message small{font-size:12px;color:var(--muted)}.ai-message p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.65;margin:8px 0}.ai-message.user{padding-left:20px;border-left:2px solid var(--ink)}
 #ai-compose>label{font-size:14px;margin:0 0 8px}#ai-message{width:100%;font:16px 'Segoe UI',sans-serif;line-height:1.5;background:transparent;color:inherit;border:0;border-bottom:1px solid var(--line);border-radius:0;resize:vertical;min-height:80px;max-height:160px;padding:12px 0}#ai-message:focus-visible{outline:0;border-bottom:2px solid var(--ink)}

@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "snarkjs": "869181cfaf7526fe8972073d31655493a04326d5",
+    "circomlib": "c372f14d324d57339c88451834bf2824e73bbdbc",
+    "websnark": "4c0af6a8b65aabea3c09f377f63c44e7a58afa6d",
+    "fixedMerkleTree": "0.6.0"
+  },
+  "inputs": {
+    "base64-js/index.js": "829eadd8a1a441d25be0cb93b00e16a0d0c20fd294db95d8f2ed87e6954b7182",
+    "ieee754/index.js": "fe3e2b20c1ebb57c3b390c8f685ad1e04e6f493517fa7e432f4351bb77a1a4d0",
+    "buffer/index.js": "9fab6e5f345b42e0ab83cac4c0790d40b77b21ad6af47ace7364f3f6a1f8d8d4",
+    "big-integer/BigInteger.js": "9157657de3b1e92a2b75a8bc2e2dbecde1cdd0db414bb729c165528962ab7647",
+    "snarkjs/src/bigint.js": "ed536201cd51de513a43c1732867d7f85456a178e4c124d5aa77d5aa82105f20",
+    "snarkjs/src/futils.js": "5f764b866aac6634a398648e6a5b9520976164a7afd865df16dacfaa5afa46d0",
+    "snarkjs/src/zqfield.js": "120352eaccd8d0c4578a9ced552c84c399f5b62b1b70a8861c7e9e8713616d6d",
+    "snarkjs/src/f2field.js": "ec3bc96b0349b11c86f4b684bedd32df25be928dd1c0ca616a44a71dd26e4e7d",
+    "snarkjs/src/f3field.js": "8f972e203762ab7f2c988a4e3615faf40e7b1b92c4cdec36f6388bc69b026a62",
+    "snarkjs/src/gcurve.js": "acadaa8b446de36b8a7c41f2daea55e499a94f136b2a4fd241df9fdf38fc6fb8",
+    "snarkjs/src/bn128.js": "85c5519d4a590434c6e5e81ef5d78ae951f2dbf572c8d1df096ffeaa3373c1ef",
+    "circomlib/src/babyjub.js": "14c86fcedbd4f64243311b4ef1580ecea179ee9b790333bce7c275293cd04a83",
+    "inherits/inherits_browser.js": "ad322a7b1dec60f3d2ebda2091816469efb55b567d241cf3cf0fa4c5a4afe500",
+    "blake-hash/lib/blake.js": "6f3498fb6ee325283457f0822bacc2f9f9fa54436d77fa9b97ee37b8839d6ddb",
+    "blake-hash/lib/blake256.js": "22e0ed7b7d35f8fe036a9c927903a615bc2f178c1c053307742a16eb2e62172b",
+    "circomlib/src/pedersenHash.js": "7fa3e464680f6d593709aa14ebd4bc82ee95b9d0d33fbd99c2fbb49450ed0f17",
+    "circomlib/src/mimcsponge.js": "d931bb6e7639107abf7597758aee85ee131482fddc98de7115973fae88097c4f",
+    "fixed-merkle-tree/src/mimc.js": "b3008a2c8aca04aee5c351086e2d126c791bde43630e23d4a3e9ced9c95fc10f",
+    "fixed-merkle-tree/src/merkleTree.js": "ec08904700866a99228221e0018946bb2d0b11b139ea908228ced0c99b847023",
+    "websnark/build/groth16_wasm.js": "f3dfe57eeb393d1a07794c1e710805e748064345f5f4ad2fb594a7882aa47d3c",
+    "websnark/src/groth16.js": "715466cd17ee6f096e2cf052dfbd2ffde77de10a95d8e0c1ea8b942b362bd932",
+    "snarkjs/src/calculateWitness.js": "0239f6419dcf04fa09dd7140c534899c140d804f7b20d5a0918649103800d932",
+    "snarkjs/src/circuit.js": "a72556c35e886953de1e0c4340702cf358ca58a2653aa464516ba8def68641e0",
+    "websnark/tools/stringifybigint.js": "5053c72386313a8ce31999248e4ec9789a19610e25fc9ba36e6e7b23d5e74d13",
+    "snarkjs/src/stringifybigint.js": "3c9812d0ab408321f0fc4b525b5fbb34198cbe2c59e9ae0be9eac2432e40c528",
+    "websnark/src/utils.js": "0441ef88c50121d856fea5c26122455b061d3af18b62cfa69e021b026fe5d6ba",
+    "snarkjs/src/verifier_groth.js": "c116321f0391dd1855b761fd278775053d11bf734d407b7818a158313b947c21",
+    "acorn/dist/acorn.js": "e0e1f4db811acb44e26cf665dfc6b81c1fdd457291c5893f0a8aab62ceb411f3"
+  },
+  "mimcConstantsSha256": "7ab0d96dceeddfeac34a0957229aafa031d5b2acab7da77d12c6ba7ed2202d70"
+}

@@ -1,3 +1,4 @@
+import {assetIcon} from './asset-icon.js';
 import {QUOTE_POOL,marketQuoteRequest,checkedMarketQuote,decimalUnits,formatUnits} from './market-quote.js';
 import {openDraftReview} from './route-draft-ui.js';
 import {mountPoolPrice} from './pool-price-ui.js';
@@ -18,7 +19,7 @@ export function mountMarketQuote(panel,row,snapshot){
     const payName=el('strong'),receiveName=el('strong'),payLabel=el('label','Pay');payLabel.htmlFor=amount.id;receive=el('output','—');receive.id='quote-receive';receive.setAttribute('aria-label','Estimated received amount');
     pay.append(payLabel,amount,payName,el('small','Base'));destination.append(el('span','Receive · approx.'),receive,receiveName,el('small','Base'));
     side.setAttribute('aria-label','Swap direction');path.append(el('span','UNISWAP V3'),side,el('small','0.05% pool fee'));flow.append(pay,path,destination);form.append(flow);
-    const symbols=()=>{payName.textContent=side.value==='usdc-to-weth'?'USDC':'WETH';receiveName.textContent=side.value==='usdc-to-weth'?'WETH':'USDC';};side.addEventListener('change',symbols);symbols();
+    const symbols=()=>{payName.textContent=side.value==='usdc-to-weth'?'USDC':'WETH';receiveName.textContent=side.value==='usdc-to-weth'?'WETH':'USDC';for(const n of [payName,receiveName]){n.classList.add('asset-label');n.prepend(assetIcon({symbol:n.textContent,trusted:true}));}};side.addEventListener('change',symbols);symbols();
   }
   else {const directions=el('div',null,'order-directions');side.className='quote-side-native';side.tabIndex=-1;side.setAttribute('aria-hidden','true');const buttons=[];for(const [value,label]of [['buy','Long / Buy'],['sell','Short / Sell']]){const b=el('button',label);b.type='button';b.dataset.side=value;b.setAttribute('aria-pressed',String(side.value===value));b.onclick=()=>{side.value=value;side.dispatchEvent(new Event('change',{bubbles:true}));};directions.append(b);buttons.push(b);}side.addEventListener('change',()=>{form.dataset.side=side.value;for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.side===side.value));});form.dataset.side=side.value;form.append(directions,side);}
   if(!swap)form.append(field(`Size / ${row.instrument}`,amount));

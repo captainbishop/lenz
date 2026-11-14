@@ -1,12 +1,12 @@
 {
-  "checkedAt": "2026-11-05T03:53:11.663Z",
-  "browser": "156.0.4314.58",
+  "checkedAt": "2026-11-08T08:36:28.777Z",
+  "browser": "157.0.4341.42",
   "passed": 5,
   "failed": 0,
   "checks": [
     "startup readiness disappears and its empty space collapses",
     "keyboard toggle masks available, payment and saved-swap amounts; tabs and rerenders preserve the preference and vault",
-    "share/copy/download icons retain accessible names, 48px targets, clipboard text and PNG output in both themes at 320/375/1280px",
+    "share/copy/download controls retain accessible names, 48px targets, clipboard text and PNG output in both themes at 320/375/1280px",
     "a later payment error survives the readiness timer; entered transaction amounts stay visible and failed sends preserve the vault",
     "offline reload retains masking and exactly restores shown amounts without changing keys, history or reserved money"
   ],

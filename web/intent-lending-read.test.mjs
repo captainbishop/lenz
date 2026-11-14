@@ -33,7 +33,7 @@ function configuration({ decimals, ltv, threshold, supplyCap, borrowCap }) {
     1n << 56n | 1n << 58n | 1000n << 64n | BigInt(borrowCap) << 80n | BigInt(supplyCap) << 116n;
 }
 
-function fixture({ operational = false, privateRoute = false } = {}) {
+function fixture({ operational = false, privateRoute = false, historical = false } = {}) {
   const calls = [], changes = new Map();
   const names = ['pool', 'provider', 'dataProvider', 'oracle', 'faucet', 'link', 'usdc', 'aLink', 'variableDebt'];
   const codes = Object.fromEntries(names.map((name, index) => [d[name], '0x6000' + index.toString(16).padStart(2, '0')]));
@@ -106,7 +106,8 @@ function fixture({ operational = false, privateRoute = false } = {}) {
     else if (method === 'eth_getBlockByNumber') value = { ...block, ...(params[0] !== 'finalized' && state.reorg ? { hash: hash('ac') } : {}) };
     else {
       const ref = params[method === 'eth_getStorageAt' ? 2 : 1];
-      assert.deepEqual(ref, { blockHash: block.hash, requireCanonical: true }, 'Every state read must use the same canonical hash');
+      const expectedRef=historical&&['eth_getCode','eth_getStorageAt'].includes(method)?block.number:{blockHash:block.hash,requireCanonical:true};
+      assert.deepEqual(ref, expectedRef, 'Every state read must use the same checked canonical block');
       const to = (method === 'eth_call' ? params[0].to : params[0]).toLowerCase();
       if (method === 'eth_getCode') value = to === account && !state.deployed ? '0x' : codes[to];
       else if (method === 'eth_getStorageAt') {
@@ -144,6 +145,44 @@ test('an explicit latest observation is never labelled finalized',async()=>{
   const f=fixture(),snapshot=await f.reader().snapshot({account},{blockTag:'latest'});
   assert.equal(snapshot.block.finality,'latest');assert.equal(f.calls.find(call=>call.method==='eth_getBlockByNumber').params[0],'latest');
   await assert.rejects(f.reader().snapshot({account},{blockTag:'pending'}),/observation tag/);
+});
+
+test('an original receipt position is read at its exact canonical hash below the finalized head',async()=>{
+  const f=fixture({historical:true}),head={number:'0x101',hash:hash('ac'),timestamp:'0x6ad68001'},calls=[];
+  const reader=createLendingReader({deployment:f.deployment,now:()=>1792001000000,fetchImpl:async(url,options)=>{
+    const request=JSON.parse(options.body);calls.push(request);
+    if(request.method==='eth_getBlockByNumber'&&['finalized','0x101'].includes(request.params[0]))return Response.json({jsonrpc:'2.0',id:request.id,result:head});
+    return f.fetchImpl(url,options);
+  }});
+  const snapshot=await reader.snapshot({account},{blockRef:{number:'0x100',hash:block.hash}});
+  assert.deepEqual(snapshot.block,{number:'256',hash:block.hash,timestamp:'1792442368',finality:'finalized',requireCanonical:true});
+  assert.equal(snapshot.account.position.variableDebtBaseUnits,'5000000');
+  assert.deepEqual(calls.filter(call=>call.method==='eth_getBlockByNumber').map(call=>call.params[0]),['finalized','0x100','0x100','0x101']);
+  assert(calls.filter(call=>call.method==='eth_call').every(call=>call.params[1].blockHash===block.hash&&call.params[1].requireCanonical===true));
+  assert(calls.filter(call=>['eth_getCode','eth_getStorageAt'].includes(call.method)).every(call=>call.params[call.method==='eth_getStorageAt'?2:1]==='0x100'));
+});
+
+test('receipt-block reads reject future receipts and changed receipt or finalized-head hashes',async()=>{
+  for(const problem of ['future','receipt-hash','receipt-reorg','head-reorg']){
+    const f=fixture({historical:true}),head={number:problem==='future'?'0xff':'0x101',hash:hash('ac'),timestamp:'0x6ad68001'};let receiptReads=0;
+    const reader=createLendingReader({deployment:f.deployment,fetchImpl:async(url,options)=>{
+      const request=JSON.parse(options.body);
+      if(request.method==='eth_getBlockByNumber'){
+        if(request.params[0]==='finalized')return Response.json({jsonrpc:'2.0',id:request.id,result:head});
+        if(request.params[0]==='0x101')return Response.json({jsonrpc:'2.0',id:request.id,result:{...head,hash:problem==='head-reorg'?hash('ad'):head.hash}});
+        receiptReads++;
+        if(problem==='receipt-hash'||problem==='receipt-reorg'&&receiptReads>1)return Response.json({jsonrpc:'2.0',id:request.id,result:{...block,hash:hash('ad')}});
+      }
+      return f.fetchImpl(url,options);
+    }});
+    await assert.rejects(reader.snapshot({account},{blockRef:{number:'0x100',hash:block.hash}}),/not finalized|not canonical|no longer canonical/);
+  }
+});
+
+test('receipt-block selection rejects malformed or nonfinalized references before any network read',async()=>{
+  for(const options of [{blockRef:{number:'0x0100',hash:block.hash}},{blockRef:{number:'0x100',hash:'0x1234'}},{blockRef:{number:'0x100',hash:block.hash,rpc:'https://other.example'}},{blockTag:'latest',blockRef:{number:'0x100',hash:block.hash}}]){
+    const f=fixture();await assert.rejects(f.reader().snapshot({account},options),/exact finalized/);assert.equal(f.calls.length,0);
+  }
 });
 
 test('the recoverable owner receives a factory-bound observation of the exact deployed account', async () => {

@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 const {Interface}=createRequire(new URL('../aurora/package.json',import.meta.url))('ethers');
 const module=await import(process.env.LENZ_DISCOVERY_MODULE?pathToFileURL(process.env.LENZ_DISCOVERY_MODULE):new URL('./market-discovery.mjs',import.meta.url));
 const {MARKET_READS,discoverUniswap,discoverAave,discoverHyperliquid,marketJson,discoverMarket}=module;
-const abi=new Interface(['function decimals() view returns(uint8)','function getPool(address,address,uint24) view returns(address)','function token0() view returns(address)','function token1() view returns(address)','function fee() view returns(uint24)','function liquidity() view returns(uint128)','function slot0() view returns(uint160,int24,uint16,uint16,uint16,uint8,bool)','function getReservesList() view returns(address[])','function getConfiguration(address) view returns(uint256)']);
+const abi=new Interface(['function decimals() view returns(uint8)','function getPool(address,address,uint24) view returns(address)','function token0() view returns(address)','function token1() view returns(address)','function fee() view returns(uint24)','function liquidity() view returns(uint128)','function slot0() view returns(uint160,int24,uint16,uint16,uint16,uint8,bool)','function getReservesList() view returns(address[])','function getConfiguration(address) view returns(uint256)','function getReserveData(address) view returns(tuple(tuple(uint256) configuration,uint128 liquidityIndex,uint128 currentLiquidityRate,uint128 variableBorrowIndex,uint128 currentVariableBorrowRate,uint128 currentStableBorrowRate,uint40 lastUpdateTimestamp,uint16 id,address aTokenAddress,address stableDebtTokenAddress,address variableDebtTokenAddress,address interestRateStrategyAddress,uint128 accruedToTreasury,uint128 unbacked,uint128 isolationModeTotalDebt))','function getVirtualUnderlyingBalance(address) view returns(uint128)','function totalSupply() view returns(uint256)','function UNDERLYING_ASSET_ADDRESS() view returns(address)','function POOL() view returns(address)']);
 const now=1800000000000,blockHash='0x'+'ab'.repeat(32),pool='0x'+'12'.repeat(20),block={hash:blockHash,number:'0x1234',timestamp:'0x'+(BigInt(now/1000)-60n).toString(16)};
 const config=decimals=>8000n+(8500n<<16n)+(BigInt(decimals)<<48n)+(1n<<56n)+(1n<<58n);
 function baseMock(edit=()=>{},network="base"){
@@ -20,6 +20,11 @@ function baseMock(edit=()=>{},network="base"){
     else if(request.method==='eth_call'){
       const tx=request.params[0],parsed=abi.parseTransaction({data:tx.data}),name=parsed.name;
       let values={decimals:[tx.to===market.tokens[0].id?18:6],getPool:[pool],token0:[market.tokens.map(t=>t.id).sort()[0]],token1:[market.tokens.map(t=>t.id).sort()[1]],fee:[500],liquidity:[100n],slot0:[2n**96n,0,0,1,1,0,true],getReservesList:[market.tokens.map(t=>t.id)],getConfiguration:[config((parsed.args.length ? parsed.args[0] : '')?.toLowerCase()===market.tokens[0].id?18:6)]}[name];
+      if(name==='getReserveData'){const token=market.tokens.find(t=>t.id===parsed.args[0].toLowerCase());const index=market.tokens.indexOf(token);values=[[[config(token.decimals)],10n**27n,3n*10n**25n,10n**27n,5n*10n**25n,0,Math.floor(now/1000),index,'0x'+(index?'22':'11').repeat(20),'0x'+'00'.repeat(20),'0x'+(index?'44':'33').repeat(20),'0x'+'00'.repeat(20),0,0,0]];}
+      if(name==='totalSupply')values=[1000000n];
+      if(name==='getVirtualUnderlyingBalance')values=[500000n];
+      if(name==='UNDERLYING_ASSET_ADDRESS')values=[market.tokens[/^0x(22|44)/.test(tx.to)?1:0].id];
+      if(name==='POOL')values=[market.aavePool];
       const state={request,name,values};edit(state);values=state.values;result=abi.encodeFunctionResult(name,values);
     }else assert.fail('Unexpected RPC method '+request.method);
     const response={jsonrpc:'2.0',id:request.id,result};edit({request,response});
@@ -93,3 +98,11 @@ test('a requested network cannot be substituted, or use a different token precis
   }
   await assert.rejects(discoverMarket('aave',{network:'constructor',fetcher:()=>assert.fail('No external read')}),/Unsupported market network/);
 });
+
+ test('Aave rates, receipt identities and virtual liquidity are read from the same canonical block',async()=>{
+  const mock=baseMock(),result=await discoverAave(mock),usdc=result.rows[1];
+  assert(Math.abs(usdc.supplyAPY-3.045453)<.00001);assert(Math.abs(usdc.borrowAPY-5.127109)<.00001);
+  assert.equal(usdc.availableLiquidity,'0.500000');assert.equal(usdc.totalSupplied,'1.000000');assert.equal(usdc.supplyCap,'0');
+  for(const c of mock.calls.filter(c=>c.request.method==='eth_call'))assert.deepEqual(c.request.params[1],{blockHash,requireCanonical:true});
+  const bad=await discoverAave(baseMock(s=>{if(s.name==='UNDERLYING_ASSET_ADDRESS')s.values=[pool];}));assert(bad.rows.every(r=>r.supplyAPY===null&&r.availableLiquidity===null));
+ });

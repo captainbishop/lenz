@@ -1,3 +1,4 @@
+const {chooseTheme}=require('./theme-test-ui.cjs');
 const { chromium } = require('playwright');
 const sharp = require('sharp');
 const assert = require('node:assert/strict');
@@ -34,7 +35,7 @@ const base = 'http://127.0.0.1:4173';
     assert.deepEqual(contrast, { color: 'rgb(237, 243, 233)', background: 'rgb(43, 68, 50)' });
     checks.push('actual MP4 decodes at 1200×1320; reduced motion starts paused; play/pause works; dark payment status uses readable contrast');
     for (const theme of ['dark', 'light']) {
-      await page.getByRole('button', { name: `Switch to ${theme} theme` }).click();
+      await chooseTheme(page,theme);
       assert((await page.locator('#hero-preview').getAttribute('src')).endsWith(`chat-${theme}.mp4`));
       for (const view of ['chat', 'profile', 'wallet']) {
         await page.locator('#view-' + view).click();
@@ -66,7 +67,7 @@ const base = 'http://127.0.0.1:4173';
     await page.evaluate(() => scrollTo(0, 0));
     await page.waitForFunction(() => document.querySelector('#product-preview').paused);
     checks.push('playing video pauses when it leaves the viewport');
-    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await chooseTheme(page,'dark');
     await account.reload(); await account.locator('#wallet-content').waitFor();
     assert.equal(await account.locator('html').getAttribute('data-theme'), 'dark');
     assert.equal(await account.locator('#near-total').textContent(), '0');
@@ -83,7 +84,7 @@ const base = 'http://127.0.0.1:4173';
     await page.waitForFunction(() => !document.querySelector('#product-preview').seeking && Math.abs(document.querySelector('#product-preview').currentTime-3)<.1);
     if (await page.locator('#product-preview').evaluate(v => v.paused)) await page.locator('#product-preview').press('Space');
     await page.waitForFunction(() => document.querySelector('#product-preview').currentTime > 3.2);
-    await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await chooseTheme(page,'light');
     await page.locator('#view-chat').click(); await page.waitForFunction(() => document.querySelector('#product-preview').readyState >= 2);
     assert((await page.locator('#product-preview').getAttribute('src')).endsWith('chat-light.mp4'));
     await account.reload(); await account.locator('#wallet-content').waitFor(); assert.equal(await snapshot(), before);

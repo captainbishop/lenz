@@ -5,6 +5,7 @@ import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, prepareDeliveryReceipt } from './delivery-receipts.js';
 import { isNearPayment } from './near-payment-service.js';
 import { readNearVault, nearLedger, transferTerms } from './near-protocol.js';
+import { acceptDefiReply, pendingDefiChecks, checkDefiSwap } from './defi-wallet.js';
 
 export const savedPackets = state => state.messages.flatMap(r=>[r.packet,r.receiptToShare].filter(p=>p?.from===state.identity?.profile.id));
 export async function sendable(state,packet,contract){
@@ -25,9 +26,10 @@ export async function setCarrierEnabled(enabled) {
     state.carrier={...previous,enabled,excluded:enabled?[...new Set([...previous.excluded,...savedPackets(state).filter(p=>!previous.outbox.some(e=>e.envelope.packet.id===p.id)).map(p=>p.id)])]:previous.excluded};
   });
 }
-export function createCarrierClient({config, contract, onUpdate=()=>{}, onError=()=>{}, post=carrierPost, now=Date.now}) {
-  const carriers=carrierConfig(config), delays=new Map(), cursors=new Map();
-  let controller=new AbortController(), stopped=false;
+export function createCarrierClient({config, contract, defiConfig, onUpdate=()=>{}, onError=()=>{}, post=carrierPost, now=Date.now}) {
+  const carriers=carrierConfig(config), delays=new Map(), cursors=new Map(), checks=new Map();
+  let swapConfig=defiConfig?structuredClone(defiConfig):null;
+  let controller=new AbortController(), stopped=false, mailboxOwner=null;
   const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('proof-u-chat-refresh'):null;
   const changed=()=>{channel?.postMessage('changed');onUpdate();};
   async function queue(){
@@ -59,7 +61,10 @@ export function createCarrierClient({config, contract, onUpdate=()=>{}, onError=
       }catch(error){if(signal.aborted)return;onError(error);}
     }
     // Mailbox reads are signed for this carrier and return only this identity's ciphertext.
-    const after=cursors.get(origin)??'', q=await inboxRequest(state.identity,origin,after,now());
+    const mailbox=await readState();
+    if(signal.aborted||stopped||!mailbox.carrier?.enabled||mailbox.identity?.profile.id!==state.identity?.profile.id)return;
+    const after=cursors.get(origin)??'', q=await inboxRequest(mailbox.identity,origin,after,now());
+    if(signal.aborted||stopped)return;
     const reply=await post(origin,'/v1/inbox',q,{signal});
     assert(keysAre(reply,['type','envelopes','next'])&&reply.type===CARRIER_DOMAIN&&Array.isArray(reply.envelopes)&&reply.envelopes.length<=PAGE_SIZE,'Invalid carrier inbox response.');
     let last=after;
@@ -73,24 +78,42 @@ export function createCarrierClient({config, contract, onUpdate=()=>{}, onError=
         await validateEnvelope(envelope,now());
         assert(envelope.packet.to===state.identity.profile.id,'Carrier returned someone else’s file.');
         await updateState(async s=>{
-          if(!s.carrier?.enabled)return;
+          if(signal.aborted||stopped||!s.carrier?.enabled||s.identity?.profile.id!==state.identity.profile.id)return;
+          if(await acceptDefiReply(s,swapConfig,envelope.packet)){signal.throwIfAborted();return;}
           const result=await receivePacket(s,envelope.packet,false,contract);
           if(result.kind!==DELIVERY_RECEIPT)await prepareDeliveryReceipt(s,envelope.packet.id);
-        });
+          signal.throwIfAborted();
+        },{signal});
       }catch(error){onError(error);}
     }
     cursors.set(origin,reply.next);
     delays.set(origin,{at:now()+(reply.next?1000:15000)+Math.floor(Math.random()*500),failures:0,offset:due.length?(offset+selected.length)%due.length:0});
     changed();
   }
+  async function checkUpdates(signal) {
+    const pending=await pendingDefiChecks(await readState(),swapConfig),live=new Set(pending.map(p=>p.requestId));
+    for(const id of checks.keys())if(!live.has(id))checks.delete(id);
+    const next=p=>Math.max(checks.get(p.requestId)??0,p.checkedAt+30000);
+    const due=pending.filter(p=>now()>=next(p)).sort((a,b)=>next(a)-next(b)).slice(0,2);
+    for(const item of due) {
+      if(signal.aborted||stopped||!navigator.onLine)return;
+      checks.set(item.requestId,now()+30000);
+      try{await checkDefiSwap(swapConfig,item.requestId,{signal,automatic:true});changed();}
+      catch(error){if(!signal.aborted)onError(error);}
+      finally{checks.set(item.requestId,now()+30000);}
+    }
+  }
   return {
     carriers,
     async tick(){
       if(stopped||!navigator.onLine||!carriers.length)return;
+      const signal=controller.signal;
       return navigator.locks.request('lenz-carrier-sync-v1',{ifAvailable:true},async lock=>{
-        if(!lock||stopped||!(await readState()).carrier?.enabled)return;
+        const current=await readState();
+        if(!lock||stopped||signal.aborted||!current.identity||!current.carrier?.enabled)return;
+        if(mailboxOwner!==current.identity.profile.id){mailboxOwner=current.identity.profile.id;cursors.clear();delays.clear();checks.clear();}
         await queue(); // Must commit before any network request.
-        const signal=controller.signal;
+        if(signal.aborted||stopped)return;
         await Promise.allSettled(carriers.filter(p=>(delays.get(p)?.at??0)<=now()).map(async origin=>{
           try{await exchange(origin,signal);}
           catch(error){
@@ -99,9 +122,11 @@ export function createCarrierClient({config, contract, onUpdate=()=>{}, onError=
             if(!signal.aborted)onError(error);
           }
         }));
+        if(!signal.aborted&&!stopped){try{await checkUpdates(signal);}catch(error){if(!signal.aborted)onError(error);}}
       });
     },
-    wake(){delays.clear();},
+    setDefiConfig(value){if(stopped)return;swapConfig=value?structuredClone(value):null;cursors.clear();delays.clear();checks.clear();},
+    wake(){delays.clear();checks.clear();},
     pause(){controller.abort();controller=new AbortController();},
     close(){stopped=true;controller.abort();channel?.close();},
   };

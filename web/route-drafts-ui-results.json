@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T17:04:49.811Z",
+  "checkedAt": "2026-11-05T13:49:26.381Z",
   "passed": 11,
   "failed": 0,
   "checks": [
@@ -50,18 +50,18 @@
   ],
   "sourceFiles": {
     "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
-    "web/route-drafts-ui.test.cjs": "94ebd7d73092d4010b1f5d3bdab6a570845a57eeed355ebb89b214c90f2f3c86",
-    "web/public/markets.html": "d8f0b0458f11cc060f82bf82a6f6f31178750f9e8eb2035097b1a90f347aecfe",
-    "web/public/market-quote-ui.js": "2b8c4de80440b785fa093889394542233c18412c7e178c715cea063465936226",
+    "web/route-drafts-ui.test.cjs": "0973cedc55d1382e1b2dbfc1854ef0e448efc77ba55f7acc9398e020dbc2cab3",
+    "web/public/markets.html": "cbccc40c09e3f5a026915c62a76f93b43231a578e0e561d8678b5a8f494894bc",
+    "web/public/market-quote-ui.js": "8f926f7cba781cd88de6d2e2f9491a72ad56e5c8b5ca79eb63cbc6fda07411e7",
     "web/public/route-draft-form.js": "93280dbd0dba5bc0871fb2495e3b8343811825fa7e959c0e45ed3dcd3b431e4d",
     "web/public/route-draft-ui.js": "7626b01d12c54e8a53bf693b5284f61f74d060ae086042a57c7fb7053a3403df",
     "web/public/defi-route-drafts.js": "ea96bce102e2f50943911c3f70e2b1ca55a8f34f67934f2f713354901a95816b",
-    "web/public/routes.html": "164a4bb87cdff757a06a1770b7f0116e987db3e62b847190316ec470f375cef0",
+    "web/public/routes.html": "c9113c759c112a83f0684380b0824abccc4cdfaae06dc3cecb32a00ad4fb0cf1",
     "web/public/routes.css": "a32468d7642d5c685ae39428a9dca3f48db8337c5a1cb0f2cb4a9eddb743b7d1",
     "web/public/defi-surfaces.css": "8c19b085f476bfe0719af97db4c627c34fcf4d8c00e9fa414a781c32458068d5",
-    "web/public/routes.js": "aeabba21e1f0edad555690ce0279fd5b6d4a17ab7fc52d53e696d47f5ee64cbf",
-    "web/public/sw.js": "67e4335ad3ad2f05d686eed253a3decd025c125ca8551f1630829c24763ee6be",
-    "web/public/chat-sw.js": "2196ff6a6f37e4ff94f2afd45576f91afc9cfd2171377f394eebe51393d1acf6"
+    "web/public/routes.js": "6a4debcc552f25645ec94dcc9f1328b2afab9297af93802926b88d215cc20c0c",
+    "web/public/sw.js": "d54fb2d580ca32d7cd4e06423ac3a9b1426ea498746a4bc7b7c0a43aa708e37d",
+    "web/public/chat-sw.js": "47c2e8c7dde6a53aa0a7473a4ab68d547612efedc2ed1aac84027e065313b779"
   },
   "scope": "Disposable Windows Edge with real service workers/IndexedDB/WebCrypto and fixture public APIs. No user profile, live transaction, signing, reservation or physical-device test."
 }

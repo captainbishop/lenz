@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { readNativeWallet } from './companion.mjs';
 const execute = promisify(execFile), sha = bytes => createHash('sha256').update(bytes).digest('hex');
 export function validateEffects(value, review) {
@@ -21,13 +22,13 @@ export function validateEffects(value, review) {
     change: value.change, inputValue: value.inputValue, recipient: value.recipient,
     changeOwned: true, commitmentsVerified: true, noteEncryptionVerified: true, canSign: false, canSend: false };
 }
-export async function inspectNativeEffects(wallet, file, review) {
-  return validateEffects(await inspectNativeReview('--effects',wallet,file,review),review);
+export async function inspectNativeEffects(wallet, file, review, options = {}) {
+  return validateEffects(await inspectNativeReview('--effects',wallet,file,review,options),review);
 }
 export async function inspectNativeMemos(wallet, file, review, options = {}) {
   return inspectNativeReview('--memos',wallet,file,review,options);
 }
-async function inspectNativeReview(mode, wallet, file, review, { signal } = {}) {
+async function inspectNativeReview(mode, wallet, file, review, { signal, walletRoot=fileURLToPath(new URL('./.testnet/',import.meta.url)), readWallet=readNativeWallet } = {}) {
   assert(['a', 'b'].includes(wallet) && review.wallet === wallet);
   const build = JSON.parse(await readFile(new URL('./review-inspector/build.json', import.meta.url)));
   if (mode === '--memos') assert.equal(build.memoInspectionVersion,1,'Memo inspector build is unavailable');
@@ -36,10 +37,10 @@ async function inspectNativeReview(mode, wallet, file, review, { signal } = {}) 
   }
   signal?.throwIfAborted();
   // The existing read validates testnet configuration and pinned wallet binaries.
-  await readNativeWallet('balance', wallet);
+  await readWallet('balance', wallet,{signal});
   signal?.throwIfAborted();
   const walletExecutable = fileURLToPath(new URL('../tooling/zcash-devtool/target/release/zcash-devtool.exe', import.meta.url));
-  const { stdout } = await execute(walletExecutable, ['wallet', '-w', fileURLToPath(new URL('./.testnet/' + wallet, import.meta.url)), 'list-accounts'],
+  const { stdout } = await execute(walletExecutable, ['wallet', '-w', join(walletRoot,wallet), 'list-accounts'],
     { windowsHide: true, timeout: 15000, maxBuffer: 16384 });
   const viewingKeys = [...stdout.matchAll(/^\s+UFVK: (\S+)$/gm)];
   assert.equal(viewingKeys.length, 1, 'Expected one disposable native account');

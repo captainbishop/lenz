@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createNearIntentRelay} from './intent-near-relay.mjs';
+import {createNearIntentRelay,createNearIntentFinalSnapshot} from './intent-near-relay.mjs';
 import {NEAR_INTENT_DEPLOYMENT as deployment} from './public/intent-near-plan.js';
 import {base58} from './public/intents-vendor/codecs.js';
 import {createHash} from 'node:crypto';
 import {KeyPair,actions,createTransaction,encodeTransaction,SignedTransaction,Signature} from '../contracts/node_modules/near-api-js/lib/index.js';
 import {nep413Hash} from '../integrations/intent-testnet/swap.mjs';
 import {nearAuthorizationId,implicitNearOwner} from './public/intent-near-plan.js';
+import {createNearIntentService} from './public/intent-near-route.js';
 
 test('a quote uses current funded balances and binds the actual testnet assets and recipient',async()=>{
  let retained={version:1,requests:{},grants:{},pending:null},sent=0;
@@ -34,6 +35,38 @@ function routeFixture(){
  function final(){resolved=true;const {signed,call}=retained.pending;return {final_execution_status:'FINAL',transaction:{hash:signed.txHash,signer_id:signed.senderId,receiver_id:call.receiverId,actions:[{FunctionCall:{method_name:call.methodName,args:Buffer.from(JSON.stringify(call.args)).toString('base64'),gas:call.gas,deposit:call.deposit}}]},status:{SuccessValue:''},receipts_outcome:[{id:'final-transfer-receipt',outcome:{executor_id:deployment.target,status:{SuccessValue:''},logs:['EVENT_JSON:'+JSON.stringify({standard:'nep141',event:'ft_transfer',data:[{old_owner_id:deployment.verifier,new_owner_id:'alice.testnet',amount:'2000000'}]})]}}]};}
  return {relay,rpc,signer,chosen,attempt,final,state:()=>retained,counts:()=>({signs,broadcasts}),signPayload:userPayload=>signPayload(userPayload,user)};
 }
+
+function expirySnapshot(f,{timestamp='61000000001',used=false}={}){
+ const nonces=[];f.rpc.finalSnapshot=async()=>({header:{hash:base58.encode(new Uint8Array(32).fill(7)),height:17,timestamp_nanosec:timestamp},account:id=>f.rpc.account(id),keys:id=>f.rpc.keys(id),query:async(method,args,id)=>{if(method==='is_nonce_used'){nonces.push(args);return typeof used==='function'?used(args):used;}return f.rpc.query(method,args,id);}});return nonces;
+}
+test('an expired recovered authorization retains its fence when a final view cannot distinguish pruned nonces',async()=>{
+ const f=routeFixture(),attempt=await f.attempt(),nonces=expirySnapshot(f),outcome=await f.relay.reconcile(structuredClone(attempt));
+ assert.equal(outcome.status,'unknown');assert.equal(outcome.verified,false);assert.equal(outcome.permissionExpired,true);assert.equal(outcome.resubmissionSafe,false);assert.equal(nonces.length,3);assert.equal(outcome.evidence.timestampNanosec,'61000000001');assert.deepEqual(f.counts(),{signs:0,broadcasts:0});
+ assert.throws(()=>createNearIntentService({}).validateOutcome({...outcome,status:'expired'},attempt));for(const change of [e=>e.nonces[0].nonce='changed',e=>e.nonces[0].used=true,e=>e.timestampNanosec='61000000000',e=>e.configHash='changed']){const forged=structuredClone(outcome);change(forged.evidence);assert.throws(()=>createNearIntentService({}).validateOutcome({...forged,status:'expired'},attempt));}
+ assert.equal((await f.relay.reconcile(attempt)).status,'unknown');assert.deepEqual(f.counts(),{signs:0,broadcasts:0});
+ const forged=structuredClone(attempt);forged.authorization.signed[0].signature='ed25519:'+base58.encode(new Uint8Array(64));forged.authorization.artifactId=nearAuthorizationId(forged.authorization.signed);await assert.rejects(f.relay.reconcile(forged),/signature|authorization/);
+});
+test('an unavailable recovered signature retains its exact saved review without inventing an artifact',async()=>{
+ const f=routeFixture(),attempt=await f.attempt();attempt.authorization=null;attempt.status='approval-unresolved';expirySnapshot(f);const result=await f.relay.reconcile(attempt);assert.equal(result.status,'unknown');assert.equal(result.permissionExpired,true);assert.equal(result.artifactId,undefined);assert.equal(result.evidence.authorizationRecovered,false);assert.throws(()=>createNearIntentService({}).validateOutcome({...result,status:'expired'},attempt));assert.equal((await f.relay.reconcile(attempt)).status,'unknown');assert.deepEqual(f.counts(),{signs:0,broadcasts:0});
+ const missing=routeFixture(),unknown=await missing.attempt();unknown.authorization=null;unknown.status='approval-unresolved';assert.equal((await missing.relay.reconcile(unknown)).status,'unknown');const altered=structuredClone(attempt);altered.review.destination.accountId='mallory.testnet';await assert.rejects(f.relay.reconcile(altered),/changed/);
+});
+test('local expiry, consumed nonces, an unverified deployment and pending transactions cannot release a request',async()=>{
+ for(const options of [{timestamp:'61000000000'},{used:args=>args.account_id!=='impossible'}]){const f=routeFixture(),attempt=await f.attempt();expirySnapshot(f,options);assert.equal((await f.relay.reconcile(attempt)).status,'unknown');}
+ const f=routeFixture(),attempt=await f.attempt();expirySnapshot(f);f.rpc.account=async()=>({code_hash:'changed'});assert.equal((await f.relay.reconcile(attempt)).status,'unknown');
+ const pending=routeFixture(),signed=await pending.attempt();await pending.relay.submit(signed);pending.rpc.finalSnapshot=async()=>{assert.fail('A pending transaction cannot be released by nonce expiry');};assert.equal((await pending.relay.reconcile(signed)).status,'unknown');
+});
+test('the final snapshot adapter pins every expiry query to one block and rejects substituted query blocks',async()=>{
+ const header={hash:base58.encode(new Uint8Array(32).fill(8)),height:18,timestamp_nanosec:'61000000001'},calls=[];
+ const view=await createNearIntentFinalSnapshot(async(method,params)=>{calls.push({method,params});if(method==='block')return {header};return {block_hash:header.hash,block_height:header.height,result:[102,97,108,115,101],keys:[],code_hash:'pinned'};})();
+ assert.equal(await view.query('is_nonce_used',{nonce:'exact'},deployment.verifier),false);await view.account(deployment.verifier);await view.keys(deployment.verifier);assert(calls.slice(1).every(call=>call.params.block_id===header.hash&&!Object.hasOwn(call.params,'finality')));
+ const wrong=await createNearIntentFinalSnapshot(async method=>method==='block'?{header}:{block_hash:'another',block_height:18,result:[102,97,108,115,101]})();await assert.rejects(wrong.query('is_nonce_used',{},deployment.verifier),/block/);
+});
+test('a consumed nonce pruned after expiry cannot be presented as unspent funds',async()=>{
+ const f=routeFixture(),attempt=await f.attempt();expirySnapshot(f,{used:false});
+ // The pinned bitmap implementation returns false for both never-used nonces
+ // and committed prefixes removed by cleanup_nonces after expiry.
+ assert.equal((await f.relay.reconcile(attempt)).status,'unknown');assert.deepEqual(f.counts(),{signs:0,broadcasts:0});
+});
 test('lost submission retains one exact signed transaction and reconciliation does not sign or rebroadcast',async()=>{
  const f=routeFixture(),attempt=await f.attempt();const first=await f.relay.submit(attempt);assert.equal(first.status,'unknown');assert(f.state().pending.signed.bytes.length>100);assert.deepEqual(f.counts(),{signs:1,broadcasts:1});
  assert.equal((await f.relay.submit(attempt)).status,'unknown');assert.equal((await f.relay.reconcile(attempt)).status,'unknown');assert.deepEqual(f.counts(),{signs:1,broadcasts:1});

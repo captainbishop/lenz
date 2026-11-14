@@ -10,8 +10,8 @@ import {createPredictionImageRoute} from './prediction-image.mjs';
 const response=()=>({writeHead(status,headers){this.status=status;this.headers=headers;},end(body){this.body=body;}});
 const request=(url,input,headers={})=>Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]),{url,method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json',...headers}});
 test('prediction and context routes reject private data, foreign origins and arbitrary upstreams',async()=>{
- let calls=0;const read=async()=>{calls++;return {};},route=createMarketRoute({predictions:read,marketContext:read});
- for(const [url,input] of [['/api/markets/predictions',{provider:'polymarket',privacy:'public'}],['/api/markets/context',{privacy:'public'}]]){
+ let calls=0;const read=async()=>{calls++;return {};},route=createMarketRoute({predictions:read,marketContext:read,marketIndices:read,marketAssets:read});
+ for(const [url,input] of [['/api/markets/predictions',{provider:'polymarket',privacy:'public'}],['/api/markets/context',{privacy:'public'}],['/api/markets/indices',{privacy:'public'}],['/api/markets/assets',{privacy:'public'}]]){
   for(const extra of [{address:'wallet'},{url:'http://127.0.0.1/private'},{privacy:'private'}]){const res=response();await route(request(url,{...input,...extra}),res);assert.equal(res.status,400);}
   for(const headers of [{host:'evil.test'},{origin:'https://evil.test'}]){const res=response();await route(request(url,input,headers),res);assert.equal(res.status,403);}
   assert.equal(calls,0);
@@ -45,6 +45,14 @@ test('Kalshi artwork binds metadata to the exact event and falls back from an ov
 test('grouped Kalshi events never replace a missing event image with a single candidate',async()=>{
  const calls=[],route=createPredictionImageRoute({fetcher:async url=>{calls.push(url);if(url.endsWith('/metadata'))return new Response(JSON.stringify({featured_image_url:'https://assets.kalshi.com/candidate.png',image_url:'https://assets.kalshi.com/event.png',market_details:[{image_url:'https://assets.kalshi.com/a.png'},{image_url:'https://assets.kalshi.com/b.png'}]}));return new Response('',{status:404});}});
  const res=response();await route({url:'/api/markets/prediction-image?event=kalshi:GROUP',method:'GET',headers:{host:'127.0.0.1:4173'}},res);assert.equal(res.status,404);assert(!calls.some(url=>url.includes('candidate.png')));
+});
+
+test('a full grid of image requests waits for bounded capacity instead of losing valid artwork',async()=>{
+ let active=0,peak=0,calls=0;
+ const png=Buffer.from([137,80,78,71,13,10,26,10]);
+ const route=createPredictionImageRoute({fetcher:async()=>{calls++;active++;peak=Math.max(peak,active);await new Promise(resolve=>setTimeout(resolve,10));active--;return new Response(png,{headers:{'content-type':'image/png'}});}});
+ const results=await Promise.all(Array.from({length:24},async(_,i)=>{const res=response();await route({url:'/api/markets/prediction-image?url='+encodeURIComponent('https://images.polymarket.com/event-'+i+'.png'),method:'GET',headers:{host:'127.0.0.1:4173'}},res);return res.status;}));
+ assert.deepEqual(results,Array(24).fill(200));assert.equal(calls,24);assert(peak<=6);
 });
 
 test('market JSON rejects oversized responses',async()=>{

@@ -1,6 +1,6 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),http=require('node:http'),{createHash}=require('node:crypto');
 (async()=>{
- const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results;
+ const templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8'))).results;
  const root=path.join(__dirname,'public'),server=http.createServer(async(req,res)=>{try{
    const pathname=new URL(req.url,'http://local').pathname;
    if(pathname==='/app.js'){res.setHeader('content-type','text/javascript');res.end('');return;}

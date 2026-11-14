@@ -19,7 +19,7 @@ its previews cannot sign, dispatch, release reservations or credit a wallet.
 
 Rhea, NEAR Intents, Zcash and privacy are part of the current Lenz build alongside NEAR settlement. These modules implement the quote stage. The separate [Rhea adapter](../contracts/adapter/README.md) now has funded testnet swap/refund and browser evidence. A [native shielded Zcash transfer](../zcash/pczt.md) is confirmed, with separate [unsigned browser review and expiry checks](../zcash/payment-freshness.md). NEAR Intents execution, browser Zcash signing, the shielded DeFi route and private NEAR settlement remain incomplete. Aurora has local execution/verifier evidence; no separate Aurora Intents connection is implemented.
 
-November 2: [installation checks](installation-results.json) confirm the empty-authentication payload builder and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) retains SDK 0.1.26 and requires valid signatures on preview quotes. The latest confidential live preview still returns HTTP 401.
+November 2: [installation checks](installation-results.json) confirm the empty-authentication payload builder and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) retains SDK 0.1.26 and requires valid signatures on preview quotes. November 9 live checks accepted confidential dry quotes and EVM ownership authentication; the [account adapter](../docs/confidential-account.md) adds private balance reads and fresh same-key reauthentication.
 
 `web/server.mjs` now mounts these same-origin local routes:
 
@@ -36,7 +36,7 @@ Requests require JSON and the local Lenz origin. Provider credentials, if config
 
 Rhea uses the [published testnet exchange](https://guide.rhea.finance/developers/contracts), `ref-finance-101.testnet`. Its reads share a final block hash. These are RPC-authenticated observations, not browser light-client verification or guaranteed future prices. The adapter currently handles simple pools only.
 
-The [1Click quote API](https://docs.near-intents.org/api-reference/oneclick/request-a-swap-quote) uses its mainnet endpoint. Previewing that service cannot convert testnet tUSD into mainnet assets. The client forces `dry: true`, rejects unexpected deposit details and never silently drops the requested `basic`/`advanced` confidentiality setting. The official SDK now verifies selected signed fields before a preview is returned. Its signature omits `confidentiality`, so the checked HTTPS echo is not cryptographic proof of the privacy mode or the operator's privacy guarantees. Live provider signature verification remains untested because partner access is missing.
+The [1Click quote API](https://docs.near-intents.org/api-reference/oneclick/request-a-swap-quote) uses its mainnet endpoint. Previewing that service cannot convert testnet tUSD into mainnet assets. The client forces `dry: true`, rejects unexpected deposit details and never silently drops the requested `basic`/`advanced` confidentiality setting. The official SDK verifies selected signed fields before a preview is returned, including in the November 9 disposable live checks. Its signature omits `confidentiality`, so the checked HTTPS echo is not cryptographic proof of the privacy mode or the operator's privacy guarantees.
 
 ## Local evidence
 
@@ -56,14 +56,15 @@ node integrations/check-live.mjs intents-auth
 
 These scripts save dated result files and return nonzero on failure. [Rhea's live quote](rhea-results.json) passed at a final testnet block. [Empty-intent authentication](intents-auth-results.json) succeeded using a disposable Ed25519 identity and the official SDK's versioned nonce builder. Keys and access/refresh tokens were not saved. This confirms account authentication only.
 
-Confidential quote requests still return HTTP 401. The public token list works. A user-session token was also rejected by the quote endpoint, so it is not substituted for partner credentials. Partner access is not configured. Obtain one through the [partner dashboard](https://partners.near-intents.org), configure `LENZ_INTENTS_API_KEY` only in the server environment, and rerun the dry quote check. Do not paste it into chat or put it in browser assets. The [authentication docs](https://docs.near-intents.org/integration/distribution-channels/1click-api/authentication) distinguish partner and user-session credentials. No public-route fallback was used.
+Partner access was verified locally on November 9 with a signed confidential dry quote. Each host still needs its own server-side configuration: obtain a key through the [partner dashboard](https://partners.near-intents.org), configure `LENZ_INTENTS_API_KEY` in the server process, and run the dry quote check. Keep keys out of chat, browser assets and Git. A user-session token is separate and is not substituted for partner credentials. The [authentication docs](https://docs.near-intents.org/integration/distribution-channels/1click-api/authentication) explain the distinction. Wallet now mounts explicit ownership authentication and private balance reads using the shared browser-compatible account adapter. User tokens stay in page memory; no deposit or execution route is enabled.
 
 The experimental bridge SDK was used only for an empty authentication payload and
 a probe. It has been removed. The current lock contains only `@scure/base` 1.2.6
 and reports zero registry advisories. The bounded [authentication builder](intents-auth-payload.mjs)
 retains the SDK v0 wire format, validated against [32 official-SDK fixtures](intents-auth-sdk-fixtures.json)
-before removal. The existing disposable signer remains; no live authentication
-was repeated after this change. Quote routes retain their separate verifier.
+before removal. No live authentication was repeated during that November 2
+cleanup. The November 9 account checks subsequently verified live EVM
+authentication. Quote routes retain their separate verifier.
 
 The [cleanup evidence](../research/security/dependency-cleanup-2026-11-02.md)
 records compatibility checks and scope. The original [dependency audit](dependency-audit.json)
@@ -73,4 +74,4 @@ by this replacement; full Intents integration remains open.
 
 The NEAR reserve now builds, deploys and redeems. [Rhea's funded test](../contracts/rhea-flow-results.json) created tUSD/wrapped-NEAR pool 2870, rejected an impossible minimum without debiting deposits, swapped one tUSD for `16631929970821175489787` base units of wrapped test NEAR and withdrew the output into the disposable account. Every successful call includes final receipts. The documented `register_tokens` example omitted the required one-yocto deposit; a live failure identified it and the corrected run passed. The deployed code hash is recorded; source-to-bytecode equivalence has not been established.
 
-Next Intents work is partner access, a supported execution route, and a verified binding for the requested confidentiality mode. Rhea follow-through includes external signing and recovery for missing contract callbacks; [receipt checks](../research/rhea-receipt-recovery.md) are implemented. Native shielded wallet work is in [zcash/](../zcash/README.md), and contract-verifier evidence is in [aurora/proof-results.json](../aurora/proof-results.json).
+Next Intents work is production recovery, a supported funded execution/return route, and a verified binding for the requested confidentiality mode. Rhea follow-through includes external signing and recovery for missing contract callbacks; [receipt checks](../research/rhea-receipt-recovery.md) are implemented. Native shielded wallet work is in [zcash/](../zcash/README.md), and contract-verifier evidence is in [aurora/proof-results.json](../aurora/proof-results.json).

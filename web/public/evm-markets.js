@@ -1,3 +1,4 @@
+import {HYPERLIQUID} from './hyperliquid-environment.js';
 import {immutable,CHAINS} from './defi-catalog.js';
 // Reviewed deployment identities; source links and limits: docs/market-discovery.md.
 const token=(chainId,id,symbol,decimals)=>({chainId,kind:'erc20',id,symbol,decimals});
@@ -12,7 +13,7 @@ export function marketNetwork(network='base'){
 }
 export const MARKET_SOURCES=immutable([
   ...['base','ethereum','arbitrum'].flatMap(network=>['uniswap','aave'].map(provider=>({key:network==='base'?provider:provider+':'+network,provider,network,chainId:EVM_MARKETS[network].chainId,name:(provider==='uniswap'?'Uniswap':'Aave')+' · '+CHAINS[EVM_MARKETS[network].chainId].name}))),
-  {key:'hyperliquid',provider:'hyperliquid',chainId:'hypercore:mainnet',name:'Hyperliquid · HyperCore'},
+  {key:'hyperliquid',provider:'hyperliquid',chainId:HYPERLIQUID.chainId,name:'Hyperliquid · HyperCore testnet'},
 ]);
 export function marketSource(snapshot){
   const source=MARKET_SOURCES.find(s=>s.provider===snapshot.provider&&s.chainId===snapshot.chainId);

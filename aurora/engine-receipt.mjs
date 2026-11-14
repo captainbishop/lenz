@@ -19,12 +19,13 @@ function base64(value){
   const bytes=Buffer.from(value,'base64');
   assert(bytes.length<=MAX_ENGINE_BYTES && bytes.toString('base64')===value,'Noncanonical base64');return bytes;
 }
-function validate(reference){
+function validate(reference,maxGas=300000000000000n){
+  assert(typeof maxGas==='bigint'&&maxGas>0n&&maxGas<=1000000000000000n,'Invalid Engine gas ceiling');
   keys(reference,['version','network','engine','sender','txHash','gas','contract','value','input']);
   const ref={...reference};
   assert(ref.version===1 && ref.network==='testnet' && ref.engine==='aurora','Unsupported Engine domain');
   assert(account(ref.sender) && (ref.sender.endsWith('.testnet') || /^[0-9a-f]{64}$/.test(ref.sender)),'Expected a testnet sender');
-  hash(ref.txHash);assert(decimal(ref.gas,300000000000000n)>0n,'Gas must be positive');
+  hash(ref.txHash);assert(decimal(ref.gas,maxGas)>0n,'Gas must be positive');
   const value=decimal(ref.value,(1n<<256n)-1n);
   assert(typeof ref.input==='string' && ref.input.length<=65538 && /^0x(?:[0-9a-fA-F]{2})*$/.test(ref.input),'Invalid calldata');
   const args=encodeCall({contract:ref.contract,value,input:Buffer.from(ref.input.slice(2),'hex')}).toString('base64');
@@ -78,7 +79,7 @@ function inspect({ref,args},tx){
 export function validateEngineReference(reference){return validate(reference).ref;}
 
 // RPC execution evidence only; this never settles a payment or releases a reservation.
-export function inspectEngineTransaction(reference,transaction){return inspect(validate(reference),transaction);}
+export function inspectEngineTransaction(reference,transaction,{maxGas=300000000000000n}={}){return inspect(validate(reference,maxGas),transaction);}
 export async function checkEngineTransaction(reference,{fetchImpl=globalThis.fetch,timeoutMs=20000}={}){
   const expected=validate(reference),txHash=expected.ref.txHash;
   assert(typeof fetchImpl==='function' && Number.isSafeInteger(timeoutMs) && timeoutMs>0 && timeoutMs<=60000,'Invalid lookup options');

@@ -3,6 +3,7 @@ import {Interface} from '../aurora/node_modules/ethers/lib.esm/index.js';
 import {readTokenWatch as read} from './token-watch.mjs';
 import {tokenWatchRequest,tokenWatchSnapshot,tokenUsd,tokenDecimal,readTokenWatch,saveTokenWatch} from '../web/public/token-watch.js';
 import {createIdentity} from '../web/public/peer-crypto.js';
+import {tokenMarket} from '../web/public/token-market.js';
 const now=1800000000000,abi=new Interface(['function name() view returns(string)','function symbol() view returns(string)','function decimals() view returns(uint8)','function balanceOf(address) view returns(uint256)']);
 const request={network:'ethereum',contract:'0x'+'11'.repeat(20),account:'0x'+'22'.repeat(20),publicConsent:true};
 function source(change={}){const calls=[];return {calls,fetcher:async(url,options)=>{const q=JSON.parse(options.body);calls.push(q);let result;
@@ -18,6 +19,13 @@ test('contract lookup reads an exact network and canonical block without sending
 test('no account means no balance lookup; familiar token names cannot acquire a price',async()=>{
  const s=source(),v=await read({...request,account:null},{fetcher:s.fetcher,clock:()=>now,oracle:()=>assert.fail('Unknown token must not look up a price by symbol')});
  assert.equal(v.balance,null);assert.equal(v.price,null);assert(!s.calls.some(q=>q.method==='eth_call'&&abi.parseTransaction({data:q.params[0].data}).name==='balanceOf'));
+});
+test('a failed reviewed oracle leaves the token unpriced while other contracts may use a market reference',async()=>{
+ const market=r=>tokenMarket([{chainId:r.network,baseToken:{address:r.contract},pairAddress:'0x'+'78'.repeat(20),priceUsd:'1',liquidity:{usd:100000},volume:{h24:10000},info:{imageUrl:'https://cdn.dexscreener.com/logo.png'}}],r,{now});
+ const options={fetcher:source().fetcher,clock:()=>now,oracle:()=>{throw Error('Oracle unavailable');},market};
+ const reviewed=await read({...request,contract:'0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},options);
+ assert.equal(reviewed.price,null);assert.equal(reviewed.balance,'1234500');assert.equal(reviewed.image,'https://cdn.dexscreener.com/logo.png');
+ const custom=await read(request,{...options,fetcher:source().fetcher});assert.equal(custom.price.id,'dexscreener');assert.equal(tokenUsd(custom),'1.23');
 });
 test('missing consent, endpoint injection, wrong chain, missing code and reorgs fail',async()=>{
  for(const change of [{publicConsent:false},{contract:'https://evil.invalid'},{account:'bad'},{network:'constructor'},{url:'https://evil.invalid'}])assert.throws(()=>tokenWatchRequest({...request,...change}));

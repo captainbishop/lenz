@@ -7,7 +7,7 @@ export function discoveryURL(input){
   const url=new URL(base+path);
   if(r.kind==='search')url.searchParams.set(r.provider==='dexscreener'?'q':'query',r.query);
   if(r.kind==='search'&&r.network)url.searchParams.set('network',r.network);
-  if(r.kind==='networks')url.searchParams.set('page',String(r.page));
+  if(r.kind==='networks'||r.kind==='feed'&&r.page)url.searchParams.set('page',String(r.page));
   if(r.provider==='geckoterminal'&&!['networks','trades'].includes(r.kind))url.searchParams.set('include','base_token,quote_token,dex,network');
   return url;
 }
@@ -28,10 +28,10 @@ export function normalizeDiscovery(provider,raw){
   const included=new Map((Array.isArray(raw.included)?raw.included:[]).map(item=>[item.id,item]));
   for(const p of candidates.slice(0,100)){
     try{
-      let row;if(provider==='dexscreener')row=normalized(provider,p.chainId,p.pairAddress,{address:p.baseToken.address,symbol:p.baseToken.symbol,name:p.baseToken.name,quote:p.quoteToken.symbol,venue:p.dexId,price:p.priceUsd,change:p.priceChange?.h24,liquidity:p.liquidity?.usd,volume:p.volume?.h24,marketCap:p.marketCap,fdv:p.fdv,createdAt:p.pairCreatedAt,boosted:p.boosts?.active>0});
+      let row;if(provider==='dexscreener')row=normalized(provider,p.chainId,p.pairAddress,{image:p.info?.imageUrl,address:p.baseToken.address,symbol:p.baseToken.symbol,name:p.baseToken.name,quote:p.quoteToken.symbol,venue:p.dexId,price:p.priceUsd,change:p.priceChange?.h24,liquidity:p.liquidity?.usd,volume:p.volume?.h24,marketCap:p.marketCap,fdv:p.fdv,createdAt:p.pairCreatedAt,boosted:p.boosts?.active>0});
       else {
         const a=p.attributes,r=p.relationships,network=identifier(r.network?.data?.id??p.id.split('_')[0]),base=included.get(r.base_token?.data?.id)?.attributes,quote=included.get(r.quote_token?.data?.id)?.attributes;
-        requireData(base&&quote);row=normalized(provider,network,a.address,{address:base.address,symbol:base.symbol,name:base.name,quote:quote.symbol,venue:included.get(r.dex?.data?.id)?.attributes?.name??r.dex?.data?.id,price:a.base_token_price_usd,change:a.price_change_percentage?.h24,liquidity:a.reserve_in_usd,volume:a.volume_usd?.h24,marketCap:a.market_cap_usd,fdv:a.fdv_usd,createdAt:a.pool_created_at?Date.parse(a.pool_created_at):null,boosted:false});
+        requireData(base&&quote);row=normalized(provider,network,a.address,{image:base.image_url,address:base.address,symbol:base.symbol,name:base.name,quote:quote.symbol,venue:included.get(r.dex?.data?.id)?.attributes?.name??r.dex?.data?.id,price:a.base_token_price_usd,change:a.price_change_percentage?.h24,liquidity:a.reserve_in_usd,volume:a.volume_usd?.h24,marketCap:a.market_cap_usd,fdv:a.fdv_usd,createdAt:a.pool_created_at?Date.parse(a.pool_created_at):null,boosted:false});
       }
       if(!rows.some(r=>r.id===row.id))rows.push(row);if(rows.length===60)break;
     }catch{/* Ignore malformed individual listings without accepting their metadata. */}
@@ -45,7 +45,7 @@ export async function readDegen(input,{fetchImpl=fetch,clock=Date.now,signal}={}
   if(request.kind==='networks'){requireData(Array.isArray(raw.data)&&raw.data.length<=100);return checkedNetworks({request,networks:raw.data.map(n=>({id:n.id,name:n.attributes?.name})),hasMore:raw.data.length===100,executable:false},request);}
   if(request.kind==='trades')return normalizeTrades(raw,request,clock());
   const rows=normalizeDiscovery(request.provider,raw);
-  return checkedDiscovery({version:1,request,observedAt:clock(),rows,executable:false},request,{now:clock()});
+  return checkedDiscovery({version:1,request,observedAt:clock(),rows,...(request.kind==='feed'?{hasMore:Array.isArray(raw.data)&&raw.data.length>=20}:{}),executable:false},request,{now:clock()});
 }
 export function normalizeTrades(raw,request,now=Date.now()){
   degenRequest(request);requireData(Array.isArray(raw?.data)&&raw.data.length<=300);const rows=[],events=new Map();

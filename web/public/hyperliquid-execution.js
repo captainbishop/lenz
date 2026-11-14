@@ -1,8 +1,9 @@
-import {prepareOrder,checkedOrderAction,orderAmount,requireOrder as check} from './hyperliquid-order.js';
+import {prepareOrder,checkedOrderAction,checkedOrderReview,orderAmount,requireOrder as check} from './hyperliquid-order.js';
 import {readTradingAccount,readTradingOrder,submitTradingAction} from './hyperliquid-trading.js';
 import {reserveOrderAttempt,recordOrderState,updateHyperOrders,recoverExpiredApproval} from './hyperliquid-order-store.js';
 
 export async function executeTradingOrder(review,lease,{current=()=>true,read=readTradingAccount,submit=submitTradingAction}={}){
+  review=checkedOrderReview(review);
   lease.assertCurrent();check(current()&&lease.identity.address===review.account,'Wallet or order changed. Review again.');
   async function recheck(){
     const snapshot=await read({...review.market,quote:{index:review.market.quoteIndex,symbol:review.market.quote}},review.account);
@@ -37,6 +38,7 @@ export async function refreshTradingOrder(row){
   return result;
 }
 export async function cancelTradingOrder(row,lease,{current=()=>true}={}){
+  row={...row,review:checkedOrderReview(row.review)};
   lease.assertCurrent();check(lease.identity.address===row.review.account&&current(),'Reconnect the order wallet.');
   const observed=await refreshTradingOrder(row);check(observed.state==='open','This order is no longer open. Refresh its status.');
   lease.assertCurrent();check(current(),'Cancellation closed.');

@@ -12,6 +12,16 @@ const toggle=dialog.querySelector('#carrier-enabled'),status=dialog.querySelecto
 const internetToggle=dialog.querySelector('#nostr-enabled'),internetStatus=dialog.querySelector('#nostr-status');
 button.onclick=()=>{dialog.showModal();void render();};dialog.querySelector('#carrier-close').onclick=()=>dialog.close();
 let client,internet,lastError='',internetError='',timer;
+let defiLoading=null,defiRetryAt=0;
+function loadDefiConfig(){
+  if(!client||defiLoading||!navigator.onLine||Date.now()<defiRetryAt)return;
+  defiRetryAt=Date.now()+30000;
+  // Optional swap checks must not hold up either chat delivery service.
+  defiLoading=fetch('/rhea-config.json',{signal:AbortSignal.timeout(10000)})
+    .then(response=>response.ok?response.json():null)
+    .then(config=>{if(config){client.setDefiConfig(config);defiRetryAt=Infinity;void tick().catch(()=>{});}})
+    .catch(()=>{}).finally(()=>{defiLoading=null;});
+}
 const relayErrors=new Map();
 async function render(){
   const state=await readState();updateDeliveryMode(!!client?.carriers.length,state,!!internet?.relays.length);
@@ -48,7 +58,7 @@ try{
     (async()=>{const response=await fetch('/nostr-config.json',{cache:'no-store'});if(!response.ok)throw Error('Internet delivery configuration unavailable.');
       internet=createNostrClient({config:await response.json(),contract,onUpdate:({origin,ok})=>{if(ok)relayErrors.delete(origin);void render();},onError:(error,origin)=>{if(origin)relayErrors.set(origin,error.message);else internetError=error.message;}});})(),
   ]);
-  await render();await tick();timer=setInterval(()=>{void tick().catch(()=>{});},3000);
+  loadDefiConfig();await render();await tick();timer=setInterval(()=>{loadDefiConfig();void tick().catch(()=>{});},3000);
 }catch(error){status.textContent=internetStatus.textContent=error.message;}
 toggle.onchange=async()=>{
   toggle.disabled=true;client?.pause();
@@ -60,7 +70,7 @@ internetToggle.onchange=async()=>{
   try{await setNostrEnabled(internetToggle.checked);internet?.wake();await tick();}catch(error){internetError=error.message;}
   finally{await render();}
 };
-const wake=()=>{client?.wake();internet?.wake();void tick().catch(()=>{});};
+const wake=()=>{client?.wake();internet?.wake();defiRetryAt=0;loadDefiConfig();void tick().catch(()=>{});};
 addEventListener('lenz-delivery-ready',wake);
 addEventListener('online',wake);
 addEventListener('offline',()=>{client?.pause();internet?.pause();void render();});

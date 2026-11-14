@@ -1,7 +1,7 @@
 import { walletError } from './wallet-feedback.js';
 import { walletAmount, setupBalanceVisibility } from './wallet-visibility.js';
 import { digest, openMessage } from './peer-crypto.js';
-import { updateState } from './chat-store.js';
+import { readState, updateState } from './chat-store.js';
 import { mountRheaWallet, loadRheaConfig, renderRheaWallet } from './rhea-wallet.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
@@ -9,7 +9,7 @@ import { deliveryMode, requestAutomaticDelivery } from './delivery-mode.js';
 import { receivePacket } from './receive-packet.js';
 import { DELIVERY_RECEIPT, deliveryAcknowledged, prepareDeliveryReceipt } from './delivery-receipts.js';
 import { compressed, fundingRequest, readNearVault, saveNearVault, nearLedger, displayUnits, transferTerms } from './near-protocol.js';
-import {isRecoveredChat,isRecoveredContact} from './chat-access.js';
+import {isRecoveredChat,isRecoveredContact,requirePaymentAccess} from './chat-access.js';
 
 const $ = selector => document.querySelector(selector);
 const el = (tag, text, cls) => { const n = document.createElement(tag); if(text !== undefined) n.textContent = text; if(cls) n.className = cls; return n; };
@@ -28,18 +28,18 @@ function paymentConnection() {
   document.querySelectorAll('[data-near-online]').forEach(button => { button.disabled = paymentRestricted || !navigator.onLine || button.dataset.nearBusy === 'true' || !config.ready; });
 }
 function linkReceipt(hash) {
-  const a = el('a','View confirmation ↗'); a.href = 'https://testnet.nearblocks.io/txns/' + encodeURIComponent(hash); a.target='_blank'; a.rel='noopener noreferrer'; return a;
+  const value=el('small','Confirmation: '+hash);value.className='transaction-reference';return value;
 }
-export function mountNearWallet({ action, status }) {
+export function mountNearWallet({ action, status, intentController }) {
   run = operation => action(async()=> { try { await operation(); status('Your wallet is ready.', false, { transient: true }); } catch(error) { const message=walletError(error); notice(message); throw new Error(message); } });
   const section = el('section',undefined,'near-wallet'); section.id='near-wallet';
-  section.innerHTML = `<div class="near-balance"><div class="balance-top"><div class="balance-label"><span>OFFLINE WALLET</span><button id="toggle-balances" type="button" aria-label="Hide balances" title="Hide balances" aria-pressed="false"><span data-eye-open><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><span data-eye-closed hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 3 18 18M10.6 5.1 12 5c6.5 0 10 7 10 7a20 20 0 0 1-3.2 4M6.3 6.3A22 22 0 0 0 2 12s3.5 7 10 7a12 12 0 0 0 5.7-1.7M10 10a3 3 0 0 0 4 4"/></svg></span></button></div><span class="near-network">NEAR · TESTNET</span></div><div class="near-amount"><strong id="near-total">0</strong><span>tUSD</span></div><p id="near-balance-caption">Fund your first offline payment.</p><div class="near-actions"><button id="near-send" type="button">↗ Send</button><button id="near-receive" type="button">↙ Receive</button><button id="near-fund" type="button">Add tUSD</button></div><p class="near-token-note">Lenz Test Dollar · a test token with no cash value</p></div>
+  section.innerHTML = `<div class="near-balance"><div class="balance-top"><div class="balance-label"><span>OFFLINE WALLET</span><button id="toggle-balances" type="button" aria-label="Hide balances" title="Hide balances" aria-pressed="false"><span data-eye-open><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><span data-eye-closed hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 3 18 18M10.6 5.1 12 5c6.5 0 10 7 10 7a20 20 0 0 1-3.2 4M6.3 6.3A22 22 0 0 0 2 12s3.5 7 10 7a12 12 0 0 0 5.7-1.7M10 10a3 3 0 0 0 4 4"/></svg></span></button></div><span class="near-network">NEAR · TESTNET</span></div><div class="near-amount"><strong id="near-total">0</strong><span>tUSD</span></div><p id="near-balance-caption">Fund your first offline payment.</p><div class="near-actions"><button id="near-send" type="button">↗ Send</button><button id="near-receive" type="button">↙ Receive</button><button id="near-fund" type="button" aria-label="Add tUSD" title="Add tUSD"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11h4V8h8v3h4v5h-4v-2H4zM12 8V5M8 5h8M18 20c0-1 2-3 2-3s2 2 2 3a2 2 0 0 1-4 0"/></svg></button></div><p class="near-token-note">Lenz Test Dollar · a test token with no cash value</p></div>
   <div class="near-journey"><div class="section-heading"><h2>Offline payments</h2><button id="near-explain" type="button" class="secondary" aria-expanded="false" aria-controls="near-explanation">How it works</button></div><div id="near-explanation" hidden><ol><li><span>01</span><strong>Add money</strong><small>Start with test dollars</small></li><li><span>02</span><strong>Go offline</strong><small>Send it. Receive it. Send it again.</small></li><li><span>03</span><strong>Confirm online</strong><small>Check that your payment went through</small></li></ol><p>You can send a payment while offline, and the recipient can pass it on. Share it using a nearby sharing app. Payments remain pending until checked online; if the same money was sent twice, only one payment can be confirmed.</p></div><p id="near-connection" class="quiet" role="status">Checking testnet configuration…</p><p id="near-feedback" class="status" role="status"></p></div>`;
   $('#wallet-content').prepend(section);
   walletAmount($('#near-total'), '0');
   walletAmount($('#near-balance-caption'), 'Fund your first offline payment.', 'Saved on this device.');
   setupBalanceVisibility();
-  mountRheaWallet({action});
+  mountRheaWallet({action,intentController});
   const activity=el('section',undefined,'near-activity');activity.innerHTML='<div class="section-heading"><h2>Payments</h2><button id="near-refresh" class="secondary" type="button">Refresh payments</button></div><p id="near-empty" class="quiet">Your payments will appear here.</p><div id="near-payments"></div>';
   $('.wallet-lower').prepend(activity);
   const panels=el('div');panels.innerHTML=`
@@ -64,6 +64,10 @@ export function mountNearWallet({ action, status }) {
     await updateState(async state=> {const vault=await readNearVault(state,config.contract);if(!vault.roots.some(r=>r.id===result.root.id))vault.roots.push(result.root);vault.receipts[result.root.id]=result;await saveNearVault(state,vault);});
     $('#near-fund-dialog').close();notice('Test money added. You can now send it offline.');
   });};
+  if(intentController){
+    intentController.setReserveFunding({prepare:prepareReserveFunding,fund:async terms=>{const result=await fundReserveFunding(terms);await renderNearWallet(await readState());return result;},available:()=>!!config.contract&&config.ready&&!paymentRestricted});
+    $('#near-fund').onclick=()=>intentController.openFunding();
+  }
   $('#near-send-form').onsubmit=event=> {event.preventDefault();run(async()=> {
     const packet=await updateState(state=>prepareNearPayment(state,config.contract,$('#near-recipient').value,$('#near-send-amount').value));
     currentPacket=packet;$('#near-send-dialog').close();
@@ -86,6 +90,35 @@ export function mountNearWallet({ action, status }) {
   const connection=()=>{paymentConnection();walletDelivery();};
   addEventListener('lenz-delivery-mode',walletDelivery);
   addEventListener('online',connection);addEventListener('offline',connection);
+}
+export async function prepareReserveFunding(){
+  const state=await readState();requirePaymentAccess(state.identity);
+  if(!state.identity||!config.ready||!config.contract)throw Error('Offline payment funding is unavailable.');
+  const owner=compressed(state.identity.profile.signingPublic),vault=await readNearVault(state,config.contract),request=vault.funding;
+  if(request&&request.owner!==owner)throw Error('Open the original offline payment account.');
+  const funded=vault.roots.find(root=>root.owner===owner&&vault.receipts[root.id]?.finality==='FINAL');
+  return {identityId:state.identity.profile.id,owner,contract:config.contract,amount:request?.amount??'100000000',requestId:request?.id??null,status:funded?'funded':request?'original':'new',receiptId:funded?.id??null};
+}
+export async function fundReserveFunding(terms){
+  const request=await updateState(async state=>{
+    requirePaymentAccess(state.identity);
+    if(state.identity?.profile.id!==terms.identityId||compressed(state.identity.profile.signingPublic)!==terms.owner||config.contract!==terms.contract)throw Error('The account changed. Review the original test funding.');
+    const vault=await readNearVault(state,terms.contract);
+    if(terms.requestId&&(vault.funding?.id!==terms.requestId||vault.funding.owner!==terms.owner||vault.funding.amount!==terms.amount))throw Error('The original funding request changed.');
+    if(!terms.requestId&&vault.funding)throw Error('Another funding request is already saved. Review it first.');
+    vault.funding??=await fundingRequest(state.identity,terms.contract,displayUnits(terms.amount));
+    if(vault.funding.owner!==terms.owner||vault.funding.amount!==terms.amount)throw Error('The funding request changed the reviewed amount.');
+    await saveNearVault(state,vault);return vault.funding;
+  });
+  const before=await readState();if(before.identity?.profile.id!==terms.identityId)throw Error('The account changed. Your original funding request is saved.');requirePaymentAccess(before.identity);
+  const result=await api('fund',{...request,contract:terms.contract});
+  if(result.root?.id!==request.id||result.root.amount!==request.amount||result.root.owner!==request.owner||result.finality!=='FINAL')throw Error('Funding is not verified. Check the original request.');
+  await updateState(async state=>{
+    requirePaymentAccess(state.identity);if(state.identity?.profile.id!==terms.identityId||compressed(state.identity.profile.signingPublic)!==terms.owner)throw Error('The original account was funded. Reopen it to check the receipt.');
+    const vault=await readNearVault(state,terms.contract);if(vault.funding?.id!==request.id)throw Error('The original funding request changed.');
+    if(!vault.roots.some(root=>root.id===result.root.id))vault.roots.push(result.root);vault.receipts[result.root.id]=result;await saveNearVault(state,vault);
+  });
+  return {status:'funded',verified:true,requestId:request.id,amount:request.amount,description:displayUnits(request.amount)+' tUSD added for offline payments.'};
 }
 function walletDelivery() {
   if(paymentRestricted){$('#near-connection').textContent='Chat restored · Offline funds not restored.';return;}
@@ -111,17 +144,16 @@ export async function renderNearWallet(state) {
     for(const id of ['near-fund','near-send','near-receive','near-refresh'])$('#'+id).disabled=true;
     for(const id of ['near-total','near-confirmed','near-pending','near-reserved'])if($('#'+id))walletAmount($('#'+id),'—');
     $('#near-payments').replaceChildren();$('#near-empty').hidden=false;$('#near-empty').textContent='Payment records stay on the original device.';
-    walletAmount($('#near-balance-caption'),'Chat restored · Offline funds not restored.');return;
+    walletAmount($('#near-balance-caption'),'Chat restored · Offline funds not restored.');return {available:null,owned:null};
   }
-  if(!state.identity || !enabled)return;
+  if(!state.identity || !enabled)return {available:null,owned:null};
   const vault=await readNearVault(state,config.contract), ledger=await nearLedger(vault), owner=compressed(state.identity.profile.signingPublic);
   await renderRheaWallet(vault,state.identity);
   const owned=ledger.available.filter(n=>n.owner===owner), total=owned.reduce((n,v)=>n+BigInt(v.amount),0n);
+  const reserved = [...ledger.notes.values()].filter(note => note.owner===owner && ledger.reserved.has(note.id) && !ledger.consumed.has(note.id) && !ledger.blocked.has(note.id)).reduce((sum,note) => sum + BigInt(note.amount),0n);
   walletAmount($('#near-total'),displayUnits(total));$('#near-fund').disabled=!!vault.roots.find(n=>n.owner===owner && vault.receipts[n.id]);
   if ($('#near-confirmed')) {
     const confirmed = owned.filter(note => vault.receipts[note.id.startsWith('root:') ? note.id : note.id.split(':')[0]])
-      .reduce((sum,note) => sum + BigInt(note.amount),0n);
-    const reserved = [...ledger.notes.values()].filter(note => note.owner===owner && ledger.reserved.has(note.id) && !ledger.consumed.has(note.id) && !ledger.blocked.has(note.id))
       .reduce((sum,note) => sum + BigInt(note.amount),0n);
     walletAmount($('#near-confirmed'),displayUnits(confirmed));
     walletAmount($('#near-pending'),displayUnits(total-confirmed));
@@ -137,7 +169,7 @@ export async function renderNearWallet(state) {
     const row=el('article',undefined,'near-payment'), id=note.id.startsWith('root:')?note.id:note.id.split(':')[0], receipt=vault.receipts[id], retry=!!vault.confirmations?.[note.id];
     row.append(amountLabel(note.amount),el('span',receipt?'Confirmed':retry?'Confirmation pending':'Awaiting confirmation','near-state'));
     if(receipt?.txHash)row.append(linkReceipt(receipt.txHash));
-    else if(receipt?.blockHeight){const a=el('a','View confirmation ↗');a.href='https://testnet.nearblocks.io/blocks/'+receipt.blockHeight;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}
+    else if(receipt?.blockHeight)row.append(el('small','Confirmed in block '+receipt.blockHeight));
     if(!receipt && retry) { const check=el('button','Check confirmation','secondary');check.type='button';check.dataset.nearOnline='';check.disabled=!navigator.onLine;check.onclick=()=>run(async()=>{await refreshNearPayments(config.contract);notice('Payment status checked.');});row.append(check); }
     if(!receipt && !note.id.startsWith('root:')) { const settle=el('button',retry?'Retry confirmation':'Confirm payment','secondary');settle.type='button';settle.dataset.nearOnline='';settle.disabled=!navigator.onLine;settle.onclick=()=>run(async()=> {
       notice('Confirming your payment…');
@@ -174,4 +206,5 @@ export async function renderNearWallet(state) {
   }
   if(receivedFiles.children.length>1)list.append(receivedFiles);
   $('#near-empty').hidden=!!list.children.length;
+  return {available:total.toString(),owned:(total+reserved).toString()};
 }

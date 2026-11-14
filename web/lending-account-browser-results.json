@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-05T11:38:03.452Z",
+  "passed": 5,
+  "failed": 0,
+  "checks": [
+    "DeFi reads only after Load account, shows exact connected Aave values and makes no signing or switching requests",
+    "lending values follow balance masking; changing views does not repeat reads or modify the Lenz account",
+    "an observed empty account differs from unavailable RPC data; a failed refresh removes old values and permits retry",
+    "account changes reject late reads and clear account data; offline state removes current-position values",
+    "reconnecting enables an explicit fresh account read without automatically disclosing the account again"
+  ],
+  "sources": {
+    "web/public/lending-account.js": "e12f42f882a35a496cee1f05fb2b60aa34c5a306e3fe7f9d82763d54a24e8ef9",
+    "web/public/lending-account-ui.js": "9278f1b6feae87184fc3a69ac926eaefa1d55132563ecee0a8cbd57bea46f062",
+    "web/public/evm-wallet-ui.js": "beb1b7da47166f48458040e663c5818ba8a9a0ece74f8b7022f0ff0245129031",
+    "web/public/wallet-portfolio.js": "5f1d9bf692f93f04d6aac44f4bdbf8e021e324dd8f0c8eeef9b3baf4f1c87c65",
+    "web/public/wallet-portfolio.css": "68d753187ee00dad79167e707c5215e4c3474ac9dadb809ca1a2d3853b578629",
+    "web/lending-account-browser.test.cjs": "8ae61800d6e5121afe81cc74687360251da8eb754eca70fd664353279bfe1079"
+  },
+  "scope": "Disposable Edge, real UI/IndexedDB, ethers ABI encoding and synthetic wallet RPC; no live account, chain observation, funds or financial operation."
+}

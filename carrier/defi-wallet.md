@@ -6,9 +6,15 @@ encrypted tUSD vault. It returns only after the shared IndexedDB transaction
 commits. A failed write returns no successful approval or handoff.
 
 The [wallet workspace](../docs/defi-workspace.md) now exposes executor choice,
-review and explicit encrypted-file/carrier delivery. Nearby executor delivery,
+review and explicit encrypted-file/carrier delivery. Nearby couriers can also
+carry approvals to a separately opted-in [browser request inbox](../docs/nearby-delivery.md#defi-requests)
+and return storage receipts. Connecting that inbox to durable executor dispatch,
 automatic execution and recipient result-to-credit integration remain open.
-The approval service itself does not call a network endpoint or select an executor.
+Approval and handoff never select an executor or call a network endpoint. The
+separate `checkDefiSwap` operation reads current state through the local wallet
+backend, verifies the saved approval's exact terms, and stores an encrypted
+outcome. It cannot sign, credit funds or release the original reservation. See
+[receiving service and wallet checks](defi-service.md) for deployment and privacy limits.
 
 ## Approval and retry
 
@@ -47,6 +53,17 @@ for retry. Storage receipt processing never invokes the executor dispatcher.
 
 ## Receipt and money boundaries
 
+**Open update file** accepts an encrypted receipt or executor report for the
+selected saved swap, including while offline. `recordDefiReply(config, requestId,
+packet)` authenticates the executor and recipient, binds the update to that swap,
+and commits it to the encrypted vault before reporting success. An update for a
+different swap is rejected without changing either approval. Duplicate and older
+reports preserve the newest saved evidence; failed writes preserve prior state.
+
+An executor report appears as **Update received · awaiting verification**.
+**Check swap** separately reads the approved operation when connected. Importing
+a file does not enable internet delivery or confirm the executor's claims.
+
 `recordDefiStorageReceipt(config, requestId, packet)` authenticates the selected
 executor's receipt against the saved request. Foreign requests/signers, financial
 claims, malformed receipt times and substituted saved packets fail. A receipt
@@ -61,7 +78,7 @@ Copied-device restoration and missing state cannot be repaired by retrying this 
 
 ## Evidence and retained limits
 
-[Thirteen browser cases](../web/defi-wallet-browser-results.json) use real Edge,
+[Browser service cases](../web/defi-wallet-browser-results.json) use real Edge,
 IndexedDB, Web Locks and WebCrypto with synthetic initial backing on a disposable
 loopback origin. They exercise failed approval/handoff/receipt commits, reload,
 loaded offline use, repeated/concurrent approvals, competing tabs, mutable callers,
@@ -69,7 +86,8 @@ expiry during encryption, old receipts and changed stored bindings. Identity,
 contacts, history, nonextractable keys and the remaining change are checked.
 The 63 existing executor, intake and money-protocol regressions also pass.
 
-[Eleven deliberate alterations](../web/defi-wallet-verification.json) are detected.
+[The deliberate-alteration gate](../web/defi-wallet-verification.json) checks the
+selected-swap binding, independent outcomes and approval/receipt boundaries.
 The handoff-expiry control removes both adjacent time checks together; the other
 controls each change one guard or operation. These tests are not a complete audit.
 

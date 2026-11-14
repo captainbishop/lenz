@@ -1,22 +1,30 @@
 {
-  "checkedAt": "2026-11-04T15:24:28.667Z",
+  "checkedAt": "2026-11-08T17:05:22.842Z",
   "passed": 1,
   "sources": {
     "aurora/contracts/OfflineBudget.sol": "4fc5cb8588829ac51377984a868b2891d477324e744018d742707447ff0bccb0",
     "aurora/offline-budget-fixture.mjs": "13d515f6976f4978e33f2c1808ebac610b4b934a2667d2fcba886b8a70ec4c93",
-    "aurora/offline-budget-browser.test.mjs": "16ac229989bb4e39e7b786773546a0d4dfcbe5b8cb5bfdf271a4c656991278e1",
-    "web/public/offline-budget.js": "b9eecc9105060bae477112a6eeadfb2a37ab396478da894aec718dd5bc304c8f",
+    "aurora/offline-budget-browser.test.mjs": "5df90b80fd8ff2f94b98d6021bb6be9be4e8a8b1c935b29acb133c1d944b4969",
+    "web/public/offline-budget.js": "156d2e90eb73791dfe43817c55419d93b8df8e9a8e8699b47350663acc85474f",
+    "web/public/offline-budget-outbox.js": "73b3445be37e73a81200ac1117f5dc6674fd06357b19c245c899dbb4f135fec1",
     "web/public/evm-vendor/offline-budget.js": "6e14f681077313b40e4aa1551001613122a6143cd040837334b24070d0577244",
-    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
-    "web/public/chat-sw.js": "afc787bd18a3fbdf5f1598d72737bd5cf7145b82a5f11c25b47ebe2429504867"
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/chat-sw.js": "4e958e34f3a4f652f7123baa3135e54eedefa25d6bd2a6220ffce359a4d571d5",
+    "carrier/server.mjs": "14f7b155a02cc0115ec39265336d911cabb1df46ba3874885b60de5939e5a7ec",
+    "carrier/store.mjs": "3f39a9113affb7b75175483816d563da6a41f131e9f90088a09283d8eeab0e3d"
   },
   "evidence": {
     "offlineReload": true,
     "noSigningNetworkRequests": true,
     "queuedCiphertextSurvivedReload": true,
+    "httpSqliteHandoff": true,
+    "carrierRestart": true,
+    "retryAfterDiscardedReply": true,
+    "noDuplicateEnvelope": true,
+    "ackDoesNotCredit": true,
     "recipientOutput": "800000000000000000",
     "recoveredRemainder": "1599000000000000000",
     "replayRejected": true
   },
-  "scope": "Disposable Edge offline signing/encryption/storage and actual isolated EthereumJS execution with a synthetic venue. Handoff is in-process test transfer of ciphertext; no real mesh/carrier, provider, private settlement, external chain/finality or production recovery."
+  "scope": "Disposable Edge offline signing and encrypted product outbox, real loopback HTTP/SQLite carrier with discarded reply and restart, isolated EthereumJS execution with a synthetic venue. No physical mesh, provider, private settlement, external chain/finality or production signer recovery."
 }

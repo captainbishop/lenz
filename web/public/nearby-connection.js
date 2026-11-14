@@ -44,25 +44,28 @@ export function createNearbyConnection({identity,contact,onPacket,onState=()=>{}
     });
     assert(!closed,'Nearby connection is closed.');return pc.localDescription.sdp;
   }
-  async function send(packet) {
+  async function send(packet,{withDispatch}={}) {
     assert(ready && !closed && channel?.readyState==='open','Pair with your contact first.');
     assert(packet.from===identity.profile.id && packet.to===contact.id,'Choose the connected contact.');
     const text=JSON.stringify(packet);assert(text.length<=MAX_PACKET && /^[\x20-\x7e]+$/.test(text),'Nearby packet is too large or invalid.');
     const hash=await digest(packet);
-    return new Promise((resolve,reject)=>{
+    const dispatch=()=>new Promise((resolve,reject)=>{
+      assert(ready && !closed && channel?.readyState==='open','Pair with your contact first.');
       const t=setTimeout(()=>{pending.delete(hash);reject(Error('No nearby acknowledgement. Reconnect to retry the saved file.'));close();},15000);
       pending.set(hash,{resolve,reject,timer:t});
       try { channel.send(JSON.stringify({kind:'start',hash,size:text.length}));
         for(let index=0,offset=0;offset<text.length;index++,offset+=CHUNK)channel.send(JSON.stringify({kind:'part',hash,index,data:text.slice(offset,offset+CHUNK)}));
       }catch(error){clearTimeout(t);pending.delete(hash);reject(error);fail(error);}
     });
+    // Authorization and frame enqueue share the store lock; remote ACKs never hold it.
+    return withDispatch?(await withDispatch(dispatch)).delivery:dispatch();
   }
   return {
     get connected(){return ready&&!closed;},
     async offer(){assert(!offer&&!closed,'Start a new connection.');attach(pc.createDataChannel(NEARBY,{ordered:true}));offer=await makeSignal(identity,contact,'offer',await gather(await pc.createOffer()));return offer;},
     async answer(input){assert(!offer&&!closed,'Start a new connection.');offer=await checkSignal(input,identity,contact);await pc.setRemoteDescription({type:'offer',sdp:offer.sdp});return makeSignal(identity,contact,'answer',await gather(await pc.createAnswer()),offer);},
     async finish(input){assert(offer?.from===identity.profile.id&&!ready&&!closed,'Create a connection first.');const answer=await checkSignal(input,identity,contact,offer);await pc.setRemoteDescription({type:'answer',sdp:answer.sdp});},
-    send(packet){const job=outbound.then(()=>send(packet));outbound=job.catch(()=>{});return job;},
+    send(packet,options){const job=outbound.then(()=>send(packet,options));outbound=job.catch(()=>{});return job;},
     close,
   };
 }

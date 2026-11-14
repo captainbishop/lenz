@@ -1,0 +1,17 @@
+{
+  "schema": "lenz/git-public-assets/v1",
+  "origin": "https://lenz-prototype.vercel.app",
+  "files": {
+    "vendor/ffjavascript-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+    "vendor/ffjavascript-worker.js": "d62dee6cff2bf15bb9bce562d1d35bd96a045bcd30557010894d35c3334f699e",
+    "vendor/ffjavascript.js": "eac6ef8180ed3cf0500c68efa172164dcf663f46c432f891aa7d6331483d9652",
+    "vendor/poseidon.js": "6583b16f417a28075e49e1cfc01e17b0e9e4cd1b4f4d3484d780910391fcf9ec",
+    "vendor/poseidon_constants_opt.js": "5d24cde82a0858cc17f4941bd2a18f4a69906f3d050cd5f19d0d221802abd1bd",
+    "vendor/snarkjs-LICENSE.txt": "d95c74a62d14f13ebfbc8c1783c315e2ed2389e80048b264bdeddb8114dee945",
+    "vendor/snarkjs.js": "52645f2ff4662b5192c89e7a0d7315e763faa18aece53657a176cfd6e4e5a1f9",
+    "assets/step.wasm": "eb5db4a9336abcbe28b1c3df53d25fb1e6cfc21d0fd7e8ba5dc2441b6453f099",
+    "assets/step.zkey": "4c7912f5f0bd060263ecd55a68e407fab57230d226ad0b99090c35fac4d441da",
+    "config.js": "0464118f2489bd0032a89a00c7f5459db29852904b4a44f04b7e71e44b29372b",
+    "capsule.js": "a9264ae81c4b9b40a6f4bbf5dbf4317c0c32dc913dd86905b4e8da1fc7bf57fb"
+  }
+}

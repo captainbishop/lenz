@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-09T01:00:47.006Z",
+  "checkedAt": "2026-11-08T19:08:41.605Z",
   "node": "v24.21.0",
   "nearApiJs": "7.4.0",
   "scope": "Real P-256 encryption, NEAR SDK signing, SQLite and local HTTP. Synthetic funded roots and chain/receipt responses; no live transaction or wallet changes.",
@@ -313,7 +313,7 @@
     "contracts/defi-executor.test.mjs": "8f905fc754495b6e23344d49b2d2a2d0e0bd16f1e1725697d9d7b3b4f177421c",
     "contracts/client.mjs": "2b63ee4d674c310426c399cfae00805283dca9ace54bb9489ec7f3c1e26f8284",
     "integrations/near-network.mjs": "ab3bd88366a2cb70da27ae67b08372e7df043bf2921c4c5f3410241f55b82f3d",
-    "web/public/defi-request.js": "4a3eddb39de6acb90833c1e851a2963a0ad99d03ee38e84b2c7cd2466b9ee8eb",
+    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
     "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",

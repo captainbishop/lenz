@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-08T05:05:21.048Z",
-  "passed": 2,
+  "checkedAt": "2026-11-14T17:12:05.166Z",
+  "passed": 3,
   "failed": 0,
   "previous": "3b683eea721b8e3f899b9f41c74eb417d5aef322",
   "apiRequests": 0,
-  "scope": "Disposable Windows Edge, previous committed cache and modules; failed then successful update; fixture root and expired reservation, no financial request."
+  "scope": "Disposable Windows Edge, previous committed cache and modules; failed then successful update; root market cache; fixture root and expired reservation, no financial request."
 }

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T19:33:42.533Z",
+  "checkedAt": "2026-11-08T16:29:33.519Z",
   "passed": 12,
   "checks": [
     "Wallet and Conversations open account sign-in first, with device-only profiles under optional controls",
@@ -16,32 +16,32 @@
     "account status and controls fit both themes and narrow screens"
   ],
   "sources": {
-    "web/account-backup-browser.test.cjs": "99b3052c99084f2994641d021e25d96443c17983a791c2e7e05685308052cd52",
+    "web/account-backup-browser.test.cjs": "25736914ff048d2d9359e75dcc02c1fb0f53575bd7a1545ffb2f7cef8da13834",
     "web/account-relay.mjs": "68d9fb3b0198e4a75609e38e2f6d7e2529e1e2d4992dc96dbc84b9b5974ac6bc",
     "web/account-store.mjs": "ab68aa9024470e12d239935c79a62542189816be47b9ad64ea0b032659ac20a1",
     "web/public/account-keys.js": "6ccad7c47a80a5e8d9b3910a8ae39361332ef71b4c1a6bdbead48c6fe44e07f1",
     "web/public/account-backup.js": "633aa976943e2ea23c836befbc7feae384d5120dc65a1dfe4a69d17501ec0bca",
     "web/public/account-sync.js": "79ba1b3bcd1cda0b30bae74b87e22c818e0da12dd508b3b7e66e5226f46232f7",
-    "web/public/account-ui.js": "99df42ab2500a7949cb7fc671b45924e2896395d29b6168b74a3b20708e83cb9",
-    "web/public/account.html": "f21c13856f3050d69f2d1ba274d90e00916808e12573a5e95a1cd0297a4c2020",
-    "web/public/account.css": "585e47b2d7da517ad48168a2738fa71e5e936ef52cd111c589a722a3bb7edace",
-    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
-    "web/public/chat.js": "a20a3e74157f7672dd04bd7c4b88cc8fc20080d2df1a80d67c4725f5a798ef44",
-    "web/public/chat.html": "88cbcb91fa66b0be944678ce74883cf14bee0b69372ece8d97d711f3eb7fa3f1",
-    "web/public/money.js": "563b2956fd194b1bc7aec6bb46a253a0a9b80307ba74bc719456e73aaadb3df6",
-    "web/public/money.html": "dff06eefcb8e25d5c0e7b63368203593467ca02f59764d90880e178787fb5126",
-    "web/public/chat-layout.css": "adbc42f2eabcb030f6204be39c8b0babe05b704efaa5689ac1557d002f1b923f",
-    "web/public/profile-panels.js": "dd1bc762605a93d87749714b2eff1be8cf034b34020451b624e6dfcdbd98c1dc",
+    "web/public/account-ui.js": "f2d617374c18b5be45a179a29a83f4a7a51ae5c1c2fd216f0de9db202188d65d",
+    "web/public/account.html": "4e33116041631eeb7c7e6f9689f120ae641dd584434b3effce056e62cb70fa4a",
+    "web/public/account.css": "4105dbef7bc16b590e6d92e6c4b05231d4786a9dd989e42665a2066ab35b5028",
+    "web/public/chat-store.js": "0872ed55203d9eaf7fcf7f678cfc8b9fa5cb60b59bea26106a24252a14cbf25d",
+    "web/public/chat.js": "169d96792fc5aedb9342a82ff40aadd69c656fde15ca9b44772a5e07d91cd857",
+    "web/public/chat.html": "81566cd47ae778e0498ac830e1e2df934faf86ef10f61e48ded79e77c48c37f1",
+    "web/public/money.js": "bf231e342c269765f859bed44082d465de9f5e0224e090bd07622a1f8711662a",
+    "web/public/money.html": "b556fbee0f32fc389ad27ed1955b0de85495bc6d9836429fcba3b68c2d984dfe",
+    "web/public/chat-layout.css": "79a14f9ef14de33bed63f8688507fb8d43fc94a5adbdeb916954e867638e1f03",
+    "web/public/profile-panels.js": "5d2490b969c289dc90f15dc4a61604f8c3e93336275edb706858c73c38b8ea1b",
     "web/public/save-offline.js": "434eceaed11c3d6aae664d96c9e4125158e7d7be69f4966186ed811fd57ace45",
     "web/public/identity-recovery.js": "184542efe54f58e0dca71f407a37b3a86af0484cf3c45703db5b4fcaf91dd08c",
     "web/public/legacy-recovery.js": "034668ab691b5ff795a88de771323b4047de66cfa59ebd6e7d5da2ea3a840f0c",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
-    "web/public/chat-access.js": "8729e9b3e9b3fff8d09265a982dd2f2272fee5065ea676d9099ad4064414ccc2",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/chat-restore.js": "9dac0bcb468ca9619774252bab3a74ad2b0114cd1908a9cf37e23472ca525120",
     "web/public/recovery-service.js": "260fa54d672de8989377ab1e9ea3ae483c32e3f71d6df534d8c10343351bfe03",
     "web/public/evm-vendor/identity-recovery.js": "6b134f1d2522a46a403ec283627fe16dce49716a05464f28d067708aeefa034e",
-    "web/public/chat-sw.js": "c46a0a96de23d480126d114ca5956f40c967607385ba1ac45b517b96358b50a5",
-    "web/public/sw.js": "aaef6a2bc236f5e9d36ef54c04ba2da8839798da3384bc2320d44d4e9bff9fdc"
+    "web/public/chat-sw.js": "9671028d2e6045ae562bba2f967696b2bf2db21c4f23773c3836130b5405b712",
+    "web/public/sw.js": "dd30084775b9382aa254f501b7b87791c3d4addbe586aa944da5e5ec30a3e7cc"
   },
   "scope": "Disposable Edge on localhost, actual WebAuthn PRF through a virtual synced authenticator, real HTTP and SQLite, fresh IndexedDB restoration, and three isolated sessions seeded with the same disposable PRF input. Passkey cloud synchronization, physical devices, hosted durability and financial recovery were not tested. No real user account or financial action."
 }

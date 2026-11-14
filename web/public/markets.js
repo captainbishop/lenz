@@ -1,5 +1,6 @@
-import {startOfflineAccess} from './offline-access.js';
-import {marketLogo} from './market-logo.js';
+import {mountLendingMarkets} from './lending-market-ui.js';
+import {assetPriceCard} from './asset-price-card.js';
+import {assetIcon} from './asset-icon.js';
 import {MARKET_SOURCES,marketSource} from './evm-markets.js';
 import {CHAINS} from './defi-catalog.js';
 import {QUOTE_POOL} from './market-quote.js';
@@ -16,6 +17,8 @@ import {mountHyperliquid} from './hyperliquid-ui.js';
 import {mountPredictions} from './prediction-ui.js';
 import {mountMarketOverview} from './market-overview.js';
 import {workspaceHeading} from './workspace-heading.js';
+import {startOfflineAccess} from './offline-access.js';
+import {showComingSoon} from './release-availability.js';
 const $=s=>document.querySelector(s),providers=MARKET_SOURCES.map(s=>s.key),names=Object.fromEntries(MARKET_SOURCES.map(s=>[s.key,s.name]));
 const entry=new URLSearchParams(location.search),entryView=entry.get('view'),entryAction=entry.get('action');
 const storageKey='lenz-market-snapshots-v1',data=new Map(),saved=new Set(),failures=new Set();let category=['credit','liquidity','perpetuals','degen','spot','predictions'].includes(entryView)?entryView:'all',selected=null,busy=false,liveState='off',detailShape='',manualGeneration=0,manualController=null;
@@ -28,11 +31,17 @@ const predictions=mountPredictions(predictionsTarget);
 const sectionHeading=workspaceHeading({title:'Lending',kind:'credit'});sectionHeading.element.hidden=true;$('.market-body').before(sectionHeading.element);
 let openingMarket=null;
 const overview=mountMarketOverview($('#market-overview'),{open:openMarket,snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),forgetSources:forgetMarkets});
+const lendingTarget=document.createElement('section');lendingTarget.hidden=true;$('.market-body').before(lendingTarget);const lending=mountLendingMarkets(lendingTarget,{snapshots:()=>data.values(),refreshSources:()=>$('#refresh-markets').onclick(),initialAction:entryView==='credit'?entryAction:undefined});
 function openMarket(view,id){$('#market-search').value='';$('#market-network').value='';category=view;openingMarket=id??null;if(['credit','liquidity'].includes(view))selected=id??null;for(const b of $('#market-filters').children)b.setAttribute('aria-pressed',String(b.dataset.category===view));render();live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(view));$('#main').scrollIntoView({block:'start'});}
 const shape=row=>JSON.stringify([row.id,row.status,row.assets,row.feePips,row.sizeDecimals,row.maxLeverage]);
 const el=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
 const selector=el('button');selector.id='market-selector';$('.market-toolbar').insertBefore(selector,$('#market-network'));
 const picker=mountMarketPicker(selector,id=>{selected=id;render();});
+const listToggle=el('button');listToggle.id='market-list-toggle';listToggle.type='button';listToggle.setAttribute('aria-label','Collapse market list');listToggle.setAttribute('aria-controls','market-rows');listToggle.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10V4H4v16h16v-6M9 4v16"/></svg>';$('.list-heading').prepend(listToggle);
+let listCollapsed=false;try{listCollapsed=localStorage.getItem('lenz-market-list-collapsed')==='true';}catch{}
+function paintList(){listToggle.setAttribute('aria-expanded',String(!listCollapsed));listToggle.setAttribute('aria-label',listCollapsed?'Expand market list':'Collapse market list');$('#market-rows').hidden=listCollapsed;$('.market-body').classList.toggle('list-collapsed',listCollapsed);}
+listToggle.onclick=()=>{listCollapsed=!listCollapsed;paintList();try{localStorage.setItem('lenz-market-list-collapsed',String(listCollapsed));}catch{}};paintList();
+
 $('.market-toolbar').append($('#live-status'),$('#refresh-markets'));$('#data-settings').append($('.read-disclosure'),$('#market-sources'),$('.snapshot-bar'));
 const phoneLayout=matchMedia('(max-width:760px)');
 function placeFilters(){const parent=phoneLayout.matches?$('#data-settings'):$('.market-toolbar');parent.append($('#market-network').closest('.lenz-choice')??$('#market-network'),$('.search'));}
@@ -56,7 +65,6 @@ function sourceStatus(){
   $('#refresh-markets').disabled=busy||liveState==='updating'||!navigator.onLine;
   $('#market-live').disabled=busy;
   $('#refresh-markets').hidden=$('#market-live').checked||['all','prices','degen','spot','perpetuals','predictions'].includes(category);
-
   if(!data.size)$('#market-status').textContent=busy||liveState==='updating'?'Loading markets…':!navigator.onLine?'No saved markets.':failures.size?'Markets unavailable. Try refreshing.':'Load markets to see prices.';
   const stale=[...data.values()].some(s=>state(s)!=='Recently read');
   $('#live-status').textContent=!navigator.onLine?'Offline':!$('#market-live').checked?'Paused':document.hidden?'Paused':failures.size?'Retrying · Earlier data':stale&&liveState==='live'?'Stale · Retrying':liveState==='live'?'Live':liveState==='retrying'?'Retrying · Earlier data':'Connecting…';
@@ -71,7 +79,7 @@ function details(row,snapshot){
   else if(row.id!==QUOTE_POOL){panel.append(poolSurface(row),el('p','Quotes not connected for this pool.'));}
   else {
     const nav=el('nav',undefined,'position-actions');nav.setAttribute('aria-label','Pool actions');const area=el('div');
-    for(const action of ['Swap','Liquidity']){const button=el('button',action);button.type='button';button.setAttribute('aria-pressed',String(action==='Swap'));button.onclick=()=>{clearMarketQuote();for(const b of nav.children)b.setAttribute('aria-pressed',String(b===button));area.replaceChildren();if(action==='Swap')mountMarketQuote(area,row,data.get(marketSource(snapshot).key)??snapshot);else area.append(poolSurface(row));};nav.append(button);}
+    for(const action of ['Swap','Liquidity']){const button=el('button',action);button.type='button';button.setAttribute('aria-pressed',String(action==='Swap'));button.onclick=()=>{if(action==='Liquidity'){showComingSoon(button);return;}clearMarketQuote();for(const b of nav.children)b.setAttribute('aria-pressed',String(b===button));area.replaceChildren();mountMarketQuote(area,row,data.get(marketSource(snapshot).key)??snapshot);};nav.append(button);}
     panel.append(nav,area);mountMarketQuote(area,row,snapshot);if(entryView==='liquidity'&&entryAction==='liquidity')nav.children[1].click();
   }
   const dl=el('dl',undefined,'detail-data');
@@ -100,23 +108,24 @@ function refreshDetails(row,snapshot){
 }
 function render(preserve=false){
   const prices=category==='prices';oraclePrices.show(prices);oraclePrices.filter($('#market-search').value);
-  const isOverview=category==='all',isDegen=category==='degen',isPrediction=category==='predictions',isHyperliquid=['spot','perpetuals'].includes(category),special=prices||isDegen||isHyperliquid||isPrediction||isOverview;overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);predictions.show(isPrediction,isPrediction?openingMarket:null);openingMarket=null;
-  selector.hidden=special;$('.search').hidden=isDegen||isHyperliquid||isPrediction||isOverview;$('#market-status').hidden=isDegen||isHyperliquid||isPrediction||isOverview;$('#live-status').hidden=isDegen||isHyperliquid||isPrediction||isOverview;
+  const isLending=category==='credit',isOverview=category==='all',isDegen=category==='degen',isPrediction=category==='predictions',isHyperliquid=['spot','perpetuals'].includes(category),special=prices||isDegen||isHyperliquid||isPrediction||isOverview||isLending;lending.show(isLending,openingMarket);overview.show(isOverview);if(isOverview)overview.update();degen.show(isDegen);hyperliquid.show(isHyperliquid,category,openingMarket);predictions.show(isPrediction,isPrediction?openingMarket:null);openingMarket=null;
+  selector.hidden=special;$('.search').hidden=isLending||isDegen||isHyperliquid||isPrediction||isOverview;$('#market-status').hidden=isLending||isDegen||isHyperliquid||isPrediction||isOverview;$('#live-status').hidden=isLending||isDegen||isHyperliquid||isPrediction||isOverview;
   $('#market-network').hidden=special;$('.market-body').hidden=special;$('#market-sources').hidden=special;$('.snapshot-bar').hidden=special;
-  sectionHeading.element.hidden=special;if(!special){sectionHeading.setKind(category);sectionHeading.title.textContent=category==='credit'?'Lending':'Liquidity';sectionHeading.description.textContent=category==='credit'?'Reserve settings across supported lending markets.':'Explore pool liquidity, assets and fees.';sectionHeading.description.hidden=false;}
+  sectionHeading.element.hidden=special;sectionHeading.showTools(!special);if(!special){sectionHeading.setKind(category);sectionHeading.title.textContent=category==='credit'?'Lending':'Liquidity';sectionHeading.description.textContent=category==='credit'?'Reserve settings across supported lending markets.':'Explore pool liquidity, assets and fees.';sectionHeading.description.hidden=false;}
   if(special){picker.close();clearPerpTerminal();clearMarketQuote();sourceStatus();return;}
   const before=selected,focused=document.activeElement?.dataset.marketId;
   sourceStatus();const query=$('#market-search').value.trim().toLowerCase();
   const rows=[...data.values()].flatMap(snapshot=>snapshot.rows.map(row=>({row,snapshot}))).filter(({row})=>(category==='all'||row.category===category)&&(!$('#market-network').value||row.chainId===$('#market-network').value)&&`${row.label} ${marketSource({provider:row.marketId,chainId:row.chainId}).name} ${row.category}`.toLowerCase().includes(query));
   $('#market-count').textContent=data.size?`${rows.length} market${rows.length===1?'':'s'}`:'Markets';
+  sectionHeading.setMetrics([{label:category==='credit'?'Reserves loaded':'Pools loaded',value:data.size?String(rows.length):'—'},{label:'Networks',value:data.size?String(new Set(rows.map(({row})=>row.chainId)).size):'—'},{label:'Sources',value:data.size?String(new Set(rows.map(({snapshot})=>marketSource(snapshot).key)).size):'—'}],'Loaded markets',JSON.stringify([category,$('#market-network').value,query,rows.map(({row})=>row.id).sort()]));
   if(!data.size)$('#market-status').textContent=busy?'Loading…':!navigator.onLine?'No saved markets. Connect to load data.':failures.size?'Could not load markets. Try refreshing.':'Load markets to see prices and pool settings.';
   else $('#market-status').textContent=rows.length?'':'No markets match this search.';
   if(!rows.some(({row})=>row.id===selected))selected=rows[0]?.row.id??null;
-  const choices=rows.map(({row,snapshot})=>({id:row.id,label:row.category==='perpetuals'?row.instrument+' / USD':row.label,detail:marketSource(snapshot).name}));picker.update(choices,selected);
+  const choices=rows.map(({row,snapshot})=>({id:row.id,venue:row.marketId==='hyperliquid'?'hyperliquid':null,symbol:row.instrument,label:row.category==='perpetuals'?row.instrument+' / USD':row.label,detail:marketSource(snapshot).name,network:row.chainId,asset:row.assets?.[0]}));picker.update(choices,selected);
   $('#market-rows').replaceChildren(...rows.map(({row,snapshot})=>{
     const button=el('button',undefined,'market-row');button.type='button';button.dataset.marketId=row.id;button.setAttribute('aria-pressed',String(row.id===selected));
-    const name=el('span');name.append(el('strong',row.label),el('small',marketSource(snapshot).name));name.querySelector('strong').prepend(marketLogo({kind:'spot',name:row.instrument??row.assets?.[0]?.symbol??row.label.split(/[ /]/)[0],coin:row.instrument??row.label}));const value=el('span',metric(row),'metric'),rowState=el('span',`${row.status} · ${state(snapshot)}`,'row-state');rowState.dataset.observationProvider=marketSource(snapshot).key;rowState.dataset.rowStatus=row.status;value.append(rowState);
-    const arrow=el('span','↗','arrow');arrow.setAttribute('aria-hidden','true');button.append(name,value,arrow);
+    const name=el('span');name.append(el('strong',row.label),el('small',marketSource(snapshot).name));name.querySelector('strong').prepend(assetIcon({symbol:row.instrument??row.assets?.[0]?.symbol??row.label.split(/[ /]/)[0],trusted:true,venue:row.marketId==='hyperliquid'?'hyperliquid':null}));const value=el('span',metric(row),'metric'),rowState=el('span',`${row.status} · ${state(snapshot)}`,'row-state');rowState.dataset.observationProvider=marketSource(snapshot).key;rowState.dataset.rowStatus=row.status;value.append(rowState);
+    const arrow=el('span','↗','arrow');arrow.setAttribute('aria-hidden','true');const asset=row.assets?.[0];button.append(assetPriceCard({name:row.label,symbol:asset?.symbol??row.instrument,contract:asset?.id,network:row.chainId,subtitle:marketSource(snapshot).name,referencePrice:true,quote:'USD'}).element,value,arrow);
     button.onclick=()=>{selected=row.id;picker.update(choices,selected);for(const sibling of $('#market-rows').children)sibling.setAttribute('aria-pressed',String(sibling===button));details(row,snapshot);if(matchMedia('(max-width:680px)').matches)$('#market-detail').scrollIntoView({block:'start',behavior:'auto'});};return button;
   }));
   const item=rows.find(({row})=>row.id===selected);if(item){if(preserve&&before===selected&&detailShape===shape(item.row))refreshDetails(item.row,item.snapshot);else details(item.row,item.snapshot);}
@@ -126,8 +135,8 @@ function render(preserve=false){
 try{
   const raw=localStorage.getItem(liveStorageKey)??localStorage.getItem(storageKey);
   if(raw){if(raw.length>2000000)throw Error('Saved data too large');const collection=JSON.parse(raw);if(!Array.isArray(collection)||collection.length>MARKET_SOURCES.length)throw Error('Invalid saved data');
-    for(const value of collection){const snapshot=marketSnapshot(value);const key=marketSource(snapshot).key;if(data.has(key))throw Error('Duplicate provider');data.set(key,snapshot);saved.add(key);}
-    $('#snapshot-status').textContent='Saved data';
+    let skipped=0;for(const value of collection){try{const snapshot=marketSnapshot(value);const key=marketSource(snapshot).key;if(data.has(key))throw Error('Duplicate provider');data.set(key,snapshot);saved.add(key);}catch{skipped++;}}
+    $('#snapshot-status').textContent=skipped?'Some saved sources need refreshing.':'Saved data';
   }
 }catch{data.clear();saved.clear();$('#snapshot-status').textContent='Saved data could not be read. Refresh to reload.';}
 async function readMarkets(signal){
@@ -136,15 +145,16 @@ async function readMarkets(signal){
       const source=MARKET_SOURCES.find(s=>s.key===provider),request={provider:source.provider,...(source.network&&source.network!=='base'?{network:source.network}:{})};
       const response=await fetch('/api/markets/read',{method:'POST',headers:{'content-type':'application/json'},credentials:'omit',body:JSON.stringify(request),signal:AbortSignal.any([signal,AbortSignal.timeout(45000)])});
       if(!response.ok)throw Error('Market read failed');const text=await response.text();if(text.length>2000000)throw Error('Response too large');
-      const snapshot=marketSnapshot(JSON.parse(text));if(marketSource(snapshot).key!==provider||snapshot.expiresAt<=Date.now()||snapshot.observedAt<(data.get(provider)?.observedAt??0))throw Error('Wrong or stale provider response');return {provider,snapshot};
+      const snapshot=marketSnapshot(JSON.parse(text));if(marketSource(snapshot).key!==provider||snapshot.expiresAt<=Date.now()||snapshot.observedAt<(data.get(provider)?.observedAt??0))throw Error('Wrong or stale provider response');
+      const result={provider,snapshot};if(!signal.aborted&&navigator.onLine&&!document.hidden)acceptMarkets([result],true);return result;
     }catch{return {provider};}
   }));
 }
-function acceptMarkets(results){
+function acceptMarkets(results,partial=false){
   for(const {provider,snapshot}of results){if(snapshot){data.set(provider,snapshot);saved.delete(provider);failures.delete(provider);}else failures.add(provider);}
   render(true);
   if(results.some(result=>result.snapshot))try{localStorage.setItem(liveStorageKey,JSON.stringify([...data.values()]));$('#snapshot-status').textContent='Market data saved on this device.';}catch{$('#snapshot-status').textContent='Market data could not be saved.';}
-  if(failures.size)throw Error('Some market feeds unavailable');
+  if(!partial&&failures.size)throw Error('Some market feeds unavailable');
 }
 const live=liveRead({period:2000,read:readMarkets,accept:acceptMarkets,status:value=>{liveState=value;sourceStatus();}});
 $('#market-live').onchange=()=>{try{localStorage.setItem('lenz-market-live-mode',$('#market-live').checked?'on':'off');}catch{}live.setEnabled($('#market-live').checked&&!['degen','spot','perpetuals','predictions'].includes(category));dispatchEvent(new Event('market-live-change'));};
@@ -161,8 +171,7 @@ function forgetMarkets(){
   catch{$('#snapshot-status').textContent='Could not remove saved data.';}
 };
 $('#forget-markets').onclick=forgetMarkets;
-themeIcon(document.querySelector('#theme-toggle'));
-
+themeIcon($('#theme-toggle'));
 function connectionChanged(){if(!navigator.onLine){manualGeneration++;manualController?.abort();manualController=null;busy=false;}live.wake();data.size?readStates():render();}
 addEventListener('online',connectionChanged);addEventListener('offline',connectionChanged);document.addEventListener('visibilitychange',()=>{if(document.hidden){manualGeneration++;manualController?.abort();manualController=null;busy=false;sourceStatus();}live.wake();});addEventListener('pagehide',()=>{live.stop();manualGeneration++;manualController?.abort();});setInterval(()=>{if(!document.hidden)readStates();},10000);render();
 try{$('#market-live').checked=localStorage.getItem('lenz-market-live-mode')!=='off';}catch{$('#market-live').checked=true;}

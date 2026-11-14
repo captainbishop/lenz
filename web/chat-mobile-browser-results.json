@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T15:18:42.342Z",
+  "checkedAt": "2026-11-05T15:12:43.662Z",
   "checks": [
     "new mobile profiles see the conversation and disabled composer before adding a contact",
     "people list, contact import and return preserve the selected conversation and draft",
@@ -8,10 +8,10 @@
     "message area and composer fit narrow phones, landscape and desktop without horizontal overflow"
   ],
   "sources": {
-    "web/public/chat.html": "81b45707dd8517235d0f7d2a973177573e433fc2244b608da719dd818f7d7439",
+    "web/public/chat.html": "64b4c9e2970479cf351a0a913ff9eb5a02b1a07ac333ad391bb4f5e8a090a229",
     "web/public/chat.js": "169d96792fc5aedb9342a82ff40aadd69c656fde15ca9b44772a5e07d91cd857",
-    "web/public/chat-layout.css": "1905f1d35989757ecf30f382448008e092a5e71bda08f0036d038fe3c70e96ba",
-    "web/public/chat-sw.js": "8820c2aa41f617567a07800f03bb77149b02598e726235a0a9b37eb04ebe63da",
+    "web/public/chat-layout.css": "79a14f9ef14de33bed63f8688507fb8d43fc94a5adbdeb916954e867638e1f03",
+    "web/public/chat-sw.js": "9098cf55c7d4670cdfb48173a7d1dd28adc279b426c357a072c23aa9faac043b",
     "web/chat-mobile-browser.test.cjs": "1db85e9a0d5c5a9b77582bac8e1d4e1e689363f4df14aef481c12595f0c8eaf6"
   },
   "scope": "Disposable Edge profiles and contact; one locally encrypted message, no external delivery or financial requests."

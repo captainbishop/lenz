@@ -1,4 +1,6 @@
+import {ensureOfflineAccess} from './offline-access.js';
 export async function saveOffline() {
+  if(!navigator.onLine){await ensureOfflineAccess();return;}
   if (!('serviceWorker' in navigator)) throw new Error('Offline saving needs a browser with service-worker support.');
   let worker;
   const scopes=['/chat.html','/money.html','/swap-tools.html','/recovery.html','/account.html'];
@@ -21,4 +23,5 @@ export async function saveOffline() {
     const timer = setTimeout(() => { messages.port1.close(); reject(new Error('Offline preparation timed out. Try again when connected.')); }, 30000);
     messages.port1.onmessage = ({ data }) => { clearTimeout(timer); messages.port1.close(); data.ok ? resolve(data) : reject(new Error(data.error)); };
   }); worker.postMessage({ type: 'prepare' }, [messages.port2]); await result;
+  await ensureOfflineAccess();dispatchEvent(new Event('lenz-offline-files'));
 }

@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  const files=['web/public/form-controls.js','web/public/markets.js','web/public/markets.html','web/public/oracle-prices-ui.js','web/public/market-picker.js','web/public/degen-chart.js','web/public/chart-indicators.js','web/public/chart-vendor/lightweight-charts.js','web/market-navigation-browser.test.cjs'];
  const hashes=async()=>Object.fromEntries(await Promise.all(files.map(async f=>[f,createHash('sha256').update(await fs.readFile(path.join(__dirname,'..',f))).digest('hex')]))),sources=await hashes();
  const browser=await chromium.launch({channel:'msedge',headless:true}),checks=[],errors=[],financial=[];
- const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results;
+ const templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8'))).results;
  const {tapeFixtures}=await import('../integrations/market-tape-fixtures.mjs');
  try{for(const width of [1280,680,390]){
   const context=await browser.newContext({viewport:{width,height:900},serviceWorkers:'block'}),page=await context.newPage();

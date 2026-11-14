@@ -1,6 +1,18 @@
 # Lenz web app
 
-Open `http://127.0.0.1:4173/` for the homepage, `/money.html` for the wallet or `/chat.html` for conversations. The product name is Lenz; the logo uses two opposing L forms. Native Android and iPhone apps remain on the roadmap.
+The current app mounts NEAR Intents, Aurora Swap, Sepolia lending and native
+Zcash Send alongside encrypted chat and offline tUSD. Hyperliquid trading uses
+the shared Coming soon dialog. See [current addresses, execution/privacy scope
+and backend setup](../docs/testnet-integrations.md). Older proof-only examples
+below retain their original scope.
+
+Open the configured local origin, normally `http://localhost:4173/`, for the homepage, `/money.html` for the wallet or `/chat.html` for conversations. Keep the same origin for account storage and local execution services. The product name is Lenz; the logo uses two opposing L forms. Native Android and iPhone apps remain on the roadmap.
+
+## Run and host the app
+
+Follow the [root setup](../README.md#local-setup) to install locked dependencies and build proof assets. From this directory, `node build.mjs` builds the browser files and `node server.mjs` starts the local app. Configure only the required execution services using [backend setup](../docs/testnet-integrations.md#backend-setup).
+
+The [hosting guide](../docs/testnet-integrations.md#hosting) covers two separate packages: `build-vercel.mjs` creates a static preview with unavailable APIs; `build-hosted-vercel.mjs` adds an authenticated proxy to a private gateway. The [live prototype](https://lenz-prototype.vercel.app) runs that website and proxy on Vercel, reaching this computer's gateway and local signers through a temporary Cloudflare tunnel. It depends on those local services. Operator custody and journals remain on this computer, and financial routes require the original identity/source mapping. Public read-only acceptance has passed; live financial execution through the public origin remains separate.
 
 October 31: ordinary chat **Pay** now sends tUSD using the same encrypted vault/history as the wallet. Received payments can be passed onward offline. Saved swaps explain what needs connectivity and never execute automatically on reconnect. Historical synthetic records remain preserved; demo funding and trading controls have been removed. [Product flow and fresh verification](../research/offline-social-money.md): 54 Node tests, 50 browser checks and 41 cache routes; browser initial backing is a fixture.
 
@@ -38,7 +50,11 @@ Photos are centre-cropped to 128×128 JPEG locally and re-encoded without the or
 
 Lenz saves application files automatically on this device. Wait for Ready offline before disconnecting. Each feature retains its checked observations separately; saved observations are historical. Encrypted backup export remains deliberate. The original proof experiment is `/payment-demo.html`.
 
-Clearing site data loses this prototype's account. Recovery and device transfer are not implemented. Current private keys are nonextractable, and old wallet snapshots cannot safely be made spendable without handling later spends and outstanding authorizations. See [behavior and safety boundaries](../docs/behavior.md).
+Clearing site data loses a device-only profile without a usable backup. The app
+now mounts encrypted account/chat and original-action recovery. Restored money
+must be reconciled with later spends and outstanding authorizations; a browser
+archive cannot replace native Zcash custody. See [recovery scope](../docs/testnet-integrations.md)
+and [behavior and safety boundaries](../docs/behavior.md).
 
 The conversation screen has a people list, search, a message thread and a composer with Pay and Swap actions. Pay prepares an encrypted tUSD payment; Swap opens the wallet's saved swaps. On narrow screens, choose a person to open their conversation and use the back button to return. About Lenz contains a short explanation of private chat and pending payments.
 

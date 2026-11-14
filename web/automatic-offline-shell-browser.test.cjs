@@ -50,6 +50,27 @@ async function activeScope(page,scope){
  assert.fail('Prior scope failed to activate: '+scope);
 }
 
+async function offlineFunding(page){
+ const saved=await page.evaluate(async()=>{
+  const {HYPERLIQUID_TESTNET_GRANTS}=await import('/hyperliquid-funding-policy.js');
+  const {newHyperliquidSetupAction}=await import('/hyperliquid-account-setup.js');
+  const {createTornadoProver}=await import('/tornado-prover.js');
+  const {AURORA_INTENT_DEPLOYMENT}=await import('/intent-aurora-config.js');
+  await import('/intent-aurora-source.js');
+  await import('/intent-aurora-funding.js');
+  await import('/intent-aurora-funding-ui.js');
+  await import('/intent-aurora-account.js');
+  await import('/intent-aurora-plan.js');
+  await import('/intent-aurora-route.js');
+  const prover=createTornadoProver();let timer;
+  try{
+   const note=await Promise.race([prover.generateNote(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('The saved original note worker did not respond offline')),15000);})]);
+   return {grants:HYPERLIQUID_TESTNET_GRANTS,setup:newHyperliquidSetupAction('0x'+'1'.repeat(40),123).abstraction,chain:AURORA_INTENT_DEPLOYMENT.chainId,valid:await prover.validateNote(note)};
+  }finally{clearTimeout(timer);prover.dispose();}
+ });
+ assert.deepEqual(saved,{grants:{spotUSDC:'12',perpsUSDC:'3'},setup:'disabled',chain:1313161555,valid:true},'Saved funding modules and the original note computation work without the server');
+}
+
 async function shellJourney({previous=false,overrides={},previousRoot=null}={}){
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'lenz-automatic-shell-'));
  const previousSources={};
@@ -133,7 +154,7 @@ async function shellJourney({previous=false,overrides={},previousRoot=null}={}){
     },revision);
     if(!updated)await new Promise(resolve=>setTimeout(resolve,100));
    }
-   assert(updated,'Both workers finish updating the saved application files');
+   assert(updated,JSON.stringify({message:'Both workers finish updating the saved application files',diagnosis:await page.evaluate(async()=>({registrations:(await navigator.serviceWorker.getRegistrations()).map(r=>({scope:r.scope,active:r.active?.state,installing:r.installing?.state,waiting:r.waiting?.state})),caches:await caches.keys(),rootRecovery:(await(await caches.open('proof-u-web-demo-v1')).match('/recovery.html'))?.status}))}));
    const savedRoot=await page.evaluate(async()=>{for(const name of await caches.keys()){if(name==='proof-u-web-demo-v1')return(await(await caches.open(name)).match('/recovery.html')).text();}});
    assert(!savedRoot.includes('save-backup-offline'),'The root worker updates its saved Recovery document as well');
    await page.reload();await ready(page,'#backup-cache-status');
@@ -149,10 +170,12 @@ async function shellJourney({previous=false,overrides={},previousRoot=null}={}){
   context=await open();await context.setOffline(true);page=context.pages()[0];
   page.on('pageerror',error=>errors.push(error.message));
   let networkResponses=0;context.on('response',response=>{if(response.ok()&&!response.fromServiceWorker())networkResponses++;});
+  const home=await page.goto(base+'/',{waitUntil:'domcontentloaded'});assert(home.fromServiceWorker(),'Home opens from saved files');await offlineFunding(page);
   for(const [route,selector]of routes){
    const response=await page.goto(base+route);assert(response.fromServiceWorker(),route+' opens from saved application files');
    await ready(page,selector);await retained(page,fixture);
    assert.equal(await page.evaluate(()=>navigator.onLine),false);
+   if(route==='/money.html')await offlineFunding(page);
   }
   assert.deepEqual(errors,[]);assert.equal(networkResponses,0);
   assert(requests>0,'Only the initial installation used the static fixture server');

@@ -36,7 +36,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
  });
  await regression('Saved Hyperliquid event details remain accessible offline without a separately saved catalogue',async(page,context)=>{
   await page.goto(base+'/markets.html?view=predictions');await page.locator('[data-event-id="hyperliquid:outcome:12"]').waitFor();
-  await page.getByRole('button',{name:'Save events offline',exact:true}).click();assert.equal(await page.evaluate(()=>localStorage.getItem('lenz-hyperliquid-catalog-v1')),null);
+  await page.getByRole('button',{name:'Save events offline',exact:true}).click();assert.equal(await page.evaluate(()=>localStorage.getItem('lenz-hyperliquid-testnet-catalog-v2')),null);
   await context.setOffline(true);await page.locator('[data-event-id="hyperliquid:outcome:12"]').click();await page.getByRole('dialog').waitFor();assert.match(await page.locator('.prediction-detail-markets').textContent(),/60%/);
  });
  await regression('Overview refresh includes CoinMarketCap',async page=>{

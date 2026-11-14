@@ -87,13 +87,23 @@ export function createLendingReader({ fetchImpl = fetch, deployment = {}, now = 
     const signal = options.signal ? AbortSignal.any([options.signal, deadline]) : deadline;
     const blockTag = options.blockTag ?? 'finalized';
     check(['finalized', 'latest'].includes(blockTag), 'Choose a canonical lending observation tag.');
+    const blockRef = options.blockRef;
+    check(blockRef === undefined || plain(blockRef) && Object.keys(blockRef).sort().join() === 'hash,number' && quantity(blockRef.number) && hash(blockRef.hash) && blockTag === 'finalized', 'Choose an exact finalized lending receipt block.');
     check(await rpc('eth_chainId', [], signal) === d.chainHex, 'The lending RPC returned another chain.');
-    const block = await rpc('eth_getBlockByNumber', [blockTag, false], signal);
+    let block = await rpc('eth_getBlockByNumber', [blockTag, false], signal);
     check(plain(block) && quantity(block.number) && hash(block.hash) && quantity(block.timestamp), 'A finalized lending block is unavailable.');
+    const finalizedHead = block;
+    if (blockRef) {
+      check(BigInt(blockRef.number) <= BigInt(finalizedHead.number), 'The original lending receipt is not finalized.');
+      block = await rpc('eth_getBlockByNumber', [blockRef.number, false], signal);
+      check(plain(block) && block.number === blockRef.number && block.hash === blockRef.hash && quantity(block.timestamp) && BigInt(block.timestamp) <= BigInt(finalizedHead.timestamp), 'The original lending receipt block is not canonical.');
+    }
     const ref = { blockHash: block.hash, requireCanonical: true };
+    // Historical code/storage APIs use numbers; the receipt and finalized hashes bracket every read.
+    const codeRef = blockRef ? block.number : ref;
     const codes = {}, implementations = {};
     async function code(target, key) {
-      const value = await rpc('eth_getCode', [target, ref], signal);
+      const value = await rpc('eth_getCode', [target, codeRef], signal);
       check(typeof value === 'string' && /^0x(?:[0-9a-fA-F]{2})+$/.test(value), 'A lending contract has no verifiable code.');
       const codeHash = keccak256(value), pinned = Boolean(key && d.codeHashes[key]);
       if (pinned) check(codeHash === d.codeHashes[key], 'A pinned lending contract changed.');
@@ -112,7 +122,7 @@ export function createLendingReader({ fetchImpl = fetch, deployment = {}, now = 
     const targets = Object.fromEntries([...protocolKeys, ...deploymentKeys].filter(key => d[key]).map(key => [key, d[key]]));
     await Promise.all(Object.entries(targets).map(async ([key, target]) => { codes[key] = await code(target, key); }));
     await Promise.all(protocolKeys.map(async key => {
-      const slot = await rpc('eth_getStorageAt', [d[key], implementationSlot, ref], signal);
+      const slot = await rpc('eth_getStorageAt', [d[key], implementationSlot, codeRef], signal);
       check(hash(slot) && /^0x0{24}/.test(slot), 'The lending implementation slot is invalid.');
       const implementation = '0x' + slot.slice(-40), pin = d.implementationPins[key];
       if (/^0x0{40}$/.test(implementation)) {
@@ -200,7 +210,7 @@ export function createLendingReader({ fetchImpl = fetch, deployment = {}, now = 
         accountState.address = predicted; accountState.route = factoryRoute;
       }
       if (accountState.address) {
-        const accountCode = await rpc('eth_getCode', [accountState.address, ref], signal);
+        const accountCode = await rpc('eth_getCode', [accountState.address, codeRef], signal);
         check(typeof accountCode === 'string' && /^0x(?:[0-9a-fA-F]{2})*$/.test(accountCode), 'The lending account code is invalid.');
         if (accountCode === '0x') {
           accountState.status = 'undeployed';
@@ -224,6 +234,10 @@ export function createLendingReader({ fetchImpl = fetch, deployment = {}, now = 
     }
     const canonical = await rpc('eth_getBlockByNumber', [block.number, false], signal);
     check(plain(canonical) && canonical.hash === block.hash && canonical.number === block.number && canonical.timestamp === block.timestamp, 'The finalized lending snapshot is no longer canonical.');
+    if (blockRef) {
+      const head = await rpc('eth_getBlockByNumber', [finalizedHead.number, false], signal);
+      check(plain(head) && head.hash === finalizedHead.hash && head.number === finalizedHead.number && head.timestamp === finalizedHead.timestamp, 'The finalized lending head is no longer canonical.');
+    }
     const codePinsVerified = Object.entries(targets).every(([key]) => codes[key].pinned);
     const implementationPinsVerified = proxyKeys.every(key => implementations[key]?.pinned) && Object.values(implementations).every(value => value === null || value.pinned);
     const configured = Boolean(d.lendingFactory && proofRoute);

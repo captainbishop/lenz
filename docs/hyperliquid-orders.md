@@ -1,9 +1,15 @@
 # Hyperliquid orders in Lenz
 
-Supported Hyperliquid markets now have an order form below their chart. Choose a
-market, connect an external wallet, check funds, enter a size and limit price,
-choose public execution, and review before signing. Returning from another market
-category retains the editable draft for that market during the current page session.
+Spot, perpetual and prediction trading show the shared **Coming soon** dialog in
+the current app. Charts and public market data remain available. Testnet funding,
+orders, fills, cancellation and same-wallet recovery have not completed a live
+acceptance journey. The adapter checks described below do not enable trading.
+
+The retained adapter has an order form for supported markets. Its component tests
+cover wallet connection, funds checks, size and limit price, explicit public
+execution, and review before signing. Returning from another market category
+retains the editable draft during the current page session. The release gate keeps
+this form unavailable in the current app.
 
 For supported perpetuals, the connected wallet's selected position shows direction,
 size, entry price, unrealized P&L, liquidation price and margin used. Values carry
@@ -24,10 +30,13 @@ Unsupported markets remain browsable and offer an explicitly external venue link
 
 ## Funding and authority
 
-Deposit and withdrawal open Hyperliquid's [official interface](https://app.hyperliquid.xyz/trade).
-Use the same wallet there, then return to Lenz and refresh funds. Native funding,
-withdrawal and leverage changes are not connected. This path does not turn NEAR
-test dollars into mainnet collateral or represent a completed cross-chain route.
+Orders use [HyperCore testnet](https://app.hyperliquid-testnet.xyz/trade).
+Test funds requests send a reviewed grant of test USDC from Lenz's configured
+distributor into separate spot and perpetual balances. A new empty account first
+approves Standard mode in its wallet. Grants require actual distributor inventory;
+an unavailable distributor does not create a balance. Retained requests are checked
+through the same wallet and original request. Funding, orders and positions are
+public on Hyperliquid. Native withdrawal and leverage changes are not connected.
 
 Connecting reads the selected address and balances; it does not sign. Execution
 requires a separate public-route choice and wallet signature for one GTC limit
@@ -51,6 +60,13 @@ ID, market, side, original size and limit price. Older responses cannot reverse
 observed fills or completed outcomes. A successful HTTP response alone does not
 establish a fill.
 
+If a client-ID lookup is missing, Lenz checks that wallet's historical and open
+orders for the exact client ID. It never substitutes another order with similar
+price and size. Reported fills require matching order and trade IDs, market,
+direction, price bounds, quantities, timestamps and fees. Missing, duplicate or
+conflicting fill records leave the request unresolved. Provider history is capped;
+absence from the available records does not prove that an order was never sent.
+
 The 60-second signed expiry limits when the action can be submitted. An accepted
 GTC order remains open until filled or cancelled. Cancelling requires a separate
 signature, and already-filled quantities remain filled.
@@ -60,6 +76,9 @@ lookup after possible submission remains uncertain; Lenz does not automatically
 create another order. Saved activity stays readable offline, with its saved time.
 Users can export local history and explicitly clear resolved records. Open and
 uncertain records remain, and nonce history survives clearing visible activity.
+The external wallet remains the spending account. Local order history is not
+included in a Lenz account backup; after losing the device, recover the same wallet
+and reconcile its venue account before approving further activity.
 
 Local encryption protects stored records, not public venue activity or a compromised
 application origin. This flow provides neither private settlement nor offline order
@@ -70,8 +89,10 @@ execution. Those integrations remain active work alongside lending and liquidity
 The browser checks use isolated stores, an ephemeral signer and simulated exchange
 responses. They cover review/back, reconnect, cancellation, account changes during
 signing, expired pre-submission recovery, status races, margin-mode changes and
-history cleanup. No real wallet signature, order, deposit or withdrawal was used.
-Live metadata was read separately; it is not execution evidence.
+history cleanup. Recovery checks also cover missing lookups, exact historical and
+open-order binding, partial cancellation, and rejected duplicate or changed fill
+evidence. These are isolated tests. Live execution evidence must separately verify
+funding, order receipts, fills and balances; market reads do not prove execution.
 
 - [Info endpoint](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint)
 - [Exchange endpoint](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint)

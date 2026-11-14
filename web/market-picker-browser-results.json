@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T17:03:59.407Z",
+  "checkedAt": "2026-11-05T10:37:48.502Z",
   "passed": 6,
   "checks": [
     "search selects the exact market and returns focus to the styled trigger",
@@ -10,13 +10,13 @@
     "offline reload retains the picker and saved markets without provider requests"
   ],
   "sources": {
-    "web/public/market-picker.js": "40f98aec2f36c3b93f37f4b7672dd627b87a2ad3f933dcf69a5a57858f679f72",
+    "web/public/market-picker.js": "e4fd93303837199c353b06345bbbd5346b69dfc93a328a71139d45ab614167a0",
     "web/public/market-picker.css": "e4a35ef6547f44b6e8c3e0eaca9f5d49f09283cdca06866130ef615e0b16e56b",
     "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
-    "web/public/markets.js": "bf2e9016d358ab71de84c85c44634b4f6a99afae303ce7fb0edaf1bb7dafc0f4",
-    "web/public/markets.html": "d8f0b0458f11cc060f82bf82a6f6f31178750f9e8eb2035097b1a90f347aecfe",
-    "web/public/sw.js": "67e4335ad3ad2f05d686eed253a3decd025c125ca8551f1630829c24763ee6be",
-    "web/public/chat-sw.js": "2196ff6a6f37e4ff94f2afd45576f91afc9cfd2171377f394eebe51393d1acf6",
+    "web/public/markets.js": "47ec5022ebbbbd77dcb8e44bda01c668c08580bad1c6d34c2da953d5ca0f2abe",
+    "web/public/markets.html": "32a01e7c23a27cb400df33ee061dc2ee7005d04be03ad68cac7b3d9c68b8d0f1",
+    "web/public/sw.js": "bb24c0dc776251ddc615398242816dcb3d09cec0b85d7894792a3d3a6c56a723",
+    "web/public/chat-sw.js": "913a9d5bfc638a2802e19c8b5b0a382685ed505c309038bc2ba32501ffea5a40",
     "web/market-picker-browser.test.cjs": "9af4ca54ea5b41a69ef77fb337c44529ab5a500adbd101b3b0f3fe04c2a24c71"
   },
   "scope": "Disposable Edge with fixture public data; no wallet connection or financial operation. Emulated phone layouts are not physical-device testing."

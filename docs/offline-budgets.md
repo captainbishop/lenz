@@ -38,6 +38,27 @@ No provider is required to sign. Production signer generation, encrypted key
 recovery and migration remain incomplete; browser tests use explicitly disposable
 fixture keys and do not alter the user's Lenz identity.
 
+The [offline outbox](../web/public/offline-budget-outbox.js) persists the signed
+instruction, chosen executor and exact encrypted carrier envelope in the shared
+browser store before returning a handoff. Web Locks serialize competing tabs.
+Another instruction for the same budget nonce is refused, including after expiry;
+retrying the same instruction retains its original terms and ciphertext.
+Storage capacity is checked before committing new records, with room reserved
+for their later acknowledgements. A full outbox preserves earlier authorizations
+and lets their delivery state advance. This module is available offline but is not
+connected to a funding or signing control in the product.
+
+Carrier delivery requires explicit enablement and records destinations before
+sending. Up to four carriers can receive an authorization, including attempts
+whose replies were lost. Carrier storage and authenticated executor storage have
+separate states. Neither state settles an instruction, releases its nonce, or
+credits the wallet. Expiry leaves the authorization unresolved. There is no
+automatic retry through another destination or a public execution route.
+If carrier retention expires while the instruction remains valid, handoff renews
+and saves the outer retention wrapper. The signed instruction, executor, nonce,
+encrypted payload and message ID stay the same. Expired carrier storage is no
+longer reported as current custody; renewed delivery requires a new acknowledgement.
+
 ## Execution and recovery
 
 A distinct `BudgetCall` is created for each budget. Only the manager can invoke
@@ -108,11 +129,20 @@ records source hashes and detected guard alterations.
 [Offline browser evidence](../aurora/offline-budget-browser-results.json) records
 the browser-to-executor rehearsal. The browser reloads offline, loads cached
 signing modules, signs and encrypts an instruction, and retains ciphertext across
-another reload. The test transfers that ciphertext in process to a separate
-executor, which checks it and executes the actual compiled contract against a
-synthetic venue. Recipient balances and source remainder are measured in the EVM.
+another reload using the outbox. A real local HTTP/SQLite carrier receives it;
+the test discards the response, restarts the carrier, reloads the browser and
+retries the identical envelope. The executor retrieves one envelope through its
+authenticated inbox, checks it and executes the actual compiled contract against
+a synthetic venue. Recipient balances and source remainder are measured in the EVM.
 The encrypted reply is authenticated executor communication, not an independent
-chain finality proof. Real mesh/carrier transport is not exercised by this test.
+chain finality proof. The test also returns a storage acknowledgement through the
+carrier and checks that it creates no recipient output. Physical mesh delivery
+is not exercised. The signing key remains a disposable test fixture.
+
+[Outbox browser tests](../web/offline-budget-outbox-browser.test.cjs) cover nonce
+conflicts across tabs, failed writes, recipient binding, missing consent, altered
+terms, forged acknowledgements, expiry and capacity. These use disposable Edge
+contexts with real IndexedDB, Web Locks and WebCrypto.
 
 Security review of the initial design identified shared downstream caller
 authority. A synthetic venue reproduced a second budget claiming the first
@@ -131,6 +161,12 @@ upgradeable, fee-on-transfer or otherwise unusual token/venue is approved by
 these tests. Actual adapter/token policies and protocol-specific result proofs
 must be reviewed before extending the rehearsal to external assets. The current
 synthetic venue is not evidence of Uniswap, Aave or Hyperliquid execution.
+
+Approved rehearsal instructions can also use the [nearby courier](nearby-delivery.md)
+path. The receiving device must independently approve the sender and budget
+policy. Its durable inbox returns a signed storage receipt, retains conflicting
+nonce history, and does not execute the request or release the sender's nonce.
+This extends offline delivery, not the rehearsal's production or privacy scope.
 
 The full [existing-wallet journey](crosschain-defi.md) still needs recoverable
 onboarding, product budget signing/storage, deployment and funding preflight,

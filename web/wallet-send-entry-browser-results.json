@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-05T11:35:21.341Z",
+  "passed": 7,
+  "failed": 0,
+  "checks": [
+    "Send opens focused recipient entry and icon actions; entering terms and cancelling selection make no wallet requests",
+    "cancelled and declined connections preserve entered terms; late replies cannot restore a cancelled wallet; successful connection requires a new review",
+    "a network-qualified recipient survives connection and wrong-chain funding is rejected before transfer reads or switching",
+    "a saved Lenz recipient enters the existing offline test-payment flow without showing external funding controls",
+    "cancelling verification of a new Lenz recipient returns to Send with the pasted ID intact",
+    "a recipient lookup from a closed Send cannot populate a newly opened Send",
+    "the main Send entry cannot enable transfers for a custom wallet network"
+  ],
+  "sources": {
+    "web/public/evm-transfer-ui.js": "3c1a09b2e4db5a4de3c4e95ae7292d7a84fd7dcdf777d8b589a29c4d2876319f",
+    "web/public/evm-wallet-ui.js": "beb1b7da47166f48458040e663c5818ba8a9a0ece74f8b7022f0ff0245129031",
+    "web/public/money.js": "4584e066a6c1dfba3fd1c0c73fb5207e9a8b9610ba9d4c1776af18a87aa0bb9f",
+    "web/public/wallet-portfolio.js": "5f1d9bf692f93f04d6aac44f4bdbf8e021e324dd8f0c8eeef9b3baf4f1c87c65",
+    "web/public/wallet-portfolio.css": "68d753187ee00dad79167e707c5215e4c3474ac9dadb809ca1a2d3853b578629",
+    "web/wallet-send-entry-browser.test.cjs": "c6eddb369fb9d0673b2d6ba9b951df8bc9b502f9bc6eae375156b5f4bd80a0d4"
+  },
+  "scope": "Disposable Edge with synthetic wallet/provider and real local contact storage; decode scheduling delayed in test context. No real wallet, funds, signing or transaction."
+}

@@ -3,18 +3,14 @@ import './home-defi.js';
 import {themeIcon} from './theme-icon.js';
 const $ = selector => document.querySelector(selector), root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const read = key => { try { return localStorage.getItem(key); } catch { return null; } };
-const save = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
-let paused = reduced.matches || read('lenz-home-motion') === 'off';
+let paused = reduced.matches;
 function motionState() {
- root.classList.toggle('motion-off', paused); $('#motion-toggle').setAttribute('aria-pressed', String(paused));
- $('#motion-toggle').textContent = paused ? 'Motion off' : 'Motion on'; pausePreviewMotion(paused);
+ root.classList.toggle('motion-off', paused);pausePreviewMotion(paused);
  if (paused) { for (const animation of document.getAnimations()) animation.finish(); for(const target of document.querySelectorAll('[data-tilt-surface]')) { target.style.setProperty('--rx','0deg'); target.style.setProperty('--ry','0deg'); } }
 }
 themeIcon($('#theme-toggle'));refreshPreviewVideos();motionState();
 addEventListener('lenz-theme-changed',refreshPreviewVideos);
-$('#motion-toggle').onclick=()=>{ paused=!paused; save('lenz-home-motion',paused?'off':'on'); motionState(); };
-reduced.addEventListener('change',()=>{paused=reduced.matches||read('lenz-home-motion')==='off';motionState();});
+reduced.addEventListener('change',()=>{paused=reduced.matches;motionState();});
 const reveal=new IntersectionObserver(entries=>{for(const entry of entries) if(entry.isIntersecting){entry.target.classList.add('seen');reveal.unobserve(entry.target);if(!paused)entry.target.animate([{opacity:.35,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.65,.3,1)'});}}, {threshold:.12});
 for(const target of document.querySelectorAll('[data-reveal]'))reveal.observe(target);
 for(const target of document.querySelectorAll('[data-tilt]')){

@@ -19,8 +19,8 @@ or an attractive colour palette alone does not meet it.
 - Keep warm paper `#f5f5ef`, forest `#173f35`, ink `#193b31` and lime `#e1efa6`.
   Lime identifies the primary action or selected state. Dim surfaces use
   `#14291f` and `#20382b`, with readable text `#edf3e9`. Dark uses near-black
-  green `#080f0c` and `#111d17`. The shared appearance menu offers Light, Dim,
-  Dark and Auto; Auto follows the device setting. Choices persist across pages
+  green `#080f0c` and `#111d17`. The shared appearance button cycles through Light, Dim and Dark with each
+  click. The initial appearance follows the device setting. Choices persist across pages
   and tabs and remain usable offline. If storage is blocked, the current page
   retains the explicit choice. Dim and Dark share the dark preview recordings.
 - Use Georgia for short display headings and Segoe UI for controls and reading.
@@ -127,13 +127,35 @@ The current DEX is a first UI slice, not the completed visual redesign of Lenz.
 
 ## Wallet interaction revision
 
-[Wallet actions](wallet-tokens.md) select a person before entering an amount,
-with scanning in the recipient step. Receive opens directly on the Lenz QR.
+[Wallet Send](wallet-tokens.md) opens on the recipient field, then asset and amount.
+Funding selection preserves entered terms and returns to a separate transfer review.
+Receive chooses the asset before displaying its receiving QR.
+Offline test dollars stay in a labelled expandable asset row, separate from external
+funds and imported tokens. For tUSD, choose a person before entering an amount,
+with scanning in the recipient step; Receive opens on its Lenz QR.
 Send, Receive, Add and close use accessible SVG controls. Use Lenz colours for
 recipient selection; do not restore the native blue dropdown. Token imports
-show exact network/contract data and keep watched balances separate from offline
+show the connected wallet's exact network/contract holdings and keep them separate from offline
 tUSD. Short section links aid navigation. No design acceptance is inferred from
-passing UI checks; the wallet remains under review.
+passing UI checks; the wallet remains under review. Use actual token artwork in
+asset selectors, holdings and market headings. Imported contracts need an exact
+asset match; ticker text alone must not select a trusted token logo. Market lists
+collapse to a compact toggle while preserving the selected chart and its state.
+The toggle uses a sidebar symbol with an accessible expand/collapse name; the
+compact Degen rail retains the selected token logo. Wallet holdings lead the
+screen, with account, Activity, import and display controls kept secondary.
+Do not reintroduce large Payments/People sections below Tokens or a redundant
+visible Wallet heading. History stays available through Activity and contacts
+through Send. Unknown native balances remain distinct from observed zeroes.
+
+Keep the user’s chosen asset through every step. Show the receiving network beside
+the destination even when the address matches across networks. Ordinary addresses
+and temporary route deposits need distinct lifetimes. A signature or contact name
+must not substitute for destination verification. Before approval show the amount,
+recipient, asset, receiving network, fee coverage and visibility. Network setup
+belongs in settings; transaction-specific network information belongs in review.
+Keep a submitted transfer distinct from a confirmed one, and retain a clear path
+back to its status after interruption.
 
 Apply [workflow privacy boundaries](privacy-workflows.md) to every approval and
 status. Avoid phrases implying the user's device must reconnect for all offline
@@ -155,7 +177,7 @@ artwork. Keep utility actions compact, labelled and at least 44px. The homepage
 uses the same palette while retaining its preview controls and composition.
 
 Cards do not acquire a green outline on pointer hover or press. Large actionable
-cards lift on hover or press, with a matching arrow nudge.
+cards rise briefly on touch or keyboard activation, with a matching arrow nudge.
 Keep layout stable and disable this motion for reduced-motion or Motion off.
 Reserve a neutral focus ring for keyboard navigation. Verify
 normal text contrast at 4.5:1, small-screen reflow and offline asset availability.

@@ -38,9 +38,9 @@ test('one unavailable venue keeps the remaining catalogue and successful refresh
 
 test('tape reads bind to discovered class and coin, and cancellation prevents selected-market reads',async()=>{
   const catalog=createHyperliquidCatalogReader({fetcher:hyperliquidFixtureFetcher});
-  const request={marketId:'hypercore:spot:@1188',interval:'1m',privacy:'public'};
+  const request={marketId:'hypercore:testnet:spot:@1188',interval:'1m',privacy:'public'};
   const tape=await readHyperliquidTape(request,{catalog,fetcher:hyperliquidFixtureFetcher});assert.deepEqual(tape.candles,[]);assert.deepEqual(tape.levels[1],[]);
-  await assert.rejects(readHyperliquidTape({...request,marketId:'hypercore:builder:@1188'},{catalog,fetcher:()=>assert.fail('Unknown market must not read a tape')}));
+  await assert.rejects(readHyperliquidTape({...request,marketId:'hypercore:testnet:builder:@1188'},{catalog,fetcher:()=>assert.fail('Unknown market must not read a tape')}));
   const abort=new AbortController();abort.abort();await assert.rejects(readHyperliquidTape(request,{catalog,signal:abort.signal,fetcher:()=>assert.fail('Cancelled read must not contact the source')}));
 });
 

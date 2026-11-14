@@ -1,7 +1,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
 (async()=>{
   const {createMarketRoute}=await import('./market-relay.mjs'),{createMarketStream}=await import('./market-stream.mjs'),{tapeFixtures}=await import('../integrations/market-tape-fixtures.mjs');
-  const root=path.join(__dirname,'public'),templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'))).results;
+  const root=path.join(__dirname,'public'),templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json')))).results;
   const sockets=[],calls=[],errors=[],checks=[];let streamAdvance=0,historyUnavailable=false;
   class Socket extends EventTarget{
     readyState=0;sent=[];

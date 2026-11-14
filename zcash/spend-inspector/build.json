@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "sourceRevision": "eb38d7a373661179dbc083a2fd58b3a6c9b25818",
+  "scanReadinessVersion": 1,
+  "chainTipVersion": 1,
+  "sourceSha256": "2aa2d9c841a2ea34eb6e9ab2639a5b09f1edccf3eff155edcc400e6a6dfd6c43",
+  "manifestSha256": "20d4168b19a2cf60bd93d1f91d9c44f2f7904fbb775594093a7ca224d77bcd22",
+  "lockSha256": "b33830860eb5beb677c5af2bff6a6e1d07a5226eb2677e56460b5dfbfecbdf05",
+  "executableSha256": "fb59767ce9583e9990e07728b6e657a5e664be370ce4cec01816d7b39fda4caf",
+  "command": "cargo +1.99.1 build --manifest-path zcash/spend-inspector/Cargo.toml --release --locked --offline",
+  "scope": "Read-only current note/witness/retained-anchor/full scan checks and expiry-bound exact original input eligibility, with pinned testnet RPC observation; no signing or broadcasting.",
+  "tlsProvider": "ring",
+  "chainBlockVersion": 1,
+  "checkedAt": "2026-11-14T19:30:04.5035846Z",
+  "expiredInputVersion": 1
+}

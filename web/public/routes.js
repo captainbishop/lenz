@@ -1,5 +1,5 @@
-import {startOfflineAccess} from './offline-access.js';
 import {themeIcon} from './theme-icon.js';
+import {startOfflineAccess} from './offline-access.js';
 import {listRouteDrafts,attachRouteQuote,removeRouteDraft,routeDraftStatus} from './defi-route-drafts.js';
 import {checkedMarketQuote} from './market-quote.js';
 import {CHAINS,MARKETS} from './defi-catalog.js';
@@ -75,7 +75,7 @@ async function reload(){
   finally{if(ticket===loading)$('#reload-drafts').disabled=false;}
 }
 $('#reload-drafts').onclick=reload;
-themeIcon(document.querySelector('#theme-toggle'));
+themeIcon($('#theme-toggle'));
 addEventListener('offline',()=>{invalidate();if($('#route-action-status'))$('#route-action-status').textContent='Offline · Saved draft retained.';update();});addEventListener('online',update);setInterval(update,1000);
 await reload();
 startOfflineAccess($('#route-cache-status'));

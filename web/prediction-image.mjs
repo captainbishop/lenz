@@ -2,7 +2,9 @@ import {marketFetch} from '../integrations/market-http.mjs';
 import {predictionImageURL} from './public/prediction-model.js';
 import {boundedMarketJSON} from '../integrations/prediction-catalog.mjs';
 export function createPredictionImageRoute({fetcher=marketFetch}={}){
- const cache=new Map(),pending=new Map();
+ const cache=new Map(),pending=new Map(),queue=[];let active=0;
+ function enqueue(work){return new Promise((resolve,reject)=>{queue.push({work,resolve,reject,at:Date.now()});drain();});}
+ function drain(){while(active<6&&queue.length){const job=queue.shift();if(Date.now()-job.at>20000){job.reject(Error('Image service busy'));continue;}active++;Promise.resolve().then(job.work).then(job.resolve,job.reject).finally(()=>{active--;drain();});}}
  async function read(key){
   let urls=[key];
   if(key.startsWith('kalshi:')){
@@ -27,9 +29,9 @@ export function createPredictionImageRoute({fetcher=marketFetch}={}){
   const input=new URL(req.url,'http://127.0.0.1:4173'),event=input.searchParams.get('event'),url=event&&/^kalshi:[A-Z0-9][A-Z0-9_-]{0,159}$/.test(event)?event:predictionImageURL(input.searchParams.get('url'));
   if(req.method!=='GET'||req.headers.host!=='127.0.0.1:4173'||!url||input.searchParams.size!==1){res.writeHead(400);res.end();return;}
   try{
-   if(!cache.has(url)&&!pending.has(url)){if(pending.size>=6)throw Error('Image service busy');pending.set(url,read(url).finally(()=>pending.delete(url)));}
+   if(!cache.has(url)&&!pending.has(url)){if(pending.size>=96)throw Error('Image service busy');pending.set(url,enqueue(()=>read(url)).finally(()=>pending.delete(url)));}
    const value=cache.get(url)??await pending.get(url);
    res.writeHead(200,{'Content-Type':value.type,'Cache-Control':'private, max-age=3600','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox"});res.end(value.body);
-  }catch{res.writeHead(404,{'Cache-Control':'no-store'});res.end();}
+  }catch(error){res.writeHead(error.message==='Image service busy'?503:404,{'Cache-Control':'no-store','Retry-After':'2'});res.end();}
  };
 }

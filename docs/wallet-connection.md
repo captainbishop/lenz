@@ -20,7 +20,10 @@ Names are untrusted text, not verified wallet brands. Remote icons and provider
 URLs are not loaded. Providers must support EIP-1193 account/network events.
 
 No account RPC runs before explicit selection. The disclosure covers address
-sharing with Lenz and reading through the selected wallet's network provider.
+sharing with Lenz and public data services under “What connecting allows”.
+Selecting the wallet also permits automatic token discovery on supported chains;
+there is no extra checkbox or signature. Payments still require their own review
+and wallet approval.
 The default connection uses only `eth_requestAccounts`, `eth_accounts`, `eth_chainId`,
 `eth_blockNumber` and `eth_getBalance`. Balance reads use an explicit block number,
 followed by account and chain checks. Provider responses are observations from
@@ -37,8 +40,9 @@ late replies cannot revive a cancelled or replaced session. Calls time out after
 30 seconds. Disconnect removes Lenz's listeners and session; revoking wallet site
 permissions remains a separate wallet action.
 
-The connection writes no Lenz keys, contacts, messages, reservations, token
-watchlists or offline balance. External addresses are not linked to Lenz contact
+The connection writes no Lenz keys, contacts, messages, reservations or offline
+balance. Automatic discovery saves checked token observations to the encrypted
+watchlist when a local profile exists. External addresses are not linked to Lenz contact
 cards or passed to the market relay. The wallet's own provider can observe reads;
 public-chain activity is not private settlement. Saving the app offline caches
 the controls, never a connected account or active permission.

@@ -15,6 +15,12 @@ const codeHash=value=>base58.encode(Buffer.from(value,'hex'));
 const displayAmount=value=>{const units=BigInt(value),fraction=(units%1000000n).toString().padStart(6,'0').replace(/0+$/,'');return (units/1000000n).toString()+(fraction?'.'+fraction:'');};
 const empty=()=>({version:1,requests:{},grants:{},pending:null});
 function checkJournal(state){check(state?.version===1&&state.requests&&state.grants&&Object.keys(state.requests).length<=512&&Object.keys(state.grants).length<=100,'The retained NEAR journal cannot be read.');return state;}
+export function createNearIntentFinalSnapshot(request){return async()=>{
+ const {header}=await request('block',{finality:'final'});
+ check(header&&typeof header.hash==='string'&&base58.decode(header.hash).length===32&&Number.isSafeInteger(header.height)&&header.height>0&&typeof header.timestamp_nanosec==='string'&&/^[1-9][0-9]{0,24}$/.test(header.timestamp_nanosec),'The final NEAR block is invalid.');
+ const query=async params=>{const result=await request('query',{...params,block_id:header.hash});check(result?.block_hash===header.hash&&result.block_height===header.height,'The expiry query returned another block.');return result;};
+ return {header,account:account_id=>query({request_type:'view_account',account_id}),async keys(account_id){return (await query({request_type:'view_access_key_list',account_id})).keys;},async query(method_name,args,account_id){const result=await query({request_type:'call_function',account_id,method_name,args_base64:Buffer.from(json(args)).toString('base64')});return JSON.parse(Buffer.from(result.result).toString('utf8'));}};
+};}
 function exactTransaction(signed,call){
  check(signed&&typeof signed.bytes==='string'&&Buffer.from(signed.bytes,'base64').toString('base64')===signed.bytes,'Invalid retained transaction bytes.');
  const decoded=decodeSignedTransaction(Buffer.from(signed.bytes,'base64')),tx=decoded.transaction,operation=tx.actions[0]?.functionCall;
@@ -29,8 +35,8 @@ export function createNearIntentRelay({rpc,signer,journal,now=Date.now,random=si
  const serialized=operation=>{const task=queue.then(operation);queue=task.catch(()=>{});return task;};
  const randomness=()=>Buffer.from(random(15)).toString('base64');
  async function balances(owner){const result=await rpc.query('mt_batch_balance_of',{account_id:owner,token_ids:['nep141:'+deployment.source,'nep141:'+deployment.target]},deployment.verifier);check(Array.isArray(result)&&result.length===2&&result.every(value=>typeof value==='string'&&/^[0-9]{1,39}$/.test(value)),'The testnet balances are invalid.');return result;}
- async function assertDeployment(){
-  const [verifier,source,target,fee,keys,roles]=await Promise.all([rpc.account(deployment.verifier),rpc.account(deployment.source),rpc.account(deployment.target),rpc.query('fee',{},deployment.verifier),rpc.keys(deployment.verifier),rpc.query('acl_get_super_admins',{skip:0,limit:100},deployment.verifier)]);
+ async function assertDeployment(view=rpc){
+  const [verifier,source,target,fee,keys,roles]=await Promise.all([view.account(deployment.verifier),view.account(deployment.source),view.account(deployment.target),view.query('fee',{},deployment.verifier),view.keys(deployment.verifier),view.query('acl_get_super_admins',{skip:0,limit:100},deployment.verifier)]);
   check(verifier.code_hash===codeHash(deployment.verifierSha256)&&source.code_hash===codeHash(deployment.tokenSha256)&&target.code_hash===codeHash(deployment.tokenSha256)&&fee===0&&Array.isArray(keys)&&keys.length===0&&Array.isArray(roles)&&roles.length===0,'The deployed verifier, assets, authority or fee changed.');
  }
  async function fundingAuthority(){const owners=await Promise.all([rpc.query('owner_get',{},deployment.source),rpc.query('owner_get',{},deployment.target)]);return typeof signer.relayerId==='string'&&owners.every(owner=>owner===signer.relayerId);}
@@ -58,7 +64,19 @@ export function createNearIntentRelay({rpc,signer,journal,now=Date.now,random=si
   const success=Object.hasOwn(result.status??{},'SuccessValue')&&result.receipts_outcome.every(receipt=>Object.hasOwn(receipt.outcome.status,'SuccessValue')||Object.hasOwn(receipt.outcome.status,'SuccessReceiptId'));
   return {success,txHash:pending.signed.txHash,receiptIds:result.receipts_outcome.map(receipt=>receipt.id),result};
  }
- function pendingOutcome(row,reason='The original testnet transaction has no final result yet.') {return {intentId:row.review.id,artifactId:row.authorization.artifactId,status:'unknown',verified:false,evidence:{network:'testnet',transaction:row.transaction?.txHash??null,description:reason}};}
+ function pendingOutcome(row,reason='The original testnet transaction has no final result yet.') {return {intentId:row.review.id,artifactId:row.authorization?.artifactId,status:'unknown',verified:false,evidence:{network:'testnet',transaction:row.transaction?.txHash??null,description:reason}};}
+ async function observeExpiry(row){
+  if(!rpc.finalSnapshot||row.transaction||row.finalReceipt)return null;
+  try{
+   const view=await rpc.finalSnapshot(),payloads=[...row.review.authorization.payloads,row.review.solverPayload],timestamp=BigInt(view.header.timestamp_nanosec);
+   if(!payloads.every(payload=>timestamp>BigInt(Date.parse(JSON.parse(payload.message).deadline))*1000000n))return null;
+   await assertDeployment(view);const nonces=[];
+   for(const payload of payloads){const accountId=JSON.parse(payload.message).signer_id;check(await view.query('is_nonce_used',{account_id:accountId,nonce:payload.nonce},deployment.verifier)===false,'An original nonce was consumed or unavailable.');nonces.push({accountId,nonce:payload.nonce,used:false});}
+   // Expired bitmap prefixes can be deleted by the contract's garbage collector.
+   // A false post-expiry view cannot distinguish unused from previously consumed.
+   return {intentId:row.review.id,artifactId:row.authorization?.artifactId,status:'unknown',verified:false,resubmissionSafe:false,permissionExpired:true,evidence:{network:'testnet',verifier:deployment.verifier,sourceRevision:deployment.sourceRevision,configHash:deployment.verifierSha256,tokenHash:deployment.tokenSha256,blockHash:view.header.hash,blockHeight:view.header.height,timestampNanosec:view.header.timestamp_nanosec,nonces,authorizationRecovered:!!row.authorization,description:'The permission expired. Nonce records may have been pruned, so this final view cannot prove whether the swap ran. The original request remains unresolved.'}};
+  }catch{return null;}
+ }
  async function verifySettlement(state,row,final){
   const review=row.review,output=review.quote.output;
   if(!final.success)return pendingOutcome(row,'The final transaction or an asynchronous receipt failed. Check the retained result; a withdrawal failure can leave LTT in your Intents account.');
@@ -94,11 +112,14 @@ export function createNearIntentRelay({rpc,signer,journal,now=Date.now,random=si
  });}
  async function reconcile(attempt){return serialized(async()=>{
   const state=checkJournal(await journal.read());let row=state.requests[attempt?.id];
-  if(!row){check(attempt?.id===attempt?.review?.id,'The original request identifier changed.');checkNearReview(attempt.review,attempt.review,{allowExpired:true});const authorization=checkNearAuthorization(attempt.authorization,attempt.review);for(const signed of authorization.signed)check(verifyNep413(signed),'Invalid user NEP-413 signature.');row={review:attempt.review,authorization,transaction:null};}
-  else check(sameNearValue(attempt.review,row.review)&&row.authorization&&sameNearValue(attempt.authorization,row.authorization),'The retained NEAR request or authorization changed.');
-  checkNearAuthorization(row.authorization,row.review);if(row.outcome?.status==='executed')return row.outcome;
+  if(!row){check(attempt?.id===attempt?.review?.id,'The original request identifier changed.');checkNearReview(attempt.review,attempt.review,{allowExpired:true});const authorization=attempt.authorization?checkNearAuthorization(attempt.authorization,attempt.review):null;check(authorization||attempt.status==='approval-unresolved','The original authorization is missing.');for(const signed of authorization?.signed??[])check(verifyNep413(signed),'Invalid user NEP-413 signature.');row={review:attempt.review,authorization,transaction:null};}
+  else check(sameNearValue(attempt.review,row.review)&&sameNearValue(attempt.authorization??null,row.authorization??null),'The retained NEAR request or authorization changed.');
+  checkNearReview(row.review,row.review,{allowExpired:true});
+  if(row.authorization)checkNearAuthorization(row.authorization,row.review);if(row.outcome?.status==='executed')return row.outcome;
   if(!state.pending){
    if(row.finalReceipt||row.transaction)return row.outcome??pendingOutcome(row);
+   const expiry=await observeExpiry(row);if(expiry){check(Object.keys(state.requests).length<512||state.requests[row.review.id],'The retained request limit was reached.');row.outcome=expiry;state.requests[row.review.id]=row;await journal.write(state);return expiry;}
+   if(!row.authorization)return pendingOutcome(row,'The original approval is unavailable. Expiry has not been verified.');
    let safe=row.review.deadline>now();for(const payload of [...row.review.authorization.payloads,row.review.solverPayload])if(await rpc.query('is_nonce_used',{account_id:JSON.parse(payload.message).signer_id,nonce:payload.nonce},deployment.verifier)!==false)safe=false;
    return {...pendingOutcome(row,safe?'No transaction was created for this request. You can resume the original approval.':'The original permission cannot be safely resumed. Keep checking this request.'),resubmissionSafe:safe};
   }
@@ -180,7 +201,7 @@ export async function openNearIntentRelay({stateDir,deployerKeyFile,deploymentSt
  const lease=await open(lockPath,'wx',0o600);await lease.writeFile(String(process.pid));await lease.sync();await lease.close();
  const journal={async read(){try{return checkJournal(JSON.parse(await readFile(path,'utf8')));}catch(error){if(error.code!=='ENOENT')throw error;return empty();}},async write(state){checkJournal(state);const file=await open(path+'.next','w',0o600);await file.writeFile(json(state)+'\n');await file.sync();await file.close();await rename(path+'.next',path);}};
  async function request(method,params){const response=await fetchImpl(deployment.rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:json({jsonrpc:'2.0',id:'lenz-near-intent',method,params}),signal:AbortSignal.timeout(90000)});check(response.ok,'NEAR testnet RPC is unavailable.');const body=await response.json();check(!body.error,'NEAR testnet RPC did not return the requested final result.');return body.result;}
- const rpc={async query(method,args,contractId){const result=await request('query',{request_type:'call_function',account_id:contractId,method_name:method,args_base64:Buffer.from(json(args)).toString('base64'),finality:'final'});return JSON.parse(Buffer.from(result.result).toString('utf8'));},account:account_id=>request('query',{request_type:'view_account',account_id,finality:'final'}),async keys(account_id){return (await request('query',{request_type:'view_access_key_list',account_id,finality:'final'})).keys;},send:signed_tx_base64=>request('send_tx',{signed_tx_base64,wait_until:'FINAL'}),transaction:(tx_hash,sender_account_id)=>request('tx',{tx_hash,sender_account_id,wait_until:'FINAL'})};
+ const rpc={finalSnapshot:createNearIntentFinalSnapshot(request),async query(method,args,contractId){const result=await request('query',{request_type:'call_function',account_id:contractId,method_name:method,args_base64:Buffer.from(json(args)).toString('base64'),finality:'final'});return JSON.parse(Buffer.from(result.result).toString('utf8'));},account:account_id=>request('query',{request_type:'view_account',account_id,finality:'final'}),async keys(account_id){return (await request('query',{request_type:'view_access_key_list',account_id,finality:'final'})).keys;},send:signed_tx_base64=>request('send_tx',{signed_tx_base64,wait_until:'FINAL'}),transaction:(tx_hash,sender_account_id)=>request('tx',{tx_hash,sender_account_id,wait_until:'FINAL'})};
  const signer={solverId:implicitNearOwner(solverPair.getPublicKey().toString()),relayerId:relayer.accountId,solverAccountId:solver.accountId,
   async signSolver(payload){return {standard:'nep413',payload:structuredClone(payload),public_key:solverPair.getPublicKey().toString(),signature:'ed25519:'+base58.encode(solverPair.sign(nep413Hash(payload)).signature)};},
   async signTransaction(call){const account=call.senderRole==='solver'?solver:relayer,signed=await account.createSignedTransaction({receiverId:call.receiverId,actions:[actions.functionCall(call.methodName,call.args,BigInt(call.gas),BigInt(call.deposit))]});return {senderId:account.accountId,txHash:base58.encode(createHash('sha256').update(encodeTransaction(signed.transaction)).digest()),bytes:Buffer.from(signed.encode()).toString('base64')};},

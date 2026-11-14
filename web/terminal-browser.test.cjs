@@ -1,9 +1,9 @@
-const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:mainnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
+const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:testnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
 // Actual UI with synthetic public data in a disposable Edge profile.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url'),{createHash}=require('node:crypto');
 async function run({override,record=true}={}){
  const {tapeFixtures}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-tape-fixtures.mjs'))),{quoteMarket}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quotes.mjs'))),{quoteMock}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quote-fixtures.mjs')));
- const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results.map(r=>r.observation),hl=templates.find(r=>r.provider==='hyperliquid'),eth=hl.rows.find(r=>r.instrument==='ETH');eth.id='hyperliquid:0:ETH';eth.venueIndex=0;eth.sizeDecimals=3;hl.rows=[eth];
+ const templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8'))).results.map(r=>r.observation),hl=templates.find(r=>r.provider==='hyperliquid'),eth=hl.rows.find(r=>r.instrument==='ETH');eth.id='hyperliquid:0:ETH';eth.venueIndex=0;eth.sizeDecimals=3;hl.rows=[eth];
  const screenshotDir=process.env.LENZ_DEGEN_SCREENSHOTS??path.join(require('node:os').tmpdir(),'lenz-market-screens');await fs.mkdir(screenshotDir,{recursive:true});
  const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1440,height:1100},serviceWorkers:'block'}),page=await context.newPage(),errors=[],calls=[],checks=[];let mode='normal',release;
  const check=name=>{checks.push(name);console.log('PASS '+name);};

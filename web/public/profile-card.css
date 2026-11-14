@@ -9,7 +9,7 @@ body #share-contact .share-card{padding:16px;border-radius:16px;border:1px solid
 body #share-contact #share-name{color:var(--lenz-text);font:600 20px/1.25 'Segoe UI',sans-serif;margin:3px 0 0;overflow-wrap:anywhere}
 #share-contact #contact-qr{box-sizing:border-box;width:min(244px,100%);height:auto;margin:0 auto;background:white;border-radius:10px;image-rendering:pixelated}
 body #share-contact .contact-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
-body #share-contact .contact-action{width:100%;height:46px;min-height:46px;padding:10px 7px;display:flex;gap:7px;align-items:center;justify-content:center;border:1px solid var(--lenz-edge);border-radius:11px;background:var(--lenz-well);color:var(--lenz-text);font:500 12px 'Segoe UI',sans-serif}
+body #share-contact .contact-action{width:100%;height:48px;min-height:48px;padding:10px 7px;display:flex;gap:7px;align-items:center;justify-content:center;border:1px solid var(--lenz-edge);border-radius:11px;background:var(--lenz-well);color:var(--lenz-text);font:500 12px 'Segoe UI',sans-serif}
 body #share-contact #share-card{background:var(--lenz-green-ink);color:var(--lenz-green);border-color:transparent}
 #share-contact .contact-action svg{width:19px;height:19px;flex:none;stroke-width:1.7}
 #share-contact #share-feedback{font-size:12px;line-height:1.4;color:var(--lenz-muted);margin:12px 0 0}#share-contact #share-feedback:empty{display:none}

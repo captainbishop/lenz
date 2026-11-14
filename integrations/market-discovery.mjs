@@ -1,11 +1,12 @@
+import {HYPERLIQUID} from '../web/public/hyperliquid-environment.js';
 import { createHash } from 'node:crypto';
 import { readCalldata,readResult } from '../aurora/market-read-codec.mjs';
 import { immutable } from '../web/public/defi-catalog.js';
-import {marketFetch} from './market-http.mjs';
+import {marketFetch,METADATA_RPC} from './market-http.mjs';
 import {marketNetwork} from '../web/public/evm-markets.js';
 import {ORACLE_NETWORKS} from '../web/public/oracle-feeds.js';
 export const MARKET_READS=immutable({
-  baseRpc:'https://mainnet.base.org',hyperliquid:'https://api.hyperliquid.xyz/info',
+  baseRpc:'https://mainnet.base.org',hyperliquid:HYPERLIQUID.info,
   factory:'0x33128a8fc17869897dce68ed026d694621f6fdfd',
   aavePool:'0xa238dd80c259a72e81d7e4664a9801593f98d1c5',
   tokens:[
@@ -21,7 +22,8 @@ const quantity=x=>typeof x==='string'&&/^0x(?:0|[1-9a-fA-F][0-9a-fA-F]*)$/.test(
 const address=x=>typeof x==='string'&&/^0x[0-9a-fA-F]{40}$/.test(x)&&!/^0x0{40}$/i.test(x);
 const decimal=x=>typeof x==='string'&&/^-?(?:0|[1-9][0-9]{0,29})(?:\.[0-9]{1,24})?$/.test(x);
 export async function marketJson(url,body,{fetcher=marketFetch,signal=AbortSignal.timeout(20000),maxBytes=1024*1024}={}){
-  check([MARKET_READS.baseRpc,MARKET_READS.hyperliquid,...Object.values(ORACLE_NETWORKS).map(n=>n.rpc)].includes(url),'Unapproved market endpoint');
+  check([MARKET_READS.baseRpc,MARKET_READS.hyperliquid,...Object.values(ORACLE_NETWORKS).map(n=>n.rpc),...Object.values(METADATA_RPC)].includes(url),'Unapproved market endpoint');
+  signal.throwIfAborted();
   const response=await fetcher(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),redirect:'error',signal});
   if(!response.ok){await response.body?.cancel();throw Error(`Market source HTTP ${response.status}`);}
   check(response.body,'Empty market response');
@@ -32,7 +34,7 @@ export async function marketJson(url,body,{fetcher=marketFetch,signal=AbortSigna
 }
 function envelope(provider,rows,evidence,clock){
   const observedAt=clock();
-  return immutable({version:1,provider,chainId:rows[0].chainId,network:'mainnet',kind:'market-observation',observedAt,expiresAt:observedAt+60000,executable:false,rows,evidence,
+  return immutable({version:1,provider,chainId:rows[0].chainId,network:provider==='hyperliquid'?HYPERLIQUID.environment:'mainnet',kind:'market-observation',observedAt,expiresAt:observedAt+60000,executable:false,rows,evidence,
     scope:'Public read-only discovery. No quote, signing, reservation, transaction or position access.',
   });
 }
@@ -49,15 +51,15 @@ export async function discoverHyperliquid({fetcher=marketFetch,clock=Date.now}={
     check((m.isDelisted===undefined||typeof m.isDelisted==='boolean')&&(m.onlyIsolated===undefined||typeof m.onlyIsolated==='boolean'),'Invalid venue market flags');
     const c=contexts[i];check(c&&['markPx','oraclePx','funding','openInterest'].every(k=>decimal(c[k])),'Invalid venue prices or funding');
     check(Number(c.markPx)>=0&&Number(c.oraclePx)>=0&&Number(c.openInterest)>=0,'Negative venue price or interest');
-    return {id:`hyperliquid:${i}:${m.name}`,marketId:'hyperliquid',category:'perpetuals',chainId:'hypercore:mainnet',label:`${m.name} perpetual`,instrument:m.name,venueIndex:i,sizeDecimals:m.szDecimals,maxLeverage:m.maxLeverage,collateralToken:meta.collateralToken,isolatedOnly:m.onlyIsolated===true,status:m.isDelisted?'delisted':'listed',markPrice:c.markPx,oraclePrice:c.oraclePx,funding:c.funding,openInterest:c.openInterest,executable:false};
+    return {id:`hyperliquid:${i}:${m.name}`,marketId:'hyperliquid',category:'perpetuals',chainId:HYPERLIQUID.chainId,label:`${m.name} perpetual`,instrument:m.name,venueIndex:i,sizeDecimals:m.szDecimals,maxLeverage:m.maxLeverage,collateralToken:meta.collateralToken,isolatedOnly:m.onlyIsolated===true,status:m.isDelisted?'delisted':'listed',markPrice:c.markPx,oraclePrice:c.oraclePx,funding:c.funding,openInterest:c.openInterest,executable:false};
   });
   return envelope('hyperliquid',rows,{source:MARKET_READS.hyperliquid,method:'metaAndAssetCtxs',dex:'',assurance:'provider-https',providerTimestamp:null,statement:'The provider supplies no timestamp in this response; observation time is the local receipt time.',responseSha256:hash(JSON.stringify(data))},clock);
 }
 export async function baseSnapshot(options,recent=false){
   const market=marketNetwork(options.network);
-  const {fetcher=marketFetch,clock=Date.now}=options,signal=AbortSignal.timeout(40000);let id=0;
+  const {fetcher=marketFetch,clock=Date.now}=options,signal=AbortSignal.any([AbortSignal.timeout(40000),...(options.signal?[options.signal]:[])]);let id=0;
   async function rpc(method,params){
-    check(['eth_chainId','eth_getBlockByNumber','eth_getCode','eth_call'].includes(method),'Unsupported market RPC method');
+    check(['eth_chainId','eth_getBlockByNumber','eth_getCode','eth_call','eth_getBalance','eth_getTransactionCount','eth_gasPrice','eth_simulateV1'].includes(method),'Unsupported market RPC method');
     const request={jsonrpc:'2.0',id:++id,method,params};
     const response=await marketJson(market.rpc,request,{fetcher,signal,maxBytes:256*1024});
     check(response?.jsonrpc==='2.0'&&response.id===request.id&&!response.error&&Object.hasOwn(response,'result'),'Invalid market RPC response');return response.result;
@@ -74,7 +76,7 @@ export async function baseSnapshot(options,recent=false){
   }
   await Promise.all(market.tokens.map(async token=>{await code(token.id);check(Number((await call(token.id,'decimals'))[0])===token.decimals,'Token decimals differ from reviewed identity');}));
   async function finish(){const current=await rpc('eth_getBlockByNumber',[block.number,false]);check(current?.hash===block.hash,'Market block changed during read');return {source:market.rpc,assurance:recent?'rpc-latest-block':'rpc-finalized-block',blockHash:block.hash,blockNumber:BigInt(block.number).toString(),blockTimestamp:timestamp,codeSha256:codeHashes,statement:'RPC-authenticated chain and code observations, not independent light-client verification or a code audit.'};}
-  return {code,call,finish,clock,market};
+  return {code,call,finish,clock,market,rpc,block,tag};
 }
 export async function discoverUniswap(options={}){
   const s=await baseSnapshot(options,options.recent===true),market=s.market,[weth,usdc]=market.tokens;
@@ -95,7 +97,18 @@ export async function discoverAave(options={}){
     check(reserves.includes(token.id),'Reviewed asset is not an Aave reserve');
     const bits=(await s.call(market.aavePool,'getConfiguration',[token.id]))[0],flag=n=>(bits&(1n<<BigInt(n)))!==0n;
     check(Number((bits>>48n)&255n)===token.decimals,'Aave reserve decimals mismatch');
-    return {id:`aave:${options.network&&options.network!=='base'?options.network+':':''}${token.id}`,marketId:'aave',category:'credit',chainId:market.chainId,label:`${token.symbol} reserve`,address:market.aavePool,version:'v3',assets:[token],ltvBps:Number(bits&65535n),liquidationThresholdBps:Number((bits>>16n)&65535n),active:flag(56),frozen:flag(57),borrowingEnabled:flag(58),paused:flag(60),status:!flag(56)?'inactive':flag(60)?'paused':flag(57)?'frozen':'listed',executable:false};
+    let lending={supplyAPY:null,borrowAPY:null,availableLiquidity:null,totalSupplied:null,totalBorrowed:null};
+    const amount=n=>{const scale=10n**BigInt(token.decimals);return (n/scale).toString()+'.'+(n%scale).toString().padStart(token.decimals,'0');};
+    const apy=ray=>{const value=Math.expm1(31536000*Math.log1p(Number(ray)/1e27/31536000))*100;check(Number.isFinite(value)&&value>=0&&value<=100000,'Invalid Aave rate');return value;};
+    try{
+      const [reserve]=await s.call(market.aavePool,'getReserveData',[token.id]);check(reserve.configuration[0]===bits,'Reserve configuration changed');
+      const supplied=reserve.aTokenAddress.toLowerCase(),debt=reserve.variableDebtTokenAddress.toLowerCase();
+      for(const receipt of [supplied,debt]){await s.code(receipt);const [underlying,pool]=await Promise.all([s.call(receipt,'UNDERLYING_ASSET_ADDRESS'),s.call(receipt,'POOL')]);check(underlying[0].toLowerCase()===token.id&&pool[0].toLowerCase()===market.aavePool,'Reserve receipt identity changed');}
+      const [supplyTotal,borrowTotal]=await Promise.all([s.call(supplied,'totalSupply'),s.call(debt,'totalSupply')]);
+      lending={...lending,supplyAPY:apy(reserve.currentLiquidityRate),borrowAPY:apy(reserve.currentVariableBorrowRate),totalSupplied:amount(supplyTotal[0]),totalBorrowed:amount(borrowTotal[0])};
+      try{lending.availableLiquidity=amount((await s.call(market.aavePool,'getVirtualUnderlyingBalance',[token.id]))[0]);}catch{}
+    }catch{}
+    return {id:`aave:${options.network&&options.network!=='base'?options.network+':':''}${token.id}`,marketId:'aave',category:'credit',chainId:market.chainId,label:`${token.symbol} reserve`,address:market.aavePool,version:'v3',assets:[token],...lending,supplyCap:((bits>>116n)&((1n<<36n)-1n)).toString(),borrowCap:((bits>>80n)&((1n<<36n)-1n)).toString(),ltvBps:Number(bits&65535n),liquidationThresholdBps:Number((bits>>16n)&65535n),active:flag(56),frozen:flag(57),borrowingEnabled:flag(58),paused:flag(60),status:!flag(56)?'inactive':flag(60)?'paused':flag(57)?'frozen':'listed',executable:false};
   }));
   check(rows.every(r=>r.ltvBps<=10000&&r.liquidationThresholdBps<=10000),'Invalid reserve risk parameters');
   return envelope('aave',rows,await s.finish(),s.clock);

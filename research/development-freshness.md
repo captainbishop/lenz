@@ -1,261 +1,52 @@
-# Bounded lending accounts, November 14, 2026
+# Prototype release review, November 15, 2026
 
-The fixed-route Solidity account passed 22 fresh local EVM tests. Existing independent review still matches exact contract and test hashes. Checks cover owner permissions, replay and deadline, scaled Aave mint and burn, debt and health limits, repayment cleanup, same-nonce cancellation and free-token transfer, changed code and reentry. This batch adds the contract and tests without mounting browser or live execution.
+The release joins the mounted wallet, encrypted chat and offline handoffs,
+bounded NEAR Intents, proof-funded Aurora Swap, Sepolia lending, native Zcash
+Send and public market views. The original identities, custody and unresolved
+request fences remain bound to their existing owners. Historical media and
+verification reports retain their recorded dates and source revisions; their
+presence does not establish current production coverage.
 
-# Pinned Sepolia lending reads, November 14, 2026
+Fresh release checks cover authenticated hosted routing and durable native jobs,
+canonical lending reads, sponsor fences, exact Swap outputs, native confirmation
+and expiry, encrypted recovery and account changes. The financial boundary run
+passed 89 tests, and the account/intent/server run passed 39. The pinned prover
+build passed three reproducibility checks; 13 browser/local-EVM checks accepted
+the genuine proof and rejected altered inputs and artifacts. No fresh financial
+action ran during these release checks.
 
-The standalone reader and local read-only HTTP boundary passed 27 fresh tests. Runtime and proxy pins, canonical finality, exact assets and account selection, unknown positions, cancellation and bounded requests are checked through RPC and HTTP fixtures. Independent source review found no blocker. No signing or execution is mounted by this batch.
+Markets now paints and saves a validated provider result before slower sources
+finish. A vanished requested market remains unavailable until another explicit
+selection. Fourteen Overview and four progressive browser groups pass. Hosted
+packaging uses standard minification and tree shaking. The smaller bundle does
+not establish faster cold provider reads; live latency remains variable.
 
-# Lending search focus, November 14, 2026
+The original Sepolia repayment, withdrawal and free-fund exits finalized at
+nonce 6. At finalized block 12136221, free LINK, free USDC and debt were zero;
+0.000067332779539608 LINK remained as indexed aLINK collateral. The final exit
+returned 0.998442 test USDC. Native Send and Aurora Swap retain their separate
+original confirmation evidence. These outcomes do not establish full anonymity,
+production funds support or closure of the lending account.
 
-Lending asset search uses the same underlined focus treatment as market search.
-The focused field was checked in the actual Markets page: its outer outline is
-absent, while the visible underline and keyboard focus remain.
+Vercel Git builds use locked compiler dependencies and hash-pinned public browser
+assets. Keys, private native artifacts, custody mappings and execution journals
+remain outside Git. The website and authenticated proxy depend on the configured
+local gateway and temporary tunnel. The Git connection and release deployment
+are verified separately from the content freshness gate.
 
+The strict staged publication scanner reported no findings across 2,236 files
+before the Git build additions. Documentation checks passed six core documents
+and 71 local links, plus four release documents with 142 local links. The valid
+native signer patch and exact upstream license retain their required bytes.
+The three obsolete verification-report deletions remain preserved in Git
+history. Private release checks and recording provenance stay outside this
+repository. This record binds reviewed content; it is not an audit certificate.
 
-# Workspace request and backup lifetimes, November 13, 2026
-
-Workspace dispatch fences request invocation and rejects results after local
-session invalidation. Backup workers stop on cancellation or page suspension,
-retain uncertain archives and recreate their runner on a valid page restoration.
-The normal account request remains compatible with explicit runner injection.
-Trading history uses owner-specific workspace records and preserves earlier
-raw/scoped observations. Malformed saved history cannot become an empty result
-or be replaced by a new observation.
-
-The selected source passed 69 automated checks: 34 Node cases and 35 Edge
-groups covering dispatch, performance storage, full account backup/recovery
-and the existing account overview. Offline restart, interrupted storage, late
-replies, encrypted upload contents and duplicate backup revisions were checked
-with disposable accounts. Removed guards were detected for request injection,
-dispatch context, commit cancellation and history ownership. The backup test
-checks the requested return destination before reading the new account.
-
-Worker revisions refresh the mounted backup code. Workspace-bound factories
-remain unmounted; complete store isolation, provider/transport cleanup, shared
-financial exclusions, Wallet profile controls and physical-device acceptance
-remain required. These checks do not establish settlement, recovered financial
-authority, remote passkey synchronization or hosted backup durability.
-
-
-# Workspace storage, November 13, 2026
-
-The unmounted workspace store binds reads and writes to one local session.
-Lending observations and financial recovery reviews have separate encrypted
-workspace records. Legacy evidence is retained. Cancelled writes, stale session
-results, conflicting observations and damaged records reject without replacing
-retained evidence. Guest observations stay separate when a Lenz identity is added.
-
-The selected source passed 87 disposable Edge checks across session migration,
-workspace updates, private storage and existing lending/recovery interfaces,
-including full browser/server shutdown and offline reopening. Historical save
-code and scoped saves complete without a lock cycle. Independent review findings
-were corrected and rechecked. Guard changes exercised ownership, cancellation,
-read fencing and lock separation. These factories are not mounted in the app;
-profile selection still requires the remaining stores, provider/transport
-lifecycles, shared financial exclusions and journey verification. This change
-does not establish financial authority, settlement or physical-device behavior.
-
-
-# Automatic offline saving, November 13, 2026
-
-Main app entries prepare their offline files automatically and display readiness.
-Validated public market reads save locally; cancelled or removed reads cannot
-restore saved data. Storage failures remain visible. Chat backup export remains
-deliberate and existing identities and encrypted conversations remain intact.
-
-The selected candidate passed 28 browser cases and groups: app installation,
-upgrade from the previous committed app, synthetic cache transitions, interrupted
-downloads, missing-file repair, first-entry offline restarts, public-market
-retention, storage failures and cancellation. Existing worker registrations are
-explicitly updated before retrying unsupported readiness checks. These checks
-use disposable Edge profiles and local provider fixtures. Earlier timing and
-upgrade failures are retained in the local review record; this evidence makes
-no installation-time or physical-device guarantee. Financial freshness, private
-settlement and full profile isolation are outside this change.
-
-
-# Automatic private-read saving, November 12, 2026
-
-Explicitly loaded lending positions and retained financial evidence save encrypted
-on this device. Checked recovery-file merges preserve conflicting copies and
-remain unreconciled, with no spending authority. Verified public name observations
-save locally. Separate manual save controls are removed; encrypted file export
-remains deliberate. Cache revisions deliver the corrected modules, and duplicate
-financial dependencies no longer prevent Conversations cache installation.
-
-Fresh checks on the selected candidate covered 57 browser groups and 19 Node cases.
-They include failed storage, cancelled reads and writes, account changes,
-historical offline reopening, and retained source journals and access restrictions.
-Tests use disposable identities, local provider fixtures and installed runtimes.
-These results do not establish physical-device behavior, private settlement,
-production financial recovery, or complete workspace isolation.
-
-# Workspace session foundation, November 12, 2026
-
-A standalone session library preserves the existing workspace, partitions its
-core state and rejects stale reads, saves and provider replies after session
-changes. Wallet Add wallet, switching and whole-app sign-out remain unconnected.
-Auxiliary stores, background/provider lifetimes and shared financial exclusions
-still require integration before those controls can become available.
-
-Sixteen public-interface browser groups passed on the final source, including
-blocked and interrupted migration, private-key pairing, cancelled transactions,
-cross-tab invalidation, retained recovered-access restrictions and full offline
-browser restart after the fixture server stopped. Tests use disposable identities
-and local provider fixtures. These checks do not establish full profile isolation,
-production financial recovery or physical-device acceptance.
-
-# Financial recovery review, November 12, 2026
-
-Wallet settings opens a read-only review of retained approvals, transfers and
-reservations. Encrypted reviews preserve older and conflicting observations.
-Missing or invalid sources remain explicit gaps; duplicate signed records
-coalesce, and an oversized source cannot hide records from another source.
-Custom-chain quantities retain exact base units without guessed ETH metadata.
-Failures use short labels with technical evidence under Details; test and demo
-records visibly have no cash value.
-
-Fresh verification passed six core/archive cases, 46 surrounding cases, 16
-browser groups and a custom-currency regression. Six removed guards were
-detected. The fuller Wallet separately passed all 16 browser groups and the
-currency regression. Tests use disposable local fixtures and include encrypted
-file merges, failed/cancelled writes, account changes, three themes, enlarged
-text and offline browser restart after server shutdown. All 33 recovery module
-dependencies are cached. Spending recovery, canonical funding/outcomes and
-exclusive financial signing authority remain incomplete.
-
-# Exact unsigned memo review, November 12, 2026
-
-The local Zcash review screen can inspect authenticated payment and owned-change
-memos and record an explicit confirmation bound to the saved transaction and all
-memo bytes. Raw content remains transient; signing and sending remain unavailable.
-Technical fingerprints stay under Transaction details, and Lenz themes are preserved.
-
-Fresh verification passed 41 JS cases, 11 native cases, nine memo browser groups,
-nine output groups and eight expiry groups. Twelve theme/viewport combinations
-and enlarged text passed. [Evidence](../zcash/memo-review-verification.json) binds
-sources and the reviewed ignored native executable. Tests use public synthetic
-fixtures. Current inputs/witnesses, production signer recovery, submission and
-independent outcomes remain open.
-
-# Selected lending positions, November 12, 2026
-
-Markets now reads exact selected WETH/USDC reserve positions on Ethereum, Base
-and Arbitrum. Encrypted saved observations reopen offline. Repay and Withdraw
-amount reviews stay bounded to the observed values and expose no execution.
-Account changes, interrupted saves and conflicting same-block values fail closed.
-
-Fresh checks passed 25 Node cases, 17 browser checks and two full Markets
-journey/restart groups after the server stopped. Both worker resource lists
-resolve. [Evidence](../web/lending-position-verification.json) binds exact sources
-and retains the corrected defects and test-fixture failures. Provider observations
-are not independent chain evidence. First uncached offline distribution, physical
-devices, credit execution and financial recovery remain open.
-
-# Wallet welcome and offline setup, November 12, 2026
-
-Wallet now opens Tokens and Receive after a successful read-only connection.
-The welcome and profile setup pages share Lenz themes and clear Back/Continue
-paths. Offline arrival offers Start offline; device-only creation saves before
-opening Wallet, including keyboard submission. Storage/service failures retain
-the form and entered name. Recovered financial access remains paused.
-
-Fresh verification passed 28 Node cases, 10 journey groups, 13 backup groups
-and two full browser restart groups after the authentic web server stopped.
-Thirty-six visual combinations and additional target/text stress checks covered
-the entry regions. The two-tab backup test now counts requests from both tabs.
-[Evidence](../web/onboarding-journey-verification.json) binds exact sources and
-retained failures. Files were installed before disconnection; uncached offline
-distribution, physical devices, full financial recovery and private settlement
-remain open. No live financial operation ran.
-
-# Private cross-asset Swap, November 12, 2026
-
-Wallet adds an owner-directed Swap through the existing offline approval,
-encrypted handoff, executor and outcome path. Source/destination quantities and
-minimums remain distinct through recovery. Pay reviews survive cancelled Swap;
-received swaps use explicit action labels. Integrated verification passed 56
-Node cases and 42 Edge cases, including full offline restarts. Independent
-Spec and Standards findings are closed. [Evidence](../web/private-swap-verification.json)
-records exact sources, failures and limits. A real unfunded quote/generation
-check still receives a provider fee despite an explicitly empty fee list; the
-current approval guard rejects that unsupported policy. Funded execution,
-independent private finality, exits and complete financial recovery remain open.
-
-# Zcash encrypted output review, November 12, 2026
-
-The native unsigned review now authenticates payment and owned-change ciphertext
-against committed recipients and values using pinned pool-version domains. Earlier
-saved checks remain reviewable with an explicit encryption qualification. Signing
-and sending stay unavailable. Independent Spec and Standards reviews cleared the
-scope; integrated verification passed seven Rust tests, 37 Node cases and 11 Edge
-groups. Native and bridge guard alterations, interrupted offline cache upgrade
-and a locked release build also passed. [Evidence](../zcash/note-encryption-verification.json)
-records exact sources and limits. Current witnesses, signing, complete financial
-recovery, physical delivery and shielded DeFi routes remain open.
-
-# Cancelled chat restoration, November 12, 2026
-
-A pending chat restore now carries cancellation to the actual database write.
-Leaving recovery aborts an unfinished installation; an already committed install
-remains saved. Fresh verification passed 45 Node cases and five Edge groups,
-including active transactions, reload and actual navigation/Back. Independent
-Spec and Standards reviews cleared the narrow scope; lifecycle documentation
-now matches the cancellation boundary. [Evidence](../web/chat-restore-cancellation-verification.json)
-records exact sources, retained failures and tested limits. This does not add
-financial revocation, complete key recovery or physical-device evidence.
-
-# Funding arrival checks, November 12, 2026
-
-Wallet keeps the original deposit checkable after source confirmation. Check funding
-reads its provider status and saves an encrypted report separately from the source
-transaction. Reported arrivals/refunds stay unverified and cannot credit funds or
-resend a transfer. Invalid, conflicting and older reports preserve saved evidence;
-account replacement and cancellation at the actual write boundary prevent late saves.
-Amounts remain masked and offline reopening retains the original checked time.
-
-The candidate based on the private-history recovery commit passed 67 Node cases
-and 21 Edge funding/cache groups, including two full offline browser restarts.
-Independent reviews reproduced and verified the account/write races and impossible
-arrival-plus-refund report. [Verification](../web/private-funding-status-verification.json)
-records exact sources, the checked API interface, failures and limits. No live
-funding, independently verified settlement/refund, balance credit or physical-device
-delivery is established. Existing footage remains historical and unchanged.
-
-# Private request history recovery, November 12, 2026
-
-Automatic account backups retain validated private approvals, disclosure records,
-receipts and provider updates. Same-ID sign-in restores readable payment history
-with fresh local encryption and continued payment restrictions. Device merges
-retain newer evidence and reject conflicting owner nonces. ETH quantities retain
-network labels; assets without display metadata show exact base units and asset ID.
-
-The isolated candidate passed 66 account, approval, status, executor HTTP and
-recovery tests, including 14 Edge recovery groups and full offline browser restarts.
-Three deliberate guard-removal scenarios were detected; one removes two redundant
-validation guards. [Verification](../web/private-recovery-verification.json) records
-source hashes, retained failures and tested limits. Provider reports remain
-unverified. Financial reconciliation, independent settlement/refund evidence and
-physical-device delivery remain incomplete. Existing recordings remain unchanged
-and are checked against their exact source revision. Two freshness tests cover
-current-source drift and historical-source/media validation.
-
-# Received private requests, November 11, 2026
-
-Wallet now exposes exact sender-owner consent, encrypted request intake, separate
-payment review, explicit submission, original-deposit status reads and encrypted
-update export. Unknown attempts cannot retry automatically. Permission removal,
-account changes, unavailable asset metadata and unfinished checks block submission.
-Provider reports remain unverified. Both workers cache the receiving controls.
-
-The isolated candidate passed 60 Node cases and 62 browser/HTTP cases across the
-receiving controls, owner Wallet, existing journals and full offline restart. Four
-controlled guard removals failed their intended regressions. Phone and desktop
-views were inspected in light and dark themes. [Verification](../web/private-executor-verification.json)
-records the exact sources, retained fixture/build failures and tested limits.
-No deployment, real signing, private settlement, refund or financial recovery is
-established. Recorded application videos and their sources remain unchanged.
+Homepage preview provenance now references its exact recorded Git revision.
+All 72 recorded source hashes match that revision, and all six video/poster
+pairs retain the original bytes. The preview verifier checks historical sources
+at that revision and current media/cache bytes; it does not relabel old footage
+as a recording of the current app.
 
 # Section Account restoration, November 11, 2026
 
@@ -274,139 +65,6 @@ themes without connecting a wallet. The earlier incomplete visual fixture and
 legacy navigation timeout remain recorded in the [verification](../web/market-account-verification.json).
 No production funding, signing, settlement, refund, recovery or device capability
 is established by these checks. Existing preview recordings remain unchanged.
-
-# Borderless funding and plain-language actions, November 11, 2026
-
-Wallet adds native ETH from Ethereum, Arbitrum or Base through NEAR Intents 1Click. The selected wallet supplies the source network; amount entry survives wallet selection. Signed quotes and exact reviews are stored encrypted before a wallet prompt. Unknown attempts block repeats, and checks reconcile only the original transaction and finalized source receipt. Source confirmation never credits private funds or verifies refunds. Both offline workers retain attempts after a full browser restart.
-
-The action screens use Lenz funds, Review transfer and Confirm in wallet. Contract and provider details are expandable; amounts, fees, send/refund times, public visibility and unknown outcomes remain visible. Chat backup wording warns that clearing site data can delete financial records and lose access to device-dependent funds. Message checks are separate from person verification.
-
-The isolated candidate passed 79 Node cases, 28 funding/payment/offline browser cases and 7 broader browser files. Four removed protections failed behavioral assertions and were restored exactly. Separate Spec and Standards reviews have no remaining findings. Read-only replay compared 15 frames; 9 matched and the remainder differ only in approved message-status wording. Original captures, videos and stored account data are preserved. Source-bound commands and limits are in web/private-funding-verification.json.
-
-Legacy market navigation timed out. The saved-route suite targets a hidden Refresh control on the unchanged baseline as well; those browser journeys remain unverified.
-
-Server partner access, broader funding assets, production private execution, independent private credit/refunds, financial recovery and physical first-offline delivery remain unfinished. No deployment or real financial operation ran.
-
-# Wallet private approvals, November 11, 2026
-
-The existing Wallet prepares an unfunded same-asset Confidential Intents payment, retains an encrypted unsigned review and saves an approval before encrypted handoff. Receipt terms bind the chosen recipient and asset. Executor reports and storage receipts preserve newer history and remain explicitly unverified. The asset menu preserves its pressed label during focus, opens on the first click and keeps native values and keyboard cancellation. Signing uses the displayed wallet selection.
-
-The isolated candidate passed 98 Node tests, 15 Wallet browser cases and two complete offline worker restart cases. Six selected mutation scenarios failed behavioral assertions. Separate Spec and Standards reviews cover the focused change. A fresh baseline-versus-renderer comparison matched 15 preview frames and preserved all three test accounts, historical captures and recordings. Source hashes and reproducible commands are in web/private-spend-verification.json.
-
-Preparation requires a server-only partner credential. Native ETH funding, deployed executor controls, automatic courier routing, funded private execution, independent settlement/refund, financial recovery and physical first-offline delivery remain unfinished. The legacy general form-controls test stopped at its old market readiness prerequisite; the focused menu regression passes. These checks use disposable providers, real cryptography and local browser storage. No live financial operation or deployment ran.
-
-# Durable encrypted private reports, November 11, 2026
-
-Private approval journals save encrypted provider observations and exact owner storage receipts. Duplicate reads reuse the same packet; older or conflicting updates cannot replace the latest report. A durable activity warning prevents a later pending report from reopening submission, including when conflicting evidence is rejected. Interrupted status checks remain blocked until reconciliation. Optional IndexedDB cancellation aborts the write without publishing a packet.
-
-The isolated candidate passed 61 Node tests and 33 Edge outcome, outbox and automatic-cache cases. Existing account backup and Send passed 13 and eight behavior groups. Independent Spec probes passed 10 cases; separate Spec and Standards reviews have no remaining findings. Eight selected mutation scenarios were detected, including one paired receipt-binding change. A fresh read-only replay matched all 15 saved preview frames and preserved all three test accounts. Both workers retain outcome services after a full offline restart without explicit preparation.
-
-Provider reports and storage receipts do not credit balances, verify settlement or release financial reservations. Wallet controls, automatic courier routing, production funding/private execution/refund, independent settlement verification, financial recovery and physical first-offline delivery remain unfinished. Localhost, synthetic providers and disposable browser keys define the tested scope. No live financial operation or deployment ran.
-
-# Private signing and submission libraries, November 10, 2026
-
-Owner review binds the signed private quote to one exact transfer. The external wallet retains its key; cancelled or changed-account prompts cannot release an approval. The connected adapter distinguishes pre-dispatch rejection from unknown submission outcomes, and reads the original deposit after expiry without renewing authority. Malformed provider timestamps and invalid local clocks are rejected before they can become status evidence. Quote-level routing instructions are rejected. Recovery preserves approvals accepted within clock tolerance and rejects review windows that have not opened.
-
-The isolated candidate passed 61 Node tests, including the existing quote and EVM connection regressions, plus three offline Edge signing groups with a disposable provider. Verification detected 33 single-guard changes and one paired clock-bound change. Real local HTTP checks reject redirects and cancel stalled responses; malformed UTF-8 and oversized otherwise-valid reports are rejected. Five browser bundle/license files reproduced exactly from pinned dependencies. Existing dependency advisory records were not refreshed.
-
-These libraries do not activate Wallet controls, an HTTP execution endpoint or offline caches. Browser checks load the modules before disconnecting; they do not prove cold installation or physical-wallet compatibility. The caller must persist the signed request and submission attempt before dispatch. Private funding, encrypted outcome return and independent settlement/refund verification remain unfinished. Existing preview sources and media are unchanged.
-
-# Private execution observations, November 10, 2026
-
-The status validator binds normalized provider reports to an already verified quote review. It checks the original deposit, exact input, minimum output, refund bounds, canonical integer quantities and timestamps. Independent clock bounds prevent two tolerance windows from accepting an update two minutes in the future. Missing amounts and fees stay unknown. A provider report never becomes signed settlement evidence.
-
-Nine Node tests pass in an isolated candidate, and 24 deliberate guard changes are detected. Six existing adapter tests also pass in the working tree; that adapter and its signing dependencies remain outside this commit. The new validator is not mounted in the browser or its offline cache. Encrypted outcome delivery and independent settlement verification remain unfinished. Existing preview sources and media are unchanged.
-
-# Send, sharing and drafts, November 10, 2026
-
-Send commits encrypted chat before opening device sharing. Cancelled sharing retains the message, and Share retries its original packet. Drafts follow the selected contact; text entered during a save survives. A queued Send rejects a replaced account inside the storage lock.
-
-The isolated candidate passed eight Send browser groups and five same-ID recovery groups, including a complete offline browser restart. Sharing uses an API fixture; physical system sharing remains untested. The source-bound record is web/chat-send-verification.json.
-
-Read-only replay hides the composer. Its visible fragments preserve every element except the outgoing Save message label, which becomes Share. Twelve frames and the signed receipts are unchanged. Existing recordings retain the earlier file-saving walkthrough; saving a copy remains available as a fallback. No financial flow changed.
-
-An interrupted Conversations update retains the older cache still used by Wallet. The isolated browser regression first failed with global cache deletion and passes after that deletion is removed, including after the server stops and the browser restarts. Old cache reclamation awaits reliable ownership information.
-
-# Same-ID chat recovery and receipts, November 10, 2026
-
-The recovery page installs same-ID chat archives in an empty browser and re-exports new conversations with the existing phrase. Version 2 archives and automatic backups preserve verified delivery receipts; version 1 and legacy successor readers remain supported. Receipt-only changes synchronize without repeated uploads. Financial authority is excluded.
-
-The isolated candidate passed 53 protocol tests, five main recovery browser groups, 13 automatic-backup groups and one identity browser group. Verification detected 27 guard alterations. Main recovery retained receipts after a complete offline browser restart. Fifteen read-only preview frames and signed receipts match a fresh replay of the preceding commit; existing videos and posters retain their earlier layouts. The source-bound record is web/chat-recovery-verification.json.
-
-The root worker caches the receipt dependency graph. A separate browser regression opens a receipt-bearing archive offline after only that worker is installed; removing the dependencies reproduces the failure. Its unused generated proof runtime uses inert fixtures.
-
-Physical devices, cloud passkey transfer and financial recovery remain unverified.
-
-# Durable executor recovery and receiving service, November 9, 2026
-
-The NEAR testnet executor retains exact signed transactions across interrupted
-submission and reconciles their outcomes before another action. Status-only reads
-cannot open a signer. The authenticated receiving service stores encrypted replies
-and reserves result capacity before execution; restart preserves sender policy,
-receipts, pending attempts and independently observed final outcomes.
-
-An isolated source tree passed 47 executor, 19 inbox and 5 HTTP route tests.
-Verification detected 41 executor and 13 inbox guard changes. These use local
-SQLite, WebCrypto, SDK signatures and synthetic chain state. Production identity
-provisioning, live execution, private settlement and physical devices remain open.
-
-# Authenticated executor updates, November 9, 2026
-
-Executor update decoding binds the selected sender, recipient and saved request,
-rejects malformed or future-dated reports, and snapshots input before validation.
-Authenticated reports remain claims for independent settlement verification.
-Four protocol tests pass, including mutable input and hostile reply cases; four
-removed validation guards are detected. This parser does not activate delivery.
-
-# Prediction discovery and event artwork
-
-Predictions brings public Polymarket, Kalshi and Hyperliquid events into searchable
-Lenz cards with categories, provider filters, dated prices and resolution details.
-Saved events retain their original observation time during failures and offline
-navigation. Hyperliquid details remain readable without a separate native cache.
-Overview refresh and save include CoinMarketCap public market metrics.
-
-Cards use approved provider event images or exact existing Hyperliquid asset
-mappings. Grouped events cannot substitute a featured candidate when the event
-image fails. The image relay checks fixed hosts, ticker identity, raster signatures,
-size and concurrency. Gzip JSON is decoded before the response-size boundary.
-Both offline workers include the new modules.
-
-The isolated candidate passed 126 checks: 52 Node, 10 prediction browser,
-24 Hyperliquid browser, 24 order browser, 14 Overview browser and 2 cache
-upgrade checks. Disposable browser state covers phone and desktop layouts,
-provider failures, malformed metadata, saved recovery and navigation. Existing
-fixture identities, encrypted storage and reservations survive cache upgrades.
-The source-bound record is web/market-action-verification.json.
-
-The live local preview loaded event images from Polymarket and Kalshi and the
-existing Anthropic asset for Hyperliquid. Unverified images retain the fallback.
-Existing recordings, their source inputs and posters are unchanged; they illustrate
-earlier layouts. This revision does not establish outcome execution, unrestricted
-provider availability, physical-device behavior or private settlement.
-
-# Position management and shared controls
-
-Supported perpetual markets display the selected wallet position and prepare a
-reduce-only limit order after a fresh account read. Position changes before and
-after signing block an obsolete order. Price entry, public-route choice and
-external-wallet review remain explicit.
-
-Dropdowns share rounded surfaces, compact touch targets and visible keyboard
-selection in Light, Dim and Dark. Long market pickers fit phone and landscape
-viewports. The market filter reads All markets. The root offline cache now
-includes the modules required to reopen Markets and its saved activity.
-
-The isolated candidate passed 95 scoped checks: 24 Node, 24 order browser,
-9 shared-controls browser, 12 ID-card browser, 24 market browser and 2 cache
-upgrade checks. Browser state, signatures and exchange responses are disposable
-fixtures. Existing account identity, encrypted storage and reservations survive
-the tested cache upgrades. No real wallet or financial action ran.
-
-The portable source-bound record is web/market-action-verification.json. Existing
-recordings retain their earlier layouts; the changed menus and position panel
-were inspected separately. Private settlement, offline execution and broader
-market/DeFi coverage are not established by this revision.
 
 # Market overview and artwork, November 7, 2026
 
@@ -487,6 +145,40 @@ The connection prompt uses one short sentence. Wallet account permission,
 native balance reads and payment approval behavior are unchanged. The wallet
 cache revision refreshes the prompt for saved installations. The current
 disposable provider/browser checks pass; no wallet signature or transaction ran.
+
+# Wallet holdings, Send and artwork, November 5, 2026
+
+Send opens on recipient entry and retains terms through wallet selection and
+cancellation. A late reply from an earlier transfer cannot hide a newly opened
+Send form. Imported ERC-20 holdings bind the connected owner, network and exact
+contract; their quantities and partial USD totals remain distinct. A failed
+reviewed Chainlink feed leaves that asset unpriced. Other contracts may use an
+explicit DEX reference price after exact identity and market-activity checks.
+
+Receive keeps its stable wallet address and asset-specific QR. The selected
+asset, choice menu and transfer history include artwork. The checked 235-market
+perpetuals bundle loads offline; collapsing lists preserves the selected chart.
+Unknown or newly listed assets can still show a monogram. Artwork is not asset
+verification or an execution capability.
+
+The Aave account view shows observed collateral, debt and health with explicit
+reads, oracle-unit checks and account/block binding. Reconnecting requires wallet
+connection and a new account read. Values are cleared when the account changes
+or goes offline. Unknown account data is never presented as an empty position.
+
+Fresh browser coverage exercises recipient/funding cancellation, imported
+holdings, lending, QR/signature binding, pending recovery, masking, responsive
+themes and cache upgrades. Node boundary checks and isolated guard-removal
+checks cover wallet dispatch, finality, receiving signatures and image reads.
+Tests use synthetic providers and disposable browsers; the EVM execution check
+uses an isolated local VM. No user wallet or external financial operation ran.
+
+The shared choice renderer was replayed through the recorded chat/payment
+states: all ten frames and original receipts match. Videos and posters are
+unchanged; [source review](../web/preview-wallet-review.json) binds this replay.
+Automatic authenticated ID resolution, confidential receiving, lending actions
+and full private offline execution remain unfinished. User visual acceptance
+and physical-device testing remain outstanding. See [wallet actions](../docs/wallet-tokens.md).
 
 # Wallet receiving instructions, November 5, 2026
 
@@ -1580,36 +1272,3 @@ Reviewed same-origin public Hyperliquid streaming, interval and lifecycle cancel
 Reviewed read-only native spot, perpetual, builder-venue and outcome discovery, including sparse token/context joins, quote units, side selection, text-only templates, malformed-source isolation, cancellable reads, combined stream quotas and delayed-chart labels. Activity navigation opens a matching market automatically. Local logos, inline timeframe buttons, labelled utility icons and neutral focus styling retain the native chart interface. Keyboard selection retains focus; offline navigation explains unavailable history.
 
 The isolated checkpoint passed 50 Node tests, 22 catalogue browser checks, 18 existing streaming checks, 24 Degen checks and 2 offline upgrade checks. The empty-panel reproduction failed before automatic selection and passed afterward. Live reads returned 1,003 markets; native book/trade events were observed across all four instrument classes. Candle pushes were observed for spot/native perps in the final short run and for an outcome in an earlier run. Empty history and a one-sided spot book remained usable. No account, signing, payment or settlement action ran. External-chain pool coverage and a guaranteed delivery cadence remain outside this feature. See docs/hyperliquid-markets.md.
-
-## Shared appearance, November 7
-
-Reviewed shared illustrated headers and local theme-specific artwork across Markets,
-Wallet, Drafts, Account, Recovery and Conversations. Light, Dim and Dark have
-separate text/surface palettes. Markets retain their richer colours; homepage
-frames and selected panels blend their accents into the darker page. Large cards
-lift their visual contents while keeping the click target fixed. Action arrows
-use the same directional transition. Reduced motion and Motion off remain respected.
-
-Verification: 78 desktop/phone appearance cases, 14 Overview checks, 24 Hyperliquid
-checks, 7 appearance-menu groups, 5 homepage groups, 7 gallery groups and 2 cache
-upgrade checks passed. Edge-click and drag-away cancellation checks passed. The
-saved message/payment replay passed in all three themes with all three stored
-accounts unchanged. Existing illustrated media bytes were retained; see
-web/preview-style-review.json for the scope. Screenshots and exploratory records
-remain outside Git. No new signing, transaction or settlement action ran.
-
-## Native market actions and compact ID card
-
-Standard-account Hyperliquid USDC spot and default-venue perp limit orders now
-connect wallet funds, public-route review, per-order signing, persistent status
-and cancellation. Native funding/withdrawal, other account modes and private
-execution remain unconnected. The ID card keeps its QR and sharing actions in a
-compact theme-aware layout. See `web/market-action-verification.json` for the
-source-bound checks and tested limits. Existing illustrated homepage recordings
-retain their recorded layouts; no video or poster was changed.
-
-## NEAR testnet intent execution, November 13
-
-The testnet relay checks the pinned verifier and token code, administrative keys, token issuer, funded balances, exact NEP-413 authorization and final asynchronous receipts. Signed transactions are saved before submission; reconciliation reads the original transaction without signing or broadcasting again. Funding requires an explicit signed request. Local HTTP access checks the host, origin, request size and rate, and returns sanitized configuration errors. Runtime keys and journals must be supplied outside the repository. Directory checks require a parent path segment; a repository child named like parent traversal is rejected. An unconfigured relay preserves existing HTTPS and LAN app startup.
-
-The isolated source candidate passed 29 Node tests covering exact authorization, tampering, failed receipts, interrupted submission, bounded funding and HTTP access. Deployment scripts passed syntax checks. These local tests use disposable signatures and controlled RPC responses. Actual testnet journeys were checked separately; their private wallet records and signed artifacts are excluded from source. The browser UI and other private payment routes retain their separate integration checks.

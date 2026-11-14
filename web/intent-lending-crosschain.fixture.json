@@ -1,0 +1,157 @@
+{
+  "observedAt": "2026-11-14T14:24:03.715Z",
+  "source": "https://api.testnets.relay.link/quote/v2",
+  "scope": "Public testnet quote with a disposable example sender and illustrative commitment; no source signing or settlement.",
+  "input": {
+    "sender": "0x000000000000000000000000000000000000beef",
+    "privacyPool": "0xdf45f28484715decbb66d77ed17c2b24ecf6d178",
+    "commitment": "0x0000000000000000000000000000000000000000000000000000000000000003",
+    "maxInputAmount": "3000000000000000",
+    "maxGasCost": "1000000000000000",
+    "deadline": 1794666539898
+  },
+  "quote": {
+    "requestId": "0x1794666241cbfd7854cbb6ae9ed56cce9e7a9b6323d051e94700581a7689c568",
+    "steps": [
+      {
+        "id": "deposit",
+        "kind": "transaction",
+        "items": [
+          {
+            "data": {
+              "from": "0x000000000000000000000000000000000000beef",
+              "to": "0x5feab8db4534f9f7e2669bb260c57a01ad1c12e3",
+              "data": "0x49290c1c000000000000000000000000000000000000000000000000000000000000beefa7c2d36014d6a45c5350873b3ba4dc56c5d3886a730db633f14eceecc590259b",
+              "value": "2330390425720457",
+              "chainId": 84532,
+              "gas": "32415",
+              "maxFeePerGas": "8774059",
+              "maxPriorityFeePerGas": "1000000"
+            },
+            "check": {
+              "endpoint": "/intents/status/v3?requestId=0x1794666241cbfd7854cbb6ae9ed56cce9e7a9b6323d051e94700581a7689c568",
+              "method": "GET"
+            }
+          }
+        ]
+      }
+    ],
+    "fees": {
+      "app": {
+        "amount": "0"
+      }
+    },
+    "details": {
+      "sender": "0x000000000000000000000000000000000000beef",
+      "recipient": "0x000000000000000000000000000000000000beef",
+      "currencyIn": {
+        "currency": {
+          "chainId": 84532,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "ETH",
+          "name": "Ether",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "2330390425720457",
+        "amountFormatted": "0.002330390425720457",
+        "amountUsd": "4.368853",
+        "minimumAmount": "2330390425720457"
+      },
+      "currencyOut": {
+        "currency": {
+          "chainId": 11155111,
+          "address": "0xf8fb3713d459d7c1018bd0a49d19b4c44290ebe5",
+          "symbol": "LINK",
+          "name": "LINK",
+          "decimals": 18,
+          "metadata": {
+            "verified": false
+          }
+        },
+        "amount": "1000000000000000000",
+        "amountFormatted": "1.0",
+        "amountUsd": "0",
+        "minimumAmount": "1000000000000000000"
+      },
+      "refundCurrency": {
+        "currency": {
+          "chainId": 84532,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "ETH",
+          "name": "Ether",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "2330390425720457",
+        "amountFormatted": "0.002330390425720457",
+        "amountUsd": "4.368853",
+        "minimumAmount": "2330390425720457"
+      }
+    },
+    "protocol": {
+      "v2": {
+        "orderId": "0xa7c2d36014d6a45c5350873b3ba4dc56c5d3886a730db633f14eceecc590259b",
+        "hubType": "onchain",
+        "orderData": {
+          "version": "v1",
+          "solverChainId": "base-sepolia",
+          "solver": "0x3e34b27a9bf37d8424e1a58ac7fc4d06914b76b9",
+          "salt": "0x60dd8bd3ba7938e00a0b676d2cd5b856155f92118db79980271fec85ecb55b8b",
+          "inputs": [
+            {
+              "payment": {
+                "chainId": "base-sepolia",
+                "currency": "0x0000000000000000000000000000000000000000",
+                "amount": "2330390425720457",
+                "weight": "1"
+              },
+              "refunds": [
+                {
+                  "chainId": "base-sepolia",
+                  "recipient": "0x000000000000000000000000000000000000beef",
+                  "currency": "0x0000000000000000000000000000000000000000",
+                  "minimumAmount": "0",
+                  "deadline": 1795271043,
+                  "extraData": "0x000000000000000000000000f5042e6ffac5a625d4e7848e0b01373d8eb9e222"
+                },
+                {
+                  "chainId": "sepolia",
+                  "recipient": "0x000000000000000000000000000000000000beef",
+                  "currency": "0x0000000000000000000000000000000000000000",
+                  "minimumAmount": "0",
+                  "deadline": 1795271043,
+                  "extraData": "0x"
+                }
+              ]
+            }
+          ],
+          "output": {
+            "chainId": "sepolia",
+            "payments": [
+              {
+                "recipient": "0xa1bea5fe917450041748dbbbe7e9ac57a4bbebab",
+                "currency": "0xf8fb3713d459d7c1018bd0a49d19b4c44290ebe5",
+                "minimumAmount": "1000000000000000000",
+                "expectedAmount": "1000000000000000000"
+              }
+            ],
+            "calls": [
+              "0x000000000000000000000000f8fb3713d459d7c1018bd0a49d19b4c44290ebe50000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000044095ea7b3000000000000000000000000df45f28484715decbb66d77ed17c2b24ecf6d1780000000000000000000000000000000000000000000000000de0b6b3a764000000000000000000000000000000000000000000000000000000000000",
+              "0x000000000000000000000000df45f28484715decbb66d77ed17c2b24ecf6d1780000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000024b214faa5000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000"
+            ],
+            "deadline": 1795271043,
+            "extraData": "0x"
+          },
+          "fees": []
+        },
+        "paymentDetails": {
+          "chainId": "base-sepolia",
+          "depository": "0x5feab8db4534f9f7e2669bb260c57a01ad1c12e3",
+          "currency": "0x0000000000000000000000000000000000000000",
+          "amount": "2330390425720457"
+        }
+      }
+    }
+  }
+}

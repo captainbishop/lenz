@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-05T13:26:25.137Z",
+  "checks": [
+    "contract import binds the connected owner, retains quantity and adds its priced value without signatures",
+    "imported tokens appear in Send, exact contract review, searchable picker, Escape focus, paste and responsive themes",
+    "unpriced token quantity remains visible, total is partial and values respect masking",
+    "account change discards a delayed balance while retaining public metadata and removes spending controls for other owners"
+  ],
+  "scope": "Disposable browser/provider and market fixtures; no user wallet or live transfer."
+}

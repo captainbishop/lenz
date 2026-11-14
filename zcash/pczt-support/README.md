@@ -19,8 +19,11 @@ derivation. The first JavaScript review assumed that derivation would be present
 and failed. The candidate checks ownership from the actual receiver and the
 wallet-derived full viewing key instead. The original failure remains recorded.
 
-`lenz-zcash-pczt.exe` is a separate experimental binary. The browser companion still
-uses the original executable, whose hash must match `zcash/source-lock.json`.
+`lenz-zcash-pczt.exe` is a separate experimental binary. Native Send uses it for
+new unsigned preparation with an explicit 120-block expiry window and for signing.
+The CLI accepts 40 through 120 blocks after the proposal target. Existing payment
+artifacts and their expiries remain unchanged. Read-only wallet and extraction
+operations use the original executable, whose hash must match `zcash/source-lock.json`.
 The dependency lock remains unchanged. [Build hashes](build.json) and the
 [source patch](ironwood-test-signer.patch) identify the candidate.
 
@@ -33,13 +36,16 @@ cargo +1.99.1 build --manifest-path tooling/zcash-devtool/Cargo.toml --bin lenz-
 node zcash/pczt-support/record-build.mjs
 ```
 
-The recorder saves hashes; successful compilation must be checked separately.
+The patch includes both `sign.rs` and bounded expiry creation in `create.rs`.
+The recorder saves their source hashes and the explicit expiry version alongside
+the executable hash; successful compilation must be checked separately.
 Do not rerun the transaction as a build check. `node zcash/pczt-test.mjs` only reads
 the saved report. Mutating steps are explicit and fixed to this disposable run.
 Submission journals the exact txid and signed artifact hash before network access;
 an interrupted submission requires reconciliation, never a newly created spend.
 
-All PCZTs and wallet secrets stay under ignored `zcash/.testnet/`. PCZTs can reveal
+All PCZTs, journals and wallet secrets stay in configured private storage outside
+the product repository. PCZTs can reveal
 private witnesses and payment metadata, so they are not browser assets or public
 test fixtures. This is a local Windows test tool, not a production wallet or an
 offline onward-transfer protocol. Network confirmation still requires connectivity.

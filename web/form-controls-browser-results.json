@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-07T21:01:36.002Z",
-  "passed": 9,
+  "checkedAt": "2026-11-07T19:56:05.699Z",
+  "passed": 7,
   "checks": [
     "themed menus bind exact swap direction and tolerance without consenting or requesting a quote",
     "arrows, Home/End, typeahead, Escape and Tab preserve exact selection and focus",
@@ -8,26 +8,18 @@
     "enlarged menus fit and accept selection; outside clicks dismiss them and checkboxes keep restrained keyboard focus",
     "dialog Escape, native validation, disabled options, form values, safe text, reset and removal stay correct",
     "offline reload retains styled controls and cached choices without quote requests",
-    "Name and Zcash selectors use the same themed menus without wallet actions",
-    "Older page styling retains a visible active option and correct native selection",
-    "Long market menus fit phone and landscape screens in all three appearances"
+    "Name and Zcash selectors use the same themed menus without wallet actions"
   ],
   "sources": {
-    "web/public/market-picker.js": "3b45cfd1919054832baf3391fb43e0089456acf07f70c2b16c069101cd8defb3",
-    "web/public/market-picker.css": "6c398a7664252e3e2db077f0bfdb7249a8854e8304c1a7e0319790844dcf4034",
-    "web/public/theme-tokens.css": "51e132519752834c6a90037a73a3cc3422ef96e845152b83fd11a7852507047e",
-    "web/public/name-lab.html": "5c7036c8d180406b1eb0adc31b5930f2725bd2d0234f33f6f559170fad7695f5",
-    "web/public/zcash-lab.html": "2a7b4b29a480e1150bb9ccbe4be59011d8d50f61ed1ede583b7b56e0f9cd8c3b",
-    "web/public/payment-demo.html": "466feaa9af2637d4f971a944a820c180b66f83ebca0763dc033f1173ce4f4875",
-    "web/public/form-controls.js": "8d6818aed296fd1175be248a02a99a53807ab575328901c44cb4f9590cd4723d",
+    "web/public/form-controls.js": "3e8c063510517a5a477dda118bf5e2f0b555dac7e2da3f51265dd40ee63b99ea",
     "web/public/form-controls.css": "b3b31fd79d5b444ac286e3243901bd8aa12e9b353dde2b76e10e54de9c938d80",
-    "web/public/markets.html": "7dccdacbe54f09da247db08181507af7a1f9003fa37ea6283719d2590bb4122b",
-    "web/public/money.html": "f7f2bfd306a4974bb44ae16215c058bde553cc35aa6c7343aa36a0ebf801ae7c",
-    "web/public/chat.html": "b3a2a28361a19633a2a9c4e4eb80c0afca795d416f4171c224eb6d88eb08ec52",
-    "web/public/routes.html": "4ba8354c3b2e4345ce4bb5449433c304ec2ac854c31814df61004459172c4db6",
-    "web/public/sw.js": "e774f94ac26a07080745c00508932d507ae8fc594605b436d46a2fa29d3600e8",
-    "web/public/chat-sw.js": "2bb10e83847480a3cad834ee36b5ef79351fc9053a4f5ee917a95410070bc3f8",
-    "web/form-controls-browser.test.cjs": "c963b41085898566610b44cb4785d80c8319cb75263923f34ae26a646615623b"
+    "web/public/markets.html": "849954ed1b3c2bec6adb4ae93784b570beaffdee9681156295d876e924200462",
+    "web/public/money.html": "b556fbee0f32fc389ad27ed1955b0de85495bc6d9836429fcba3b68c2d984dfe",
+    "web/public/chat.html": "66cec6f8a7488a043392e1874e28607441bc795d4c2c35e7b2f00da473052686",
+    "web/public/routes.html": "6e6c8879a94a86bfefad900a4131a794ebb2570ade06f3f59ed5b33e972ba7fc",
+    "web/public/sw.js": "79e9655c1c4e0667aa2d9b41876f178b320868df6e69d2cd477fedd90a6281bc",
+    "web/public/chat-sw.js": "f654c6f2759de33ad22888230389a3456cd90d7d6669148e1a4e6522ea1e2c85",
+    "web/form-controls-browser.test.cjs": "7e59f3e7c73abbe7d1c1fa33759c982460fad1e5352c66e32c6ebf750f23d5a1"
   },
   "scope": "Disposable Edge with fixture market data and synthetic form; emulated viewport checks, no physical-device or screen-reader certification, wallet operation or financial transaction."
 }

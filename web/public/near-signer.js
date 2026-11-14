@@ -44,7 +44,8 @@ export async function signRefundDeposit(request, context, signer) {
   const transaction = await refundDepositTransaction(request, context);
   const selected = signer ?? await wallet();
   const accounts = await selected.getAccounts({ network: 'testnet' });
+  await context.beforeSign?.();
   assert(accounts?.length === 1 && accounts[0].accountId === request.payer, `Connect ${request.payer} in Meteor before returning this refund.`);
   // The result is a submission hint only. The caller checks the exact final root.
-  await selected.signAndSendTransaction(transaction);
+  await selected.signAndSendTransaction(transaction, { beforeSign: context.beforeSign });
 }

@@ -64,6 +64,6 @@ $('#restore-chat').onclick=async()=>{
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const open=!$('#open-panel').hidden;show(open?'open':'create',false);}});
 addEventListener('pagehide',()=>{restoreReview?.cancel();clear();});addEventListener('keydown',event=>{if(event.key==='Escape')show($('#open-panel').hidden?'create':'open');});
-themeIcon(document.querySelector('#theme-toggle'));
-startOfflineAccess($('#backup-cache-status'));
+themeIcon($('#theme-toggle'));
 try{const state=await readState();$('#backup-account').textContent=state.identity?.profile.name??'No account in this browser';$('#saved-phrase-field').hidden=!isRecoveredChat(state.identity);if(!state.identity)show('open',false);}catch{show('open',false);status('Could not read the account in this browser. You can still open a backup.');}
+startOfflineAccess($('#backup-cache-status'));

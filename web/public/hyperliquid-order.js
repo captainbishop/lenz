@@ -1,5 +1,6 @@
 import {encode} from './hyperliquid-vendor/msgpack.js';
 import {keccak256,TypedDataEncoder,recoverAddress} from './evm-vendor/offline-budget.js';
+import {HYPERLIQUID,checkedHyperliquidDomain} from './hyperliquid-environment.js';
 
 export const requireOrder=(ok,message)=>{if(!ok)throw Error(message);};
 const check=requireOrder,scale=10n**18n;
@@ -14,6 +15,7 @@ const wallet=value=>typeof value==='string'&&/^0x[0-9a-f]{40}$/.test(value)&&!/^
 const id=()=> '0x'+Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('');
 
 export function resolveOrderMarket(row,{spot,perps}){
+  checkedHyperliquidDomain(row);
   check(['spot','perp'].includes(row?.kind),'Native orders are not connected for this market yet.');
   let result;
   if(row.kind==='spot'){
@@ -29,7 +31,7 @@ export function resolveOrderMarket(row,{spot,perps}){
   }
   check(Number.isInteger(result.sizeDecimals)&&result.sizeDecimals>=0&&result.sizeDecimals<=(result.kind==='spot'?8:6),'Unsupported market precision.');
   check([result.base,result.quote].every(s=>typeof s==='string'&&s.length<=80&&!/[\u0000-\u001f\u202a-\u202e\u2066-\u2069]/.test(s)),'Invalid market names.');
-  return Object.freeze(result);
+  return Object.freeze({...result,environment:HYPERLIQUID.environment,chainId:HYPERLIQUID.chainId});
 }
 function amountPrecision(value,decimals){check((value.split('.')[1]?.length??0)<=decimals,`Use at most ${decimals} decimal places.`);}
 export function orderPosition(market,funds){
@@ -50,6 +52,7 @@ export function orderPosition(market,funds){
   return {side:negative?'short':'long',size,entryPrice:optional(position.entryPx),pnl:optional(position.unrealizedPnl,true),liquidationPrice:optional(position.liquidationPx),margin:optional(position.marginUsed)};
 }
 export function prepareOrder(market,account,input,funds,{now=Date.now(),cloid=id()}={}){
+  checkedHyperliquidDomain(market);
   check(wallet(account),'Connect your wallet first.');
   check(funds?.mode==='disabled','Trading for this account mode is not connected in Lenz yet.');
   check(['buy','sell'].includes(input.side)&&typeof input.reduceOnly==='boolean','Choose an order direction.');
@@ -83,14 +86,14 @@ export function prepareOrder(market,account,input,funds,{now=Date.now(),cloid=id
       check(orderAmount(funds.perp?.withdrawable)>=spend,'Not enough available margin on Hyperliquid.');
     }
   }
-  return Object.freeze({version:1,market,account,side:input.side,size,price,reduceOnly:input.reduceOnly,leverage,marginMode,markPrice,fee:funds.fee,spend:orderText(spend),spendAsset,nonce:now,expiresAt:now+60000,
+  return Object.freeze({version:2,environment:HYPERLIQUID.environment,chainId:HYPERLIQUID.chainId,market,account,side:input.side,size,price,reduceOnly:input.reduceOnly,leverage,marginMode,markPrice,fee:funds.fee,spend:orderText(spend),spendAsset,nonce:now,expiresAt:now+60000,
     action:{type:'order',orders:[{a:market.asset,b:input.side==='buy',p:price,s:size,r:input.reduceOnly,t:{limit:{tif:'Gtc'}},c:cloid}],grouping:'na'}});
 }
 export function orderTypedData(action,nonce,expiresAfter){
   check(Number.isSafeInteger(nonce)&&nonce>0&&(expiresAfter===undefined||Number.isSafeInteger(expiresAfter)&&expiresAfter>nonce),'Invalid order lifetime.');
   const packed=encode(action),bytes=new Uint8Array(packed.length+(expiresAfter===undefined?9:18)),view=new DataView(bytes.buffer);bytes.set(packed);view.setBigUint64(packed.length,BigInt(nonce));
   bytes[packed.length+8]=0;if(expiresAfter!==undefined){bytes[packed.length+9]=0;view.setBigUint64(packed.length+10,BigInt(expiresAfter));}
-  return {domain:{name:'Exchange',version:'1',chainId:1337,verifyingContract:'0x'+'0'.repeat(40)},types:{Agent:[{name:'source',type:'string'},{name:'connectionId',type:'bytes32'}]},primaryType:'Agent',message:{source:'a',connectionId:keccak256(bytes)}};
+  return {domain:{name:'Exchange',version:'1',chainId:1337,verifyingContract:'0x'+'0'.repeat(40)},types:{Agent:[{name:'source',type:'string'},{name:'connectionId',type:'bytes32'}]},primaryType:'Agent',message:{source:HYPERLIQUID.orderSource,connectionId:keccak256(bytes)}};
 }
 export function checkedOrderAction(action){
   const exact=(o,keys)=>o&&Object.keys(o).sort().join(',')===keys.sort().join(',');
@@ -105,7 +108,8 @@ export function checkedOrderAction(action){
   return structuredClone(action);
 }
 export function checkedOrderReview(r){
-  check(r?.version===1&&wallet(r.account)&&['spot','perp'].includes(r.market?.kind)&&typeof r.market.coin==='string'&&r.market.coin.length<=80,'Invalid saved order.');
+  checkedHyperliquidDomain(r);checkedHyperliquidDomain(r.market);
+  check(r?.version===2&&wallet(r.account)&&['spot','perp'].includes(r.market?.kind)&&typeof r.market.coin==='string'&&r.market.coin.length<=80,'Invalid saved order.');
   const action=checkedOrderAction(r.action),o=action.orders?.[0];
   check(o&&o.a===r.market.asset&&o.b===(r.side==='buy')&&o.p===r.price&&o.s===r.size&&o.r===r.reduceOnly&&['buy','sell'].includes(r.side),'Saved order terms changed.');
   check(Number.isSafeInteger(r.nonce)&&r.nonce>0&&r.expiresAt===r.nonce+60000&&Number.isInteger(r.leverage)&&r.leverage>0&&orderAmount(r.fee)<=scale/100n&&orderAmount(r.spend)>=0n,'Invalid saved order limits.');
@@ -126,4 +130,19 @@ export function inspectOrder(review,response){
   const status=wrapped.status,state=status==='open'?'open':status==='filled'?'filled':status==='scheduledCancel'||status==='canceled'||/Canceled$/.test(status)?'cancelled':status==='rejected'||/Rejected$/.test(status)?'rejected':'unknown';
   check(state!=='filled'||remaining===0n,'Filled order has a remaining amount.');
   return {state,remaining:orderText(remaining),filled:orderText(size-remaining),oid:o.oid,statusTime:wrapped.statusTimestamp};
+}
+export function inspectOrderFills(review,observation,rows,{endTime=Date.now()}={}){
+  check(Array.isArray(rows)&&rows.length<=2000&&Number.isSafeInteger(endTime),'Order fills are unavailable. Check again.');
+  const trades=[],ids=new Set(),limit=orderAmount(review.price);let filled=0n;
+  for(const row of rows.filter(row=>row.oid===observation.oid)){
+    check(row.coin===review.market.coin&&row.side===(review.side==='buy'?'B':'A')&&Number.isSafeInteger(row.tid)&&row.tid>=0&&!ids.has(row.tid)&&/^0x[0-9a-f]{64}$/.test(row.hash)&&Number.isSafeInteger(row.time)&&row.time>=review.nonce-60000&&row.time<=endTime,'Fill does not match the reviewed order.');
+    const price=decimal(row.px),size=decimal(row.sz),quantity=orderAmount(size),px=orderAmount(price);
+    check(quantity>0n&&px>0n&&(review.side==='buy'?px<=limit:px>=limit),'Fill exceeds the reviewed order limits.');
+    check(typeof row.fee==='string'&&[review.market.quote,...(review.market.kind==='spot'?[review.market.base]:[])].includes(row.feeToken),'Order fill fees are unavailable.');
+    const rebate=row.fee.startsWith('-'),fee=decimal(rebate?row.fee.slice(1):row.fee);
+    ids.add(row.tid);filled+=quantity;
+    trades.push({tid:row.tid,hash:row.hash,time:row.time,size,price,fee:rebate&&fee!=='0'?'-'+fee:fee,feeToken:row.feeToken});
+  }
+  check(filled===orderAmount(observation.filled),'Order fills are not confirmed. Check again.');
+  return {...observation,fills:trades.sort((a,b)=>a.time-b.time||a.tid-b.tid)};
 }

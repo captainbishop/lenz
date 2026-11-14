@@ -96,3 +96,16 @@ test('RPC failure closes the popup without exposing a transaction', async () => 
   await assert.rejects(wallet.signAndSendTransaction(transaction), /Network/);
   assert(f.popups[0].closed); assert.equal(f.popups[0].sent.length, 0); assert.equal(f.listeners.size, 0);
 });
+test('refund review is rechecked after awaited transaction preparation before any bytes reach the popup', async()=>{
+  const f=fixture(),wallet=createMeteorWallet(f.host);f.storage.set(ACCOUNT_KEY,'receiver.testnet');
+  let release,current=true,checks=0;const waiting=new Promise(r=>release=r),fetcher=f.host.fetch;
+  f.host.fetch=async()=>{await waiting;return fetcher();};
+  const pending=wallet.signAndSendTransaction(transaction,{beforeSign:async()=>{checks++;assert(current,'Lenz account changed');}}),rejected=assert.rejects(pending,/account changed/);
+  await flush();assert.equal(f.popups[0].sent.length,0);current=false;release();await rejected;
+  assert.equal(checks,1);assert.equal(f.popups[0].sent.length,0);assert(f.popups[0].closed);
+});
+test('a payer switch during the final review check cannot disclose a prepared transaction',async()=>{
+  const f=fixture(),wallet=createMeteorWallet(f.host);f.storage.set(ACCOUNT_KEY,'receiver.testnet');
+  await assert.rejects(wallet.signAndSendTransaction(transaction,{beforeSign:async()=>{f.storage.set(ACCOUNT_KEY,'other.testnet');}}),/selected wallet changed/);
+  assert.equal(f.popups[0].sent.length,0);assert(f.popups[0].closed);
+});

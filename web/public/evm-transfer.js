@@ -22,9 +22,21 @@ export function transferAssets(chainId){
 const word=value=>BigInt(value).toString(16).padStart(64,'0');
 const accountWord=value=>value.slice(2).padStart(64,'0');
 const abiUint=value=>{check(typeof value==='string'&&/^0x[0-9a-fA-F]{64}$/.test(value),'Invalid token response.');return BigInt(value);};
+export function importedTransferToken(token){
+ check(exact(token,['id','symbol','decimals'])&&address(token.id)===token.id,'Invalid token contract.');
+ check(typeof token.symbol==='string'&&token.symbol.trim().length>0&&token.symbol.length<=24&&!/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/.test(token.symbol),'Invalid token symbol.');
+ check(Number.isInteger(token.decimals)&&token.decimals>=0&&token.decimals<=36,'Invalid token decimals.');
+ return {...token};
+}
+function sendingToken(chainId,id,custom){
+ const known=transferAssets(chainId).find(a=>a.id===id);
+ if(custom){const token=importedTransferToken(custom);check(!known&&token.id===id,'Token contract changed.');return token;}
+ check(known,'Import this token before sending.');return known;
+}
+export const reviewToken=review=>sendingToken(review.terms.chainId,review.terms.asset,review.token);
 export function transferTerms(identity,input){
- check(exact(input,['asset','recipient','amount','publicConsent'])&&input.publicConsent===true,'Allow this public transfer first.');
- const asset=transferAssets(identity.chainId).find(a=>a.id===input.asset);check(asset,'Choose ETH, USDC or WETH.');
+ check(exact(input,['asset','recipient','amount','publicConsent',...(Object.hasOwn(input,'token')?['token']:[])])&&input.publicConsent===true,'Allow this public transfer first.');
+ const asset=sendingToken(identity.chainId,input.asset,input.token);
  const recipient=address(input.recipient),from=address(identity.address),value=units(input.amount,asset.decimals);
  check(recipient!==from,'Choose another receiving address.');
  return {chainId:identity.chainId,from,recipient,asset:asset.id,units:value,to:asset.id==='native'?recipient:asset.id,value:asset.id==='native'?value:'0x0',data:asset.id==='native'?'0x':'0xa9059cbb'+accountWord(recipient)+word(value)};
@@ -34,18 +46,18 @@ async function identityCheck(lease,terms){
  check(Array.isArray(accounts)&&accounts.length>0&&address(accounts[0])===terms.from,'Wallet account changed.');
  check(hex(q(await lease.request('eth_chainId')))===terms.chainId,'Wallet network changed.');lease.assertCurrent();
 }
-async function tokenCheck(lease,terms){
+async function tokenCheck(lease,terms,custom){
  if(terms.asset==='native')return;
- const asset=transferAssets(terms.chainId).find(a=>a.id===terms.asset);
+ const asset=sendingToken(terms.chainId,terms.asset,custom);
  const code=await lease.request('eth_getCode',[terms.asset,'latest']);check(typeof code==='string'&&/^0x[0-9a-fA-F]+$/.test(code),'Token contract unavailable.');
  check(abiUint(await lease.request('eth_call',[{to:terms.asset,data:'0x313ce567'},'latest']))===BigInt(asset.decimals),'Token decimals changed.');
  check(abiUint(await lease.request('eth_call',[{to:terms.asset,data:'0x70a08231'+accountWord(terms.from)},'latest']))>=q(terms.units),'Insufficient token balance.');
 }
 export function validateReview(value){
- check(exact(value,['version','terms','transaction','createdAt','expiresAt',...(value?.version===3?['funding']:[])])&&[1,3].includes(value.version),'Invalid transfer review.');
+ check(exact(value,['version','terms','transaction','createdAt','expiresAt',...(value?.version===2?['token']:[]),...(value?.version===3?['funding']:[])])&&[1,2,3].includes(value.version),'Invalid transfer review.');
  const t=value.terms;check(exact(t,['chainId','from','recipient','asset','units','to','value','data']),'Invalid transfer terms.');
- const asset=transferAssets(t.chainId).find(a=>a.id===t.asset);check(asset,'Unsupported transfer asset.');
- const rebuilt=transferTerms({chainId:t.chainId,address:t.from},{asset:t.asset,recipient:t.recipient,amount:amount(t.units,asset.decimals),publicConsent:true});
+ const asset=reviewToken(value);
+ const rebuilt=transferTerms({chainId:t.chainId,address:t.from},{asset:t.asset,recipient:t.recipient,amount:amount(t.units,asset.decimals),publicConsent:true,...(value.version===2?{token:value.token}:{})});
  check(JSON.stringify(rebuilt)===JSON.stringify(t),'Transfer terms changed.');
  const tx=value.transaction;check(exact(tx,['chainId','from','to','value','data','nonce','gas','gasPrice']),'Invalid wallet transaction.');
  for(const field of ['chainId','from','to','value','data'])check(tx[field]===t[field],'Transaction changed: '+field);
@@ -56,7 +68,7 @@ export function validateReview(value){
  return structuredClone(value);
 }
 export async function prepareTransfer(lease,input,{now=Date.now()}={}){
- const terms=transferTerms(lease.identity,input);await identityCheck(lease,terms);await tokenCheck(lease,terms);
+ const terms=transferTerms(lease.identity,input),token=input.token?importedTransferToken(input.token):null;await identityCheck(lease,terms);await tokenCheck(lease,terms,token);
  const nonce=hex(q(await lease.request('eth_getTransactionCount',[terms.from,'pending'])));
  const gasPrice=hex(q(await lease.request('eth_gasPrice')));check(q(gasPrice)>0n,'Gas price unavailable.');
  const basic={chainId:terms.chainId,from:terms.from,to:terms.to,value:terms.value,data:terms.data,nonce};
@@ -64,12 +76,12 @@ export async function prepareTransfer(lease,input,{now=Date.now()}={}){
  const gas=hex((estimate*120n+99n)/100n);
  check(q(await lease.request('eth_getBalance',[terms.from,'pending']))>=q(terms.value)+q(gas)*q(gasPrice),'Insufficient ETH for amount and gas.');
  await identityCheck(lease,terms);
- return validateReview({version:1,terms,transaction:{...basic,gas,gasPrice},createdAt:now,expiresAt:now+60000});
+ return validateReview({version:token?2:1,...(token?{token}:{}),terms,transaction:{...basic,gas,gasPrice},createdAt:now,expiresAt:now+60000});
 }
 export async function recheckTransfer(lease,review,{now=Date.now()}={}){
  const r=validateReview(review);check(now>=r.createdAt&&now<r.expiresAt,'Review expired. Check the transfer again.');await identityCheck(lease,r.terms);
  if(r.version===3)checkFundingTransfer(r,{now});
- await tokenCheck(lease,r.terms);
+ await tokenCheck(lease,r.terms,r.token);
  check(q(await lease.request('eth_getTransactionCount',[r.terms.from,'pending']))===q(r.transaction.nonce),'Wallet activity changed. Review again.');
  check(q(await lease.request('eth_gasPrice'))<=q(r.transaction.gasPrice),'Gas price changed. Review again.');
  const gas=q(await lease.request('eth_estimateGas',[r.transaction]));check(gas>=21000n&&gas<=q(r.transaction.gas),'Gas estimate changed. Review again.');

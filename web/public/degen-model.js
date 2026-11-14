@@ -1,3 +1,4 @@
+import {tokenImageURL} from './token-market.js';
 export const DEGEN_SOURCES = Object.freeze({dexscreener:'DEX Screener',geckoterminal:'GeckoTerminal'});
 export const DEGEN_NETWORKS=Object.freeze({solana:'Solana',eth:'Ethereum',base:'Base',bsc:'BNB Chain',ton:'TON',sui:'Sui',arbitrum:'Arbitrum',polygon_pos:'Polygon',avax:'Avalanche',optimism:'Optimism'});
 export const DEGEN_INTERVALS=Object.freeze({'1m':60000,'5m':300000,'15m':900000,'30m':1800000,'1h':3600000,'4h':14400000,'1d':86400000,'1w':604800000});
@@ -16,6 +17,7 @@ export function degenRequest(value){
   const {provider,kind}=value;requireData(Object.hasOwn(DEGEN_SOURCES,provider));
   const fields={search:['provider','kind','query'],feed:['provider','kind','feed'],networks:['provider','kind','page'],trades:['provider','kind','network','pool','address'],pool:['provider','kind','network','pool'],candles:['provider','kind','network','pool','address','interval']}[kind];
   if(['search','feed'].includes(kind)&&Object.hasOwn(value,'network')){requireData(provider==='geckoterminal');identifier(value.network);fields.push('network');}
+  if(kind==='feed'&&Object.hasOwn(value,'page')){requireData(Number.isInteger(value.page)&&value.page>=1&&value.page<=10,'Feed page must be between 1 and 10');fields.push('page');}
   requireData(fields&&Object.keys(value).length===fields.length&&fields.every(k=>Object.hasOwn(value,k)),'Invalid discovery request');
   if(kind==='search')requireData(typeof value.query==='string'&&value.query.trim().length>=2&&value.query.length<=120&&!/[\u0000-\u001f]/.test(value.query),'Enter a token or address');
   if(kind==='feed')requireData(provider==='geckoterminal'&&['trending','new'].includes(value.feed));
@@ -39,7 +41,7 @@ export function checkedMarket(value){
   requireData(value?.executable===false&&Object.hasOwn(DEGEN_SOURCES,value.source));
   const network=identifier(value.network),pool=identifier(value.pool),address=identifier(value.address),chain=chainReference(value.source,network);
   requireData(value.chain?.id===chain.id&&value.id===`${value.source}/${network}/${addressKey(pool)}`);
-  const row={id:value.id,source:value.source,network,pool,chain,address,symbol:text(value.symbol,40),name:text(value.name),venue:text(value.venue,100),quote:text(value.quote,40),price:metric(value.price),change:metric(value.change,true),liquidity:metric(value.liquidity),volume:metric(value.volume),marketCap:metric(value.marketCap),fdv:metric(value.fdv),createdAt:metric(value.createdAt),boosted:value.boosted===true,executable:false};
+  const row={...(tokenImageURL(value.image)?{image:tokenImageURL(value.image)}:{}),id:value.id,source:value.source,network,pool,chain,address,symbol:text(value.symbol,40),name:text(value.name),venue:text(value.venue,100),quote:text(value.quote,40),price:metric(value.price),change:metric(value.change,true),liquidity:metric(value.liquidity),volume:metric(value.volume),marketCap:metric(value.marketCap),fdv:metric(value.fdv),createdAt:metric(value.createdAt),boosted:value.boosted===true,executable:false};
   requireData(row.createdAt===null||Number.isSafeInteger(row.createdAt));return Object.freeze(row);
 }
 export function checkedDiscovery(value,expected,{now=Date.now(),saved=false}={}){
@@ -49,7 +51,8 @@ export function checkedDiscovery(value,expected,{now=Date.now(),saved=false}={})
   const rows=value.rows.map(checkedMarket);requireData(rows.every(r=>r.source===request.provider)&&new Set(rows.map(r=>r.id)).size===rows.length);
   if(request.kind==='pool')requireData(rows.every(r=>r.network===request.network&&addressKey(r.pool)===addressKey(request.pool)));
   if(['feed','search'].includes(request.kind)&&request.network)requireData(rows.every(r=>r.network===request.network),'Source returned another chain');
-  return {version:1,request,observedAt:value.observedAt,rows,executable:false};
+  if(value.hasMore!==undefined)requireData(request.kind==='feed'&&typeof value.hasMore==='boolean');
+  return {version:1,request,observedAt:value.observedAt,rows,...(request.kind==='feed'?{hasMore:value.hasMore??rows.length>=20}:{}),executable:false};
 }
 export function checkedCandles(value,expected,{now=Date.now(),saved=false}={}){
   const request=degenRequest(expected);requireData(request.kind==='candles'&&value?.executable===false&&JSON.stringify(degenRequest(value.request))===JSON.stringify(request));

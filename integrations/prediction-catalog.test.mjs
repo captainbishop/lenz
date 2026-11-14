@@ -63,13 +63,27 @@ test('partial Hyperliquid failures preserve saved prediction events and their ob
 });
 
 test('large Polymarket metadata can produce a bounded event snapshot',async()=>{
- const read=createPredictionReader({fetcher:async()=>new Response(JSON.stringify([{active:false,metadata:'x'.repeat(9*1024*1024)}]))});
- assert.deepEqual((await read('polymarket')).events,[]);
+ const read=createPredictionReader({fetcher:async()=>new Response(JSON.stringify({id:'7',active:false,metadata:'x'.repeat(9*1024*1024)}))});
+ assert.deepEqual((await read('polymarket',{eventId:'7'})).events,[]);
+});
+
+test('compact discovery follows the provider cursor and fetches outcomes only for the exact opened event',async()=>{
+ const calls=[],meta={id:'7',title:'A discovered event',active:true,closed:false,tags:[],volume24hr:1200,liquidity:400};
+ const read=createPredictionReader({fetcher:async url=>{calls.push(url);return new Response(JSON.stringify(url.includes('/events/7')?{...meta,markets:[{id:'m',question:'Q',active:true,closed:false,acceptingOrders:true,outcomes:'["Yes","No"]',outcomePrices:'["0.5","0.5"]'}]}:{events:[{...meta,id:url.includes('after_cursor')?'8':'7'}],next_cursor:url.includes('after_cursor')?null:'next-page'}));}});
+ const first=await read('polymarket');assert.equal(first.events[0].hydrated,false);assert.equal(first.events[0].markets.length,0);assert.equal(first.nextCursor,'next-page');
+ const next=await read('polymarket',{cursor:first.nextCursor});assert.equal(next.events[0].id,'polymarket:8');assert.equal(next.more,false);
+ const detail=await read('polymarket',{eventId:'7'});assert.equal(detail.events[0].hydrated,true);assert.equal(detail.events[0].markets.length,1);assert.equal(calls.length,3);assert(calls[0].includes('include_markets=false'));
+ await assert.rejects(read('polymarket',{eventId:'9'}),/Wrong prediction event/);
+});
+
+test('Hyperliquid prediction discovery retains more than two hundred independent outcomes',async()=>{
+ const catalog=await createHyperliquidCatalogReader({fetcher:hyperliquidFixtureFetcher})();const row=catalog.rows.find(r=>r.kind==='outcome');
+ const result=normalizePredictions('hyperliquid',{...catalog,rows:Array.from({length:650},(_,i)=>({...row,id:'outcome:'+i}))});assert.equal(result.events.length,650);
 });
 
 test('Hyperliquid event categories follow their subject rather than the trading provider',async()=>{
  const catalog=await createHyperliquidCatalogReader({fetcher:hyperliquidFixtureFetcher})();const outcome=catalog.rows.find(r=>r.kind==='outcome');
- for(const [name,category]of [['2026/2027 English Premier League winner','Sports'],['Federal Open Market Committee rate decision','Economy'],['Bitcoin price tomorrow','Crypto'],['Unclassified question','Other']])assert.equal(normalizePredictions('hyperliquid',{rows:[{...outcome,name}]}).events[0].category,category);
+ for(const [name,category]of [['2026/2027 English Premier League winner','Sports'],['Federal Open Market Committee rate decision','Economy'],['Bitcoin price tomorrow','Crypto'],['Unclassified question','Other']])assert.equal(normalizePredictions('hyperliquid',{...catalog,rows:[{...outcome,name}]}).events[0].category,category);
 });
 
 test('subject artwork follows an exact template parameter and survives saved catalogue validation',()=>{
@@ -79,4 +93,15 @@ test('subject artwork follows an exact template parameter and survives saved cat
  assert.equal(read({...outcome,description:'asset:../../private'}).artworkSymbol,null);
  assert.equal(read(outcome,{...template,keywords:[]}).artworkSymbol,null);
  assert.equal(read({...outcome,name:'template:companyIpoConfirmed',description:'company:Anthropic'},{id:'companyIpoConfirmed',name:'{company} IPO',description:'IPO event',keywords:[['company','string']]}).artworkSymbol,'xyz:ANT');
+});
+test('pagination preserves older observation times and terminal cursors through refresh',async()=>{
+ const {mergePredictionPage}=await import('../web/public/prediction-model.js');
+ const page=(id,at,next)=>normalizePredictions('polymarket',{events:[{id,title:'Event '+id,active:true,closed:false}],next_cursor:next},at);
+ const first=page('1',1000,'second'),second=page('2',2000,null);
+ const loaded=mergePredictionPage(first,second,{extend:true});
+ assert.equal(loaded.nextCursor,null);assert.deepEqual(loaded.events.map(e=>e.observedAt),[1000,2000]);
+ const refreshed=mergePredictionPage(loaded,page('1',3000,'second'));
+ assert.equal(refreshed.nextCursor,null);assert.deepEqual(refreshed.events.map(e=>e.observedAt),[3000,2000]);
+ assert.equal(mergePredictionPage(loaded,page('3',3000,'second'),{reset:true}).nextCursor,'second');
+ assert.equal(mergePredictionPage(first,page('2',2000,'second'),{extend:true}).nextCursor,null);
 });

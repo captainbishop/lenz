@@ -31,7 +31,7 @@ async function add(page, profile) {
 }
 async function send(page, text) {
   await page.locator('#message').fill(text); await page.locator('#prepare-message').click();
-  await status(page, 'Message saved and encrypted');
+  await status(page, 'Message saved. Choose how to share it.');
   return JSON.parse(await page.locator('#outgoing').inputValue());
 }
 async function receive(page, packet, file = false) {

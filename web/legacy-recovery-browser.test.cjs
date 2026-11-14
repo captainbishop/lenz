@@ -22,7 +22,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   await p.locator('#open-tab').click();assert.equal(await p.locator('#backup-words li').count(),0);await source.close();pass('backup downloads after phrase checks, excludes payment records and preserves the source account');
   for(let copy=0;copy<2;copy++){
    const ctx=await browser.newContext({viewport:{width:1280,height:900},reducedMotion:'reduce'}),page=await ctx.newPage();await page.goto(base+'/recovery.html');const existing=await fixture(page,false);await page.reload();
-   await page.locator('#save-backup-offline').click();await page.locator('#backup-cache-status').filter({hasText:'Page saved for offline use.'}).waitFor();await page.evaluate(()=>navigator.serviceWorker.ready);await ctx.setOffline(true);const beforeHits=hits;await page.reload();await page.locator('#open-tab').click();
+   await page.locator('#backup-cache-status').filter({hasText:'Ready offline'}).waitFor();await page.evaluate(()=>navigator.serviceWorker.ready);await ctx.setOffline(true);const beforeHits=hits;await page.reload();await page.locator('#open-tab').click();
    await selectFile(page,archive);await page.locator('#backup-phrase').fill(phrase);await page.locator('#open-backup').click();await page.locator('#backup-history').waitFor();assert.equal(await page.locator('#backup-phrase').inputValue(),'');assert.equal(await page.locator('#backup-file').inputValue(),'');
    assert.match(await page.locator('#history-messages').innerText(),/Meet by the bookshop/);assert.equal(await page.locator('#history-contacts img').count(),0);assert.match(await page.locator('#history-contacts').innerText(),/<img src=x/);
    const recovered=await page.evaluate(async ({phrase,archive})=>{

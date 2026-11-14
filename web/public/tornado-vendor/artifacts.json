@@ -1,0 +1,14 @@
+{
+  "withdraw.json": {
+    "bytes": 19474889,
+    "sha256": "3ddd61dbff09caeec82d8edde95c674a3c34f9e66b1fe9f2c8783e72fe536f98"
+  },
+  "withdraw_proving_key.bin": {
+    "bytes": 14522256,
+    "sha256": "8e2d2f22beafb5a9666daebca57b13f8029c3656c65fcfbcc86e2418fa16a3af"
+  },
+  "withdraw_verification_key.json": {
+    "bytes": 3398,
+    "sha256": "3eedcf6ec6b5c24219ed19c7a33966fbfa6a03ae7c84124270589091e87cf8d3"
+  }
+}

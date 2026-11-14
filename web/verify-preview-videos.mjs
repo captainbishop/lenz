@@ -1,11 +1,21 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 const root = new URL('../', import.meta.url), hash = data => createHash('sha256').update(data).digest('hex');
 const read = path => readFile(new URL(path, root));
 const recording = JSON.parse(await read('web/preview-recording.json'));
 assert.equal(recording.videos.length, 6); assert.equal(recording.apiRequests, 0); assert.deepEqual(recording.errors, []);
-for (const [path, expected] of Object.entries(recording.sourceFiles)) assert.equal(hash(await read(path)), expected, 'Recording is stale: ' + path);
+if (recording.sourceRevision !== undefined) assert(/^[a-f0-9]{40}$/.test(recording.sourceRevision), 'Invalid recorded source revision');
+for (const [path, expected] of Object.entries(recording.sourceFiles)) {
+  let bytes;
+  if (recording.sourceRevision) {
+    const result = spawnSync('git', ['show', recording.sourceRevision + ':' + path], { cwd: root, maxBuffer: 64 * 1024 * 1024, windowsHide: true });
+    assert.equal(result.status, 0, 'Recorded source is unavailable: ' + path);
+    bytes = result.stdout;
+  } else bytes = await read(path);
+  assert.equal(hash(bytes), expected, 'Recording is stale: ' + path);
+}
 let bytes = 0;
 for (const video of recording.videos) {
   assert(video.seconds >= 12 && video.seconds <= 24 && video.width === 1200 && video.height === 1320 && video.fps === 30 && video.changingFrames > 90);

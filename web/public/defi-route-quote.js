@@ -1,8 +1,9 @@
+import {HYPERLIQUID} from './hyperliquid-environment.js';
 import {routeObjective} from './defi-route-plan.js';
 import {immutable} from './defi-catalog.js';
 import {checkedMarketQuote,decimalUnits,requireQuote as check} from './market-quote.js';
 
-const base='eip155:8453',hypercore='hypercore:mainnet';
+const base='eip155:8453',hypercore=HYPERLIQUID.chainId;
 export const QUOTE_ASSETS=immutable({USDC:{chainId:base,kind:'erc20',id:'0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',decimals:6},WETH:{chainId:base,kind:'erc20',id:'0x4200000000000000000000000000000000000006',decimals:18}});
 const tokens=QUOTE_ASSETS;
 const sameAsset=(a,b)=>a&&['chainId','kind','id','decimals'].every(k=>a[k]===b[k]);

@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{createHash}=require('node:crypto');
 const {securityHeaders}=require('./security-policy.mjs');
-const modules=['defi-wallet.js','chat-store.js','peer-crypto.js','profile-display.js','near-protocol.js','rhea-protocol.js','near-deposit.js','defi-request.js','carrier-protocol.js'];
+const modules=['defi-wallet.js','chat-store.js','peer-crypto.js','chat-access.js','profile-display.js','near-protocol.js','rhea-protocol.js','near-deposit.js','defi-request.js','carrier-protocol.js'];
 const config={network:'testnet',ready:true,adapter:'adapter.lenz.testnet',reserve:'reserve.lenz.testnet',exchange:'ref-finance-101.testnet',poolId:2870,tokenOut:'wrap.testnet'};
 async function run({walletSource,filter,record=true}={}){
   let browser,api=0;const results=[];
@@ -42,6 +42,162 @@ async function run({walletSource,filter,record=true}={}){
   }
   try{
     await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({channel:'msedge',headless:true});
+    await check('a manually opened executor update is saved offline without credit or reservation release',async({a,context,base,boot})=>{
+      const input=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot();
+        const report={type:d.DEFI_OBSERVATION,requestId:ref.requestId,checkedAt:Date.now(),state:'observed',observation:{claimed:'complete'},transaction:null};
+        return {ref,before,report,packet:await p.sealMessage(executor,before.profile,report)};
+      });
+      await context.setOffline(true);
+      const result=await a.evaluate(async({ref,packet})=>{
+        await w.recordDefiReply(c,ref.requestId,packet);const saved=await snapshot();
+        await w.recordDefiReply(c,ref.requestId,packet);return {saved,duplicate:await snapshot()};
+      },input);
+      assert.deepEqual(result.saved,result.duplicate);assert.equal(result.saved.available,input.before.available);assert.deepEqual(result.saved.reserved,input.before.reserved);
+      assert.deepEqual(result.saved.vault.rheaOrders[0].defi.executorUpdate.report,input.report);
+      assert.equal(result.saved.vault.rheaOrders[0].status,null);assert.equal(result.saved.vault.rheaOrders[0].defi.checkedOutcome,undefined);
+      await context.setOffline(false);await boot(a,base);assert.deepEqual((await a.evaluate(()=>snapshot())).vault,result.saved.vault);
+    });
+    await check('manual update import binds the selected swap and rolls back failed storage',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const first=await w.approveDefiSwap(c,executor.profile,swap,consent);
+        const second=await w.approveDefiSwap(c,executor.profile,{...swap,text:'1'},{...consent,approvalId:'b'.repeat(32)});
+        const before=await snapshot(),report={type:d.DEFI_OBSERVATION,requestId:second.requestId,checkedAt:Date.now(),state:'pending',observation:null,transaction:null};
+        const packet=await p.sealMessage(executor,before.profile,report),rejected=[];
+        for(const [id,file]of [[first.requestId,packet],[second.requestId,{...packet,signature:'0'.repeat(128)}]]){
+          try{await w.recordDefiReply(c,id,file);rejected.push(false);}catch{rejected.push(true);}
+        }
+        const denied=await snapshot(),put=IDBObjectStore.prototype.put;let failed=false;
+        IDBObjectStore.prototype.put=function(){this.transaction.abort();throw Error('Storage write failed');};
+        try{await w.recordDefiReply(c,second.requestId,packet);}catch{failed=true;}finally{IDBObjectStore.prototype.put=put;}
+        const rollback=await snapshot(),pending=w.recordDefiReply(c,second.requestId,packet);
+        packet.from='f'.repeat(64);await pending;
+        return {before,denied,rollback,rejected,failed,after:await snapshot(),report};
+      });
+      assert.deepEqual(result.rejected,[true,true]);assert(result.failed);assert.deepEqual(result.denied,result.before);assert.deepEqual(result.rollback,result.before);
+      assert.equal(result.after.vault.rheaOrders[0].defi.executorUpdate,undefined);
+      assert.deepEqual(result.after.vault.rheaOrders[1].defi.executorUpdate.report,result.report);
+      assert.equal(result.after.available,result.before.available);assert.deepEqual(result.after.reserved,result.before.reserved);
+    });
+    await check('encrypted executor updates survive offline reload without claiming settlement',async({a,base,boot})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot();
+        const report={type:'lenz/defi-observation/v1',requestId:ref.requestId,checkedAt:Date.now(),state:'observed',observation:{claimed:'complete'},transaction:null};
+        const packet=await p.sealMessage(executor,before.profile,report);
+        const accepted=await store.updateState(s=>w.acceptDefiReply(s,c,packet)),after=await snapshot();
+        await store.updateState(s=>w.acceptDefiReply(s,c,packet));
+        return {before,after,duplicate:await snapshot(),accepted,report};
+      });
+      assert.equal(result.accepted,true);assert.equal(result.after.available,result.before.available);assert.deepEqual(result.after.reserved,result.before.reserved);
+      assert.equal(result.after.vault.rheaOrders[0].status,null);assert.equal(result.after.vault.rheaOrders[0].defi.checkedOutcome,undefined);
+      assert.deepEqual(result.after.vault.rheaOrders[0].defi.executorUpdate.report,result.report);assert.deepEqual(result.after,result.duplicate);
+      await boot(a,base);assert.deepEqual((await a.evaluate(()=>snapshot())).vault,result.after.vault);
+    });
+    await check('executor updates reject forgery and invalid timing and keep the newest authenticated evidence',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot(),created=before.vault.rheaOrders[0].defi.request.createdAt;
+        const report={type:'lenz/defi-observation/v1',requestId:ref.requestId,checkedAt:created+10,state:'pending',observation:null,transaction:null};
+        const accept=async(body,signer=executor)=>store.updateState(async s=>w.acceptDefiReply(s,c,await p.sealMessage(signer,before.profile,body)));
+        const rejected=[];
+        for(const [body,signer] of [[report,other],[{...report,requestId:'c'.repeat(64)},executor],[{...report,checkedAt:created-1},executor],[{...report,checkedAt:Date.now()+120000},executor],[{...report,state:'complete'},executor],[{...report,credit:'100'},executor]]){
+          try{rejected.push(!await accept(body,signer));}catch{rejected.push(true);}
+        }
+        const invalid=await snapshot();await accept(report);const first=await snapshot();
+        await accept({...report,checkedAt:created,state:'observed'});const older=await snapshot();
+        try{await accept({...report,state:'observed'});rejected.push(false);}catch{rejected.push(true);}
+        const conflict=await snapshot();await accept({...report,checkedAt:created+20,state:'unavailable'});
+        const latest=await snapshot(),clock=Date.now;Date.now=()=>consent.expiresAt+1;
+        try{await accept({...report,checkedAt:consent.expiresAt+1,state:'observed'});}finally{Date.now=clock;}
+        return {rejected,before,invalid,first,older,conflict,latest,expired:await snapshot()};
+      });
+      assert.deepEqual(result.rejected,[true,true,true,true,true,true,true]);assert.deepEqual(result.before,result.invalid);
+      assert.deepEqual(result.first,result.older);assert.deepEqual(result.first,result.conflict);
+      assert.equal(result.latest.vault.rheaOrders[0].defi.executorUpdate.report.state,'unavailable');
+      assert.equal(result.expired.vault.rheaOrders[0].defi.executorUpdate.report.state,'observed');
+      assert.equal(result.expired.vault.rheaOrders[0].status,null);assert.equal(result.expired.vault.rheaOrders[0].defi.checkedOutcome,undefined);
+      assert.equal(result.expired.available,result.before.available);assert.deepEqual(result.expired.reserved,result.before.reserved);
+    });
+    await check('failed executor update storage leaves the approval and balance unchanged',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot();
+        const packet=await p.sealMessage(executor,before.profile,{type:'lenz/defi-observation/v1',requestId:ref.requestId,checkedAt:Date.now(),state:'pending',observation:null,transaction:null});
+        const put=IDBObjectStore.prototype.put;let rejected=false;
+        IDBObjectStore.prototype.put=function(){this.transaction.abort();throw Error('disk full');};
+        try{await store.updateState(s=>w.acceptDefiReply(s,c,packet));}catch{rejected=true;}finally{IDBObjectStore.prototype.put=put;}
+        return {before,after:await snapshot(),rejected};
+      });assert(result.rejected);assert.deepEqual(result.before,result.after);
+    });
+    await check('independent swap checks persist completed outcomes offline without credit or reservation release',async({a,base,boot})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot(),order=before.vault.rheaOrders[0].packet;
+        const original=window.fetch;let request;
+        window.fetch=async(url,options)=>{request={url,body:JSON.parse(options.body)};return Response.json({requestId:ref.requestId,state:'observed',observation:{finality:'FINAL',block:{height:10,hash:'4'.repeat(32)},order:{id:order.id,instruction:order.instruction,stage:'complete',output:'100',reason:''}}});};
+        try{return {before,result:await w.checkDefiSwap(c,ref.requestId),after:await snapshot(),request};}finally{window.fetch=original;}
+      });
+      assert.equal(result.result.state,'observed');assert.equal(result.after.available,result.before.available);assert.deepEqual(result.after.reserved,result.before.reserved);
+      assert.equal(result.after.vault.rheaOrders[0].status?.stage,'complete');assert.equal(result.request.url,'/api/defi/rhea/status');
+      assert.equal(result.request.body.request.id,result.after.vault.rheaOrders[0].defi.request.id);
+      assert.equal(result.request.body.sender.name,'Sender');assert.equal(result.request.body.sender.photo,undefined);
+      await boot(a,base);const after=await a.evaluate(()=>snapshot());assert.equal(after.vault.rheaOrders[0].defi.checkedOutcome?.state,'observed');
+    });
+    await check('swap checks reject mismatched, nonfinal and regressed results without replacing saved evidence',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),order=(await snapshot()).vault.rheaOrders[0].packet,original=window.fetch;
+        const good={requestId:ref.requestId,state:'observed',observation:{finality:'FINAL',block:{height:10,hash:'4'.repeat(32)},order:{id:order.id,instruction:order.instruction,stage:'complete',output:'100',reason:''}}};
+        let reply=good;window.fetch=async()=>Response.json(reply);const rejected=[];
+        try {
+          const initial=await snapshot();
+          for(const change of [r=>r.requestId='a'.repeat(64),r=>r.observation.finality='OPTIMISTIC',r=>r.observation.order.instruction.receiver_id='other.testnet',r=>r.observation.order.output='99']){
+            reply=structuredClone(good);change(reply);try{await w.checkDefiSwap(c,ref.requestId);rejected.push(false);}catch{rejected.push(true);}
+          }
+          const afterInvalid=await snapshot();if(rejected.some(value=>!value))return {rejected,initial,afterInvalid,before:null,after:null};
+          reply=good;await w.checkDefiSwap(c,ref.requestId);const before=await snapshot();
+          for(const change of [r=>r.observation.block.height=9,r=>r.observation.block.hash='5'.repeat(32),r=>{r.state='ready';r.observation.order=null;r.observation.block.height=11;}]){
+            reply=structuredClone(good);change(reply);try{await w.checkDefiSwap(c,ref.requestId);rejected.push(false);}catch{rejected.push(true);}
+          }
+          return {rejected,initial,afterInvalid,before,after:await snapshot()};
+        } finally {window.fetch=original;}
+      });assert.deepEqual(result.rejected,[true,true,true,true,true,true,true]);assert.deepEqual(result.afterInvalid,result.initial);assert.deepEqual(result.after,result.before);
+    });
+    await check('late status replies cannot update a different active account',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),original=window.fetch;let started,release;
+        const waiting=new Promise(r=>started=r),held=new Promise(r=>release=r);window.fetch=async()=>{started();await held;return Response.json({requestId:ref.requestId,state:'ready',observation:{finality:'FINAL',block:{height:10,hash:'4'.repeat(32)},order:null}});};
+        try {
+          const pending=w.checkDefiSwap(c,ref.requestId).then(()=>false,()=>true);await waiting;
+          await store.updateState(async s=>{s.identity=await p.createIdentity('Different account');delete s.nearBox;delete s.nearKey;await n.saveNearVault(s,n.emptyNearVault(c.reserve));});
+          const before=await snapshot();release();return {rejected:await pending,before,after:await snapshot()};
+        } finally {release?.();window.fetch=original;}
+      });assert(result.rejected);assert.deepEqual(result.after,result.before);
+    });
+    await check('failed status saves and offline checks preserve the saved wallet',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot(),original=window.fetch,put=IDBObjectStore.prototype.put;let calls=0,savedRejected=false,offlineRejected=false;
+        window.fetch=async()=>{calls++;return Response.json({requestId:ref.requestId,state:'ready',observation:{finality:'FINAL',block:{height:10,hash:'4'.repeat(32)},order:null}});};
+        try {
+          IDBObjectStore.prototype.put=function(){this.transaction.abort();throw Error('disk full');};
+          try{await w.checkDefiSwap(c,ref.requestId);}catch{savedRejected=true;}finally{IDBObjectStore.prototype.put=put;}
+          Object.defineProperty(navigator,'onLine',{value:false,configurable:true});
+          try{await w.checkDefiSwap(c,ref.requestId);}catch{offlineRejected=true;}
+          return {savedRejected,offlineRejected,calls,before,after:await snapshot()};
+        } finally {delete navigator.onLine;window.fetch=original;IDBObjectStore.prototype.put=put;}
+      });assert(result.savedRejected);assert(result.offlineRejected);assert.equal(result.calls,1);assert.deepEqual(result.after,result.before);
+    });
+    await check('confirmed conflicts stop further handoffs without freeing the reserved input',async({a})=>{
+      const result=await a.evaluate(async()=>{
+        const ref=await w.approveDefiSwap(c,executor.profile,swap,consent),before=await snapshot(),original=window.fetch;let rejected=false;const regressions=[];
+        window.fetch=async()=>Response.json({requestId:ref.requestId,state:'conflicted',observation:{finality:'FINAL',block:{height:10,hash:'4'.repeat(32)},order:null}});
+        try {
+          await w.checkDefiSwap(c,ref.requestId);
+          for(const height of [10,11]){
+            window.fetch=async()=>Response.json({requestId:ref.requestId,state:'ready',observation:{finality:'FINAL',block:{height,hash:'4'.repeat(32)},order:null}});
+            try{await w.checkDefiSwap(c,ref.requestId);regressions.push(false);}catch{regressions.push(true);}
+          }
+          try{await w.defiHandoff(c,ref.requestId);}catch{rejected=true;}
+          return {rejected,regressions,before,after:await snapshot(),sources:await w.defiCourierSources(await store.readState(),c)};
+        } finally {window.fetch=original;}
+      });assert(result.rejected);assert.deepEqual(result.regressions,[true,true]);assert.deepEqual(result.after.reserved,result.before.reserved);assert.equal(result.after.available,result.before.available);assert.equal(result.sources[0].sendable,false);
+    });
     await check('atomic approval keeps identity, history and remaining change',async({a})=>{
       const result=await a.evaluate(async()=>{const before=await snapshot(),ref=await w.approveDefiSwap(c,executor.profile,swap,consent),after=await snapshot(),packet=await w.defiHandoff(c,ref.requestId),opened=await d.openDefiRequest(executor,before.profile,c,packet);return {before,after,ref,opened,encrypted:JSON.stringify((await store.readState())).includes('min_output')};});
       assert.equal(result.after.available,'6000000');assert.equal(result.after.reserved.length,1);assert.equal(result.opened.id,result.ref.requestId);assert.equal(result.opened.operation.packet.id,result.ref.orderId);

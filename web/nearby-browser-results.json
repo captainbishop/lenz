@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-01T19:58:24.893Z",
-  "browser": "156.0.4314.58",
+  "checkedAt": "2026-11-10T02:34:19.615Z",
+  "browser": "157.0.4341.42",
   "checks": [
     "signed QR pairing establishes a real local data channel with no web or relay access",
     "delivery indicators follow the selected recipient and clear after disconnect",
@@ -13,6 +13,12 @@
   ],
   "errors": [],
   "blockedRequests": [
+    "/sw.js",
+    "/chat-sw.js",
+    "/chat-sw.js",
+    "/chat-sw.js",
+    "/chat-sw.js",
+    "/chat-sw.js",
     "/chat-sw.js",
     "/chat-sw.js",
     "/chat-sw.js"

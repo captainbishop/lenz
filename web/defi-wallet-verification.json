@@ -1,7 +1,47 @@
 {
-  "checkedAt": "2026-11-03T05:05:10.819Z",
-  "browserTests": 13,
+  "checkedAt": "2026-11-09T01:41:42.594Z",
+  "browserTests": 23,
   "mutations": [
+    {
+      "name": "manual-selected-request",
+      "detected": true,
+      "failedCase": "manual update import"
+    },
+    {
+      "name": "status-persistence",
+      "detected": true,
+      "failedCase": "independent swap checks"
+    },
+    {
+      "name": "status-request",
+      "detected": true,
+      "failedCase": "swap checks reject"
+    },
+    {
+      "name": "status-finality",
+      "detected": true,
+      "failedCase": "swap checks reject"
+    },
+    {
+      "name": "status-minimum",
+      "detected": true,
+      "failedCase": "swap checks reject"
+    },
+    {
+      "name": "status-regression",
+      "detected": true,
+      "failedCase": "swap checks reject"
+    },
+    {
+      "name": "status-conflict-handoff",
+      "detected": true,
+      "failedCase": "confirmed conflicts"
+    },
+    {
+      "name": "status-conflict-regression",
+      "detected": true,
+      "failedCase": "confirmed conflicts"
+    },
     {
       "name": "persist-vault",
       "detected": true,
@@ -59,18 +99,19 @@
     }
   ],
   "sourceFiles": {
-    "web/public/defi-wallet.js": "16affd6f706b16de0ffb76481522b96dd718af47b165572386860d0dde7d307a",
-    "web/public/chat-store.js": "5394d555d73d71c735de075b0edca8a7039c6be48d433c134fa6e08862a24534",
-    "web/public/peer-crypto.js": "d92ba6cd60fce04d0e15d88a6370f4aa870ea8c92c90c306a4065b0e380aee6e",
+    "web/public/defi-wallet.js": "0afe3a096f5a04da415a62d1fcbc92b034507c50348cf0cb0cf799f4b7916951",
+    "web/public/chat-store.js": "59cc3dbf1276190c255c48e98e33fe8b4a7c72f3b0e9009702419777c7faa533",
+    "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
+    "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
-    "web/public/near-protocol.js": "394d7c091e643496c8ea87e48036941958dc9013742766878410d9ff4c80b962",
+    "web/public/near-protocol.js": "729c1ecc6badac347d7b308874b5d774b3389c33e1dd3cee663f67631c3ffd20",
     "web/public/rhea-protocol.js": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3",
     "web/public/near-deposit.js": "ab19a4633b9f077f023e6b8ec0a836b7870b61704068c07249d92b62c7d068a2",
-    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
+    "web/public/defi-request.js": "4a3eddb39de6acb90833c1e851a2963a0ad99d03ee38e84b2c7cd2466b9ee8eb",
     "web/public/carrier-protocol.js": "11cb3896a9e07e711049c4162250172ee5d0ec7a058fc78e6d91f58c8fe92280",
-    "web/defi-wallet-browser.test.cjs": "c453afe13aaf5c4b92ede6763bb60f6ee8d0ed64431264653967cce9846017b4",
-    "web/security-policy.mjs": "e7da2be46c337221387a83630da30e612fe515c504e08b5cb6f0d0f0d135b93b",
-    "web/defi-wallet-verification.cjs": "f61f8940138379f1c73f79948bc2a9f438ddb6fbce87ef4b6729fe1a4a785742"
+    "web/defi-wallet-browser.test.cjs": "4439b94c1c8e989772be83ad5e2f65e202560b51a0ceb1711ed521d1917dec06",
+    "web/security-policy.mjs": "db4f4b872d4f63e5184ed5996fca3b9d0e0c72686637aab91d65097b5303f9e5",
+    "web/defi-wallet-verification.cjs": "33d8b2b6a9c680b654588cec73ee81d623bf3bf2129f663ca19ad98ed2372a34"
   },
   "scope": "Disposable Windows Edge, real IndexedDB/Web Locks/WebCrypto, synthetic funded roots and two same-origin tabs. No user identity, live chain transaction, transport activation or wallet credit."
 }

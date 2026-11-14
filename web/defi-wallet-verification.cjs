@@ -5,6 +5,14 @@ const {run}=require('./defi-wallet-browser.test.cjs');
   const file=path.join(__dirname,'public/defi-wallet.js'),source=await fs.readFile(file,'utf8');
   const baseline=await run(),mutations=[];
   const variants=[
+    ['manual-selected-request','manual update import',[["if(requestId!==null)assert(request.id===requestId,'This update belongs to another saved swap');",'']]],
+    ['status-persistence','independent swap checks',[["await saveNearVault(state,current);",'']]],
+    ['status-request','swap checks reject',[["result.requestId===request.id","true"]]],
+    ['status-finality','swap checks reject',[["o.finality==='FINAL'","true"]]],
+    ['status-minimum','swap checks reject',[["if(o.order.stage==='complete')assert(BigInt(o.order.output)>=BigInt(order.packet.instruction.min_output),'Swap output is below the approved minimum');",'']]],
+    ['status-regression','swap checks reject',[["assert(o.block.height>=previous.block.height,'An older swap update was ignored.');",'']]],
+    ['status-conflict-handoff','confirmed conflicts',[["assert(order.defi.checkedOutcome?.state!=='conflicted','This payment has a confirmed conflict. Review it before sharing again.');",'']]],
+    ['status-conflict-regression','confirmed conflicts',[["assert(previous.state!=='conflicted' || result.state==='conflicted','This payment has a confirmed conflict. The saved result is unchanged.');",'']]],
     ['persist-vault','atomic approval',[["await saveNearVault(state,prepared.vault);",'']]],
     ['reuse-approval','repeated approval',[["if(existing) {","if(false && existing) {"]]],
     ['approved-terms','changed approval terms',[["assert(existing.defi.binding===binding, 'This approval id already has different terms');",'']]],

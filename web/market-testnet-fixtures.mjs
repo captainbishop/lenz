@@ -1,0 +1,6 @@
+// Synthetic testnet observations keep recorded mainnet evidence unchanged.
+export function testnetDiscoveryFixture(observedAt=Date.now()){
+ const chainId='hypercore:testnet',markets=[['SOL',0,3,20],['ETH',1,4,25],['AVAX',2,2,5],['BTC',3,5,40],['ATOM',4,2,5]];
+ return {version:1,provider:'hyperliquid',chainId,network:'testnet',kind:'market-observation',observedAt,expiresAt:observedAt+60000,executable:false,rows:markets.map(([instrument,venueIndex,sizeDecimals,maxLeverage])=>({id:`hyperliquid:${venueIndex}:${instrument}`,marketId:'hyperliquid',category:'perpetuals',chainId,label:instrument+' perpetual',instrument,venueIndex,sizeDecimals,maxLeverage,collateralToken:0,isolatedOnly:false,status:'listed',markPrice:instrument==='ETH'?'2000':'100',oraclePrice:instrument==='ETH'?'2001':'101',funding:'0.00001',openInterest:'10',executable:false})),evidence:{source:'https://api.hyperliquid-testnet.xyz/info',method:'metaAndAssetCtxs',dex:'',assurance:'test-fixture',providerTimestamp:null,statement:'Synthetic testnet market fixture; no live market observation.'}};
+}
+export function testnetMarketReport(report){return {...report,results:report.results.map(result=>result.provider==='hyperliquid'?{...result,observation:testnetDiscoveryFixture()}:result)};}

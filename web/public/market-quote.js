@@ -1,3 +1,4 @@
+import {HYPERLIQUID} from './hyperliquid-environment.js';
 import {immutable} from './defi-catalog.js';
 export const QUOTE_POOL='uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224';
 export const requireQuote=(ok,message)=>{if(!ok)throw Error(message);};
@@ -36,7 +37,7 @@ export function checkedMarketQuote(value,expected,{now=Date.now()}={}){
   check(JSON.stringify(marketQuoteRequest(value.request))===JSON.stringify(request),'Quote terms changed.');
   check(Number.isSafeInteger(value.observedAt)&&value.observedAt<=now+5000&&Number.isSafeInteger(value.sourceTime)&&value.sourceTime>=0&&value.sourceTime<=now+5000,'Invalid quote time.');
   check(Number.isSafeInteger(value.expiresAt)&&value.expiresAt>now&&value.expiresAt>value.observedAt&&value.expiresAt<=value.observedAt+30000&&value.expiresAt<=value.sourceTime+(swap?60000:30000),'Quote expired.');
-  check(value.evidence?.source===(swap?'https://mainnet.base.org':'https://api.hyperliquid.xyz/info'),'Quote source changed.');
+  check(value.evidence?.source===(swap?'https://mainnet.base.org':HYPERLIQUID.info),'Quote source changed.');
   const r=value.result;
   if(swap){
     const input=request.side==='usdc-to-weth'?'USDC':'WETH',output=input==='USDC'?'WETH':'USDC';

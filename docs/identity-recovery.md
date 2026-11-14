@@ -1,18 +1,17 @@
-## Same-ID archives and delivery receipts
-
-The recovery page accepts same-ID chat archives and continues with the original Lenz ID in an empty browser. New replies save on that device. Re-export uses the same recovery phrase. Existing accounts cannot be replaced by an import.
-
-New archives use `lenz/chat-archive/v2` and preserve verified outgoing acknowledgements and incoming receipts prepared for sharing. Receipt validation binds the signature, direction, message ID and exact encrypted packet. Version 1 remains readable with its strict packet-only schema. Same-ID automatic backups merge receipt changes across devices.
-
-Legacy successor archives retain their format. Old-ID receipt history is not migrated; new messages written by the recovered successor use v2 within the recovered-backup bundle. Chat recovery does not restore financial authority or settlement state.
-
 # Identity and chat recovery
 
 A generated 24-word Lenz phrase recreates the same P-256 signing and encryption
 keys. An encrypted archive can carry the profile, contacts and authenticated text
 messages. The derivation module stages these results without writing to storage.
-The [chat restore flow](legacy-chat-backups.md) can install a signed successor
-from an existing-account backup into an empty browser. The [automatic backup flow](automatic-backup.md) derives the same identity
+The chat restore flow opens a `lenz/chat-archive/v1` or `v2` backup in an empty browser
+with the same Lenz ID and conversations. New messages save locally and survive
+offline reopening; an exported backup can include those replies under the same
+phrase. Version 2 also preserves verified delivery acknowledgements and prepared
+receipts, so a retry can share the saved receipt. Same-identity automatic backups
+include receipt-only edits and merge them across devices. Local saving does not
+protect against browser data being cleared.
+The [legacy restore flow](legacy-chat-backups.md) installs a signed successor
+from an existing-account backup. The [automatic backup flow](automatic-backup.md) derives the same identity
 from a passkey without a phrase screen. Optional device-only profiles retain
 the earlier name-based onboarding.
 
@@ -45,24 +44,32 @@ Nonextractability alone does not protect against malicious application code.
 AES-256-GCM encrypts the complete profile/contact/message snapshot. A fresh
 32-byte salt and 12-byte IV accompany each archive; the header is authenticated.
 The encryption key uses HKDF-SHA256 from the 256-bit entropy with the archive salt
-and `lenz/chat-archive/v1` label. This supports randomly generated recovery secrets,
+and the archive's version label (`lenz/chat-archive/v1` or `lenz/chat-archive/v2`).
+New archives use version 2; the version 1 reader retains its original strict schema.
+This supports randomly generated recovery secrets,
 not user-chosen passwords. No raw private key or phrase is written to the archive.
 Archive size remains observable.
 
 Before returning a restored identity, validation checks the profile/key binding,
-each contact, message signature, recipient and decrypted text payload. Unknown
+each contact, message signature, recipient and decrypted text payload. Version 2
+also verifies each receipt's signature, direction, message ID and hash of the exact
+original encrypted packet. Only outgoing messages can have a received receipt;
+only incoming messages can have a prepared receipt to share. Unknown
 fields, missing contacts, duplicates, malformed ciphertext and excess sizes are
 rejected. Limits are 500 contacts, 1,000 messages and 8 MB of plaintext. Invalid
 archives never write to the active account because this module has no storage
-interface. The caller receives a staged result marked `chat-only` and
+interface. A receipt acknowledges file delivery, not payment settlement. The
+caller receives a staged result marked `chat-only` and
 `financialState: not-restored`.
 
 Payment messages, vaults, balances, reservations and other financial fields are
 rejected. The module does not silently drop them. Restored signing keys still
 have cryptographic authority wherever that identity was previously authorized;
-the return marker is not a cryptographic spending lock. Manual product installation accepts the signed successor format. Passkey
-sign-in can install its authenticated same-identity archive; both apply
-chat-only access checks. Neither restores an archive as a financial account.
+the return marker is not a cryptographic spending lock. Manual installation
+accepts the signed successor format and the same-identity chat archive. Passkey
+sign-in can install its authenticated same-identity archive. All three paths
+apply chat-only access checks and refuse to replace existing account data.
+None restores an archive as a financial account.
 Two restored copies can both sign chat messages. No single-device exclusivity
 or safe payment recovery is claimed.
 
@@ -71,6 +78,8 @@ separate [existing-account backup](legacy-chat-backups.md) preserves signed text
 history with per-message keys and an old-key-authorized successor link. Its
 restore flow installs that successor only into an empty account. This identity module
 rejects an archive whose keys differ from the supplied phrase's derived keys.
+Legacy successor archives retain their existing text-history format; their old-ID
+receipt history is not migrated by the version 2 same-identity format.
 
 Same-ID automatic account backup additionally preserves validated owner-side
 [private request history](private-spending.md#recovering-saved-requests).

@@ -2,6 +2,9 @@
 import { WALLET_NETWORKS, networkId, walletNetworkParameters } from './evm-networks.js';
 import {receivingWalletData,verifyReceivingWallet} from './receiving-instructions.js';
 import {checkedOrderAction,orderTypedData,verifyOrderSignature} from './hyperliquid-order.js';
+import {checkAuthenticationPayload} from './intents-auth-payload.js';
+import {acquireWalletPrompt} from './wallet-prompt.js';
+import {checkedHyperliquidSetupAction,hyperliquidSetupTypedData,verifyHyperliquidSetupSignature} from './hyperliquid-account-setup.js';
 export { WALLET_NETWORKS } from './evm-networks.js';
 const assert = (ok, message) => { if (!ok) throw Error(message); };
 const quantity = value => typeof value === 'string' && /^0x(?:0|[1-9a-f][0-9a-f]*)$/i.test(value) && value.length <= 66;
@@ -96,6 +99,24 @@ export function createWalletSession({ changed = () => {}, timeoutMs = 30000, net
       const current = provider, ticket = generation, identity = snapshot;
       const assertCurrent = () => assert(current === provider && ticket === generation && identity === snapshot && sameNetwork(identity.chainId, identity.network), 'Wallet changed. Review again.');
       return Object.freeze({ identity, assertCurrent,
+        async signIntentsAuthentication(payload, { signal } = {}) {
+          assertCurrent(); signal?.throwIfAborted();
+          checkAuthenticationPayload(payload, identity.address);
+          const releasePrompt = acquireWalletPrompt(current);
+          try {
+            assert(account(await request('eth_accounts',null,current,ticket))===identity.address
+              && chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId, 'Wallet changed. Review again.');
+            assert(await request('eth_getCode',[identity.address,'latest'],current,ticket)==='0x', 'Private balances currently require an externally owned wallet.');
+            assertCurrent(); signal?.throwIfAborted(); checkAuthenticationPayload(payload, identity.address);
+            const hex = '0x' + [...new TextEncoder().encode(payload)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+            // Retain the lock until the provider prompt actually settles, even after cancellation.
+            const signature = await current.request({method:'personal_sign',params:[hex,identity.address]});
+            assertCurrent(); signal?.throwIfAborted(); checkAuthenticationPayload(payload, identity.address);
+            assert(account(await request('eth_accounts',null,current,ticket))===identity.address
+              && chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId, 'Wallet changed. Review again.');
+            return signature;
+          } finally { releasePrompt(); }
+        },
         request(method, params) {
           assertCurrent();
           assert(['eth_accounts','eth_chainId','eth_blockNumber','eth_getBalance','eth_getTransactionCount','eth_gasPrice','eth_estimateGas','eth_call','eth_getCode','eth_getTransactionByHash','eth_getTransactionReceipt','eth_getBlockByNumber'].includes(method), 'Unsupported wallet read.');
@@ -117,6 +138,24 @@ export function createWalletSession({ changed = () => {}, timeoutMs = 30000, net
           assertCurrent();assert(Date.now()<expiresAt,'Order review expired. Review again.');
           assert(account(await request('eth_accounts',null,current,ticket))===identity.address,'Wallet changed. Review again.');
           return verifyOrderSignature(data,signature,identity.address);
+        },
+        async signHyperliquidSetup(action,expiresAt,{retainSignature}={}) {
+          let providerInvoked=false,releasePrompt;
+          try{
+            assertCurrent();const checked=checkedHyperliquidSetupAction(action),data=hyperliquidSetupTypedData(checked);
+            assert(checked.user===identity.address&&Number.isSafeInteger(expiresAt)&&expiresAt<=checked.nonce+60000&&Date.now()<expiresAt&&typeof retainSignature==='function','Account setup review changed or expired.');
+            releasePrompt=acquireWalletPrompt(current);
+            assert(account(await request('eth_accounts',null,current,ticket))===identity.address&&chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId,'Wallet changed. Review again.');
+            assertCurrent();assert(Date.now()<expiresAt,'Account setup review expired. Review again.');
+            const typed={...data,types:{EIP712Domain:[{name:'name',type:'string'},{name:'version',type:'string'},{name:'chainId',type:'uint256'},{name:'verifyingContract',type:'address'}],...data.types}};
+            providerInvoked=true;
+            const signature=await current.request({method:'eth_signTypedData_v4',params:[identity.address,JSON.stringify(typed)]});
+            verifyHyperliquidSetupSignature(checked,signature);await retainSignature(signature);
+            assertCurrent();assert(Date.now()<expiresAt,'Account setup review expired. Review again.');
+            assert(account(await request('eth_accounts',null,current,ticket))===identity.address&&chain(await request('eth_chainId',null,current,ticket),resolve)===identity.chainId,'Wallet changed. Review again.');
+            return signature;
+          }catch(error){if(!providerInvoked||error?.code===4001)error.hyperliquidSetupNotSigned=true;throw error;}
+          finally{releasePrompt?.();}
         },
         async signReceiving(terms) {
           assertCurrent();

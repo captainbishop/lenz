@@ -1,6 +1,7 @@
 import {marketNetwork} from './evm-markets.js';
 import {immutable} from './defi-catalog.js';
 import {ORACLE_FEEDS} from './oracle-feeds.js';
+import {checkedMarketPrice,tokenImageURL} from './token-market.js';
 import {bytes,hex,unhex} from './peer-crypto.js';
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const exact=(o,keys)=>o&&Object.getPrototypeOf(o)===Object.prototype&&Object.keys(o).sort().join(',')===[...keys].sort().join(',');
@@ -17,7 +18,8 @@ export function tokenPriceFeed(request){
 }
 export function tokenWatchSnapshot(value,request,{now=Date.now(),cached=false}={}){
  request=tokenWatchRequest(request);
- check(exact(value,['kind','request','name','symbol','decimals','balance','price','blockHash','blockNumber','observedAt','executable'])&&value.kind==='token-watch'&&value.executable===false,'Invalid token read.');
+ check(exact(value,['kind','request','name','symbol','decimals','balance','price','blockHash','blockNumber','observedAt','executable',...['image','nativePrice'].filter(k=>Object.hasOwn(value,k))])&&value.kind==='token-watch'&&value.executable===false,'Invalid token read.');
+ if(value.image!==undefined&&value.image!==null)check(tokenImageURL(value.image)===value.image,'Invalid token image.');
  check(JSON.stringify(tokenWatchRequest(value.request))===JSON.stringify(request),'Token read changed.');
  for(const [key,max] of [['name',80],['symbol',24]])check(typeof value[key]==='string'&&value[key].trim().length>0&&value[key].length<=max&&!/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/.test(value[key]),'Invalid token label.');
  check(Number.isInteger(value.decimals)&&value.decimals>=0&&value.decimals<=36,'Invalid token decimals.');
@@ -25,8 +27,9 @@ export function tokenWatchSnapshot(value,request,{now=Date.now(),cached=false}={
  check(request.account?uint(value.balance):value.balance===null,'Invalid token balance.');
  check(/^0x[0-9a-f]{64}$/.test(value.blockHash)&&uint(value.blockNumber),'Invalid token block.');
  check(Number.isSafeInteger(value.observedAt)&&value.observedAt>0&&value.observedAt<=now+5000&&(cached||now-value.observedAt<60000),'Token data needs updating.');
- if(value.price!==null){
-  const f=tokenPriceFeed(request),p=value.price;
+ for(const [field,p] of [['price',value.price],['nativePrice',value.nativePrice]])if(p!=null){
+  if(field==='price'&&p.id==='dexscreener'){checkedMarketPrice(p,request,{now,cached});continue;}
+  const f=field==='nativePrice'?ORACLE_FEEDS.find(f=>f.network===request.network&&f.asset==='ETH'):tokenPriceFeed(request);
   check(f&&exact(p,['id','answer','decimals','updatedAt','observedAt'])&&p.id===f.id&&p.decimals===f.decimals&&uint(p.answer)&&BigInt(p.answer)>0n,'No verified price for this contract.');
   check(Number.isSafeInteger(p.observedAt)&&p.observedAt<=now+5000&&Number.isSafeInteger(p.updatedAt)&&p.updatedAt>0&&p.updatedAt<=p.observedAt+5000&&p.observedAt-p.updatedAt<=f.heartbeat*1000&&(cached||now-p.observedAt<60000),'Token price needs updating.');
  }

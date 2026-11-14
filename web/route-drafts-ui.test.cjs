@@ -1,4 +1,5 @@
-const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:mainnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
+const {chooseTheme}=require('./theme-test-ui.cjs');
+const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:testnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
 // Real browser, static product files and fixture public APIs. No financial endpoints.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url'),{createHash}=require('node:crypto');
 const {securityHeaders}=require('./security-policy.mjs');
@@ -30,7 +31,7 @@ async function run({overrides={},filter,record=true}={}){
   const snapshot=page=>page.evaluate(async()=>JSON.stringify(await(await import('/chat-store.js')).readState()));
   const drafts=page=>page.evaluate(async()=>await(await import('/defi-route-drafts.js')).listRouteDrafts());
   async function quote(page,perp=false){
-    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));await page.goto(base()+'/markets.html');await page.waitForFunction(()=>document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
+    await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));await page.goto(base()+'/markets.html');await page.waitForFunction(()=>document.querySelector('#home-cache-status').dataset.offlineState==='ready'||document.querySelector('#home-cache-status').textContent.startsWith('Page available offline'));
     await page.locator('#refresh-markets').click();await page.waitForFunction(()=>!document.querySelector('#refresh-markets').disabled);
     await page.locator(perp?'[data-market-id="hyperliquid:0:ETH"]':'[data-market-id="uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224"]').click();
     await page.locator('#quote-amount').fill(perp?'1.5':'2');await page.locator('#quote-public').check();await page.locator('#quote-amount').press('Enter');await page.locator('#quote-save-draft').waitFor();
@@ -39,7 +40,7 @@ async function run({overrides={},filter,record=true}={}){
     await page.locator('#quote-save-draft').click();await page.locator('#draft-address').fill('0x'+'44'.repeat(20));await page.locator('#draft-fee').fill('0.002');
     if(perp){await page.locator('#draft-collateral').fill('25');await page.locator('#draft-leverage').selectOption('2');await page.locator('#draft-reduce').check();}
   }
-  async function save(page,perp=false){await quote(page,perp);await form(page,perp);await page.locator('#draft-public').check();await page.locator('#draft-save').click();await page.locator('#open-saved-drafts').waitFor();await page.locator('#open-saved-drafts').click();await page.locator('.route-row').waitFor();await page.waitForFunction(()=>document.querySelector('#route-cache-status').textContent.startsWith('Drafts available offline'));}
+  async function save(page,perp=false){await quote(page,perp);await form(page,perp);await page.locator('#draft-public').check();await page.locator('#draft-save').click();await page.locator('#open-saved-drafts').waitFor();await page.locator('#open-saved-drafts').click();await page.locator('.route-row').waitFor();await page.waitForFunction(()=>document.querySelector('#route-cache-status').dataset.offlineState==='ready'||document.querySelector('#route-cache-status').textContent.startsWith('Drafts available offline'));}
   async function check(name,fn){if(filter&&!name.startsWith(filter))return;mode='normal';release=null;requests=[];unexpected=[];const context=await browser.newContext({viewport:{width:1360,height:1100}}),page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
     try{await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));await page.goto(base()+'/markets.html');await seed(page);await fn({page,context});assert.deepEqual(unexpected,[]);assert(requests.every(r=>Object.keys(r.input).every(k=>!['recipient','address','wallet'].includes(k))));checks.push({name,pass:true});console.log('PASS '+name);}
     catch(e){console.error({name,missing,errors,cache:await page.locator('#home-cache-status').textContent({timeout:1000}).catch(()=>null)});throw e;}finally{release?.();await context.close();}
@@ -59,7 +60,7 @@ async function run({overrides={},filter,record=true}={}){
     });
     await check('Hyperliquid draft keeps order size separate from collateral and fits both themes',async({page})=>{
       await save(page,true);const [row]=await drafts(page);assert.equal(row.objective.source.amount,'25000000');assert.equal(row.objective.destination.order.size,'1500');assert.equal(row.objective.destination.order.maxLeverage,2);assert.equal(row.objective.destination.order.reduceOnly,true);
-      for(const theme of ['light','dark']){if(theme==='dark')await page.locator('#theme-toggle').click();for(const [width,height]of [[320,740],[390,844],[844,390],[1360,1100]]){await page.setViewportSize({width,height});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),theme+' overflow '+width);}if(record)await page.screenshot({path:path.join(__dirname,`evidence/routes-${theme}.png`),fullPage:true});}
+      for(const theme of ['light','dark']){if(theme==='dark')await chooseTheme(page,'dark');for(const [width,height]of [[320,740],[390,844],[844,390],[1360,1100]]){await page.setViewportSize({width,height});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),theme+' overflow '+width);}if(record)await page.screenshot({path:path.join(__dirname,`evidence/routes-${theme}.png`),fullPage:true});}
       await page.setViewportSize({width:390,height:844});if(record)await page.screenshot({path:path.join(__dirname,'evidence/routes-phone.png'),fullPage:true});assert((await page.locator('#route-detail').innerText()).includes('Fees, margin and account checks pending.'));
     });
     await check('offline reload retains drafts and expiry without network or wallet changes',async({page,context})=>{
@@ -82,7 +83,7 @@ async function run({overrides={},filter,record=true}={}){
         const asset={chainId:'near:mainnet',kind:'native',id:'native',decimals:36};
         await(await import('/defi-route-drafts.js')).saveRouteDraft({id:'older-rhea',source:{asset,amount:'1'},destination:{marketId:'rhea',chainId:'near:mainnet',action:'swap',outputAsset:asset},recipient:{chainId:'near:mainnet',address:'reader.near'},limits:{deadline:Date.now()+3600000,minReceive:'1',maxFees:[{asset,amount:'1'+'0'.repeat(77)}]},privacy:'private',returnTo:null});
       });
-      await page.goto(base()+'/routes.html');await page.locator('.route-row').waitFor();const text=await page.locator('#route-detail').innerText();assert(text.includes('Rhea · NEAR'));assert(text.includes('0.'+'0'.repeat(35)+'1'));assert(text.includes('1'+'0'.repeat(41)+' NEAR'));assert(!text.includes('ETH'));assert(!text.includes('Trading address'));assert(text.includes('Private route required'));assert.equal(await page.locator('#refresh-draft-quote').count(),0);
+      await page.goto(base()+'/routes.html');await page.locator('.route-row').waitFor();const text=await page.locator('#route-detail').innerText();assert(text.includes('Rhea · NEAR'));assert(text.includes('0.'+'0'.repeat(35)+'1'));assert(text.includes('1'+'0'.repeat(41)+' NEAR'));assert(!text.includes('ETH'));assert(!text.includes('Trading address'));assert(text.includes('Private transfer required'));assert.equal(await page.locator('#refresh-draft-quote').count(),0);
     });
     await check('review reflows in both themes with large text and reduced motion',async({page})=>{
       await quote(page,true);await form(page,true);await page.emulateMedia({reducedMotion:'reduce'});

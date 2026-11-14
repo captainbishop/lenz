@@ -67,10 +67,22 @@ prepared offline reload. Completion/refund refer to the approved receiving walle
 These reads create no Lenz credit and release no original reservation. Refund
 re-entry still requires the backed deposit verification path.
 
-Automatic browser retrieval of encrypted service replies, service-contact
-provisioning and durable operator key recovery remain integration work. Tests retain
-disposable identities across service restarts; this is not a production key store.
-Personal browser receiving inboxes remain separate.
+With carrier delivery enabled, Wallet retrieves encrypted receipts and executor
+updates automatically. Updates remain pending verification until the separate status
+reader confirms the saved approval. Pausing delivery aborts outstanding checks;
+offline reloads preserve the evidence and reservations. Reconnecting resumes checks,
+including when earlier requests are unavailable. Optional swap configuration cannot
+block ordinary chat delivery from starting.
+
+Wallet also accepts encrypted receipt and report files through **Open update
+file** on a saved swap. This works offline and preserves the evidence across a
+prepared reload. A file must authenticate as the chosen executor's update for
+that exact request and recipient. It does not enable carrier delivery. When
+connected, **Check swap** verifies the outcome through the separate status reader.
+
+Service-contact provisioning and durable operator key recovery remain integration
+work. Tests retain disposable identities across service restarts; this is not a
+production key store. Personal browser receiving inboxes remain separate.
 
 ## Privacy and verification
 

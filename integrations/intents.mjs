@@ -4,7 +4,7 @@ export const INTENTS_API = 'https://1click.chaindefuser.com';
 const require = (ok, message) => { if (!ok) throw new Error(message); };
 const amount = value => typeof value === 'string' && /^[1-9][0-9]{0,77}$/.test(value);
 async function request(path, options, fetcher, apiKey) {
-  const response = await fetcher(INTENTS_API + path, { ...options, headers: { 'content-type': 'application/json',
+  const response = await fetcher(INTENTS_API + path, { ...options, redirect: 'error', headers: { 'content-type': 'application/json',
     ...(apiKey ? { 'X-API-Key': apiKey } : {}) }, signal: AbortSignal.timeout(20000) });
   require(response.ok, `NEAR Intents HTTP ${response.status} at ${path}${response.status === 401 ? ': authentication was rejected; confidential quotes need partner API access' : ''}`);
   return response.json();

@@ -3,7 +3,9 @@ const {run}=require('./defi-approval-browser.test.cjs');
 (async()=>{
  const baseline=await run(),mutations=[];
  const variants=[
-  ['private-policy','defi-workspace.js','private preference',"if($('#rhea-privacy').value!=='public-testnet')throw Error('Private execution is required. This test route is public and cannot be used with that preference.');",''],
+  ['update-file-size','defi-wallet-ui.js','invalid update files',"assert(file.size<=204800,'This update file is too large');",''],
+  ['update-file-notice','defi-wallet-ui.js','an executor update file','Update file checked.','Update saved.'],
+  ['private-policy','defi-workspace.js','private preference',"if($('#rhea-privacy').value!=='public-testnet')throw Error('You chose a private swap. This test swap is public, so it cannot continue.');",''],
   ['late-quote-privacy','rhea-wallet.js','DEX quote',"    requirePublicSwap();\n    if(q.request?","    if(q.request?"],
   ['quote-minimum','rhea-wallet.js','invalid quote',"if(q.request.slippageBps!==slippageBps||!/^[1-9][0-9]{0,38}$/.test(q.amountOut)||BigInt(q.minAmountOut)!==BigInt(q.amountOut)*BigInt(10000-slippageBps)/10000n)throw Error('Invalid quote minimum');",''],
   ['quote-slippage-race','rhea-wallet.js','invalid quote',"||Number($('#rhea-slippage').value)!==slippageBps",''],

@@ -1,8 +1,8 @@
-const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:mainnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
+const fixtureSource=(s,input)=>s.provider===input.provider&&s.chainId===(input.provider==='hyperliquid'?'hypercore:testnet':({base:'eip155:8453',ethereum:'eip155:1',arbitrum:'eip155:42161'})[input.network??'base']);
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url'),{createHash}=require('node:crypto');
 (async()=>{
  const {quoteMarket}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quotes.mjs'))),{quoteMock}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-quote-fixtures.mjs')));
- const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results.map(r=>r.observation),pool=templates.find(r=>r.provider==='uniswap').rows[0];
+ const templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8'))).results.map(r=>r.observation),pool=templates.find(r=>r.provider==='uniswap').rows[0];
  const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1360,height:1000}}),page=await context.newPage(),calls=[],errors=[],checks=[];let priceFailure=false;
  const pass=name=>{checks.push(name);console.log('PASS '+name);};
  try{

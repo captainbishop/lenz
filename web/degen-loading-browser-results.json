@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T16:54:58.921Z",
+  "checkedAt": "2026-11-05T16:42:09.439Z",
   "checks": [
     "snapshot-only updates preserve chart instance and retry window",
     "two visible tabs do not create storage/request loops",

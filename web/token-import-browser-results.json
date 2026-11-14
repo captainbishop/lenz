@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-05T14:29:28.140Z",
+  "checks": [
+    "paste autofills public metadata without connection or checkbox; Add token is the sole primary action",
+    "metadata-only row has unread balance and responsive underline focus in both themes",
+    "Solana and NEAR retain case, decimals and encrypted imports across reload",
+    "reviewed metadata can be saved after a delay and loss of connection without inventing a balance",
+    "failed network reads stay visible through match selection and differ from confirmed absence; retry clears recovered sources",
+    "ambiguity requires a network choice; edits reject late metadata; invalid decimals fail and retry recovers",
+    "an aged optional balance does not block saving metadata and remains labelled as saved",
+    "optional account balance reads require consent and discard responses after account changes",
+    "closing during encryption cancels persistence and preserves existing imports"
+  ],
+  "sources": {
+    "web/public/wallet-token-import.js": "0327f456cd4cf4f125a766dfb52bfab94121dfaf7687ccecedbd07f1f15a5040",
+    "web/public/token-metadata.js": "e8e9404b338605c5b904ddf5e45352854905e0cd09e59ec357b62114af30b3a9",
+    "web/public/token-watch.js": "b256d35077e7735147df16e95c8e7f74946261d50f433b0a2739aa9999db5a46",
+    "web/public/wallet-tokens.js": "42fc3387e3b64de8c94d432b11b235e9c208def1cacb1f465ae18a4faacdaf41",
+    "web/public/chat-store.js": "d0aa9a32a8cbfc6f7d3366d3de64ac8e772299b3cecde2b358260e088291059c",
+    "web/public/wallet-portfolio.css": "26184762209021175b1ffa753e76f18da447a7f1c348ab46445ea6c7a18308e6",
+    "web/public/chat-sw.js": "a6aca35ec1d9260c7540aa66a92650fd1b87452738c19c7ad203bc993cc19fa0",
+    "web/token-import-browser.test.cjs": "e80053f8ec5c021877f3f638ff339a83542c0ea3e5cdd8e7c8f5b79a41e295d0"
+  },
+  "scope": "Disposable browser/provider/API fixtures; no user wallet or live transfer."
+}

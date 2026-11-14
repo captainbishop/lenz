@@ -9,7 +9,7 @@ const scan='M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7h3v3H7zm7 0h3v3h-3zM7 14h3v3
 
 // These controls use the existing wallet, contact verification and delivery services.
 export function mountWalletActions({addRecipient}){
- for(const [id,label,path] of [['near-send','Send','M6 18 18 6M6 6h12v12'],['near-receive','Receive','M18 6 6 18M6 6v12h12'],['near-fund','Add tUSD','M12 5v14M5 12h14']])iconButton($('#'+id),label,path);
+ for(const [id,label,path] of [['near-send','Send','M6 18 18 6M6 6h12v12'],['near-receive','Receive','M18 6 6 18M6 6v12h12'],['near-fund','Add tUSD','M4 11h4V8h8v3h4v5h-4v-2H4zM12 8V5M8 5h8M18 20c0-1 2-3 2-3s2 2 2 3a2 2 0 0 1-4 0']])iconButton($('#'+id),label,path);
  document.querySelectorAll('.dialog-top button[data-close]').forEach(button=>{
   iconButton(button,button.getAttribute('aria-label')||'Close','m6 6 12 12M18 6 6 18');button.classList.add('wallet-close');
  });

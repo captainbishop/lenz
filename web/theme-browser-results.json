@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-08T08:32:20.814Z",
+  "checks": [
+    "initial appearance follows device changes before an explicit choice",
+    "each click cycles Light, Dim, Dark; the preference persists across pages, reloads and tabs",
+    "Enter and Space cycle appearance without opening a menu or moving focus",
+    "three distinct palettes fit phone and desktop with an accessible theme target",
+    "homepage, markets, conversations, account and recovery use the shared cycle",
+    "changing appearance preserves an unfinished recovery form",
+    "blocked preference storage keeps the explicit choice for the current page"
+  ],
+  "sources": {
+    "web/public/app-theme.js": "5373e436d85804e9cb09d29dcda1d7889b564210ae4c374d762221f4237f5481",
+    "web/public/theme-icon.js": "c445c313beabb251b472f42135a7aa245884fcda1b9db5b294c67841ab0d8a1b",
+    "web/public/theme-tokens.css": "5f4ab57a3f79dd3e2d344f770a8bab86f59485de3e6d5530c057ed96991d35e4",
+    "web/public/app-theme.css": "7fb58650e6bf9f9eb98026c5a2194299d3389a5121f21a17b1e48f0b8726875b",
+    "web/public/chat-layout.css": "79a14f9ef14de33bed63f8688507fb8d43fc94a5adbdeb916954e867638e1f03",
+    "web/public/money.css": "31f82ce0aab60c9ff24d14d709464b7e5453da6ea847b58ac7c3b0de0fdb16f5",
+    "web/public/near-wallet.css": "f7e8efa9e3273067f864c9615cea151f073d0a4467f87cb269fa00a6bfd5acdd",
+    "web/public/home.css": "ab69939cad3dff61516a4235e201024a34242d1098166ddf14ad9a6ac0301271",
+    "web/public/home-defi.css": "a78b5bcb0dbd3ed56cff6d2204efbab7651f6af6256448dcd5d8a5198b4fb520",
+    "web/public/markets.css": "2bd1b181699d10f40df0225b02898727e25617be424c7e9da584b697668d7626",
+    "web/public/degen.css": "31e750a219f7818eeba837f0edad56f5f96c39fdf0931141197a0fa8ee3273dd",
+    "web/public/terminal.css": "ff79a07667ee931a4bd827fb32068523c8cc099bbd5ce6ba1e92737237da7481",
+    "web/public/form-controls.css": "b3b31fd79d5b444ac286e3243901bd8aa12e9b353dde2b76e10e54de9c938d80",
+    "web/public/wallet-portfolio.css": "1be3da83e9b05c5d67dd81e1c94014a417953e77e011c620149de467a0a50c6a",
+    "web/public/index.html": "3cbbd8d2ffd11a1785c206e665fadbb6f72bd1fde895609edb25c52da3983117",
+    "web/public/money.html": "b556fbee0f32fc389ad27ed1955b0de85495bc6d9836429fcba3b68c2d984dfe",
+    "web/public/markets.html": "5c449f7cd44aba32238f8778bb33acb71f9d189802ae1929bb1a4f2822e34601",
+    "web/public/routes.html": "6e6c8879a94a86bfefad900a4131a794ebb2570ade06f3f59ed5b33e972ba7fc",
+    "web/public/chat.html": "66cec6f8a7488a043392e1874e28607441bc795d4c2c35e7b2f00da473052686",
+    "web/public/account.html": "588b395b2d9116ebcdc0332d2b701b2009709ab29c6a1b8589817c888710ffc5",
+    "web/public/recovery.html": "da9c9e84dec0aec4c1599890bb3442951fdbff71ebfbad6fd45f24b157f0d6e9",
+    "web/public/home-videos.js": "7183c8ec50a0c0d3ab45e4b4de81aa3e772a6142c954ddbf8fa63f1357230492",
+    "web/public/money.js": "bf231e342c269765f859bed44082d465de9f5e0224e090bd07622a1f8711662a",
+    "web/public/markets.js": "76547a2915168ac4478cc98a5c91f33132718980c7358fab277450ed68aa9860",
+    "web/public/routes.js": "6a4debcc552f25645ec94dcc9f1328b2afab9297af93802926b88d215cc20c0c",
+    "web/public/sw.js": "2775545af663e3fba7450259bb9b8794470b3d4894e78b81a9b4ef0497163613",
+    "web/public/chat-sw.js": "802f760665299c8be0a7a86d7d6f26f64634f8f57f2ddf0c9ca98fae4928a404",
+    "web/theme-browser.test.cjs": "5996820d8f86ae4873770778fb471d124a193af551d6f4fbf90c3dd53453caa8"
+  },
+  "scope": "Disposable Edge contexts; public API calls blocked; no user account or wallet operations."
+}

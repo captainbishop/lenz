@@ -3,6 +3,7 @@ import {CHAINS} from './defi-catalog.js';
 import {readState} from './chat-store.js';
 import {readLendingPosition,reviewLendingPosition} from './lending-position.js';
 import {savedLendingPositions,saveLendingPosition,lendingOwner} from './lending-position-store.js';
+import {iconButton} from './wallet-actions.js';
 
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const button=(text,fn)=>{const b=el('button',text);b.type='button';b.onclick=fn;return b;};
@@ -10,12 +11,13 @@ let wallet=null,picker=null,active=null;
 function session(){
  if(wallet)return wallet;
  wallet=createWalletSession({changed:()=>active?.walletChanged()});picker=el('dialog',undefined,'lending-position-dialog');picker.setAttribute('aria-labelledby','lending-wallet-title');
- const title=el('h2','Connect wallet');title.id='lending-wallet-title';const choices=el('div'),status=el('p');status.setAttribute('role','status');
- picker.append(title,el('p','Connect to read this Aave reserve. Your wallet provider sees the account and asset. Connecting gives no permission to spend.'),choices,status,button('Close',()=>{if(wallet.pending)wallet.disconnect();picker.close();}));document.body.append(picker);
+ const title=el('h2','Connect wallet');title.id='lending-wallet-title';const top=el('div',undefined,'lending-wallet-top'),choices=el('div',undefined,'lending-wallet-options'),status=el('p'),close=button('',()=>{if(wallet.pending)wallet.disconnect();picker.close();});status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ iconButton(close,'Close','m6 6 12 12M18 6 6 18');top.append(title,close);const details=el('details'),summary=el('summary','What connecting allows');details.append(summary,el('p','Lenz can read your address and reserve position. Your wallet provider sees the account and asset. Connecting needs no signature and gives no permission to spend.'));
+ picker.append(top,el('p','Connect to see your Aave position.'),choices,status,details);document.body.append(picker);
  const providers=[];
  function add(provider,name){
   if(providers.length>=12||providers.includes(provider)||!provider||['request','on','removeListener'].some(k=>typeof provider[k]!=='function'))return;
-  providers.push(provider);choices.append(button(name,async()=>{if(wallet.pending)return;for(const b of choices.children)b.disabled=true;status.textContent='Check your wallet…';try{await wallet.connect(provider);picker.close();}catch{status.textContent='Could not connect. Choose Ethereum, Arbitrum or Base in your wallet and try again.';}finally{for(const b of choices.children)b.disabled=false;}}));
+  providers.push(provider);const choice=button('',async()=>{if(wallet.pending)return;for(const b of choices.children)b.disabled=true;status.textContent='Check your wallet…';try{await wallet.connect(provider);picker.close();}catch{status.textContent='Could not connect. Choose Ethereum, Arbitrum or Base in your wallet and try again.';}finally{for(const b of choices.children)b.disabled=false;}});choice.append(el('span',name));const arrow=el('span',undefined,'lending-wallet-arrow');arrow.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>';choice.append(arrow);choices.append(choice);
  }
  addEventListener('eip6963:announceProvider',event=>{const {info,provider}=event.detail??{};if(typeof info?.name==='string'&&info.name.trim()&&info.name.length<=80&&!/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/.test(info.name))add(provider,info.name.trim());});
  picker.addEventListener('cancel',()=>{if(wallet.pending)wallet.disconnect();});picker.addEventListener('close',()=>{if(wallet.pending)wallet.disconnect();});

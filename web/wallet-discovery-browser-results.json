@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-05T14:57:40.036Z",
+  "checks": [
+    "explicit connection automatically loads tokens without a checkbox or signature; cancelling makes no discovery request",
+    "hide-zero removes known zero ETH while retaining unread BTC/SOL",
+    "balance masking covers detected holdings and portfolio",
+    "account changes discard delayed discovery and disable spending"
+  ],
+  "scope": "Disposable wallet/provider and API fixtures; unexpected provider methods including signing fail; no live user account lookup."
+}

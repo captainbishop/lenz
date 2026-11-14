@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-09T01:02:19.755Z",
+  "checkedAt": "2026-11-08T18:57:07.256Z",
   "node": "v24.21.0",
   "platform": "win32",
   "scope": "Disposable identities, synthetic reserve roots, real P-256/AES-GCM, local SQLite and two loopback HTTP carriers. No chain calls, funding, wallet changes or physical-device tests.",
@@ -110,7 +110,7 @@
     "carrier/defi-inbox-verification.mjs": "ddca7b9c10c0554859cafdecad5a80fe1eec715743f3a61aa5ed99ab8b6b2218",
     "carrier/server.mjs": "14f7b155a02cc0115ec39265336d911cabb1df46ba3874885b60de5939e5a7ec",
     "carrier/store.mjs": "3f39a9113affb7b75175483816d563da6a41f131e9f90088a09283d8eeab0e3d",
-    "web/public/defi-request.js": "4a3eddb39de6acb90833c1e851a2963a0ad99d03ee38e84b2c7cd2466b9ee8eb",
+    "web/public/defi-request.js": "04f38df8e8f15c6c7092cd597b5038952b5ecd9ffa4c2b0bdf98a6fc651ea302",
     "web/public/peer-crypto.js": "eda8bfa995ed4265c9df983192082f555ae20793b5ad7304ecffbd8cd202bc29",
     "web/public/profile-display.js": "c81e200ca46e36f56bb59641add4db4a4f8e77f271db304180e572af3a148f3f",
     "web/public/chat-access.js": "640c9f80087dbeb115640ffec20980cbaae03a3c6f422e72ebc707d643200d25",

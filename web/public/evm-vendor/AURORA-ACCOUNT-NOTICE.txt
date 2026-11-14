@@ -1,0 +1,1 @@
+Transaction encoding and decoding from the pinned ethers 6.17.0 stack (MIT). No provider, wallet or mnemonic is exported. Signing uses the existing adjacent offline-budget.js SigningKey export. See ethers-LICENSE.txt, noble-hashes-LICENSE.txt and noble-curves-LICENSE.txt.

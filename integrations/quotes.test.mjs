@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
 import { rheaQuote, RHEA } from './rhea.mjs';
 import { intentsPreview, intentsTokens, intentsAuthenticate } from './intents.mjs';
 import { signTestQuote, testPublicKey, verifyTestSignature } from './quote-verifier/test-fixtures.mjs';
@@ -74,6 +76,37 @@ test('Intents passes partner credentials only as a request header, never into re
     assert.equal(options.headers['X-API-Key'],'test-partner-secret');return fake(url,options);
   }});
   assert(!JSON.stringify(result).includes('test-partner-secret'));
+});
+
+test('Intents refuses redirects before partner credentials reach another origin', async () => {
+  const leaked = [];
+  const destination = createServer((request, response) => {
+    leaked.push(request.headers['x-api-key']);
+    response.writeHead(200, { 'content-type': 'application/json' });
+    response.end('[]');
+  });
+  const redirect = createServer((request, response) => {
+    request.resume();
+    response.writeHead(307, { location: `http://127.0.0.1:${destination.address().port}/capture` });
+    response.end();
+  });
+  try {
+    destination.listen(0, '127.0.0.1'); await once(destination, 'listening');
+    redirect.listen(0, '127.0.0.1'); await once(redirect, 'listening');
+    const fetcher = (_, options) => fetch(`http://127.0.0.1:${redirect.address().port}/redirect`, options);
+    for (const check of [
+      () => intentsTokens({ apiKey: 'disposable-partner-key', fetcher }),
+      () => intentsPreview(intentInput(), { apiKey: 'disposable-partner-key', fetcher }),
+    ]) {
+      const result = await check().then(() => ({ rejected: false }), () => ({ rejected: true }));
+      assert.deepEqual(leaked, [], 'A redirected request exposed the partner key');
+      assert.equal(result.rejected, true, 'Redirected API responses must be rejected');
+    }
+  } finally {
+    await Promise.all([redirect, destination].map(server => new Promise(resolve => {
+      server.closeAllConnections(); server.close(resolve);
+    })));
+  }
 });
 test('Intents rejects missing or forged signatures and altered signed output',async()=>{
   for(const change of [v=>{delete v.signature;return v;},v=>({...v,signature:'ed25519:bad'}),v=>({...v,quote:{...v.quote,amountOut:'9999'}})]){

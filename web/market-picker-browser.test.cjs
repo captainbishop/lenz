@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'}),page=await context.newPage(),checks=[],errors=[],quoteRequests=[];let reads=0;
  const pass=name=>{checks.push(name);console.log('PASS '+name);};
  try{
-  const templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')).results;
+  const templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8'))).results;
   const {tapeFixtures}=await import(pathToFileURL(path.join(__dirname,'../integrations/market-tape-fixtures.mjs')));
   page.on('pageerror',e=>errors.push(e.message));
   page.on('request',request=>{if(request.url().endsWith('/api/markets/quote'))quoteRequests.push(request.postData());});

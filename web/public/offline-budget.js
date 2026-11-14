@@ -14,6 +14,11 @@ function domain(value){
  check(exact(value,['name','version','chainId','verifyingContract'])&&value.name==='LenzOfflineBudget'&&value.version==='1'&&value.chainId==='31337'&&address(value.verifyingContract),'Unsupported budget deployment.');
  return structuredClone(value);
 }
+export function checkBudgetPolicy(value){
+ check(exact(value,['domain','signer','budgetId','privacyPolicy'])&&address(value.signer)&&uint(value.budgetId,256)&&value.budgetId!=='0','Missing independently checked budget.');
+ domain(value.domain);check(value.privacyPolicy===PUBLIC_BUDGET_REHEARSAL,'Private budget execution for this privacy policy is not connected.');
+ return structuredClone(value);
+}
 export function checkBudgetOrder(value){
  check(exact(value,orderKeys),'Invalid budget order fields.');
  for(const f of ['budgetId','nonce'])check(uint(value[f],256),'Invalid budget counter.');
@@ -24,6 +29,7 @@ export function checkBudgetOrder(value){
  return structuredClone(value);
 }
 export function budgetDigest(deployment,order){return TypedDataEncoder.hash(domain(deployment),BUDGET_ORDER_TYPES,checkBudgetOrder(order));}
+export function budgetNonceKey(packet){const d=domain(packet.domain),o=checkBudgetOrder(packet.order);return[d.chainId,d.verifyingContract,o.budgetId,o.nonce].join(':');}
 export function offlineSignerAddress(secret){check(secret instanceof Uint8Array&&secret.length===32,'Invalid offline signing key.');return computeAddress(new SigningKey(secret).publicKey).toLowerCase();}
 export function signBudgetOrder(secret,deployment,order){
  check(secret instanceof Uint8Array&&secret.length===32,'Invalid offline signing key.');
@@ -34,7 +40,7 @@ export function checkBudgetPacket(input,expected,{now=Math.floor(Date.now()/1000
  const packet=structuredClone(input);
  check(exact(packet,['type','domain','order','data','signature'])&&packet.type==='lenz/offline-budget/v1','Invalid budget packet.');
  const d=domain(packet.domain),o=checkBudgetOrder(packet.order);
- check(exact(expected,['domain','signer','budgetId','privacyPolicy'])&&address(expected.signer),'Missing independently checked budget.');
+ checkBudgetPolicy(expected);
  check(JSON.stringify(d)===JSON.stringify(domain(expected.domain))&&o.budgetId===expected.budgetId&&o.privacyPolicy===expected.privacyPolicy,'Budget destination or privacy policy differs.');
  check(Number.isSafeInteger(now)&&now>=0&&BigInt(o.deadline)>BigInt(now),'Offline instruction expired.');
  check(budgetCallHash(packet.data)===o.dataHash,'Budget call bytes differ.');

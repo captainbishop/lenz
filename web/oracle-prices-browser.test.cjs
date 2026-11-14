@@ -1,6 +1,6 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),{pathToFileURL}=require('node:url'),{createHash}=require('node:crypto');
 (async()=>{
- const {ORACLE_FEEDS,ORACLE_NETWORKS}=await import(pathToFileURL(path.join(__dirname,'public/oracle-feeds.js'))),templates=JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'))).results.map(r=>r.observation);
+ const {ORACLE_FEEDS,ORACLE_NETWORKS}=await import(pathToFileURL(path.join(__dirname,'public/oracle-feeds.js'))),templates=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json')))).results.map(r=>r.observation);
  const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),page=await context.newPage(),calls=[],errors=[],checks=[];let mode='normal',release,seq=0;
  const pass=n=>{checks.push(n);console.log('PASS '+n);};
  try{

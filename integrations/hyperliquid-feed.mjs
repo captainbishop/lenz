@@ -6,7 +6,7 @@ import {checkedHyperliquidEvent} from '../web/public/hyperliquid-feed.js';
 import {CANDLE_INTERVALS} from '../web/public/market-tape.js';
 
 export async function readHyperliquidTape(input,{fetcher=marketFetch,clock=Date.now,signal,catalog=readHyperliquidCatalog}={}){
-  const request=hyperliquidRequest(input),[,kind,...parts]=request.marketId.split(':'),coin=parts.join(':');
+  const request=hyperliquidRequest(input),[,,kind,...parts]=request.marketId.split(':'),coin=parts.join(':');
   const directory=await catalog({signal});signal?.throwIfAborted();
   if(!directory.rows.some(row=>row.kind===kind&&(row.coin===coin||row.sides.some(s=>s.coin===coin))))throw Error('Market unavailable');
   const endTime=clock(),startTime=endTime-299*CANDLE_INTERVALS[request.interval];
