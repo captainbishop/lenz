@@ -1,3 +1,7 @@
+# Pinned Sepolia lending reads, November 14, 2026
+
+The standalone reader and local read-only HTTP boundary passed 27 fresh tests. Runtime and proxy pins, canonical finality, exact assets and account selection, unknown positions, cancellation and bounded requests are checked through RPC and HTTP fixtures. Independent source review found no blocker. No signing or execution is mounted by this batch.
+
 # Lending search focus, November 14, 2026
 
 Lending asset search uses the same underlined focus treatment as market search.
