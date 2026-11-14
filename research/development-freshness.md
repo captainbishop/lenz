@@ -1,3 +1,9 @@
+# Lending search focus, November 14, 2026
+
+Lending asset search uses the same underlined focus treatment as market search.
+The focused field was checked in the actual Markets page: its outer outline is
+absent, while the visible underline and keyboard focus remain.
+
 
 # Workspace request and backup lifetimes, November 13, 2026
 

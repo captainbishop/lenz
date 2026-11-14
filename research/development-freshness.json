@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-11-13T18:28:17.924Z",
+  "reviewedAt": "2026-11-14T15:29:48.002Z",
   "review": "research/development-freshness.md",
   "files": {
     ".gitignore": "58a135928336f74cfa9fe6754abdc8128fa6c74e68c9ce6f08c70ab330f95ae1",
@@ -381,7 +381,7 @@
     "research/crypto-step/step.circom": "6a31fe5114fdff3bb0fdd8fc6dcf046735ad9070ee3d6ce5e270166ffc70dfe4",
     "research/crypto-step/step.mjs": "379717ed8c18256dfb16dc88c21f5f709bb63762028cd9ba1c55355a6899c07b",
     "research/crypto-step/step.test.mjs": "20ac60b07a967bfb434e18e050ac86f444355816d84af5e51941959697a08bab",
-    "research/development-freshness.md": "822635146b3d09499482a340ec258a0dc35b99bb58ff8c1a580bc25771373f4e",
+    "research/development-freshness.md": "dd688fb80598353c7b463f5f8c0ce38d4ad19df2016aa4770dd5d8f19a7d9e6f",
     "research/mobile-handover/CapsuleCrypto.swift": "ed0c84e7418b9294dbf94d4e9ce9e5dc70b6b3bf097803a8b2e518c49034e25c",
     "research/mobile-handover/CapsuleVectors.swift": "58f5ba0fe4d240d4eef40ac966087a1310492cd0df1408d210b86803fa9d4d8f",
     "research/mobile-handover/README.md": "9f010170efd2f0a35b4ff184e4f309bd2002c411dbba762cb20ae80ac211e236",
@@ -1676,7 +1676,7 @@
     "web/public/welcome.css": "ac005b8956a85313666b12769c8e53bda91dd7a5b6093847e96fc571515a0495",
     "web/public/workspace-dispatch.js": "19d2bc5da2dbf44875a464e256097d4ee7c506fd54c8111274a6f460b03adfd5",
     "web/public/workspace-heading.js": "ebd73b43c1e24a7402a523cbb80c51a257add987acbfba67427d5d89faff6a37",
-    "web/public/workspace-layout.css": "58f7a8f3c5bd4ec5054b87026249de634e2fa432a45d22a4f9973e23334d178f",
+    "web/public/workspace-layout.css": "49f9842904db2ae1487bac60a636c8b06a9f511e49e89b9083559cba19fb6c10",
     "web/public/workspace-session.js": "ea858e9dabd6b333cdf65ead9b836914f9909102c5af43c8719def6d24ccd048",
     "web/public/workspace-store.js": "3b88f0b8163ca4b18d67d9da411f2981131bca53ccbd2012ad43c98bf2a13e84",
     "web/public/zcash-lab.css": "2815185479b87fd2760545bc97aba2c3ff5691dd5ad2d5aac17b6b8ef53c0884",
