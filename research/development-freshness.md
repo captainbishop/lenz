@@ -1,3 +1,7 @@
+# Bounded lending accounts, November 14, 2026
+
+The fixed-route Solidity account passed 22 fresh local EVM tests. Existing independent review still matches exact contract and test hashes. Checks cover owner permissions, replay and deadline, scaled Aave mint and burn, debt and health limits, repayment cleanup, same-nonce cancellation and free-token transfer, changed code and reentry. This batch adds the contract and tests without mounting browser or live execution.
+
 # Pinned Sepolia lending reads, November 14, 2026
 
 The standalone reader and local read-only HTTP boundary passed 27 fresh tests. Runtime and proxy pins, canonical finality, exact assets and account selection, unknown positions, cancellation and bounded requests are checked through RPC and HTTP fixtures. Independent source review found no blocker. No signing or execution is mounted by this batch.
