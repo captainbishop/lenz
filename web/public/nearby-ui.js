@@ -12,7 +12,7 @@ button.type='button';button.className='secondary';button.id='nearby-open';button
 const dialog=document.createElement('dialog');dialog.id='nearby-dialog';dialog.setAttribute('aria-labelledby','nearby-title');
 dialog.innerHTML=`<div class="dialog-top"><h2 id="nearby-title">Nearby</h2><button class="secondary" type="button" id="nearby-close">Close</button></div>
 <p id="nearby-status" role="status" aria-live="polite">Pair on the same Wi-Fi or hotspot.</p>
-<div id="nearby-setup"><label for="nearby-person">Person</label><select id="nearby-person"></select><p class="quiet" id="nearby-empty" hidden>Add and verify their Lenz ID first.</p>
+<div id="nearby-setup"><label for="nearby-person">Person</label><select id="nearby-person" data-empty-label="No contacts yet" aria-describedby="nearby-empty"></select><p class="quiet" id="nearby-empty" hidden>Add and verify their Lenz ID first.</p>
 <div class="nearby-actions"><button type="button" id="nearby-create">Create code</button><button class="secondary" type="button" id="nearby-scan">Scan code</button></div></div>
 <div id="nearby-code-panel" hidden><h3 id="nearby-code-title"></h3><canvas id="nearby-qr" role="img" aria-label="Nearby pairing QR code"></canvas><p class="quiet" id="nearby-code-hint"></p><button class="secondary" type="button" id="nearby-copy">Copy code</button><details><summary>View code</summary><textarea id="nearby-output" readonly rows="3" aria-label="Your nearby pairing code"></textarea></details></div>
 <div id="nearby-camera-panel" hidden><video id="nearby-camera" muted autoplay playsinline></video><button class="secondary" type="button" id="nearby-camera-stop">Stop camera</button></div>

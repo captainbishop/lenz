@@ -3,6 +3,13 @@ const {createMarketRoute}=await import(process.env.LENZ_RELAY_MODULE?pathToFileU
 const quoteInput={provider:'uniswap',marketId:'uniswap:0xd0b53d9277642d899df5c87a3966a349a798f224',side:'usdc-to-weth',amount:'1',slippageBps:50,privacy:'public'};
 const req=(input={provider:'uniswap'},changes={})=>Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]),{url:'/api/markets/read',method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json'},...changes});
 const res=()=>({writeHead(status,headers){this.status=status;this.headers=headers;},end(body){this.data=JSON.parse(body);}});
+
+test('catalogue scope permits only public core perpetual or Spot reads and preserves the full default',async()=>{
+ const calls=[],route=createMarketRoute({catalog:async options=>{calls.push(options.scope);return {rows:[]};}});
+ for(const input of [{privacy:'public',scope:'everything'},{privacy:'private',scope:'core-perps'},{privacy:'public',scope:'core-perps',address:'private'},{privacy:'public',scope:'core-perps',url:'https://foreign.example'},{privacy:'private',scope:'spot'},{privacy:'public',scope:'spot',address:'private'},{privacy:'public',scope:'spot',url:'https://foreign.example'}]){const response=res();await route(req(input,{url:'/api/markets/hyper-catalog'}),response);assert.equal(response.status,400);}assert.deepEqual(calls,[]);
+ for(const input of [{privacy:'public',scope:'core-perps'},{privacy:'public',scope:'spot'},{privacy:'public'}]){const response=res();await route(req(input,{url:'/api/markets/hyper-catalog'}),response);assert.equal(response.status,200);}
+ assert.deepEqual(calls,['core-perps','spot',undefined]);
+});
 test('stream requests reject foreign origins, account fields and arbitrary upstreams before subscribing',async()=>{
  const route=createMarketRoute({stream:{subscribe(){assert.fail('Unauthorized subscription');}}}),input={marketId:'hyperliquid:0:ETH',interval:'1h',privacy:'public'};
  for(const change of [{address:'private'},{url:'wss://foreign.example'},{privacy:'private'},{interval:'1s'}]){const r=res();await route(req({...input,...change},{url:'/api/markets/stream'}),r);assert.equal(r.status,400);}

@@ -1,0 +1,131 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "historical-testnet",
+  "summarizedAt": "2026-11-17T09:47:50.824Z",
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T09:47:50.763Z",
+    "head": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 of inspected working files. These hashes identify the current implementation; they are not a historical source snapshot.",
+    "files": [
+      {
+        "path": "web/public/money.js",
+        "bytes": 11040,
+        "sha256": "1c3974e510a985f7600856b1a737985d661a17f67097cf1386f13c5a5761f0ee"
+      },
+      {
+        "path": "web/public/intent-zcash-send.js",
+        "bytes": 5097,
+        "sha256": "61b428934ea21a19f3d1aa390b70e747b6cf854e273c63de9eb8d6bdeb8a5c63"
+      },
+      {
+        "path": "web/public/intent-zcash-route.js",
+        "bytes": 6105,
+        "sha256": "40c9e343c0dbd82d324254f2be73ba2d45d6ae8146918b375062d4a234a5d19f"
+      },
+      {
+        "path": "web/intent-zcash-relay.mjs",
+        "bytes": 14725,
+        "sha256": "88a63520d7907c29102014fc60c563e977584c161a4ff47855598c796912df00"
+      },
+      {
+        "path": "zcash/payment-review.mjs",
+        "bytes": 11813,
+        "sha256": "6fbb594f18a3998957eda09126065227f77cf001e7e620f05bc8d523efd3b3f4"
+      },
+      {
+        "path": "zcash/payment-execution.mjs",
+        "bytes": 16064,
+        "sha256": "5a3c5763d12619e15f10b9ce03ae1076de5a795f4f069840e3dd5fbe842be122"
+      },
+      {
+        "path": "zcash/native-payment-execution.mjs",
+        "bytes": 23158,
+        "sha256": "3fea1c154ca6a36e9c9bfe0293fddfb2f2b0528643fbb59393f75e6e31cc08cb"
+      },
+      {
+        "path": "zcash/source-lock.json",
+        "bytes": 660,
+        "sha256": "5f542afca3d79666e9520ccab1f6253a6f4036c4bc9a04681a72a4356f3c8d7d"
+      }
+    ]
+  },
+  "provenanceScope": "Allowlisted summary of original local records. Hashes identify the preserved records; private records and raw signed artifacts are excluded.",
+  "integration": "Native Zcash Wallet Send",
+  "observedAt": "2026-11-14T21:37:41.047Z",
+  "journey": "Ordinary Wallet Send: 0.01 test ZEC with retained Activity",
+  "network": "Zcash testnet",
+  "pool": "ironwood",
+  "execution": {
+    "transaction": "c3423fa451fbfd77701c480b07665b187d74bb08b34f0d44d0757577cec0e5b5",
+    "recordedStatus": "executed",
+    "recordedVerified": true,
+    "minedHeight": 4620639,
+    "minedHash": "3d49573ec5b6cd1fe54c17fcd22e44cbb614e2c67078e8a518c15a2e941e1c00",
+    "recordedConfirmations": 10
+  },
+  "amounts": {
+    "unit": "zatoshi",
+    "decimals": 8,
+    "recipientBaseUnits": "1000000",
+    "feeBaseUnits": "10000",
+    "sourceDebitBaseUnits": "1010000"
+  },
+  "independentWalletEffects": {
+    "verifier": "independent-readonly-canonical-wallet-effects/v1",
+    "snapshots": [
+      {
+        "role": "source",
+        "network": "testnet",
+        "walletHeight": 4620648,
+        "canonicalHeight": 4620648,
+        "canonicalHash": "f2bebb47925a65f46a964a11ccbe2b5de9d08a60784b62a74b0237c37ef20b00",
+        "serverHeight": 4620648,
+        "blocksBehind": 0,
+        "maximumScanLag": 10,
+        "minedHeight": 4620639,
+        "minedHash": "3d49573ec5b6cd1fe54c17fcd22e44cbb614e2c67078e8a518c15a2e941e1c00",
+        "feeBaseUnits": "10000",
+        "receivedBaseUnits": "87970000",
+        "spentBaseUnits": "88980000"
+      },
+      {
+        "role": "recipient",
+        "network": "testnet",
+        "walletHeight": 4620648,
+        "canonicalHeight": 4620648,
+        "canonicalHash": "f2bebb47925a65f46a964a11ccbe2b5de9d08a60784b62a74b0237c37ef20b00",
+        "serverHeight": 4620649,
+        "blocksBehind": 1,
+        "maximumScanLag": 10,
+        "minedHeight": 4620639,
+        "minedHash": "3d49573ec5b6cd1fe54c17fcd22e44cbb614e2c67078e8a518c15a2e941e1c00",
+        "feeBaseUnits": null,
+        "receivedBaseUnits": "1000000",
+        "spentBaseUnits": "0"
+      }
+    ]
+  },
+  "retainedAfterReload": true,
+  "apiCounts": {
+    "prepare": 1,
+    "authorize": 1,
+    "submit": 1,
+    "reconcile": 6
+  },
+  "freshPublicVerification": {
+    "confirmed": false,
+    "scope": "No public testnet explorer or fresh canonical native wallet read was available for this summary. The shielded amount and recipient are supported by the original independent canonical wallet effects, not public explorer visibility."
+  },
+  "limitations": [
+    "Native spending authority and keys are held by the configured native wallet.",
+    "Browser backups retain activity/action references and do not restore native spending keys.",
+    "No phone-native prover, shielded ZEC-to-DeFi route, or offline onward ZEC execution is established."
+  ],
+  "originalRecords": [
+    {
+      "record": "zcashResult",
+      "bytes": 3517,
+      "sha256": "91050d55950bf9765947b2a3cde8f494ddbd73541c95b074700a7def600fc6fa"
+    }
+  ]
+}

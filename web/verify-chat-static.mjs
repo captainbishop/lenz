@@ -1,9 +1,11 @@
 import { readFile, stat } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {runInNewContext} from 'node:vm';
 const root = new URL('./public/', import.meta.url);
 const source = await readFile(new URL('chat-sw.js', root), 'utf8');
-const paths = JSON.parse(source.match(/const PATHS = (\[[^;]+\]);/)[1].replaceAll("'", '"'));
+const paths=Array.from(runInNewContext(source.slice(0,source.indexOf('self.addEventListener'))+';PATHS',{importScripts:()=>{}}),path=>path.replace(/^\.\//,'/'));
 assert.equal(new Set(paths).size, paths.length);
+assert(paths.includes('/account-return.js'), 'Account funding return must be cached');
 let bytes = 0;
 for (const path of paths) {
   const file = new URL('.' + path, root); const info = await stat(file); assert(info.isFile()); bytes += info.size;

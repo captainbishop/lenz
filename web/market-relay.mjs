@@ -54,9 +54,9 @@ export function createMarketRoute({discover=discoverMarket,quote=quoteMarket,tap
         try{send(res,200,await predictions(provider,{cursor,eventId}));}catch{send(res,503,{error:'Prediction source unavailable.'});}return true;
       }
       if(req.url==='/api/markets/hyper-catalog'){
-        if(!input||Object.keys(input).length!==1||input.privacy!=='public')throw Error('Public reads only');
+        if(!input||input.privacy!=='public'||!(Object.keys(input).length===1||Object.keys(input).length===2&&['core-perps','spot'].includes(input.scope)&&Object.keys(input).every(k=>['privacy','scope'].includes(k))))throw Error('Public reads only');
         const abort=new AbortController(),cancel=()=>abort.abort();res.once?.('close',cancel);
-        try{const value=await catalog({signal:abort.signal});if(!res.destroyed)send(res,200,value);}finally{res.off?.('close',cancel);}return true;
+        try{const value=await catalog({signal:abort.signal,...(input.scope&&{scope:input.scope})});if(!res.destroyed)send(res,200,value);}finally{res.off?.('close',cancel);}return true;
       }
       if(req.url==='/api/markets/hyper-tape'){
         const request=hyperliquidRequest(input);if(hyperReads+tapePending.size>=4){send(res,429,{error:'Market data busy.'});return true;}

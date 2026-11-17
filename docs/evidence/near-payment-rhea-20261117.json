@@ -1,0 +1,206 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "recorded-testnet-protocol",
+  "summarizedAt": "2026-11-17T12:24:28.2010200Z",
+  "observedAt": "2026-11-17T11:59:33.936Z",
+  "verifiedAt": "2026-11-17T12:00:17.197Z",
+  "integration": "NEAR reserve and Rhea adapter",
+  "journey": "Hosted signed protocol: fund 2 tUSD, settle an encrypted 1-tUSD payment, swap its received note",
+  "network": "NEAR testnet",
+  "origin": "https://lenz-prototype.vercel.app",
+  "execution": {
+    "reserve": "tusd.lenz-dev-1792984696547.testnet",
+    "adapter": "lenz-rhea-1792987934062.testnet",
+    "exchange": "ref-finance-101.testnet",
+    "poolId": 2870,
+    "recipient": "lenz-dev-1792984696547.testnet",
+    "paymentReceipt": "cd60aeee5f4ea9a0518f0bbd4af5c3eea5d1b7a27192e538329a5aa293d4d9f1",
+    "swapOrder": "dfae016d20b56c16d9a371ed3ac34b02f7be0488b8b7959fadac9b114fe0bc2e",
+    "finalStage": "complete",
+    "transactions": [
+      {
+        "action": "fund",
+        "transaction": "EydiJjNH7hryGkFwVfiqCZfC8ppdq3EssWG8xvN1PEVJ",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/EydiJjNH7hryGkFwVfiqCZfC8ppdq3EssWG8xvN1PEVJ"
+      },
+      {
+        "action": "settle",
+        "transaction": "GMMUuB8S6cPrD3MwDJKoowaVBziUCuxVcyFCNCzLBBzY",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/GMMUuB8S6cPrD3MwDJKoowaVBziUCuxVcyFCNCzLBBzY"
+      },
+      {
+        "action": "swap-submit",
+        "transaction": "E1gdFVdrQMucoGXTnMfbokwYxY4wbFFaHDqSUyFp1aRD",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/E1gdFVdrQMucoGXTnMfbokwYxY4wbFFaHDqSUyFp1aRD"
+      },
+      {
+        "action": "swap-advance",
+        "transaction": "HxqX6ydZVL3EB7VR44G7WDtwpBVsKL8q8ipfpxQ4icAc",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/HxqX6ydZVL3EB7VR44G7WDtwpBVsKL8q8ipfpxQ4icAc"
+      },
+      {
+        "action": "swap-advance",
+        "transaction": "72TsZwaSpEiPndmegv4vuVruWL5AiVhQHNHLi8utDsWX",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/72TsZwaSpEiPndmegv4vuVruWL5AiVhQHNHLi8utDsWX"
+      },
+      {
+        "action": "operator-advance",
+        "transaction": "EwFjM43NxgX3V2671AUDANY85ToUUQtBWMtqgCgw6Kpj",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/EwFjM43NxgX3V2671AUDANY85ToUUQtBWMtqgCgw6Kpj"
+      },
+      {
+        "action": "operator-advance",
+        "transaction": "CXRVYUSPnwTh2TDsPxbS9gtRar6qcF7so67gN5xMiJKs",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/CXRVYUSPnwTh2TDsPxbS9gtRar6qcF7so67gN5xMiJKs"
+      },
+      {
+        "action": "operator-advance",
+        "transaction": "EaiWvdkPCYuf26Dwx266unyJKSoDEZcAkuVAFyoLC46J",
+        "finality": "FINAL",
+        "failedReceipts": 0,
+        "explorer": "https://testnet.nearblocks.io/txns/EaiWvdkPCYuf26Dwx266unyJKSoDEZcAkuVAFyoLC46J"
+      }
+    ]
+  },
+  "assets": {
+    "funding": {
+      "token": "tUSD",
+      "decimals": 6,
+      "baseUnits": "2000000"
+    },
+    "payment": {
+      "token": "tUSD",
+      "decimals": 6,
+      "baseUnits": "1000000"
+    },
+    "swapInput": {
+      "token": "tUSD",
+      "decimals": 6,
+      "baseUnits": "1000000"
+    },
+    "output": {
+      "token": "wrap.testnet",
+      "decimals": 24,
+      "baseUnits": "3786162812967755559353",
+      "amount": "0.003786162812967755559353",
+      "signedMinimum": "3748301184838078003759"
+    },
+    "remainingReserve": {
+      "token": "tUSD",
+      "decimals": 6,
+      "baseUnits": "1000000"
+    },
+    "conservation": {
+      "minted": "2000000",
+      "reservedRemaining": "1000000",
+      "swapRedeemed": "1000000"
+    }
+  },
+  "payout": {
+    "transaction": "EaiWvdkPCYuf26Dwx266unyJKSoDEZcAkuVAFyoLC46J",
+    "token": "wrap.testnet",
+    "receiptId": "A8GqX6kJZkavLCpM5D2sCwMvSgUuWzbAiUtmx1qtdRq6",
+    "transferLog": "Transfer 3786162812967755559353 from lenz-rhea-1792987934062.testnet to lenz-dev-1792984696547.testnet",
+    "operatorRecoveryWindowDelta": "3786162812967755559353"
+  },
+  "independentChecks": [
+    "All eight transactions FINAL with exact signer, receiver, methods and original arguments; zero failed receipts",
+    "Original signed funding, payment and swap terms match the reserve and adapter outcome",
+    "Deployed legacy wrap.testnet plain Transfer log binds the exact amount, adapter and signed recipient",
+    "Linked payout receipt and adapter callback succeed; recipient delta matches the exact output",
+    "2 tUSD minted = 1 tUSD redeemed for the swap + 1 tUSD retained reserve"
+  ],
+  "recovery": {
+    "hostedStatus": 429,
+    "hostedStage": "deposited",
+    "reason": "Unchanged daily sponsor allowance exhausted",
+    "operatorAdvances": 3,
+    "scope": "Existing configured operator advanced only the same signed order; no new funding, order, spending authority or allowance change"
+  },
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T12:24:28.2010200Z",
+    "baselineCommit": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 fingerprints identify the inspected working files. baselineCommit names the published parent, not these files' revision or a complete snapshot of the earlier runtime.",
+    "files": [
+      {
+        "path": "web/public/near-payment-service.js",
+        "bytes": 1507,
+        "sha256": "de900bcd975b0e2f9f617efeed4d1bf3024bb9f57d3fe440256579768b8d3226"
+      },
+      {
+        "path": "web/public/near-payment-status.js",
+        "bytes": 10436,
+        "sha256": "ea9af30cbd6d9e9e21a2bfedca091c579250748a23bd685b4b20b97c11ee412e"
+      },
+      {
+        "path": "web/public/near-protocol.js",
+        "bytes": 9480,
+        "sha256": "729c1ecc6badac347d7b308874b5d774b3389c33e1dd3cee663f67631c3ffd20"
+      },
+      {
+        "path": "web/public/rhea-protocol.js",
+        "bytes": 5456,
+        "sha256": "4bdad4d49f7f3adf1456ce6fe63b92443f4c4d4a8a12cb30b26975d40f4a62d3"
+      },
+      {
+        "path": "web/public/rhea-wallet.js",
+        "bytes": 31869,
+        "sha256": "fc89e8a8999864b0eb33f40f47b23b86c965e7509de9355afa773e651cc9a86b"
+      },
+      {
+        "path": "web/reserve-sponsor.mjs",
+        "bytes": 3437,
+        "sha256": "b9b647421b9c1b3f0efdbeb67d8a9e985019f8ff2bfe7257c95495677e334af5"
+      },
+      {
+        "path": "web/rhea-signed-relay.mjs",
+        "bytes": 7681,
+        "sha256": "2aae345cfb69f650f0b109e5651415adc319561c0e4f4adc956241d6e5f30c9d"
+      },
+      {
+        "path": "contracts/src/lib.rs",
+        "bytes": 12292,
+        "sha256": "49c7462621c487d60452a03bdac6001f6aad467d62d2f0331133c71e38a7c9fb"
+      },
+      {
+        "path": "contracts/adapter/src/lib.rs",
+        "bytes": 14603,
+        "sha256": "339d28408234647b9ced9b973175a44340c6d83608ed73325f9cf42e47b52041"
+      }
+    ]
+  },
+  "provenanceScope": "Allowlisted public identifiers and exact verified outcomes. Private identities, signed originals, keys, local paths and journals remain excluded.",
+  "originalRecords": [
+    {
+      "record": "completed-verification.json",
+      "bytes": 1202,
+      "sha256": "24d8b6ecb82cdc2b8e68180607a93dac841e13c03279d1bc57c3ce10118a1d9e"
+    },
+    {
+      "record": "executed-verification.json",
+      "bytes": 1829,
+      "sha256": "6bbc549933ccbdd3149bb016bf77ef041debbbd5038a87daccfcad3da44fb97a"
+    }
+  ],
+  "limitations": [
+    "Protocol modules ran in Node with disposable identities and preinitialized accepted contacts; this run does not establish browser or contact-request UI behavior.",
+    "Hosted sponsorship stopped at its daily cap. Operator recovery completed the exact order; the ordinary hosted flow did not complete without that intervention.",
+    "The Android package has no financial API backend. This run did not verify an Android payment/swap journey or Bluetooth payment delivery.",
+    "The exact tUSD-to-wrap.testnet pool is a genuine NEAR testnet venue; test assets have no cash value. Arbitrary routes and private blockchain settlement remain unverified.",
+    "Offline packet acceptance is provisional. Funding and canonical settlement require a connected execution participant."
+  ]
+}

@@ -24,6 +24,12 @@ export function checkAuroraSwapPreparation(value){
  return {plan,vault:value.vault,root:value.root,nullifierHash:value.nullifierHash};
 }
 const selection=checkAuroraSwapPreparation;
+const publicSelection=request=>selection({plan:request.plan,vault:request.vault,root:request.root,nullifierHash:request.nullifierHash});
+export function auroraSwapStorageId(request){
+ const chosen=publicSelection(request),p=chosen.plan;
+ const authority={domain:'lenz/aurora-sponsored-request/v1',chainId:d.chainId,routeId:d.routeId,factory:d.factory,plan:[p.beneficiary,p.refundRecipient,p.relayer,p.relayerFee,p.minOutput,p.deadline,p.salt],vault:chosen.vault,root:chosen.root,nullifierHash:chosen.nullifierHash};
+ return 'aurora-request:'+keccak256(toUtf8Bytes(JSON.stringify(authority))).slice(2);
+}
 export function checkAuroraSwapPublicRequest(value){
  check(exact(value,['id','artifactId','plan','vault','root','nullifierHash','proof','publicSignals'])&&/^aurora-swap:[0-9a-f]{64}$/.test(value.id),'The original public private-swap request changed.');
  selection({plan:value.plan,vault:value.vault,root:value.root,nullifierHash:value.nullifierHash});
@@ -56,17 +62,27 @@ export function createAuroraSwapService({rpc,signer,journal,operatorId,operatorA
  let queue=Promise.resolve();const serial=serialize??(operation=>{const task=queue.then(operation);queue=task.catch(()=>{});return task;});
  function checkJournal(state){
   check(state?.version===1&&state.requests&&Object.getPrototypeOf(state.requests)===Object.prototype&&Object.keys(state.requests).length<=50&&JSON.stringify(state).length<=2_000_000,'The retained private swap journal is invalid.');
+  const authorities=new Set();
   for(const [id,row]of Object.entries(state.requests)){
-   check(id===row.request?.id&&['pending','unknown','executed','refunded'].includes(row.status)&&Array.isArray(row.stages)&&row.stages.length<=2&&amount(row.before?.outputBalance)&&amount(row.before?.inputBalance)&&(!['executed','refunded'].includes(row.status)||row.outcome),'The retained private swap request is invalid.');checkAuroraSwapPublicRequest(row.request);
+   checkAuroraSwapPublicRequest(row.request);const authority=auroraSwapStorageId(row.request);
+   check((id===row.request.id||id===authority)&&!authorities.has(authority)&&['pending','unknown','executed','refunded'].includes(row.status)&&Array.isArray(row.stages)&&row.stages.length<=2&&amount(row.before?.outputBalance)&&amount(row.before?.inputBalance)&&(!['executed','refunded'].includes(row.status)||row.outcome),'The retained private swap request is invalid.');authorities.add(authority);
    for(const [index,stage]of row.stages.entries()){
     check(sameAuroraSwapValue(stage.call,auroraSwapCall(row.request,stage.operation)),'The retained private swap call changed.');checkAuroraFundingTransaction(stage.signed,stage.call,operatorId);
     if(!stage.receipt)check(state.pending?.id===id&&state.pending.index===index&&state.pending.operation===stage.operation&&sameAuroraSwapValue(state.pending.signed,stage.signed)&&sameAuroraSwapValue(state.pending.call,stage.call),'The unresolved original private-swap fence is missing.');
-    else{const verified=inspectAuroraSponsoredTransaction(stage.signed,stage.call,operatorId,stage.receipt.result);check(verified&&verified.success===stage.receipt.success&&sameAuroraSwapValue(verified.receiptIds,stage.receipt.receiptIds)&&stage.receipt.transaction===stage.signed.txHash,'The retained original receipt changed.');if(stage.receipt.success&&index===row.stages.length-1&&row.outcome){checkedLogs(verified.execution,row.request,row.status,stage.operation);check(sameAuroraSwapValue(row.outcome,{intentId:id,artifactId:row.request.artifactId,status:row.status,verified:true,evidence:evidence(row.request,stage.receipt,row.status)}),'The retained verified private outcome changed.');}}
+    else{const verified=inspectAuroraSponsoredTransaction(stage.signed,stage.call,operatorId,stage.receipt.result);check(verified&&verified.success===stage.receipt.success&&sameAuroraSwapValue(verified.receiptIds,stage.receipt.receiptIds)&&stage.receipt.transaction===stage.signed.txHash,'The retained original receipt changed.');if(stage.receipt.success&&index===row.stages.length-1&&row.outcome){checkedLogs(verified.execution,row.request,row.status,stage.operation);check(sameAuroraSwapValue(row.outcome,{intentId:row.request.id,artifactId:row.request.artifactId,status:row.status,verified:true,evidence:evidence(row.request,stage.receipt,row.status)}),'The retained verified private outcome changed.');}}
    }
   }
   if(state.pending)check(state.requests[state.pending.id]?.stages[state.pending.index]&&!state.requests[state.pending.id].stages[state.pending.index].receipt,'The original pending private swap is missing.');return state;
  }
- const outcome=row=>row.outcome?structuredClone(row.outcome):({intentId:row.request.id,artifactId:row.request.artifactId,status:row.status,verified:false,...(row.statusCheck?{recovery:{available:!!row.statusCheck.operation,operation:row.statusCheck.operation,checkedAt:row.statusCheck.checkedAt}}:{})});
+ const outcome=(row,request=row.request)=>row.outcome?({...structuredClone(row.outcome),intentId:request.id,artifactId:request.artifactId}):({intentId:request.id,artifactId:request.artifactId,status:row.status,verified:false,...(row.statusCheck?{recovery:{available:!!row.statusCheck.operation,operation:row.statusCheck.operation,checkedAt:row.statusCheck.checkedAt}}:{})});
+ function original(state,request){
+  const key=auroraSwapStorageId(request),entry=Object.entries(state.requests).find(([saved,row])=>saved===key||auroraSwapStorageId(row.request)===key);
+  // Legacy row keys and signed packets stay immutable, including pending fences.
+  if(entry)check(sameAuroraSwapValue(publicSelection(entry[1].request),publicSelection(request)),'The original private request terms changed.');return entry?{key:entry[0],row:entry[1]}:{key,row:null};
+ }
+ async function authorizeAlias(row,request){
+  if(row.request.proof!==request.proof){const observed=await observedState(request);check(observed.proofValid===true,'The equivalent original private proof did not verify.');}
+ }
  function checkOperator(operator){check(operator.accountId===operatorId&&operator.address===operatorAddress&&operator.engineVerified===true&&typeof operator.maxGas==='string'&&/^[0-9]{1,20}$/.test(operator.maxGas)&&BigInt(operator.maxGas)>=BigInt(AURORA_SWAP_GAS),'The bounded private sponsor identity, code or gas authority changed.');}
  async function observedState(request,options){const state=await rpc.swapState(request,options);checkAuroraSwapSnapshot(state.snapshot,{now:now(),requireVenueFunding:options?.requireVenueFunding===true});check(Math.abs(now()-state.snapshot.block.timestamp)<=120000,'The final private chain snapshot is stale.');check(state.factoryVault===request.vault&&state.factoryBindingsVerified===true,'The onchain factory vault or immutable code binding changed.');check(amount(state.beneficiaryOutputBalance)&&amount(state.beneficiaryInputBalance)&&amount(state.vault?.inputBalance)&&amount(state.vault.outputBalance)&&amount(state.vault.allowance),'The original private balances are invalid.');if(state.vault.deployed)vaultBindings(state.vault,request);return state;}
  async function preflight(chosen){
@@ -80,12 +96,12 @@ export function createAuroraSwapService({rpc,signer,journal,operatorId,operatorA
  }
  async function configuration(){
   const [state,snapshot,operator]=await Promise.all([journal.read(),rpc.snapshot(),rpc.operatorState()]);checkJournal(state);checkAuroraSwapSnapshot(snapshot,{now:now()});checkOperator(operator);
-  const available=!state.pending&&Object.keys(state.requests).length<maxRequests&&operator.gasReady===true&&operator.allowance==='0'&&BigInt(operator.maxGas)>=BigInt(AURORA_SWAP_GAS)&&BigInt(snapshot.pool.inputBalance)>=BigInt(d.denomination);
-  return {available,execute:available,network:'testnet',routeId:d.routeId,inputAsset:d.inputToken,inputAmount:d.denomination,outputAsset:d.outputToken,outputAmount:d.outputAmount,privacyDisclosure:AURORA_INTENT_PRIVACY,reason:available?'':'Check the original private request or replenish verified sponsor gas and pool inventory.'};
+  const capacity=await signer.capacity?.('swap'),available=!state.pending&&Object.keys(state.requests).length<(capacity?50:maxRequests)&&(!capacity||capacity.available)&&operator.gasReady===true&&operator.allowance==='0'&&BigInt(operator.maxGas)>=BigInt(AURORA_SWAP_GAS)&&BigInt(snapshot.pool.inputBalance)>=BigInt(d.denomination);
+  return {available,execute:available,network:'testnet',routeId:d.routeId,inputAsset:d.inputToken,inputAmount:d.denomination,outputAsset:d.outputToken,outputAmount:d.outputAmount,privacyDisclosure:AURORA_INTENT_PRIVACY,reason:available?'':capacity&&!capacity.available?capacity.reason:'Check the original private request or replenish verified sponsor gas and pool inventory.'};
  }
- async function prepare(value){return serial(async()=>{const chosen=selection(value),state=checkJournal(await journal.read());check(!state.pending&&Object.keys(state.requests).length<maxRequests,'Check the original pending private request.');await preflight(chosen);return {...chosen,available:true,execute:true,network:'testnet',inputAsset:d.inputToken,inputAmount:d.denomination,outputAsset:d.outputToken,outputAmount:d.outputAmount,privacyDisclosure:AURORA_INTENT_PRIVACY};});}
- async function finish(state,row,result){
-  const pending=state.pending;check(pending?.id===row.request.id,'Another original private request is pending.');const receipt=inspectAuroraSponsoredTransaction(pending.signed,pending.call,operatorId,result);if(!receipt)return outcome(row);
+ async function prepare(value){return serial(async()=>{const chosen=selection(value),state=checkJournal(await journal.read()),capacity=await signer.capacity?.('swap');check(!state.pending&&Object.keys(state.requests).length<(capacity?50:maxRequests),'Check the original pending private request.');check(!capacity||capacity.available,capacity?.reason);await preflight(chosen);return {...chosen,available:true,execute:true,network:'testnet',inputAsset:d.inputToken,inputAmount:d.denomination,outputAsset:d.outputToken,outputAmount:d.outputAmount,privacyDisclosure:AURORA_INTENT_PRIVACY};});}
+ async function finish(state,key,row,result,request=row.request){
+  const pending=state.pending;check(pending?.id===key,'Another original private request is pending.');const receipt=inspectAuroraSponsoredTransaction(pending.signed,pending.call,operatorId,result);if(!receipt)return outcome(row,request);
   const stage=row.stages[pending.index];stage.finalResult=structuredClone(result);await journal.write(state);
   if(receipt.success){
    const observed=await observedState(row.request);check(observed.spent===true,'The original withdrawal nullifier is not final.');vaultBindings(observed.vault,row.request);
@@ -96,38 +112,38 @@ export function createAuroraSwapService({rpc,signer,journal,operatorId,operatorA
    else check(typeof observed.beneficiaryInputBalance==='string'&&BigInt(observed.beneficiaryInputBalance)>=BigInt(row.before.inputBalance)+BigInt(d.denomination),'The original refund account credit is unavailable.');
    row.status=status;row.outcome={intentId:row.request.id,artifactId:row.request.artifactId,status,verified:true,evidence:evidence(row.request,receipt,status)};row.observation={block:observed.snapshot.block,codes:observed.snapshot.codes,vault:observed.vault,beneficiaryOutputBalance:observed.beneficiaryOutputBalance,beneficiaryInputBalance:observed.beneficiaryInputBalance};
   }else{row.status='unknown';row.failed=true;}
-  stage.receipt={success:receipt.success,transaction:receipt.transaction,receiptIds:receipt.receiptIds,result:structuredClone(result)};state.pending=null;await journal.write(state);await rpc.settle?.(stage.signed,stage.receipt);return outcome(row);
+  stage.receipt={success:receipt.success,transaction:receipt.transaction,receiptIds:receipt.receiptIds,result:structuredClone(result)};state.pending=null;await journal.write(state);await rpc.settle?.(stage.signed,stage.receipt);if(row.outcome)await signer.releaseWorkflow?.(auroraSwapStorageId(row.request));return outcome(row,request);
  }
  async function submit(value){return serial(async()=>{
-  const request=checkAuroraSwapPublicRequest(value),state=checkJournal(await journal.read());let row=state.requests[request.id];
-  if(row){check(sameAuroraSwapValue(row.request,request),'The original private request changed.');return outcome(row);}
-  check(!state.pending&&Object.keys(state.requests).length<maxRequests&&!Object.values(state.requests).some(saved=>saved.request.nullifierHash===request.nullifierHash),'Check the original private request before another spend.');
+  const request=checkAuroraSwapPublicRequest(value),state=checkJournal(await journal.read()),saved=original(state,request),key=saved.key;let row=saved.row;
+  if(row){await authorizeAlias(row,request);return outcome(row,request);}
+  const capacity=await signer.capacity?.('swap');check(!state.pending&&Object.keys(state.requests).length<(capacity?50:maxRequests)&&(!capacity||capacity.available)&&!Object.values(state.requests).some(saved=>saved.request.nullifierHash===request.nullifierHash),'Check the original private request before another spend.');
   const observed=await preflight(request);check(observed.proofValid===true&&observed.simulateValid===true,'The original onchain proof or exact factory simulation did not verify.');
-  row={request,status:'pending',stages:[],before:{outputBalance:observed.beneficiaryOutputBalance,inputBalance:observed.beneficiaryInputBalance??'0'}};state.requests[request.id]=row;await journal.write(state);
-  const call=auroraSwapCall(request),signed=await signer.signTransaction(call);checkAuroraFundingTransaction(signed,call,operatorId);
-  row.stages.push({operation:'fulfill',call,signed,receipt:null});state.pending={id:request.id,index:0,operation:'fulfill',call,signed};await journal.write(state);
-  let result;try{result=await rpc.send(signed.bytes);}catch{row.status='unknown';await journal.write(state);return outcome(row);}return finish(state,row,result);
+  await signer.reserveWorkflow?.({id:auroraSwapStorageId(request),kind:'swap',retained:false});row={request,status:'pending',stages:[],before:{outputBalance:observed.beneficiaryOutputBalance,inputBalance:observed.beneficiaryInputBalance??'0'}};state.requests[key]=row;await journal.write(state);
+  const call=auroraSwapCall(request),signed=await signer.signTransaction(call,{id:auroraSwapStorageId(request),kind:'swap',retained:false});checkAuroraFundingTransaction(signed,call,operatorId);
+  row.stages.push({operation:'fulfill',call,signed,receipt:null});state.pending={id:key,index:0,operation:'fulfill',call,signed};await journal.write(state);
+  let result;try{result=await rpc.send(signed.bytes);}catch{row.status='unknown';await journal.write(state);return outcome(row);}return finish(state,key,row,result);
  });}
  function recoveryChoice(request,observed){
   if(observed.spent===true&&observed.vault.deployed&&observed.vault.status===0&&observed.vault.inputBalance===d.denomination&&observed.vault.outputBalance==='0'&&observed.vault.allowance==='0'&&observed.snapshot.pool.withdrawals.some(row=>row.nullifierHash===request.nullifierHash&&row.recipient===request.vault&&row.relayer===request.plan.relayer&&row.fee==='0'))return 'recover';
   if(observed.spent===false&&observed.knownRoot===true&&observed.proofValid===true&&BigInt(observed.snapshot.block.timestamp)>BigInt(request.plan.deadline)*1000n&&BigInt(observed.snapshot.pool.inputBalance)>=BigInt(d.denomination)&&(observed.vault.status===null||observed.vault.status===0)&&observed.vault.inputBalance==='0'&&observed.vault.outputBalance==='0'&&observed.vault.allowance==='0')return 'withdrawRefund';return null;
  }
  async function reconcile(value){return serial(async()=>{
-  const request=checkAuroraSwapPublicRequest(value),state=checkJournal(await journal.read());let row=state.requests[request.id];if(row)check(sameAuroraSwapValue(row.request,request),'The original retained private request changed.');
-  if(state.pending?.id===request.id){let result;try{result=await rpc.transaction(state.pending.signed.txHash,operatorId);}catch{return outcome(row);}return finish(state,row,result);}
-  if(row?.outcome){const last=row.stages.at(-1);await rpc.settle?.(last.signed,last.receipt);return outcome(row);}
+  const request=checkAuroraSwapPublicRequest(value),state=checkJournal(await journal.read()),saved=original(state,request),key=saved.key;let row=saved.row;if(row)await authorizeAlias(row,request);
+  if(state.pending?.id===key){let result;try{result=await rpc.transaction(state.pending.signed.txHash,operatorId);}catch{return outcome(row,request);}return finish(state,key,row,result,request);}
+  if(row?.outcome){const last=row.stages.at(-1);await rpc.settle?.(last.signed,last.receipt);await signer.releaseWorkflow?.(auroraSwapStorageId(row.request));return outcome(row,request);}
   const observed=await observedState(request);check(observed.proofValid===true,'The retained original proof did not verify.');
-  if(!row){check(Object.keys(state.requests).length<maxRequests&&!Object.values(state.requests).some(saved=>saved.request.nullifierHash===request.nullifierHash),'Check the original retained request for this note.');row={request,status:'unknown',stages:[],before:{outputBalance:observed.beneficiaryOutputBalance,inputBalance:observed.beneficiaryInputBalance}};state.requests[request.id]=row;}
-  const last=row.stages.at(-1);if(last?.receipt)await rpc.settle?.(last.signed,last.receipt);row.statusCheck={checkedAt:now(),operation:recoveryChoice(request,observed),withdrawal:observed.snapshot.pool.withdrawals.find(entry=>entry.nullifierHash===request.nullifierHash)??null};await journal.write(state);return outcome(row);
+  if(!row){check(Object.keys(state.requests).length<(signer.capacity?50:maxRequests)&&!Object.values(state.requests).some(saved=>saved.request.nullifierHash===request.nullifierHash),'Check the original retained request for this note.');row={request,status:'unknown',stages:[],before:{outputBalance:observed.beneficiaryOutputBalance,inputBalance:observed.beneficiaryInputBalance}};state.requests[key]=row;}
+  const last=row.stages.at(-1);if(last?.receipt)await rpc.settle?.(last.signed,last.receipt);row.statusCheck={checkedAt:now(),operation:recoveryChoice(row.request,observed),withdrawal:observed.snapshot.pool.withdrawals.find(entry=>entry.nullifierHash===request.nullifierHash)??null};await journal.write(state);return outcome(row,request);
  });}
  async function recover(value){return serial(async()=>{
-  check(exact(value,['request','operation'])&&['recover','withdrawRefund'].includes(value.operation),'Choose an explicit original recovery operation.');const request=checkAuroraSwapPublicRequest(value.request),state=checkJournal(await journal.read()),row=state.requests[request.id];check(row&&sameAuroraSwapValue(row.request,request),'Check the original private request status first.');if(row.outcome)return outcome(row);
+  check(exact(value,['request','operation'])&&['recover','withdrawRefund'].includes(value.operation),'Choose an explicit original recovery operation.');const incoming=checkAuroraSwapPublicRequest(value.request),state=checkJournal(await journal.read()),saved=original(state,incoming),key=saved.key,row=saved.row;check(row,'Check the original private request status first.');await authorizeAlias(row,incoming);const request=row.request;if(row.outcome)return outcome(row,incoming);
   check(!state.pending&&row.stages.length<2&&(!row.stages.length||row.stages[0].operation==='fulfill'&&row.stages[0].receipt?.success===false),'Check the original pending or already recovered private transaction.');
   check(row.statusCheck?.operation===value.operation&&Number.isSafeInteger(row.statusCheck.checkedAt)&&now()-row.statusCheck.checkedAt>=0&&now()-row.statusCheck.checkedAt<=60000,'Read the original private request status before recovery.');
   const [observed,operator]=await Promise.all([observedState(request,{operation:value.operation}),rpc.operatorState()]);checkOperator(operator);check(operator.gasReady===true&&operator.allowance==='0'&&recoveryChoice(request,observed)===value.operation&&observed.simulateValid===true,'The original recovery funds, gas or exact simulation changed.');
   row.before={outputBalance:observed.beneficiaryOutputBalance,inputBalance:observed.beneficiaryInputBalance};row.recoveryObservation=row.statusCheck;row.statusCheck=null;row.status='pending';await journal.write(state);
-  const call=auroraSwapCall(request,value.operation),signed=await signer.signTransaction(call);checkAuroraFundingTransaction(signed,call,operatorId);const index=row.stages.length;row.stages.push({operation:value.operation,call,signed,receipt:null});state.pending={id:request.id,index,operation:value.operation,call,signed};await journal.write(state);
-  let result;try{result=await rpc.send(signed.bytes);}catch{row.status='unknown';await journal.write(state);return outcome(row);}return finish(state,row,result);
+  const call=auroraSwapCall(request,value.operation),signed=await signer.signTransaction(call,{id:auroraSwapStorageId(request),kind:'swap',retained:row.stages.length>0||value.operation==='recover'});checkAuroraFundingTransaction(signed,call,operatorId);const index=row.stages.length;row.stages.push({operation:value.operation,call,signed,receipt:null});state.pending={id:key,index,operation:value.operation,call,signed};await journal.write(state);
+  let result;try{result=await rpc.send(signed.bytes);}catch{row.status='unknown';await journal.write(state);return outcome(row,incoming);}return finish(state,key,row,result,incoming);
  });}
  return Object.freeze({configuration,prepare,submit,reconcile,recover});
 }

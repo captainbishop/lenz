@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1500" viewBox="0 0 1440 1500" role="img" aria-labelledby="title desc">
+  <title id="title">Lenz system architecture</title>
+  <desc id="desc">Lenz separates device state, encrypted delivery and connected financial execution. The prepared browser app and Android WebView keep device state and encrypted original packets. Android adds a native Bluetooth LE bridge and packaged GET assets; it has no financial POST backend. Shared packet eligibility feeds BLE, Nostr, carrier and WebRTC adapters. Authenticated intake saves state and a signed recipient receipt atomically. Direct BLE delivery was observed on two Android phones; physical multi-hop, background operation and restart recovery remain unverified. Browser Wallet review binds exact signed financial authority and reserved inputs. Configured web services retain originals and journals, execute testnet actions, verify canonical outcomes and reconcile Wallet activity. Routes include NEAR reserve, Rhea and the original Intents verifier, a proof-funded fixed-rate Aurora venue, Aave Sepolia and separate native Zcash PCZT review, proving and signing. Zcash custody is separate from browser account storage. NEAR and EVM settlement is public despite encrypted requests. Transport acknowledgements, signed message receipts and verified financial settlement are separate checks.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#173F35"/>
+      <stop offset="1" stop-color="#102E28"/>
+    </linearGradient>
+    <marker id="delivery" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#E1EFA6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="execution" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#EBD3A8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="outcome" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#8FD5C1" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <rect width="1440" height="1500" rx="24" fill="url(#background)"/>
+  <rect x="1" y="1" width="1438" height="1498" rx="23" fill="none" stroke="#426553"/>
+  <path d="M24 3 H1416" stroke="#E1EFA6" stroke-width="5"/>
+  <g transform="translate(62 51) scale(.52)" fill="none" stroke="#E1EFA6" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 20 V78 Q30 98 50 98 H74"/>
+    <path d="M98 108 V50 Q98 30 78 30 H54"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="139" y="79" font-size="18" fill="#E1EFA6" font-weight="700" letter-spacing="3">LENZ</text>
+    <text x="139" y="142" font-size="42" fill="#F5F5EF" font-weight="600">System architecture</text>
+    <text x="64" y="188" font-size="24" fill="#BFD0C3">Encrypted delivery and verified execution follow separate paths.</text>
+    <rect x="1058" y="60" width="318" height="32" rx="16" fill="#264D3C"/>
+    <text x="1217" y="82" font-size="15" fill="#E1EFA6" font-weight="600" text-anchor="middle">CURRENT TESTNET IMPLEMENTATION</text>
+
+    <text x="64" y="218" font-size="17" fill="#E1EFA6" font-weight="700">01</text>
+    <text x="107" y="218" font-size="17" fill="#BFD0C3" font-weight="600" letter-spacing="2">APP &amp; DEVICE STATE</text>
+
+    <rect x="64" y="240" width="400" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M84 241 H444" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="88" y="275" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">HOST</text>
+    <text x="88" y="316" font-size="28" fill="#F5F5EF" font-weight="600">Browser / Android</text>
+    <text x="88" y="350" font-size="21" fill="#BFD0C3">Android: packaged GET assets</text>
+    <text x="88" y="383" font-size="21" fill="#BFD0C3">Native BLE bridge; web finance</text>
+
+    <rect x="520" y="240" width="400" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M540 241 H900" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="544" y="275" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">EXPERIENCE</text>
+    <text x="544" y="316" font-size="28" fill="#F5F5EF" font-weight="600">Lenz app</text>
+    <text x="544" y="350" font-size="21" fill="#BFD0C3">Chat · Wallet · Markets · Account</text>
+    <text x="544" y="383" font-size="21" fill="#BFD0C3">Prepared app with retained state</text>
+
+    <rect x="976" y="240" width="400" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M996 241 H1356" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="1000" y="275" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">PERSISTENCE</text>
+    <text x="1000" y="316" font-size="28" fill="#F5F5EF" font-weight="600">Saved device state</text>
+    <text x="1000" y="346" font-size="20" fill="#BFD0C3">Encrypted originals · account keys</text>
+    <text x="1000" y="378" font-size="20" fill="#BFD0C3">Local profile &amp; routing metadata</text>
+    <text x="1000" y="405" font-size="18" fill="#BFD0C3">Retained history · cached market views</text>
+
+    <path d="M464 326 H520" fill="none" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <path d="M920 323 H976" fill="none" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <path d="M976 335 H920" fill="none" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <path d="M1176 411 V458 H440 V519" fill="none" stroke="#E1EFA6" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#delivery)"/>
+    <rect x="537" y="444" width="366" height="29" rx="14" fill="#163C32"/>
+    <text x="720" y="465" font-size="19" fill="#E1EFA6" text-anchor="middle">Saved encrypted messages &amp; requests</text>
+
+    <text x="64" y="498" font-size="17" fill="#E1EFA6" font-weight="700">02</text>
+    <text x="107" y="498" font-size="17" fill="#BFD0C3" font-weight="600" letter-spacing="2">AUTHENTICATED DELIVERY</text>
+
+    <rect x="64" y="522" width="400" height="185" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M84 523 H444" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="88" y="557" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">ELIGIBILITY</text>
+    <text x="88" y="598" font-size="28" fill="#F5F5EF" font-weight="600">Shared packet policy</text>
+    <text x="88" y="634" font-size="21" fill="#BFD0C3">Eligible saved packets</text>
+    <text x="88" y="668" font-size="21" fill="#BFD0C3">Contact decisions · input checks</text>
+
+    <rect x="520" y="522" width="400" height="185" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M540 523 H900" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="544" y="557" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">TRANSPORT</text>
+    <text x="544" y="598" font-size="28" fill="#F5F5EF" font-weight="600">Delivery adapters</text>
+    <text x="544" y="633" font-size="21" fill="#BFD0C3">Android BLE · Nostr · carrier</text>
+    <text x="544" y="666" font-size="21" fill="#BFD0C3">WebRTC · framing · retries · queues</text>
+
+    <rect x="976" y="522" width="400" height="185" rx="18" fill="#204739" stroke="#52755E"/>
+    <path d="M996 523 H1356" stroke="#E1EFA6" stroke-width="2" stroke-opacity=".55"/>
+    <text x="1000" y="557" font-size="16" fill="#E1EFA6" font-weight="600" letter-spacing="1">RECIPIENT</text>
+    <text x="1000" y="598" font-size="28" fill="#F5F5EF" font-weight="600">Authenticated intake</text>
+    <text x="1000" y="634" font-size="21" fill="#BFD0C3">Validate sender · enforce limits</text>
+    <text x="1000" y="668" font-size="21" fill="#BFD0C3">Atomic save + signed receipt</text>
+
+    <path d="M464 615 H520" fill="none" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <path d="M920 615 H976" fill="none" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <path d="M1176 707 V748 H264 V707" fill="none" stroke="#E1EFA6" stroke-width="2.5" stroke-dasharray="7 6" stroke-linejoin="round" marker-end="url(#delivery)"/>
+    <rect x="482" y="733" width="476" height="29" rx="14" fill="#163C32"/>
+    <text x="720" y="754" font-size="19" fill="#E1EFA6" text-anchor="middle">Signed recipient receipt returns through delivery</text>
+    <text x="64" y="794" font-size="19" fill="#BFD0C3">Direct BLE delivery observed on two Android phones. Physical multi-hop remains unverified.</text>
+
+    <text x="64" y="842" font-size="17" fill="#EBD3A8" font-weight="700">03</text>
+    <text x="107" y="842" font-size="17" fill="#BFD0C3" font-weight="600" letter-spacing="2">REVIEWED FINANCIAL EXECUTION</text>
+
+    <rect x="64" y="866" width="400" height="166" rx="18" fill="#284636" stroke="#6D765D"/>
+    <path d="M84 867 H444" stroke="#EBD3A8" stroke-width="2" stroke-opacity=".65"/>
+    <text x="88" y="901" font-size="16" fill="#EBD3A8" font-weight="600" letter-spacing="1">APPROVAL</text>
+    <text x="88" y="942" font-size="28" fill="#F5F5EF" font-weight="600">Browser Wallet review</text>
+    <text x="88" y="977" font-size="21" fill="#BFD0C3">Recipient · asset · amount · expiry</text>
+    <text x="88" y="1010" font-size="21" fill="#BFD0C3">Exact signature + reserved input</text>
+
+    <rect x="520" y="866" width="400" height="166" rx="18" fill="#284636" stroke="#6D765D"/>
+    <path d="M540 867 H900" stroke="#EBD3A8" stroke-width="2" stroke-opacity=".65"/>
+    <text x="544" y="901" font-size="16" fill="#EBD3A8" font-weight="600" letter-spacing="1">DURABILITY</text>
+    <text x="544" y="942" font-size="28" fill="#F5F5EF" font-weight="600">Execution journal</text>
+    <text x="544" y="977" font-size="21" fill="#BFD0C3">Retain original signed action</text>
+    <text x="544" y="1010" font-size="21" fill="#BFD0C3">Check or retry the same authority</text>
+
+    <rect x="976" y="866" width="400" height="166" rx="18" fill="#284636" stroke="#6D765D"/>
+    <path d="M996 867 H1356" stroke="#EBD3A8" stroke-width="2" stroke-opacity=".65"/>
+    <text x="1000" y="901" font-size="16" fill="#EBD3A8" font-weight="600" letter-spacing="1">CONNECTED EXECUTION</text>
+    <text x="1000" y="942" font-size="28" fill="#F5F5EF" font-weight="600">Configured web services</text>
+    <text x="1000" y="977" font-size="21" fill="#BFD0C3">Local / hosted route executors</text>
+    <text x="1000" y="1010" font-size="21" fill="#BFD0C3">Verify outcomes → Wallet activity</text>
+
+    <path d="M464 949 H520" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <path d="M920 949 H976" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <text x="64" y="1082" font-size="17" fill="#EBD3A8" font-weight="700">04</text>
+    <text x="107" y="1082" font-size="17" fill="#BFD0C3" font-weight="600" letter-spacing="2">TESTNET ROUTES &amp; CANONICAL OUTCOMES</text>
+    <path d="M1176 1032 V1108 M223 1108 H1209" fill="none" stroke="#EBD3A8" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M223 1108 V1135" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <path d="M546 1108 V1135" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <path d="M866 1108 V1135" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <path d="M1209 1108 V1135" fill="none" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+
+    <rect x="64" y="1138" width="318" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <text x="86" y="1176" font-size="27" fill="#F5F5EF" font-weight="600">NEAR</text>
+    <text x="86" y="1212" font-size="20" fill="#BFD0C3">Reserve tUSD · Rhea swaps</text>
+    <text x="86" y="1244" font-size="20" fill="#BFD0C3">Original Intents verifier</text>
+    <text x="86" y="1277" font-size="18" fill="#EBD3A8">Bounded routes · NEP-413</text>
+
+    <rect x="402" y="1138" width="288" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <text x="424" y="1176" font-size="27" fill="#F5F5EF" font-weight="600">Aurora</text>
+    <text x="424" y="1212" font-size="20" fill="#BFD0C3">Proof-funded swaps</text>
+    <text x="424" y="1244" font-size="20" fill="#BFD0C3">Fixed-rate test venue</text>
+    <text x="424" y="1277" font-size="18" fill="#EBD3A8">Public EVM settlement</text>
+
+    <rect x="710" y="1138" width="312" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <text x="732" y="1176" font-size="27" fill="#F5F5EF" font-weight="600">Aave · Sepolia</text>
+    <text x="732" y="1212" font-size="20" fill="#BFD0C3">Supply · borrow · repay</text>
+    <text x="732" y="1244" font-size="20" fill="#BFD0C3">Withdraw · verified positions</text>
+    <text x="732" y="1277" font-size="18" fill="#EBD3A8">Public EVM settlement</text>
+
+    <rect x="1042" y="1138" width="334" height="171" rx="18" fill="#204739" stroke="#52755E"/>
+    <text x="1064" y="1176" font-size="27" fill="#F5F5EF" font-weight="600">Native Zcash</text>
+    <text x="1064" y="1212" font-size="20" fill="#BFD0C3">PCZT review · prove · sign</text>
+    <text x="1064" y="1244" font-size="20" fill="#BFD0C3">Separate custody &amp; scans</text>
+    <text x="1064" y="1277" font-size="18" fill="#EBD3A8">Shielded testnet payments</text>
+
+    <path d="M223 1309 V1348 H1406 V949 H1376" fill="none" stroke="#8FD5C1" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#outcome)"/>
+    <path d="M546 1309 V1348 M866 1309 V1348 M1209 1309 V1348" fill="none" stroke="#8FD5C1" stroke-width="2.5"/>
+    <rect x="319" y="1333" width="802" height="29" rx="14" fill="#12332B"/>
+    <text x="720" y="1355" font-size="20" fill="#8FD5C1" text-anchor="middle">Canonical results and retained-action recovery reconcile Wallet activity</text>
+    <text x="64" y="1393" font-size="19" fill="#BFD0C3">NEAR and EVM settlement stays public. Native Zcash custody is separate from browser storage.</text>
+
+    <path d="M64 1421 H1376" stroke="#426553"/>
+    <path d="M64 1450 H113" stroke="#E1EFA6" stroke-width="2.5" marker-end="url(#delivery)"/>
+    <text x="126" y="1456" font-size="18" fill="#BFD0C3">Encrypted packet / receipt</text>
+    <path d="M529 1450 H578" stroke="#EBD3A8" stroke-width="2.5" marker-end="url(#execution)"/>
+    <text x="591" y="1456" font-size="18" fill="#BFD0C3">Reviewed execution</text>
+    <path d="M1028 1450 H1077" stroke="#8FD5C1" stroke-width="2.5" marker-end="url(#outcome)"/>
+    <text x="1090" y="1456" font-size="18" fill="#BFD0C3">Verified result / recovery</text>
+    <text x="64" y="1484" font-size="17" fill="#BFD0C3">Link acknowledgement, signed recipient receipt and verified settlement are separate checks.</text>
+  </g>
+</svg>

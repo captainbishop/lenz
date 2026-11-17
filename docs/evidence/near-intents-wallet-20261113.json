@@ -1,0 +1,146 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "historical-testnet",
+  "summarizedAt": "2026-11-17T09:47:50.824Z",
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T09:47:50.763Z",
+    "head": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 of inspected working files. These hashes identify the current implementation; they are not a historical source snapshot.",
+    "files": [
+      {
+        "path": "web/public/money.js",
+        "bytes": 11040,
+        "sha256": "1c3974e510a985f7600856b1a737985d661a17f67097cf1386f13c5a5761f0ee"
+      },
+      {
+        "path": "web/public/intent-near-ui.js",
+        "bytes": 37268,
+        "sha256": "65b615c87cdc9d8063dcb119879bc67b3d874f70609dd365267bf81f3693be82"
+      },
+      {
+        "path": "web/public/intent-near-route.js",
+        "bytes": 23157,
+        "sha256": "d5bef9909eddbbca9d45fdaee856efc636152219b2dbd4c611cf48ea7eca3e4b"
+      },
+      {
+        "path": "web/public/intent-near-plan.js",
+        "bytes": 7550,
+        "sha256": "0317049cf99e76b4b4f9975cfb3e25c4405fb474099984ac1f840587a7a2b45e"
+      },
+      {
+        "path": "web/intent-near-relay.mjs",
+        "bytes": 36105,
+        "sha256": "2a205b4b6b8ca4f81de6d981058985498e2fc6aaaac67e5d162f426f81f25635"
+      },
+      {
+        "path": "contracts/intents-testnet/source-lock.json",
+        "bytes": 634,
+        "sha256": "bac79dc6eb4940122658606d763fb4e427137e46b6b84d3743b9b9301300b32e"
+      }
+    ]
+  },
+  "provenanceScope": "Allowlisted summary of original local records. Hashes identify the preserved records; private records and raw signed artifacts are excluded.",
+  "integration": "NEAR Intents verifier",
+  "observedAt": "2026-11-13T17:04:23.461Z",
+  "journey": "Mounted Wallet swap: 1 LTS to 2 LTT",
+  "network": "NEAR testnet",
+  "execution": {
+    "transaction": "43v4STy5F2KAarr24YWCHeUKC3SGxWN1TQXVko2PMLDQ",
+    "receiver": "verifierif13a.lenz-dev-1794582631653.testnet",
+    "method": "execute_intents",
+    "gas": "300000000000000",
+    "deposit": "0",
+    "signatureStandard": "NEP-413",
+    "mechanism": "Opposite user/solver token changes and an external withdrawal execute through the original NEAR Intents verifier.",
+    "receiptIds": [
+      "DKQJNWmb3QsSvhP2Fe1zUf9BsbUoSBVPeuSWcyFPyN3r",
+      "E6rtFLLhN6RUSARFYzs8xjkYHGArDQ2LoKBnoyFExsoh",
+      "EsrhtFyHx5WBKy9cszDL7bzBaCQpwoyHGc5y4cQogs3p",
+      "FgSF7wBo47t3c5qopfa2bNdJ3rpV1ahuhELEi3tQHZxX",
+      "CdHku478MktZWxCdzXKvAgonb82vjqp1jZqgkZCiAuVX",
+      "DoyN2gWvq1GQosp9tr4F1ozu8j2fTayQUXsZStACVjw9"
+    ],
+    "finalReceiptSuccess": true,
+    "recordedStatus": "executed",
+    "recordedVerified": true
+  },
+  "assets": {
+    "input": {
+      "token": "nep141:sourceif13a.lenz-dev-1794582631653.testnet",
+      "baseUnits": "1000000",
+      "decimals": 6
+    },
+    "output": {
+      "token": "nep141:targetif13a.lenz-dev-1794582631653.testnet",
+      "baseUnits": "2000000",
+      "decimals": 6
+    },
+    "destination": "0d14187fceb11aeacf9d6f75bcbed211e00bf0996ef105917075fcfd426d9446",
+    "observedExternalBalance": "2000000"
+  },
+  "upstream": {
+    "repository": "https://github.com/near/intents",
+    "revision": "16d04f6ec4401263f8914638710260da50bb46b0",
+    "tag": "defuse/v0.4.5",
+    "license": "MIT",
+    "artifacts": {
+      "defuse.wasm": {
+        "bytes": 1454759,
+        "sha256": "9c385736268b5240e8000169401b1d700393367cc5de74e3a9b627624b4005db"
+      },
+      "defuse_poa_token.wasm": {
+        "bytes": 240673,
+        "sha256": "bcac83483ad6d8bbec302060a8ceac6bd83151cb3c8ed1ce17685bb59a87636d"
+      }
+    }
+  },
+  "independentChecks": [
+    "Exact finalized function call and transaction hash",
+    "All recorded receipt outcomes succeeded",
+    "Exact signed nonces consumed",
+    "External token recipient and output balance checked"
+  ],
+  "freshRead": {
+    "name": "near-intents",
+    "transaction": "43v4STy5F2KAarr24YWCHeUKC3SGxWN1TQXVko2PMLDQ",
+    "checkedAt": "2026-11-17T09:46:05.738Z",
+    "confirmed": true,
+    "finality": "FINAL",
+    "receiver": "verifierif13a.lenz-dev-1794582631653.testnet",
+    "method": "execute_intents",
+    "receiptIds": [
+      "DKQJNWmb3QsSvhP2Fe1zUf9BsbUoSBVPeuSWcyFPyN3r",
+      "E6rtFLLhN6RUSARFYzs8xjkYHGArDQ2LoKBnoyFExsoh",
+      "EsrhtFyHx5WBKy9cszDL7bzBaCQpwoyHGc5y4cQogs3p",
+      "FgSF7wBo47t3c5qopfa2bNdJ3rpV1ahuhELEi3tQHZxX",
+      "CdHku478MktZWxCdzXKvAgonb82vjqp1jZqgkZCiAuVX",
+      "DoyN2gWvq1GQosp9tr4F1ozu8j2fTayQUXsZStACVjw9"
+    ],
+    "endpoint": "https://archival-rpc.testnet.near.org",
+    "scope": "Fresh read confirms finalized transaction method, receiver and receipt identifiers; it does not rerun the swap."
+  },
+  "explorer": {
+    "name": "near-page",
+    "url": "https://testnet.nearblocks.io/txns/43v4STy5F2KAarr24YWCHeUKC3SGxWN1TQXVko2PMLDQ",
+    "httpStatus": 403,
+    "available": false,
+    "checkedAt": "2026-11-17T09:43:06.831Z"
+  },
+  "limitations": [
+    "LTS/LTT and solver liquidity are operator-funded test assets.",
+    "The route is public NEAR settlement.",
+    "This route uses the original verifier; no 1Click execution is established."
+  ],
+  "originalRecords": [
+    {
+      "record": "nearResult",
+      "bytes": 322,
+      "sha256": "f09c77b2579007385810cdac5ab71340d68f77715ffbc6eaeffea608d63c9f0a"
+    },
+    {
+      "record": "nearState",
+      "bytes": 16972,
+      "sha256": "0fb51116ec063d59ba456ea41b8d074a31d481ad8c785bed5163675bfbcb198d"
+    }
+  ]
+}

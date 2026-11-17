@@ -1,3 +1,56 @@
+# Shared delivery and verification documentation, November 17, 2026
+
+The README now explains the connectivity problem, practical user journeys and
+current capabilities, with an inline architecture illustration. The review
+distinguishes retained encrypted originals from local profile/routing metadata,
+foreground Android delivery from connected financial execution, and recipient
+arrival from verified settlement. Chat drafts have no restart-persistence claim.
+This presentation update preserves application code and historical media; it
+does not establish a new device test or financial transaction.
+
+Shared packet eligibility is independent of the carrier implementation. All
+delivery clients use the same authenticated intake and signed receipt
+preparation within their original storage transactions. Stable public URLs,
+encrypted originals, contact decisions and financial-only intake are retained;
+both cache graphs include the new module.
+
+The selected 50 delivery/contact checks passed before and after the refactor.
+Updated carrier, Nostr and WebRTC browser campaigns passed 11, ten and eight
+groups with zero page errors. Startup/package checks passed 39 cases; static
+checks covered 881 Chat routes and 880 app routes. Fixture setup now reflects
+automatic cache preparation and current controls, with persisted opt-out
+assertions preserved. These results do not establish a new radio or settlement
+observation.
+
+Current architecture, setup and test evidence are separate from the retained
+proof-demo guide. The two-phone observations and eight finalized NEAR testnet
+transactions retain their original evidence, the reported reverse delay and
+operator recovery after the sponsor cap. Source fingerprints are inspection
+bindings, not the identity of a historical APK. Historical media are preserved.
+The current review is scoped to these changes and their verification boundaries.
+
+# App and repository refresh, November 17, 2026
+
+The current review covers automatic signed message requests, explicit recipient
+decisions, bounded pending history, unchanged encrypted retries, restored decline
+state and backup compatibility. Terminal responses cannot add duplicate history;
+a verified decision stops the original request while response receipts can retry.
+Targeted request, storage, authority and transport checks passed. Android JVM
+checks cover framing, retention and one-use relay tokens; physical delivery is a
+separate verification boundary.
+
+The signed Android package and hosted build match their reviewed web inputs.
+Real service-worker checks reopened the app after browser shutdown with the
+server stopped, including the new request modules. Published checks matched the
+hosted assets and authenticated backend configuration without financial dispatch.
+Existing identities, execution journals and historical screenshots are retained.
+
+The refreshed README, component overviews and source map distinguish recorded
+testnet execution from fixtures, read-only integration and unfinished behavior.
+Pinned asset preparation, developer startup, documented fixture checks, relative
+links and current implementation hashes passed. This content-drift record is not
+a comprehensive audit or a production funds claim.
+
 # Prototype release review, November 15, 2026
 
 The release joins the mounted wallet, encrypted chat and offline handoffs,

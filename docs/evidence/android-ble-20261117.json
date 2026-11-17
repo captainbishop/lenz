@@ -1,0 +1,78 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "physical-device-observation",
+  "summarizedAt": "2026-11-17T12:24:28.2010200Z",
+  "observedOn": "2026-11-17",
+  "integration": "Original Lenz Android BLE transport",
+  "journey": "Direct encrypted messages between Samsung and Xiaomi Android phones",
+  "evidenceOrigin": "Human confirmations during the two-phone test; latency is user-reported, not instrumented",
+  "conditions": {
+    "phones": [
+      "Samsung Android",
+      "Xiaomi Android"
+    ],
+    "foreground": "Both phones were instructed to remain unlocked with Lenz visible and Nearby enabled",
+    "connectivity": "Wi-Fi and mobile data were instructed to remain off; this summary does not claim an independent radio-settings measurement"
+  },
+  "observations": [
+    {
+      "direction": "Samsung to Xiaomi",
+      "result": "Recipient confirmed the named test message exactly once",
+      "latency": "Reported as almost instant"
+    },
+    {
+      "direction": "Xiaomi to Samsung",
+      "result": "Reverse reply arrived; after the retry update the named retry check arrived",
+      "latency": "About 20 seconds according to the user"
+    }
+  ],
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T12:24:28.2010200Z",
+    "baselineCommit": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 fingerprints identify inspected working files, including later refactors. baselineCommit names the published parent, not these files' revision, the tested APK hash or an instrumented radio capture.",
+    "files": [
+      {
+        "path": "native/android/src/app/lenz/nearby/MainActivity.java",
+        "bytes": 15062,
+        "sha256": "c22aaf32837aa5ed474c90a767652f4cb2d052e98c29c1cae8339a2734b170d7"
+      },
+      {
+        "path": "native/android/src/app/lenz/nearby/BluetoothMesh.java",
+        "bytes": 25221,
+        "sha256": "bb16445cecb907e5746c9066f99d9b01575c87d1eccbb8ee8854a5faefdf6e53"
+      },
+      {
+        "path": "native/android/src/app/lenz/nearby/MeshCore.java",
+        "bytes": 6168,
+        "sha256": "62037e5d1f5d0f70713d2c1b0e99cf827649fb3e55abc76756dd798adff249c9"
+      },
+      {
+        "path": "web/public/bluetooth-client.js",
+        "bytes": 11689,
+        "sha256": "26ada4753e5c31622f25eebadc79c78c50e3f5d2a8c4197ac589dcf0a14be3c3"
+      },
+      {
+        "path": "web/public/delivery-packets.js",
+        "bytes": 1392,
+        "sha256": "49f1fbcf55594fda39ad888e5b4989c1a9386cc5d0410b709bb56a061d800336"
+      },
+      {
+        "path": "web/public/receive-packet.js",
+        "bytes": 4272,
+        "sha256": "ded39c21fe3b9e1f4484b9d25b8316e066ce36645605e6e4945a3c8bec0baae3"
+      },
+      {
+        "path": "web/public/delivery-receipts.js",
+        "bytes": 4081,
+        "sha256": "2888f6611968f749ca99e6fe75ec20bec881576ee4df51d4052ddefa7c512be5"
+      }
+    ]
+  },
+  "limitations": [
+    "One direct two-phone foreground test. Direction-dependent delay remains visible; broad latency and reliability are not established.",
+    "Multi-hop, partitions, radio interruptions, process-restart radio recovery and background delivery were not physically verified by this test.",
+    "This message test does not establish Bluetooth payment delivery, blockchain settlement or an Android financial backend.",
+    "Lenz wire protocol does not interoperate with Bitchat clients. Radio presence, traffic timing, size and routing metadata remain observable; static message keys have no forward secrecy.",
+    "iOS is not implemented or tested."
+  ]
+}

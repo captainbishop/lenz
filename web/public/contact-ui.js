@@ -1,6 +1,8 @@
-import { readState, updateState } from './chat-store.js';
+import { readState } from './chat-store.js';
 import { decodeContact, encodeLenzId, drawContact, readContactFile, scanPixels } from './contact-card.js';
 import { paintAvatar } from './profile-display.js';
+import { addContactRequest } from './contact-requests.js';
+import { prepareChatDelivery, requestAutomaticDelivery } from './delivery-mode.js';
 
 const $ = selector => document.querySelector(selector);
 const safetyCode = profile => profile.id.match(/.{8}/g).join(' ');
@@ -36,11 +38,11 @@ export async function renderProfile(profile) {
 }
 
 export function setupContacts({ action, status, select, selectExisting = () => false }) {
-  let reviewed = null, reviewedRecovery=null, revision=0, stream = null, cameraSession = 0, timer = null;
+  let reviewed = null, reviewedOwner=null, reviewedRecovery=null, revision=0, stream = null, cameraSession = 0, timer = null;
   function feedback(text, error = false) { $('#contact-feedback').textContent = text; $('#contact-feedback').className = error ? 'error' : 'quiet'; }
   function resetReview() {
     revision++;reviewedRecovery=null;$('#contact-label').disabled=false;
-    reviewed = null; $('#contact-review').hidden = true; $('#verified').checked = false; $('#confirm-contact').disabled = true;
+    reviewed = null; reviewedOwner=null; $('#contact-review').hidden = true; $('#verified').checked = false; $('#confirm-contact').disabled = true;
   }
   function stopCamera() {
     cameraSession++; clearTimeout(timer); stream?.getTracks().forEach(track => track.stop()); stream = null;
@@ -54,13 +56,13 @@ export function setupContacts({ action, status, select, selectExisting = () => f
     const existing = state.contacts.find(p => p.id === profile.id);
     if (existing && selectExisting()&&!update) { await select(existing.id); $('#add-contact').close(); return; }
     if (existing && !update && existing.name === profile.name && (existing.avatar ?? 'moon') === (profile.avatar ?? 'moon') && existing.photo === profile.photo) throw new Error('This person is already in your contacts.');
-    reviewed = profile; $('#contact-name').textContent = profile.name; $('#contact-label').value = profile.name;
+    reviewed = profile; reviewedOwner=state.identity.profile.id; $('#contact-name').textContent = profile.name; $('#contact-label').value = profile.name;
     paintAvatar($('#contact-avatar'), profile); $('#contact-code').textContent = safetyCode(profile);
-    $('#confirm-contact').textContent = existing ? 'Update contact' : 'Add contact';
+    $('#confirm-contact').textContent = existing ? 'Update contact' : 'Send request';
     $('#contact-review').hidden = false;
     feedback(existing ? `Updated profile for ${existing.name}. Confirm the new name or picture with them.` : state.contacts.some(p => p.name === profile.name)
       ? 'You already have someone with this name. Confirm who shared this new ID.'
-      : 'Confirm this ID with the person before adding them.');
+      : 'Confirm this ID with the person. Adding them sends a message request.');
     $('#verified').focus();
     return true;
   }
@@ -112,13 +114,15 @@ export function setupContacts({ action, status, select, selectExisting = () => f
   $('#verified').onchange = () => { $('#confirm-contact').disabled = !reviewed || !$('#verified').checked; };
   $('#confirm-contact').onclick = () => action(async () => {
     if (!reviewed || !$('#verified').checked) throw new Error('Confirm who shared this ID first.');
+    const owner=reviewedOwner;
+    if((await readState()).identity?.profile.id!==owner)throw Error('Your account changed. Open this contact again.');
     if(reviewedRecovery){const id=await(await import('./contact-recovery.js')).acceptContactRecovery(reviewedRecovery);await select(id);$('#add-contact').close();status('Updated chat ID saved. Earlier messages and payments are unchanged.');return;}
     const profile = {...structuredClone(reviewed),name:$('#contact-label').value.trim() || reviewed.name};
-    await updateState(state => {
-      const index = state.contacts.findIndex(p => p.id === profile.id);
-      if (index === -1) state.contacts.push(profile); else state.contacts[index] = profile;
-    });
-    await select(profile.id); $('#add-contact').close(); status(`${profile.name} is ready for a conversation.`);
+    await prepareChatDelivery(owner);
+    const result=await addContactRequest(profile,{owner});
+    await select(profile.id); $('#add-contact').close();
+    if(result.packet&&!await requestAutomaticDelivery(result.packet))throw Error('Your account changed. The original request stays saved.');
+    status(result.created?`Request saved for ${profile.name}. It will send when connected.`:`${profile.name}’s contact saved.`);
   });
   $('#scan-contact').onclick = async () => {
     stopCamera(); resetReview(); const session = cameraSession;

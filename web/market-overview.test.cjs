@@ -12,7 +12,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   const route=createMarketRoute({catalog,marketContext:async()=>({version:1,provider:'coinmarketcap',observedAt:Date.now(),marketCap:null,volume24h:null,btcDominance:null}),hyperTape:read,hyperStream:createMarketStream({Socket,read,parse,checkEvent,includeTrades:true}),discover:async()=>{throw Error('Fixture excludes legacy providers');}});
   const root=path.join(__dirname,'public'),server=http.createServer(async(req,res)=>{try{
     if(req.url.startsWith('/api/')){requests.push(req.url);req.headers.host='127.0.0.1:4173';req.headers.origin='http://127.0.0.1:4173';if(await route(req,res))return;throw Error();}
-    const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep))throw Error();
+    const pathname=new URL(req.url,'http://local').pathname,file=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname));if(!file.startsWith(root+path.sep))throw Error();
     res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.html':'text/html','.json':'application/json','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');res.end(await fs.readFile(file));
   }catch{res.writeHead(404);res.end();}});
   await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({channel:'msedge',headless:true});
@@ -20,8 +20,8 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
  try{
   const evidence=(await import('./market-testnet-fixtures.mjs')).testnetMarketReport(JSON.parse(await fs.readFile(path.join(__dirname,'../integrations/market-discovery-live.json'),'utf8')));
   const templates=Object.fromEntries(evidence.results.filter(r=>r.ok).map(r=>[r.provider,r.observation]));
-  async function pageFor({paused=false,legacy=false}={}){
-   const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
+  async function pageFor({paused=false,legacy=false,offlineReady=false}={}){
+   const context=await browser.newContext({serviceWorkers:offlineReady?'allow':'block'}),page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
    if(paused)await page.addInitScript(()=>localStorage.setItem('lenz-market-live-mode','off'));
    const legacyRequests=[];
    if(legacy)await page.route('**/api/markets/read',async route=>{const b=route.request().postDataJSON();legacyRequests.push(b);const snapshot=structuredClone(templates[b.provider+(b.network?':'+b.network:'')]);snapshot.observedAt=Date.now();snapshot.expiresAt=snapshot.observedAt+60000;await route.fulfill({json:snapshot});});
@@ -29,7 +29,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   }
   {
    const {context,page,legacyRequests}=await pageFor({paused:true,legacy:true});
-   await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
+   await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
    assert(!(await page.locator('.overview-status').textContent()).includes('Loading market overview'));
    assert.equal(legacyRequests.length,0);
    checks.push('Paused startup completes its one-shot catalogue load');
@@ -50,7 +50,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
    await page.waitForFunction(()=>JSON.parse(localStorage.getItem('lenz-live-market-snapshots-v1'))?.length===7);
    assert.equal(await page.getByRole('button',{name:'Save overview offline',exact:true}).count(),0);
    await page.addInitScript(()=>Object.defineProperty(navigator,'onLine',{get:()=>false,configurable:true}));
-   await page.goto(base+'/markets.html');
+   await page.goto(base+'/markets.html');await onchain.locator('.overview-market').first().waitFor();
    assert.equal(await onchain.locator('.overview-market').count(),6);
    assert((await page.locator('.overview-status').textContent()).includes('Offline · Saved data'));
    assert((await onchain.textContent()).includes('Saved data'));assert((await onchain.textContent()).includes(String(new Date().getFullYear())));
@@ -58,7 +58,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
    await context.close();
   }
   {
-   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
+   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
    await page.locator('[data-category="spot"]').click();await page.locator('.hyper-view-nav:visible [data-view=trade]').click();await page.locator('.hyper-chart[data-candle-count="30"]').waitFor();
    await page.getByRole('searchbox',{name:'Search trading markets'}).fill('USDH');await page.getByText('No candles for this interval',{exact:true}).waitFor();
    await page.locator('[data-category="all"]').click();await page.locator('[data-overview-market="spot:107"]').click();
@@ -68,15 +68,15 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
    checks.push('Explicit overview market link clears a conflicting Spot search and opens USDC');await context.close();
   }
   {
-   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
-   assert(await page.evaluate(()=>Boolean(localStorage.getItem('lenz-hyperliquid-testnet-catalog-v2'))));await context.setOffline(true);
+   const {context,page}=await pageFor({offlineReady:true});await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
+   await page.waitForFunction(()=>document.querySelector('#home-cache-status').dataset.offlineState==='ready',null,{timeout:30000});assert(await page.evaluate(()=>Boolean(localStorage.getItem('lenz-hyperliquid-testnet-catalog-v2'))));await context.setOffline(true);
    await page.locator('[data-overview-market="spot:107"]').click();
    await page.getByText('Connect to load this chart.',{exact:true}).waitFor();
    assert.equal(await page.locator('.hyper-detail h3').textContent(),'HYPE / USDC');assert.equal(await page.locator('.hyper-row').count(),2);
    checks.push('Automatically saved Overview is immediately available to the trading workspace offline');await context.close();
   }
   {
-   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
+   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
    for(const key of ['count:spot','section:Active spot markets']){
     const refreshed=page.waitForResponse(response=>response.url().endsWith('/api/markets/hyper-catalog'));
     if(!await page.locator('#overview-tools').evaluate(n=>n.open))await page.locator('#overview-tools>summary').click();await page.getByRole('button',{name:'Refresh overview',exact:true}).click();
@@ -92,8 +92,8 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
    checks.push('Overview refresh preserves control focus and builder artwork loads locally');await context.close();
   }
   {
-   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
-   const withoutRequested=structuredClone(await catalog());withoutRequested.rows=withoutRequested.rows.filter(row=>row.id!=='spot:107');
+   const {context,page}=await pageFor();await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
+   const withoutRequested=structuredClone(await catalog());withoutRequested.rows=withoutRequested.rows.filter(row=>row.kind==='spot'&&row.id!=='spot:107');
    await page.route('**/api/markets/hyper-catalog',route=>route.fulfill({json:withoutRequested}));
    await page.locator('[data-overview-market="spot:107"]').click();
    await page.getByText('This market is no longer in the current catalogue.',{exact:true}).waitFor();
@@ -103,7 +103,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),http
   for(const theme of ['light','dim','dark'])for(const width of [375,1360]){
    const {context,page}=await pageFor({legacy:true});await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});
    await page.addInitScript(theme=>localStorage.setItem('lenz-home-theme',theme),theme);
-   await page.goto(base+'/markets.html');await page.locator('[data-overview-market]').first().waitFor();
+   await page.goto(base+'/markets.html');await page.locator('[data-overview-market="spot:107"]').waitFor();
    await page.waitForFunction(()=>[...document.querySelectorAll('.overview-artwork')].every(img=>img.complete&&img.naturalWidth>0));
    assert.equal(await page.locator('.overview-artwork').count(),9);
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'No horizontal overflow');

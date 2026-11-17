@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Readable } from 'node:stream';
+import http from 'node:http';
 import { createDefiRoute } from './defi-relay.mjs';
 function req(url, input = {}, changes = {}) {
   return Object.assign(Readable.from([Buffer.from(JSON.stringify(input))]), { url, method: 'POST',
@@ -45,4 +46,21 @@ test('status route accepts a bounded signed approval and never selects a quote o
   const response=res();await route(req('/api/defi/rhea/status',input),response);assert.equal(response.status,200);assert.equal(response.body.state,'pending');
   const large=res();await route(req('/api/defi/rhea/status',{data:'x'.repeat(65536)}),large);assert.equal(large.status,400);
   const foreign=res();await route(req('/api/defi/rhea/status',input,{headers:{host:'127.0.0.1:4173',origin:'https://foreign.example'}}),foreign);assert.equal(foreign.status,403);
+});
+
+test('HTTP swap and refund reads share a minute limit and recover without dispatching',async()=>{
+  let now=60000,reads=0;
+  const route=createDefiRoute({readDefiStatus:async()=>{reads++;return {state:'pending'};},readDefiRefund:async()=>{reads++;return {state:'ready'};}},{now:()=>now});
+  const server=http.createServer(route);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const post=name=>new Promise((resolve,reject)=>{
+    const request=http.request({hostname:'127.0.0.1',port:server.address().port,path:'/api/defi/rhea/'+name,method:'POST',headers:{host:'127.0.0.1:4173',origin:'http://127.0.0.1:4173','content-type':'application/json'}},response=>{
+      let body='';response.setEncoding('utf8');response.on('data',chunk=>{body+=chunk;});response.on('end',()=>resolve({status:response.statusCode,body:JSON.parse(body)}));
+    });request.on('error',reject);request.end('{}');
+  });
+  try{
+    for(let i=0;i<60;i++)assert.equal((await post(i%2?'refund-status':'status')).status,200);
+    for(const name of ['status','refund-status']){const limited=await post(name);assert.equal(limited.status,429);assert.match(limited.body.error,/busy/);}
+    assert.equal(reads,60);
+    now+=60000;assert.equal((await post('status')).status,200);assert.equal((await post('refund-status')).status,200);assert.equal(reads,62);
+  }finally{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
 });

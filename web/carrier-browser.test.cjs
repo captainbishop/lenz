@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),http=require('node:http'),fs=require(
 const {securityHeaders}=require('./security-policy.mjs');
 const checks=[],errors=[],api=[],contract='carrier-fixture.lenz.testnet';
 const idle=p=>p.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')!=='true'&&!document.querySelector('#status').textContent.startsWith('Opening'));
+const readyOffline=p=>p.evaluate(async()=>await(await import('/offline-access.js')).ensureOfflineAccess());
 const walletSettings=async p=>{if(await p.locator('.wallet-settings').count()&&!await p.locator('.wallet-settings').evaluate(n=>n.open))await p.locator('.wallet-settings summary').click();};
 const openDelivery=async p=>{await walletSettings(p);await p.locator('#carrier-open').click();};
 const balance=async p=>{const row=p.locator('#wallet-offline-amount');return await row.count()?row.innerText():p.locator('#near-total').innerText();};
@@ -21,7 +22,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     if(file==='/api/markets/assets'&&req.method==='POST'){res.writeHead(503);res.end();return;}
     if(file.startsWith('/api/')){api.push(file);throw Error('Financial requests forbidden');}
     res.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.html':'text/html','.css':'text/css','.svg':'image/svg+xml'})[path.extname(file)]??'application/octet-stream');
-    res.end(file==='/carrier-config.json'?JSON.stringify({version:1,carriers:origins}):file==='/near-config.json'?JSON.stringify({network:'testnet',contract,ready:true}):file==='/rhea-config.json'?JSON.stringify({ready:false,network:'testnet',reserve:contract}):await fs.readFile(path.join(__dirname,'public',file)));
+    res.end(file==='/carrier-config.json'?JSON.stringify({version:1,carriers:origins}):file==='/nostr-config.json'?JSON.stringify({version:1,relays:[]}):file==='/near-config.json'?JSON.stringify({network:'testnet',contract,ready:true}):file==='/rhea-config.json'?JSON.stringify({ready:false,network:'testnet',reserve:contract}):await fs.readFile(path.join(__dirname,'public',file==='/'?'index.html':file)));
   }catch{res.writeHead(404);res.end('Unavailable');}});
   const options=i=>({origin:origins[i],directory:path.join(directory,String(i)),peers:i<2?[origins[i+1]]:[origins[0]],allowedOrigins:[base],interval:50});
   try{
@@ -46,7 +47,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
       for(const node of nodes)assert.equal(node.store.all().length,0);
     });
     await check('offline payment survives reload and delivers automatically across three carriers',async()=>{
-      await walletSettings(a);await a.locator('#prepare-money-offline').click();await idle(a);
+      await readyOffline(a);
       await contexts[0].setOffline(true);
       await a.evaluate(async({contract,to})=>{await(await import('/chat-store.js')).updateState(s=>(import('/near-payment-service.js')).then(m=>m.prepareNearPayment(s,contract,to,'4')));},{contract,to:profiles[1].id});
       await a.reload();await idle(a);assert.equal((await read(a)).messages.length,2);
@@ -64,7 +65,7 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
       assert.deepEqual(api,[]);
     });
     await check('received money can be passed onward offline without carrier approval or settlement',async()=>{
-      await walletSettings(b);await b.locator('#prepare-money-offline').click();await idle(b);await contexts[1].setOffline(true);
+      await readyOffline(b);await contexts[1].setOffline(true);
       await b.evaluate(async({contract,to})=>{await(await import('/chat-store.js')).updateState(s=>(import('/near-payment-service.js')).then(m=>m.prepareNearPayment(s,contract,to,'1')));},{contract,to:profiles[2].id});
       await b.reload();await idle(b);assert.equal(await balance(b),'3');
       await contexts[1].setOffline(false);await waitState(c,s=>s.messages.length===1);
@@ -134,9 +135,9 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     });
     await check('chat Send survives offline reload, delivers automatically and receives a signed receipt',async()=>{
       await a.goto(base+'/chat.html');await idle(a);await a.waitForFunction(()=>document.querySelector('#prepare-message').textContent==='Send');
-      await a.locator('#prepare-offline').click();await idle(a);await contexts[0].setOffline(true);
+      await readyOffline(a);await contexts[0].setOffline(true);
       await a.locator('#message').fill('Meet me after the market');await a.locator('#prepare-message').click();await idle(a);
-      assert.equal(await a.locator('#handover').evaluate(n=>n.open),false);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
+      assert.equal(await a.locator('#handover').count(),0);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
       const id=(await read(a)).messages.at(-1).packet.id;
       await a.reload();await idle(a);assert.match(await a.locator('#messages').innerText(),/Meet me after the market/);
       await contexts[0].setOffline(false);await waitState(b,s=>s.messages.some(r=>r.packet.id===id));
@@ -146,16 +147,16 @@ const check=async(name,fn)=>{await fn();checks.push(name);console.log('PASS '+na
     await check('chat Pay queues an offline payment without opening file sharing',async()=>{
       await contexts[0].setOffline(true);await a.locator('#pay-tusd').click();await idle(a);
       await a.locator('#chat-pay-amount').fill('0.25');await a.locator('#chat-pay-submit').click();await idle(a);
-      assert.equal(await a.locator('#handover').evaluate(n=>n.open),false);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
+      assert.equal(await a.locator('#handover').count(),0);assert.match(await a.locator('#status').innerText(),/saved for delivery/i);
       const id=(await read(a)).messages.at(-1).packet.id;await contexts[0].setOffline(false);
       await waitState(b,s=>s.messages.some(r=>r.packet.id===id));await waitState(a,s=>!!s.messages.find(r=>r.packet.id===id)?.receivedReceipt);
       assert.deepEqual(api,[]);
     });
-    await check('a cross-tab opt-out restores manual sharing even before the composer label refreshes',async()=>{
+    await check('a cross-tab opt-out retains the new message without carrier dispatch',async()=>{
       const second=await contexts[0].newPage();await second.goto(base+'/chat.html');await idle(second);
       await second.evaluate(async()=>{await(await import('/carrier-client.js')).setCarrierEnabled(false);});
       await a.locator('#message').fill('Keep this file local');await a.locator('#prepare-message').click();await idle(a);
-      assert.equal(await a.locator('#handover').evaluate(n=>n.open),true);
+      assert.equal(await a.locator('#handover').count(),0);
       const id=(await read(a)).messages.at(-1).packet.id;
       for(const node of nodes)assert(!node.store.all().some(e=>e.packet.id===id));
       assert(!(await read(a)).carrier.outbox.some(e=>e.envelope.packet.id===id));await second.close();

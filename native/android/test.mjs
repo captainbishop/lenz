@@ -1,0 +1,12 @@
+import {mkdirSync,mkdtempSync,readdirSync} from 'node:fs';
+import {dirname,join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
+const root=dirname(fileURLToPath(import.meta.url));
+const index=process.argv.indexOf('--output-dir');
+if(index<0||!process.argv[index+1])throw Error('Pass --output-dir outside the product repository.');
+const output=resolve(process.argv[index+1]);mkdirSync(output,{recursive:true});const classes=mkdtempSync(join(output,'native-test-'));
+const javaRoot=join(root,'src/app/lenz/nearby'),testRoot=join(root,'test/app/lenz/nearby');
+const sources=['MeshCore.java','MeshQueue.java','MeshTokens.java'].map(name=>join(javaRoot,name)).concat(readdirSync(testRoot).filter(name=>name.endsWith('.java')).map(name=>join(testRoot,name)));
+execFileSync('javac',['--release','8','-Xlint:-options','-d',classes,...sources],{stdio:'inherit',windowsHide:true});
+for(const name of ['MeshCoreTest','MeshQueueTest','MeshTokensTest'])execFileSync('java',['-cp',classes,`app.lenz.nearby.${name}`],{stdio:'inherit',windowsHide:true});

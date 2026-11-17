@@ -8,9 +8,9 @@ body input[type=checkbox]:checked::after{content:'';width:5px;height:9px;border-
 body input[type=checkbox]:disabled{opacity:.5;cursor:default}
 body .lenz-choice{position:relative;display:inline-flex;min-width:0;max-width:100%;vertical-align:middle}
 body select.lenz-choice-source{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
-body .lenz-choice-button{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;max-width:100%;width:100%;padding:10px 12px;border:1px solid var(--lenz-edge,var(--line));border-radius:12px;background:var(--lenz-panel,var(--theme-panel,var(--panel,var(--paper))));color:var(--lenz-text,var(--ink));font:400 14px/1.4 'Segoe UI',Arial,sans-serif;text-align:left;box-shadow:none;cursor:pointer;transition:background 150ms,box-shadow 150ms}
+body .lenz-choice-button{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;max-width:100%;width:100%;padding:10px 0;border:0;border-bottom:1px solid var(--lenz-edge,var(--line));border-radius:0;background:transparent;color:var(--lenz-text,var(--ink));font:400 14px/1.4 'Segoe UI',Arial,sans-serif;text-align:left;box-shadow:none;cursor:pointer;transition:background 150ms,box-shadow 150ms}
 body .lenz-choice-button:hover:not(:disabled),body .lenz-choice-button[aria-expanded=true]{background:var(--lenz-well,var(--theme-hover,var(--hover,color-mix(in srgb,var(--ink) 8%,var(--paper)))));border-color:var(--lenz-edge,var(--line))}
-body .lenz-choice-button:focus-visible{outline:2px solid currentColor;outline-offset:3px;box-shadow:none}
+:root body .lenz-choice-button:focus-visible{outline:2px solid var(--lenz-text,var(--ink));outline-offset:3px;box-shadow:none}
 body .lenz-choice-button:disabled{opacity:.5;cursor:default}
 .lenz-choice-value{min-width:0;overflow-wrap:anywhere}
 .lenz-choice-chevron{width:7px;height:7px;flex:none;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 4px 4px}
@@ -30,5 +30,5 @@ body .draft-dialog .lenz-choice{font-size:18px}
 body #data-settings .lenz-choice{font-size:12px;margin-top:12px;min-width:145px}
 body .dex-privacy>.lenz-choice{grid-column:2;max-width:100%;font-size:13px}
 body .dex-protection>.lenz-choice{font-size:14px}
-@media(forced-colors:active){body .lenz-choice-button:focus-visible,body :is(input,textarea,select):focus-visible{outline:2px solid Highlight;outline-offset:2px}.lenz-choice-option.is-active{outline:1px solid Highlight}}
+@media(forced-colors:active){:root body .lenz-choice-button:focus-visible,body :is(input,textarea,select):focus-visible{outline:2px solid Highlight;outline-offset:2px}.lenz-choice-option.is-active{outline:1px solid Highlight}}
 @media(prefers-reduced-motion:reduce){body .lenz-choice-button{transition:none}}

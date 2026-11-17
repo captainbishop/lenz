@@ -31,16 +31,22 @@ function display(value, decimals) {
 }
 const percentage = rate => display((BigInt(rate) * 100n).toString(), 27);
 const actions = ['Supply', 'Borrow', 'Repay', 'Withdraw'];
+const actionCopy = {
+  Supply: ['Supply LINK', 'Supply LINK as collateral, then borrow USDC against it.'],
+  Borrow: ['Borrow USDC', 'Borrow against your supplied LINK. Review the rate and minimum health before approval.'],
+  Repay: ['Repay USDC', 'Repay your loan using USDC in this lending account.'],
+  Withdraw: ['Withdraw LINK', 'Withdraw supplied LINK. Your remaining collateral must cover the loan.'],
+};
 
 export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = readState, createAccount = createLendingOwnedAccount, account: suppliedAccount, service: suppliedService, readSnapshot, setupAccount, supply = null, repaymentFunding = null, now = Date.now } = {}) {
   check(target instanceof HTMLElement, 'Choose the lending workspace.');
   const style = el('link'); style.rel = 'stylesheet'; style.href = '/intent-lending-ui.css'; document.head.append(style);
   const root = el('section', undefined, 'intent-lending'); root.setAttribute('aria-label', 'Aave testnet account');
   root.innerHTML = `<div class="il-heading"><div><h3>Aave V3</h3><span>Sepolia testnet</span></div><button type="button" data-il="refresh"></button></div>
-    <div class="il-layout"><div class="il-position"><dl data-il="position"></dl><p data-il="observed" class="il-muted"></p><button type="button" data-il="open">Open lending account</button><section data-il="setup-review" class="il-setup-review" hidden aria-label="Review account setup"><h4>Set up lending account</h4><p>Your Lenz backup words recover this account.</p><dl><div><dt>Network</dt><dd>Sepolia testnet</dd></div><div><dt>Network fee</dt><dd>Paid by the testnet sponsor</dd></div></dl><p>The account and its positions are public.</p><button type="button" data-il="setup-confirm" class="il-primary">Confirm account setup</button></section><a class="il-wallet" href="/money.html">Wallet &amp; recovery</a><details><summary>Account details</summary><dl data-il="accounts"></dl></details></div>
-    <div class="il-work"><nav aria-label="Lending actions" data-il="actions"></nav><p data-il="unavailable" class="il-muted"></p><form data-il="form" hidden><label class="il-amount-label" for="il-amount">Amount</label><div class="il-amount"><input id="il-amount" data-il="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0" maxlength="50" required><strong data-il="asset"></strong></div><p data-il="balance" class="il-muted"></p>
-      <dl class="il-bounds"><div data-il="health-row"><dt><label for="il-health">Minimum safety ratio</label></dt><dd><input id="il-health" data-il="health" inputmode="decimal" value="2" maxlength="20" aria-describedby="il-health-help"></dd></div><div data-il="rate-row"><dt><label for="il-rate">Maximum borrow APR</label></dt><dd><input id="il-rate" data-il="rate" inputmode="decimal" maxlength="50"><span>%</span></dd></div></dl><p id="il-health-help" class="il-muted">Below 1, collateral can be sold to repay the loan.</p><button type="submit" class="il-primary" data-il="review">Review Borrow</button></form>
-      <section data-il="receipt" class="il-receipt" hidden aria-label="Review lending permission"><div class="il-review-heading"><h4 data-il="review-title"></h4><button type="button" data-il="edit"></button></div><dl data-il="terms"></dl><p data-il="permission-copy" class="il-muted">The lending account, amounts and loan are public.</p><button type="button" data-il="confirm" class="il-primary"></button></section><button data-il="supply" class="il-primary" type="button" hidden>Review private Supply</button></div></div>
+    <div class="il-layout"><div class="il-position"><dl data-il="position"></dl><p data-il="health-copy" class="il-muted"></p><p data-il="observed" class="il-muted"></p><button type="button" data-il="open">Open lending account</button><section data-il="setup-review" class="il-setup-review" hidden aria-label="Review account setup"><h4>Set up lending account</h4><p>Your Lenz backup words recover this account.</p><dl><div><dt>Network</dt><dd>Sepolia testnet</dd></div><div><dt>Network fee</dt><dd>Paid by the testnet sponsor</dd></div></dl><p>The account and its positions are public.</p><button type="button" data-il="setup-confirm" class="il-primary">Confirm account setup</button></section><a class="il-wallet" href="/money.html">Wallet &amp; recovery</a><details><summary>Account details</summary><dl data-il="accounts"></dl></details></div>
+    <div class="il-work"><nav aria-label="Lending actions" data-il="actions"></nav><div class="il-action-context"><h4 data-il="action-title"></h4><p data-il="action-copy" class="il-muted"></p></div><p data-il="unavailable" class="il-muted"></p><form data-il="form" hidden><label class="il-amount-label" for="il-amount">Amount</label><div class="il-amount"><input id="il-amount" data-il="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0" maxlength="50" required><strong data-il="asset"></strong></div><p data-il="balance" class="il-muted"></p>
+      <dl class="il-bounds"><div data-il="health-row"><dt><label for="il-health">Minimum health factor</label></dt><dd><input id="il-health" data-il="health" inputmode="decimal" value="2" maxlength="20" aria-describedby="il-health-help"></dd></div><div data-il="rate-row"><dt><label for="il-rate">Maximum borrow APR</label></dt><dd><input id="il-rate" data-il="rate" inputmode="decimal" maxlength="50"><span>%</span></dd></div></dl><p id="il-health-help" class="il-muted">Below 1, collateral can be sold to repay the loan.</p><button type="submit" class="il-primary" data-il="review">Review Borrow</button></form>
+      <section data-il="receipt" class="il-receipt" hidden aria-label="Review lending permission"><div class="il-review-heading"><h4 data-il="review-title"></h4><button type="button" data-il="edit"></button></div><dl data-il="terms"></dl><p data-il="permission-copy" class="il-muted">The lending account, amounts and loan are public.</p><button type="button" data-il="confirm" class="il-primary"></button></section><button data-il="supply" class="il-primary" type="button" hidden>Choose LINK to supply</button></div></div>
     <p data-il="status" class="il-status" role="status" aria-live="polite"></p><section class="il-activity"><h4>Activity</h4><ul data-il="activity"></ul><p data-il="empty" class="il-muted">No approved lending requests.</p></section><details class="il-privacy"><summary>Privacy &amp; recovery</summary><p></p><p>Keep your Lenz backup words. Approved requests remain saved when connectivity is lost. Check the original request after reconnecting.</p></details>`;
   target.append(root); root.querySelector('.il-privacy p').textContent = LENDING_PRIVACY;
   const $ = key => root.querySelector('[data-il="' + key + '"]');
@@ -49,7 +55,7 @@ export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = 
   for (const name of ['amount', 'health', 'rate']) { const input = $(name), error = el('p', '', 'il-field-error'); input.name = 'lending-' + name; input.autocomplete = 'off'; input.spellcheck = false; error.id = 'il-' + name + '-error'; error.dataset.il = name + '-error'; error.setAttribute('aria-live', 'polite'); input.setAttribute('aria-describedby', [input.getAttribute('aria-describedby'), error.id].filter(Boolean).join(' ')); (name === 'amount' ? input.closest('.il-amount') : input.closest('[data-il="' + name + '-row"]')).after(error); }
   iconButton($('refresh'), 'Refresh lending account', 'M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3M5 15a8 8 0 0 0 13 3');
   iconButton($('edit'), 'Edit lending request', 'M14 5l5 5M4 20l4-1L20 7a2 2 0 0 0-3-3L5 16z');
-  let account = suppliedAccount ?? null, service = suppliedService ?? null, identity = null, snapshot = null, execution = false, mode = 'Supply', review = null, cancellationOriginal = null, busy = false, disposed = false, generation = 0, controller = null, setupPending = false, setupReview = false, setupFeedback = false;
+  let account = suppliedAccount ?? null, service = suppliedService ?? null, identity = null, snapshot = null, execution = false, mode = 'Supply', review = null, cancellationOriginal = null, busy = false, disposed = false, generation = 0, controller = null, setupPending = false, setupReview = false, setupFeedback = false, fundingTarget = null;
   const transfer = mountLendingTransferUI(root.querySelector('.il-position'), { getContext: () => ({ account, service, snapshot, busy }), refresh });
   const repayFunding = mountLendingRepaymentFundingUI(root.querySelector('.il-work'), { config, getContext: () => ({ account, snapshot, busy, mode, review, enabled: execution }), run, refresh, route: repaymentFunding });
   async function fetchSnapshot(selection, { signal } = {}) {
@@ -86,16 +92,22 @@ export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = 
     for (const button of $('actions').children) button.setAttribute('aria-pressed', String(button.textContent === mode));
     const p = snapshot?.account?.position;
     $('position').replaceChildren(); line($('position'), 'Collateral', p ? display(p.aLinkBalanceBaseUnits, 18) + ' LINK' : '—'); line($('position'), 'Debt', p ? display(p.variableDebtBaseUnits, 6) + ' USDC' : '—');
-    line($('position'), 'Safety ratio', p ? p.variableDebtBaseUnits === '0' ? 'No debt' : display(p.accountData.healthFactorWad, 18) : '—');
+    const capacity = p?.accountData?.availableBorrowsBase, price = snapshot?.reserves?.USDC?.oraclePriceBase;
+    line($('position'), 'Borrow capacity', uint(capacity) && uint(price) && BigInt(price) > 0n ? display((BigInt(capacity) * 10n ** 6n / BigInt(price)).toString(), 6) + ' USDC' : '—');
+    line($('position'), 'Health factor', p ? p.variableDebtBaseUnits === '0' ? 'No debt' : display(p.accountData.healthFactorWad, 18) : '—');
+    $('health-copy').textContent = p ? p.variableDebtBaseUnits === '0' ? 'No loan to repay.' : BigInt(p.accountData.healthFactorWad) < wad ? 'Liquidation risk. Below 1, collateral can be sold to repay the loan.' : 'Below 1, collateral can be sold to repay the loan.' : 'Open your account to check loan health.';
+    $('health-copy').classList.toggle('il-health-risk', !!p && p.variableDebtBaseUnits !== '0' && BigInt(p.accountData.healthFactorWad) < wad);
+    $('health-copy').hidden = !p;
+    $('action-title').textContent = actionCopy[mode][0]; $('action-copy').textContent = actionCopy[mode][1];
     $('observed').textContent = snapshot ? identity?.deployed ? 'Position checked.' : 'Account setup needed.' : 'Open your account to check its position.';
     $('accounts').replaceChildren(); if (identity) { line($('accounts'), 'Position account', identity.account); line($('accounts'), 'Recoverable owner', identity.ownerAddress); } if (snapshot) line($('accounts'), 'Finalized block', snapshot.block.number);
     const eligibleSupply = mode === 'Supply' && identity?.deployed && supply?.available === true && typeof supply.open === 'function';
     $('supply').hidden = !eligibleSupply; $('supply').disabled = busy || !navigator.onLine;
     $('unavailable').hidden = !!review || formVisible() || eligibleSupply;
-    $('unavailable').textContent = !navigator.onLine ? 'Offline. Approved requests remain saved. Reconnect to check the current position.' : !identity ? mode === 'Supply' ? 'Open your lending account. Private Supply is awaiting funding and route verification.' : 'Open your lending account to continue.' : !identity.deployed ? setupPending ? 'Check the original account setup to continue.' : 'Set up your lending account to continue.' : mode === 'Supply' ? 'Private Supply is awaiting funding and route verification.' : 'Lending is unavailable. Refresh to check again.';
+    $('unavailable').textContent = !navigator.onLine ? 'Offline. Approved requests remain saved. Reconnect to check the current position.' : !identity ? 'Open your lending account to continue.' : !identity.deployed ? setupPending ? 'Check the original account setup to continue.' : 'Set up your lending account to continue.' : mode === 'Supply' ? 'Private Supply is awaiting funding and route verification.' : 'Lending is unavailable. Refresh to check again.';
     $('form').hidden = !!review || !formVisible(); $('receipt').hidden = !review;
     $('asset').textContent = mode === 'Withdraw' ? 'LINK' : 'USDC'; $('review').textContent = 'Review ' + mode;
-    $('balance').textContent = p ? mode === 'Borrow' ? 'Current debt · ' + display(p.variableDebtBaseUnits, 6) + ' USDC' : mode === 'Repay' ? 'Available · ' + display(p.freeUsdcBaseUnits, 6) + ' USDC' : 'Collateral · ' + display(p.aLinkBalanceBaseUnits, 18) + ' LINK' : '';
+    $('balance').textContent = p ? mode === 'Borrow' ? 'Capacity and available liquidity are checked again at review.' : mode === 'Repay' ? 'Available · ' + display(p.freeUsdcBaseUnits, 6) + ' USDC' : 'Collateral · ' + display(p.aLinkBalanceBaseUnits, 18) + ' LINK' : '';
     $('health-row').hidden = mode === 'Repay'; $('rate-row').hidden = mode !== 'Borrow'; root.querySelector('#il-health-help').hidden = mode === 'Repay';
     $('review').disabled = busy || !navigator.onLine; $('confirm').disabled = busy || !navigator.onLine;
     if (review) {
@@ -110,7 +122,7 @@ export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = 
       } else {
         line($('terms'), terms.action === 1 ? 'Repay at least' : terms.action === 2 ? 'Receive' : 'Borrow', display(terms.minResult, decimals) + ' ' + symbol);
         line($('terms'), 'Maximum remaining debt', display(terms.maxDebt, 6) + ' USDC');
-        if (terms.action !== 1) line($('terms'), 'Minimum safety ratio', display(terms.minHealthFactor, 18));
+        if (terms.action !== 1) line($('terms'), 'Minimum health factor', display(terms.minHealthFactor, 18));
         if (terms.action === 0) line($('terms'), 'Maximum borrow APR', percentage(terms.maxBorrowRateRay) + '%');
         line($('terms'), 'Receive in', 'Your lending account');
       }
@@ -175,18 +187,19 @@ export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = 
     if (setupPending && setupAccount) { await checkSetup(options); await refresh({ ...options, checkSetup: false }); }
     else if (!identity.deployed && setupAccount) { $('status').textContent = 'Saving account recovery…'; paint(); await account.capture().requireRecovery({ latest: true, ...options }); current(); setupReview = true; $('status').textContent = 'Account recovery saved. Review setup below.'; paint(); }
     else $('status').textContent = 'Lending account opened.';
+    await showRequestedFunding(options);
   }
-  function select(action) { check(actions.includes(action), 'Choose a lending action.'); mode = action; review = null; clearFieldErrors(); $('status').textContent = ''; paint(); }
+  function select(action) { check(actions.includes(action), 'Choose a lending action.'); mode = action; review = null; fundingTarget = null; clearFieldErrors(); $('status').textContent = ''; paint(); }
   for (const action of actions) { const button = el('button', action); button.type = 'button'; button.onclick = () => select(action); $('actions').append(button); }
   $('open').onclick = () => run(open, setupPending ? 'Checking the original account setup…' : 'Opening your lending account…', true); $('refresh').onclick = () => run(identity ? refresh : open, 'Checking your lending account…', setupPending || !identity);
-  $('setup-confirm').onclick = () => run(async options => { check(setupReview && identity && !identity.deployed, 'Review the original account setup first.'); await account.capture().requireRecovery({ latest: true, ...options }); await checkSetup(options); await refresh({ ...options, checkSetup: false }); }, 'Checking account recovery…', true);
+  $('setup-confirm').onclick = () => run(async options => { check(setupReview && identity && !identity.deployed, 'Review the original account setup first.'); await account.capture().requireRecovery({ latest: true, ...options }); await checkSetup(options); await refresh({ ...options, checkSetup: false }); await showRequestedFunding(options); }, 'Checking account recovery…', true);
   $('edit').onclick = () => { review = null; paint(); $('amount').focus(); };
   $('form').onsubmit = event => { event.preventDefault(); void run(async options => {
     clearFieldErrors();
     check(formVisible(), 'Open a verified lending account first.'); await refresh(options);
     const action = mode === 'Borrow' ? 0 : mode === 'Repay' ? 1 : 2, amount = numberInput('amount', action === 2 ? 18 : 6), p = snapshot.account.position;
     const debt = BigInt(p.variableDebtBaseUnits), rate = action === 0 ? numberInput('rate', 25) : BigInt(snapshot.reserves.USDC.variableBorrowRateRay), minimumHealth = action === 1 ? 0n : numberInput('health', 18);
-    field(action === 1 || minimumHealth >= wad, 'health', 'The minimum safety ratio must be at least 1.');
+    field(action === 1 || minimumHealth >= wad, 'health', 'The minimum health factor must be at least 1.');
     field(action !== 1 || amount <= BigInt(p.freeUsdcBaseUnits) && debt > 0n, 'amount', 'Keep enough USDC in the lending account to repay.');
     field(action !== 2 || amount <= BigInt(p.aLinkBalanceBaseUnits), 'amount', 'Choose an amount within the verified collateral.');
     const deadline = BigInt(Math.floor(now() / 1000) + 300), maxDebt = debtLimit(action, amount, debt, rate, snapshot.reserves.USDC, snapshot.block, deadline);
@@ -194,10 +207,18 @@ export function mountLendingIntentUI(target, { config = LENDING_TESTNET, read = 
     review = await service.prepare({ kind: 'Order', terms }, options); $('status').textContent = 'Review the amount and limits before confirming.'; paint(); $('confirm').focus();
   }); };
   $('confirm').onclick = () => run(async options => { check(review, 'Review the lending request first.'); const original = review, lease = account.capture(), originalService = service; await originalService.approve(original, options); options.signal?.throwIfAborted(); lease.assertCurrent(); review = null; const value = await originalService.submit(original.id, options); options.signal?.throwIfAborted(); lease.assertCurrent(); $('status').textContent = value.verified === true ? 'Lending result verified.' : 'Request submitted. Check status for finalized confirmation.'; if (value.verified === true) await refresh(options); else await activity(); });
-  $('supply').onclick = () => run(async options => { check(supply?.available === true && typeof supply.open === 'function', 'The private Supply route is unavailable.'); await account.capture().requireRecovery({ latest: true, forSupply: true, ...options }); await supply.open({ account, snapshot }, options); });
+  const fundingVisible = () => root.isConnected && !root.closest('[hidden]');
+  async function openSupply(options) { check(supply?.available === true && typeof supply.open === 'function', 'The private Supply route is unavailable.'); const lease = account.capture(); await lease.requireRecovery({ latest: true, forSupply: true, ...options }); lease.assertCurrent(); if (!fundingVisible() || mode !== 'Supply') return; await supply.open({ account, snapshot }, options); }
+  $('supply').onclick = () => run(openSupply);
+  async function showRequestedFunding(options) { if (!fundingVisible()) { fundingTarget = null; return; } if (!fundingTarget || !identity?.deployed || !snapshot) return; const asset = fundingTarget; fundingTarget = null; if (asset === 'LINK') await openSupply(options); else await repayFunding.openReview(options); }
+  function openFunding(asset) {
+    check(['LINK', 'USDC'].includes(asset), 'Choose the private LINK or Repay USDC test route.'); select(asset === 'LINK' ? 'Supply' : 'Repay'); fundingTarget = asset;
+    if (identity?.deployed && snapshot) return run(async options => { await refresh(options); await showRequestedFunding(options); });
+    $('status').textContent = asset === 'LINK' ? 'Open your lending account to check private LINK funding.' : 'Open your lending account to check test USDC for an outstanding loan.'; paint(); (setupReview ? $('setup-confirm') : $('open')).focus();
+  }
   const connectivity = () => { review = null; if (!navigator.onLine) { controller?.abort(); snapshot = null; execution = false; } paint(); void activity().catch(() => {}); };
   const positionChanged = () => { if (!disposed && identity && navigator.onLine) void run(refresh, 'Checking your lending account…'); };
-  const changed = () => { generation++; controller?.abort(); account?.dispose(); account = null; service = null; identity = null; snapshot = null; review = null; execution = false; busy = false; setupPending = false; setupReview = false; setupFeedback = false; transfer.reset(); repayFunding.reset(); $('amount').value = ''; $('rate').value = ''; $('activity').replaceChildren(); $('empty').hidden = false; $('status').textContent = ''; paint(); };
+  const changed = () => { generation++; controller?.abort(); account?.dispose(); account = null; service = null; identity = null; snapshot = null; review = null; execution = false; busy = false; setupPending = false; setupReview = false; setupFeedback = false; fundingTarget = null; transfer.reset(); repayFunding.reset(); $('amount').value = ''; $('rate').value = ''; $('activity').replaceChildren(); $('empty').hidden = false; $('status').textContent = ''; paint(); };
   addEventListener('online', connectivity); addEventListener('offline', connectivity); addEventListener('lenz-lending-intent', positionChanged); addEventListener('lenz-account-identity', changed); addEventListener('pagehide', changed); paint();
-  return Object.freeze({ element: root, open: () => run(open, 'Opening your lending account…', true), refresh: () => run(refresh, 'Checking your lending account…'), setAction: select, setSupplyRoute(value) { supply = value; paint(); }, show(visible) { root.hidden = !visible; if (!visible) transfer.cancel(); }, dispose() { changed(); disposed = true; transfer.dispose(); repayFunding.dispose(); root.remove(); style.remove(); removeEventListener('online', connectivity); removeEventListener('offline', connectivity); removeEventListener('lenz-lending-intent', positionChanged); removeEventListener('lenz-account-identity', changed); removeEventListener('pagehide', changed); } });
+  return Object.freeze({ element: root, openFunding, open: () => run(open, 'Opening your lending account…', true), refresh: () => run(refresh, 'Checking your lending account…'), setAction: select, setSupplyRoute(value) { supply = value; paint(); }, show(visible) { root.hidden = !visible; if (!visible) transfer.cancel(); }, dispose() { changed(); disposed = true; transfer.dispose(); repayFunding.dispose(); root.remove(); style.remove(); removeEventListener('online', connectivity); removeEventListener('offline', connectivity); removeEventListener('lenz-lending-intent', positionChanged); removeEventListener('lenz-account-identity', changed); removeEventListener('pagehide', changed); } });
 }

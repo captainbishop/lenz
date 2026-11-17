@@ -30,7 +30,8 @@ export function mountPrivateExecutor(panel){
  <p class="quiet">Receive a contact’s approved payment. Each request needs your review before submission.</p>
  <p id="private-executor-disclosure" class="quiet">Checking or submitting shares the owner, recipient and amount with Lenz and NEAR Intents. Privacy and completion are not independently verified.</p>
  <details id="private-executor-permissions"><summary>Allowed senders</summary>
- <form id="private-executor-policy"><label for="private-executor-sender">Contact</label><select id="private-executor-sender" required></select>
+ <form id="private-executor-policy"><label for="private-executor-sender">Contact</label><select id="private-executor-sender" required data-empty-label="No contacts yet" aria-describedby="private-executor-sender-note"></select>
+ <p id="private-executor-sender-note" class="quiet">Add and verify a contact in Wallet first.</p><button id="private-executor-add-contact" type="button" class="secondary">Add a contact</button>
  <label for="private-executor-owner">Owner’s Lenz account</label><input id="private-executor-owner" placeholder="0x…" autocomplete="off" spellcheck="false" required>
  <p class="quiet">Allow this contact to send requests for this exact account. Requests stay encrypted on this device.</p><button id="private-executor-allow" type="submit">Allow sender</button></form>
  <ul id="private-executor-policies"></ul><label class="check"><input id="private-executor-enabled" type="checkbox">Receive requests from allowed senders</label></details>
@@ -53,7 +54,8 @@ export function mountPrivateExecutor(panel){
   return (token.decimals?n.slice(0,-token.decimals):n)+(fraction?'.'+fraction:'')+' '+token.symbol+' · '+(token.network??receiveChain(token.blockchain));
  }
  function controls(){
-  dialog.setAttribute('aria-busy',String(busy));for(const node of dialog.querySelectorAll('input,select,button:not(#private-executor-close)'))node.disabled=busy;
+  dialog.setAttribute('aria-busy',String(busy));for(const node of dialog.querySelectorAll('input,select,button:not(#private-executor-close):not(.lenz-choice-button)'))node.disabled=busy;
+  $('private-executor-sender').disabled=busy||!access||![...$('private-executor-sender').options].some(option=>option.value&&!option.disabled);
   $('private-executor-allow').disabled=busy||!access||!$('private-executor-sender').value;
   $('private-executor-enabled').disabled=busy||(!summary.enabled&&(!access||!summary.policies.length));
   $('private-executor-file').disabled=busy||!access||!summary.enabled;
@@ -77,7 +79,9 @@ export function mountPrivateExecutor(panel){
   const ticket=++view,s=await readState();assert(s.identity,'Create a Lenz profile first.');const next=await confidentialInboxSummary();if(ticket!==view||!dialog.open)return;
   assert((await readState()).identity?.profile.id===s.identity.profile.id,'Executor account changed.');
   identity=s.identity.profile.id;access=s.identity.access===undefined;summary=next;summary.requests=summary.requests.map(row=>({...row,senderName:s.contacts.find(c=>c.id===row.sender)?.name??row.sender}));
-  const contact=$('private-executor-sender').value;$('private-executor-sender').replaceChildren();for(const peer of s.contacts.filter(p=>p.id!==identity&&!isRecoveredContact(s,p.id))){const option=el('option',peer.name);option.value=peer.id;$('private-executor-sender').append(option);}if(s.contacts.some(p=>p.id===contact))$('private-executor-sender').value=contact;
+  const contact=$('private-executor-sender').value,peers=s.contacts.filter(p=>p.id!==identity&&!isRecoveredContact(s,p.id)),placeholder=new Option(peers.length?'Choose a contact':s.contacts.length?'No eligible contacts':'No contacts yet','');placeholder.disabled=true;
+  $('private-executor-sender').replaceChildren(placeholder);for(const peer of peers){const option=el('option',peer.name);option.value=peer.id;$('private-executor-sender').append(option);}$('private-executor-sender').value=peers.some(p=>p.id===contact)?contact:'';
+  $('private-executor-sender-note').textContent=peers.length?'Choose the contact whose requests you want to receive.':'Add and verify a contact in Wallet first.';$('private-executor-add-contact').hidden=peers.length>0;
   $('private-executor-enabled').checked=next.enabled;$('private-executor-policies').replaceChildren();
   for(const policy of next.policies){const item=el('li'),text=el('p',(s.contacts.find(c=>c.id===policy.sender)?.name??policy.sender)+' · '+policy.owner),remove=el('button','Remove sender');remove.type='button';remove.className='secondary';
    remove.onclick=()=>act(async signal=>{const policies=summary.policies.filter(p=>p.sender!==policy.sender||p.owner!==policy.owner);await setConfidentialInboxEnabled(summary.enabled&&policies.length>0,policies,{signal,identity,previous:summary.policies});$('private-executor-feedback').textContent='Sender removed. Existing requests remain saved.';});item.append(text,remove);$('private-executor-policies').append(item);}
@@ -114,6 +118,7 @@ export function mountPrivateExecutor(panel){
   const s=await current(signal);requirePaymentAccess(s.identity);const sender=$('private-executor-sender').value,owner=$('private-executor-owner').value.trim().toLowerCase();assert(s.contacts.some(c=>c.id===sender)&&!isRecoveredContact(s,sender),'Add and verify the approved sender first.');
   const policies=[...summary.policies];if(!policies.some(p=>p.sender===sender&&p.owner===owner))policies.push({sender,owner});await setConfidentialInboxEnabled(true,policies,{signal,identity,previous:summary.policies});$('private-executor-owner').value='';$('private-executor-feedback').textContent='Sender allowed for this account. Review each payment before submitting.';
  });};
+ $('private-executor-sender').onchange=controls;
  $('private-executor-enabled').onchange=event=>{const enabled=event.target.checked;void act(async signal=>{await setConfidentialInboxEnabled(enabled,summary.policies,{signal,identity,previous:summary.policies});$('private-executor-feedback').textContent=enabled?'Receiving allowed requests.':'Receiving paused. Existing requests remain saved.';});};
  $('private-executor-file').onchange=()=>{const file=$('private-executor-file').files[0];$('private-executor-file').value='';if(!file)return;void act(async signal=>{
   assert(file.size<=210000,'Private request too large.');const value=JSON.parse(await file.text());assert(keysAre(value,['type','envelope'])&&value.type==='lenz/private-request-file/v1','Choose a saved private request.');await validateEnvelope(value.envelope);await current(signal);
@@ -127,6 +132,7 @@ export function mountPrivateExecutor(panel){
  $('private-executor-refresh').onclick=()=>act(async signal=>{await connection(signal);});
  function cancel(){generation++;view++;controller?.abort();controller=null;busy=false;selected=null;ready=false;review(null);}
  $('private-executor-close').onclick=()=>{cancel();dialog.close();};dialog.addEventListener('cancel',cancel);dialog.addEventListener('close',()=>{if(!dialog.open)cancel();});
+ $('private-executor-add-contact').onclick=()=>{$('private-executor-close').click();document.querySelector('#show-add-contact')?.click();};
  const identityChanged=()=>{cancel();identity=null;if(dialog.open){$('private-executor-history').replaceChildren();$('private-executor-policies').replaceChildren();access=false;summary={enabled:false,policies:[],requests:[]};$('private-executor-feedback').textContent='Account changed. Reopen received requests.';controls();}};
  const changed=()=>{if(dialog.open&&!busy)void refresh().catch(identityChanged);},offline=()=>{controller?.abort();ready=false;controls();},storage=event=>{if(event.key==='lenz-wallet-balances-hidden'||event.key===null)changed();};
  const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('proof-u-chat-refresh'):null;channel?.addEventListener('message',changed);

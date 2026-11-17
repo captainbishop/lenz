@@ -5,6 +5,44 @@ import {createHyperliquidCatalogReader} from './hyperliquid-catalog.mjs';
 import {hyperliquidFixtureFetcher} from './hyperliquid-fixtures.mjs';
 import {readHyperliquidTape} from './hyperliquid-feed.mjs';
 
+test('spot discovery and charts do not wait for perpetual or prediction sources',async()=>{
+ const calls=[],reader=createHyperliquidCatalogReader({fetcher:(url,options)=>{const input=JSON.parse(options.body);calls.push(input);if(['spotMetaAndAssetCtxs','l2Book','candleSnapshot'].includes(input.type))return hyperliquidFixtureFetcher(url,options);return new Promise(()=>{});}}),abort=new AbortController();let timeout;
+ try{
+  const run=async()=>{const spot=await reader({scope:'spot',signal:abort.signal});assert.deepEqual(spot.rows.map(r=>[r.kind,r.name,r.quote.symbol]),[['spot','HYPE / USDC','USDC'],['spot','HYPE / USDH','USDH']]);const tape=await readHyperliquidTape({marketId:'hypercore:testnet:spot:@107',interval:'1m',privacy:'public'},{catalog:reader,fetcher:hyperliquidFixtureFetcher,signal:abort.signal});assert.equal(tape.candles.length,30);assert.deepEqual(calls.map(c=>c.type),['spotMetaAndAssetCtxs']);};
+  await Promise.race([run(),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Spot waited for unrelated sources')),200);})]);
+ }finally{clearTimeout(timeout);abort.abort();}
+});
+
+test('core perpetual discovery does not wait for unrelated catalogue sections',async()=>{
+ const releases=[],calls=[];
+ const reader=createHyperliquidCatalogReader({fetcher:(url,options)=>{
+  const request=JSON.parse(options.body);calls.push(request);
+  if(request.type==='spotMeta')return hyperliquidFixtureFetcher(url,{...options,body:JSON.stringify({type:'spotMetaAndAssetCtxs'})}).then(async r=>new Response(JSON.stringify((await r.json())[0])));
+  if(['spotMetaAndAssetCtxs','outcomeMeta','outcomeTemplates'].includes(request.type)||request.dex==='xyz')return new Promise(resolve=>releases.push(()=>resolve(hyperliquidFixtureFetcher(url,options))));
+  return hyperliquidFixtureFetcher(url,options);
+ }});
+ const abort=new AbortController(),pending=reader({scope:'core-perps',signal:abort.signal});let timeout;
+ try{
+  const core=await Promise.race([pending,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Core markets waited for unrelated feeds')),150);})]);
+  assert.deepEqual(core.rows.map(r=>[r.kind,r.name,r.quote.symbol]),[['perp','BTC','USDC']]);assert.deepEqual(core.unavailable,[]);assert.deepEqual(calls.map(c=>c.type).sort(),['metaAndAssetCtxs','spotMeta']);
+ }finally{clearTimeout(timeout);abort.abort();releases.forEach(r=>r());await pending.catch(()=>{});}
+});
+
+test('core and full caches stay separate and shared core cancellation preserves another reader',async()=>{
+ let now=Date.now()-61000,calls=0;const releases=[];
+ const reader=createHyperliquidCatalogReader({clock:()=>now,fetcher:(url,options)=>{calls++;return new Promise(resolve=>releases.push(()=>resolve(hyperliquidFixtureFetcher(url,options))));}});
+ const abort=new AbortController(),one=reader({scope:'core-perps',signal:abort.signal}),rejected=assert.rejects(one),two=reader({scope:'core-perps'});abort.abort();releases.splice(0).forEach(r=>r());await rejected;assert.equal((await two).rows.length,1);assert.equal(calls,2);assert.equal((await reader({scope:'core-perps'})).rows.length,1);assert.equal(calls,2);
+ const full=reader();releases.splice(0).forEach(r=>r());await new Promise(r=>setImmediate(r));releases.splice(0).forEach(r=>r());assert.equal((await full).rows.length,5);assert.equal(calls,8);assert.equal((await reader()).rows.length,5);assert.equal(calls,8);
+ await assert.rejects(reader({scope:'https://arbitrary.example'}));assert.equal(calls,8);
+ now+=61000;const fresh=reader({scope:'core-perps'});releases.splice(0).forEach(r=>r());assert.equal((await fresh).observedAt,now);assert.equal(calls,10);
+});
+
+test('core, Spot and full catalogue misses share a four-source concurrency cap',async()=>{
+ let active=0,peak=0,calls=0;
+ const reader=createHyperliquidCatalogReader({fetcher:async(url,options)=>{active++;calls++;peak=Math.max(peak,active);try{await new Promise(r=>setTimeout(r,5));return hyperliquidFixtureFetcher(url,options);}finally{active--;}}});
+ const [full,core,spot]=await Promise.all([reader(),reader({scope:'core-perps'}),reader({scope:'spot'})]);assert.equal(full.rows.length,5);assert.equal(core.rows.length,1);assert.equal(spot.rows.length,2);assert.equal(calls,9);assert.equal(peak,4);assert.equal(active,0);
+});
+
 test('spot discovery joins sparse token IDs and mixed contexts without losing quote units',()=>{
   const catalog=normalizeHyperliquidCatalog({spot:[{tokens:[{index:360,name:'USDH'},{index:150,name:'HYPE'}],universe:[{index:232,name:'@232',tokens:[150,360]}]},[{coin:'#1230',midPx:'0.5'},{coin:'@232',midPx:null,markPx:'42',dayNtlVlm:'10',prevDayPx:'40'}]],perps:[],outcomes:{outcomes:[],questions:[]},templates:[]},1000);
   assert.equal(catalog.rows.length,1);

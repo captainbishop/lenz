@@ -14,7 +14,7 @@ import {mountPrivateSpend} from './private-spend-ui.js';
 import {mountPrivateFunding} from './private-funding-ui.js';
 
 const el = (tag, text) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; return node; };
-export function mountEvmWallet({sendToContact,sendShielded}={}) {
+export function mountEvmWallet({sendToContact,sendShielded,openSwap}={}) {
   const section = el('section'); section.id = 'connected-wallet'; section.className = 'connected-wallet';
   section.innerHTML = '<div class="section-heading"><h2>Connected wallet</h2><button id="evm-connect" type="button">Connect wallet</button><button id="evm-disconnect" type="button" class="secondary" hidden>Disconnect</button></div><p id="evm-intro" class="quiet">Ethereum · Arbitrum · Base</p><div id="evm-account" hidden><div class="evm-identity"><strong id="evm-network"></strong><span id="evm-address"></span><small id="evm-observed"></small></div><div class="evm-funds"><strong id="evm-balance"></strong><span>ETH</span></div><div class="evm-actions"><button id="evm-receive" type="button" class="secondary">Receive</button><button id="evm-refresh" type="button" class="secondary">Refresh</button></div></div><p id="evm-status" class="quiet" role="status"></p>';
   document.querySelector('#wallet-onboarding').before(section);
@@ -54,7 +54,7 @@ export function mountEvmWallet({sendToContact,sendShielded}={}) {
     dialog.close();
   }});
   privateAccount = mountIntentsAccount(session, section);
-  mountPrivateSpend(session, document.querySelector('#wallet-onboarding'));
+  mountPrivateSpend(session, document.querySelector('#wallet-onboarding'),{openSwap});
   mountPrivateFunding(session,{connect:async()=>{selection=null;openConnect();await new Promise(resolve=>dialog.addEventListener('close',resolve,{once:true}));return session.snapshot;}});
   const transfers=mountEvmTransfers(session,{connect:()=>{selection=null;openConnect();},sendToContact,sendShielded});
   mountReceivingLinks(session);

@@ -1,6 +1,6 @@
 # Testnet integrations
 
-Lenz's submission uses the browser app, testnet execution and continuity after connectivity loss. The full never-online first-use path and native phone applications remain further work. Component tests are separate from final original-account transaction acceptance.
+Lenz's submission uses the browser app, testnet execution and continuity after connectivity loss. A compiled Android host provides native BLE transport; physical delivery and multi-hop require separate device verification. iOS and the full never-online first-use path remain further work. The Android host does not establish a native financial backend. Component tests are separate from final original-account transaction acceptance. [Current implementation](implementation-status.md) · [dated transaction evidence](evidence/README.md).
 
 ## Contracts and source
 
@@ -49,6 +49,7 @@ Configure only the services you need. All custody, key, artifact and journal pat
 
 | Service | Server environment |
 | --- | --- |
+| Offline tUSD relay | `LENZ_TESTNET_SPONSOR_DATA` for its private allowance journal; `LENZ_TESTNET_SPONSOR_DAILY_LIMIT` defaults to 12 sponsored transactions per UTC day |
 | NEAR Intents | `LENZ_NEAR_INTENT_DATA`, `LENZ_NEAR_INTENT_RELAYER_KEY`, `LENZ_NEAR_INTENT_DEPLOYMENT` |
 | Aurora funding/Swap | `LENZ_AURORA_FUNDING_DATA`, `LENZ_AURORA_SWAP_DATA`, `LENZ_AURORA_FUNDING_KEY`, `LENZ_AURORA_FUNDING_OPERATOR`, `LENZ_AURORA_ENGINE_CODE_HASH` |
 | Sepolia lending | `LENZ_LENDING_DATA`, `LENZ_LENDING_KEY` |
@@ -56,6 +57,15 @@ Configure only the services you need. All custody, key, artifact and journal pat
 | Native Zcash | `LENZ_ZCASH_INTENT_DATA`, `LENZ_ZCASH_INTENT_BACKEND`; pinned executable, wallet scans and custody required by that backend |
 
 Keep the same sponsor, custody and journal through restart. Reconcile original actions before retrying; interrupted signing must not create replacement authority. Operator provisioning requires separately reviewed testnet funding and deployments, rather than someone else's keys.
+
+The tUSD relay checks signed funding and every payment-path edge against the configured reserve before sponsorship. Confirmed retries return their original final state; failed or uncertain broadcasts retain their allowance reservation. The journal defaults to `~/Documents/Lenz-local-notes/testnet-operator/reserve-sponsor`, outside the app repository. Preserve `allowance.json` and `initialized` through restart. If a crash leaves `allowance.lock`, stop every sponsor process, check the saved requests against final NEAR state, and remove only that stale lock before restarting. A missing or corrupt initialized ledger requires restoration of its original journal, rather than an allowance reset.
+
+Public requests share the daily sponsor limit and a 60-request minute limit. The current deployed reserve exposes no grant lookup by owner: a key already funded elsewhere may fail its new funding attempt on-chain and consume a sponsor slot. The cap bounds that cost; it does not prevent someone creating multiple profiles or guarantee public-service availability.
+
+The exact owner-signed Rhea submission, continuation and recovery routes share
+that allowance, with a 100 tUSD swap limit. Signed status and refund reads have a
+separate shared 60-request minute limit and never invoke a signer. Every operation
+requires the original signed permission; an order ID alone grants no execution.
 
 ## Hosting
 
@@ -75,7 +85,7 @@ Configure these Vercel server environment variables, keeping credential values o
 
 Start `node web/hosted-gateway.mjs` on the operator host after configuring the same `LENZ_HOSTED_ORIGIN`, `LENZ_GATEWAY_SECRET` and `LENZ_HOSTED_CUSTODY`, plus private `LENZ_ACCOUNT_DATA` and `LENZ_HOSTED_JOBS` directories. The gateway binds to loopback port 4187 by default. `LENZ_GATEWAY_BACKEND` and `LENZ_GATEWAY_LOCAL_ORIGIN` select the fixed loopback app and its configured origin; both default to port 4173. Set `LENZ_GATEWAY_PORT` if a different gateway port is required.
 
-Public reads and ordinary signed account backups use their normal app routes. Financial access requires both the signed existing Lenz identity and its configured source/owner mapping. Recovered routes still require the original verified source/account guards; signing in does not restore native custody. Unmapped operator routes remain unavailable.
+Public reads and ordinary signed account backups use their normal app routes. Offline tUSD funding, signed settlement, Rhea execution and final-state checks use original signed permissions without an operator account mapping. Amounts, spending keys and settlement records are public on NEAR; payment files remain encrypted between contacts. Native Zcash, NEAR Intents, Aurora and lending still require the signed existing Lenz identity and its configured source/owner mapping. Recovered routes require the original verified source/account guards; signing in does not restore native custody. Unmapped operator routes remain unavailable.
 
 The [live prototype](https://lenz-prototype.vercel.app) serves its website and API proxy on Vercel. A temporary Cloudflare tunnel connects the proxy to this computer's authenticated gateway and local testnet signers. Availability depends on that computer, gateway and tunnel; custody and execution journals remain local.
 

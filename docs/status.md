@@ -1,5 +1,11 @@
 # Development status
 
+## Current implementation — November 17
+
+The [current implementation table](implementation-status.md) is the entry point for supported behavior, source links, reproducible checks and unfinished work. It includes automatic signed message requests with Accept/Decline, bounded encrypted request recovery and the original Android BLE host. Direct message delivery was observed between Samsung and Xiaomi phones on November 17; the user reported about 20 seconds for the reverse retry check. Physical multi-hop, radio interruption, process-restart recovery and background delivery remain unverified. Browser/JVM transport tests are separate evidence.
+
+The [recorded integration evidence](evidence/README.md) links actual NEAR Intents, Aurora, Aave and native Zcash outcomes to their mounted implementation and retains their privacy/recovery limits. November 17's NEAR payment and Rhea verification used hosted testnet APIs; the swap required operator recovery after its normal sponsor cap was reached. Android financial POST endpoints remain absent. The [architecture guide](architecture.md) maps implementation ownership and delivery/execution paths. The sections below describe earlier checkpoints.
+
 ## Current submission scope — November 14
 
 The browser app integrates NEAR settlement and the original Intents verifier,
@@ -88,7 +94,7 @@ NEAR, Rhea, NEAR Intents, Aurora, Zcash, private settlement and recovery remain 
 
 - Configure partner credentials only in the server environment. Never place them in browser assets or Git.
 - Live checks require explicitly configured disposable test accounts, test funding and pinned native tooling. Installation or a passing fixture does not prove live execution.
-- Windows Edge is the recorded browser environment. Native Android and iPhone remain roadmap work; no iPhone/Xcode build or physical-phone interoperability result is established.
+- Windows Edge is the recorded browser environment. The Android host now has a compiled, signed APK; iPhone remains unfinished. Compilation and browser/JVM simulations do not establish physical-phone delivery or iPhone interoperability.
 - Account backup, restoration and new-device migration must preserve keys, contacts, messages and outstanding liabilities. Restoring an old snapshot must not make already-spent value spendable again.
 - Independent review of release authority, signing keys and component security is still required before real funds.
 

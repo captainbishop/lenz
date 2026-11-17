@@ -45,3 +45,5 @@ body{background:#edf0e8}.topbar{height:84px;max-width:1480px;margin:auto;padding
  .messages{padding:8px 16px}.composer{padding:6px 12px max(6px,env(safe-area-inset-bottom))}
  .composer textarea{height:48px;min-height:48px;padding:10px 12px}.composer-bottom{padding-bottom:4px}.composer-note{display:none}
 }
+.message-requests{flex:0 1 auto;min-height:0;margin-top:16px}.message-requests h3{display:flex;justify-content:space-between;font:600 13px 'Segoe UI',sans-serif;padding:0 10px;margin:0}.message-requests .contact-list{margin-top:8px;max-height:180px;min-height:0}.contact-request-review{padding:12px 24px;border-bottom:1px solid var(--line);flex-shrink:0;font-size:13px;line-height:1.5;max-height:40dvh;overflow:auto}.contact-request-review p{margin:6px 0}.contact-request-review details{margin:8px 0}.contact-request-review code{display:block;overflow-wrap:anywhere;font-size:11px}.request-actions{display:flex;gap:8px;margin-top:10px}.request-actions button{min-height:44px;font-size:13px;padding:8px 20px}
+#accept-contact-request{min-height:48px}

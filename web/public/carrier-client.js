@@ -1,29 +1,19 @@
 import { readState, updateState } from './chat-store.js';
-import { openMessage, keysAre, assert, digest } from './peer-crypto.js';
+import { keysAre, assert } from './peer-crypto.js';
 import { CARRIER_DOMAIN, PAGE_SIZE, carrierConfig, wrapForCarrier, validateEnvelope, inboxRequest, carrierPost } from './carrier-protocol.js';
-import { receivePacket } from './receive-packet.js';
-import { DELIVERY_RECEIPT, prepareDeliveryReceipt } from './delivery-receipts.js';
-import { isNearPayment } from './near-payment-service.js';
-import { readNearVault, nearLedger, transferTerms } from './near-protocol.js';
+import { receiveDeliveredPacket } from './receive-packet.js';
+import { savedPackets, sendable } from './delivery-packets.js';
 import { acceptDefiReply, pendingDefiChecks, checkDefiSwap } from './defi-wallet.js';
+import {requestedDeliveryPackets} from './delivery-mode.js';
 
-export const savedPackets = state => state.messages.flatMap(r=>[r.packet,r.receiptToShare].filter(p=>p?.from===state.identity?.profile.id));
-export async function sendable(state,packet,contract){
-  const contact=state.contacts.find(p=>p.id===packet.to);if(!contact)return false;
-  const payload=await openMessage(state.identity,contact,packet);
-  if(isNearPayment(payload)){
-    if(payload.contract!==contract)return false;
-    const ledger=await nearLedger(await readNearVault(state,contract));
-    return !ledger.blocked.has(await digest(transferTerms(contract,payload.path.at(-1)))+':0');
-  }
-  return payload.kind==='chat'||payload.kind===DELIVERY_RECEIPT;
-}
+export { savedPackets, sendable } from './delivery-packets.js';
 export async function setCarrierEnabled(enabled) {
   return updateState(state=>{
     assert(state.identity, 'Create your Lenz profile first.');
     const previous=state.carrier??{outbox:[],excluded:[]};
-    // Enabling never uploads old history. Previously queued files retain their exact signatures.
-    state.carrier={...previous,enabled,excluded:enabled?[...new Set([...previous.excluded,...savedPackets(state).filter(p=>!previous.outbox.some(e=>e.envelope.packet.id===p.id)).map(p=>p.id)])]:previous.excluded};
+    const requested=new Set(requestedDeliveryPackets(state).map(packet=>packet.id));
+    // Restore prior delivery consent while retaining unrequested history locally.
+    state.carrier={...previous,enabled,excluded:enabled?[...new Set([...previous.excluded.filter(id=>!requested.has(id)),...savedPackets(state).filter(p=>!requested.has(p.id)&&!previous.outbox.some(e=>e.envelope.packet.id===p.id)).map(p=>p.id)])]:previous.excluded};
   });
 }
 export function createCarrierClient({config, contract, defiConfig, onUpdate=()=>{}, onError=()=>{}, post=carrierPost, now=Date.now}) {
@@ -80,8 +70,7 @@ export function createCarrierClient({config, contract, defiConfig, onUpdate=()=>
         await updateState(async s=>{
           if(signal.aborted||stopped||!s.carrier?.enabled||s.identity?.profile.id!==state.identity.profile.id)return;
           if(await acceptDefiReply(s,swapConfig,envelope.packet)){signal.throwIfAborted();return;}
-          const result=await receivePacket(s,envelope.packet,false,contract);
-          if(result.kind!==DELIVERY_RECEIPT)await prepareDeliveryReceipt(s,envelope.packet.id);
+          await receiveDeliveredPacket(s,envelope.packet,{contract,sender:envelope.sender});
           signal.throwIfAborted();
         },{signal});
       }catch(error){onError(error);}

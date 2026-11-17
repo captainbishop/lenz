@@ -73,7 +73,7 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       await a.locator('#message').fill('Meet me by the bookshop. '.repeat(100));await a.locator('#prepare-message').click();await idle(a);
       const id=(await read(a)).messages.at(-1).packet.id;
       await wait(b,s=>s.messages.some(r=>r.packet.id===id));await wait(a,s=>s.messages.some(r=>r.packet.id===id&&r.receivedReceipt));
-      assert.equal((await read(b)).messages.length,1);assert.equal(await a.locator('#handover').evaluate(d=>d.open),false);
+      assert.equal((await read(b)).messages.length,1);assert.equal(await a.locator('#handover').count(),0);
     });
     await check('offline payment follows the same channel and keeps settlement separate',async()=>{
       await a.locator('#pay-tusd').click();await a.locator('#chat-pay-amount').fill('4');await a.locator('#chat-pay-form button[type=submit]').click();await idle(a);
@@ -86,7 +86,7 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       await a.locator('#contact-list button').filter({hasText:'Chidi'}).click();await idle(a);
       assert.equal(await a.locator('#prepare-message').textContent(),'Send','An unpaired contact keeps the same Send action');
       await a.locator('#pay-tusd').click();
-      assert.equal(await a.locator('#chat-pay-submit').textContent(),'Save payment to share');
+      assert.equal(await a.locator('#chat-pay-submit').textContent(),'Send payment');
       await a.locator('#chat-pay-close').click();
       await a.locator('#contact-list button').filter({hasText:'Bola'}).click();await idle(a);
       assert.equal(await a.locator('#prepare-message').textContent(),'Send');
@@ -94,7 +94,7 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       await a.locator('#pay-tusd').click();assert.match(await a.locator('#chat-pay-delivery').textContent(),/nearby/i);await a.locator('#chat-pay-close').click();
       await walletClick(b,'near-send');
       await selectRecipient(b,profiles[2].id);
-      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Prepare payment');
+      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Send payment');
       assert.doesNotMatch(await b.locator('#near-send-delivery').textContent(),/nearby/i);
       await selectRecipient(b,profiles[0].id);
       assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Send payment');
@@ -109,12 +109,12 @@ const wait=async(p,fn)=>{for(let i=0;i<150;i++){if(fn(await read(p)))return;awai
       await openNearby(a);await a.locator('#nearby-disconnect').click();
       await b.waitForFunction(()=>document.querySelector('#nearby-status').textContent.startsWith('Disconnected'));
       assert.equal(await a.locator('#prepare-message').textContent(),'Send');
-      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Prepare payment');
+      assert.equal(await b.locator('#near-send-form button[type=submit]').textContent(),'Send payment');
       assert.doesNotMatch(await a.locator('#chat-connection').textContent(),/Nearby/);
       // Configured internet delivery remains available for an unpaired recipient.
       await a.evaluate(async()=>{const d=await import('/delivery-mode.js'),s=await(await import('/chat-store.js')).readState();d.updateDeliveryMode(false,{...s,nostr:{enabled:true}},true);});
       assert.equal(await a.locator('#prepare-message').textContent(),'Send');
-      assert.match(await a.locator('#chat-connection').textContent(),/Offline.*waiting for a delivery connection/);
+      assert.match(await a.locator('#chat-connection').textContent(),/Offline.*send when connected/);
       await a.evaluate(async()=>{(await import('/delivery-mode.js')).updateDeliveryMode(false,{},false);});
       for(const p of [a,b])await p.evaluate(()=>{Object.defineProperty(navigator,'onLine',{configurable:true,get:()=>false});dispatchEvent(new Event('offline'));});
       await b.locator('[data-close="near-send-dialog"]').click();

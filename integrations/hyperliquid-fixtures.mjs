@@ -3,6 +3,7 @@ export function hyperliquidFixtureFetcher(url,options){
   const request=JSON.parse(options.body),now=Date.now(),coin=request.coin??request.req?.coin;
   let value;
   switch(request.type){
+    case 'spotMeta':value={tokens:[{index:360,name:'USDH'},{index:150,name:'HYPE'},{index:0,name:'USDC'}],universe:[{index:107,name:'@107',tokens:[150,0]},{index:1188,name:'@1188',tokens:[150,360]}]};break;
     case 'spotMetaAndAssetCtxs':value=[{tokens:[{index:360,name:'USDH'},{index:150,name:'HYPE'},{index:0,name:'USDC'}],universe:[{index:107,name:'@107',tokens:[150,0]},{index:1188,name:'@1188',tokens:[150,360]}]},[{coin:'#120',midPx:'0.6'},{coin:'@107',midPx:'42',dayNtlVlm:'1000'},{coin:'#121',midPx:'0.4'}]];break;
     case 'perpDexs':value=[null,{name:'xyz'}];break;
     case 'metaAndAssetCtxs':value=[{collateralToken:request.dex?360:0,universe:[{name:request.dex?'xyz:GOLD':'BTC',maxLeverage:20},{name:request.dex?'xyz:OLD':'OLD',isDelisted:true}]},[{midPx:'100',dayNtlVlm:'500'},{}]];break;

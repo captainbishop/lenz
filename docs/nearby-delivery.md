@@ -1,4 +1,13 @@
-# Nearby transfer
+# Nearby delivery
+
+The Android host provides Lenz's Bluetooth transport directly.
+Ordinary chat Send retains the original encrypted message and resumes it when a
+delivery route becomes available. Nearby starts the phone permission flow; a
+verified Lenz recipient receipt determines arrival. Native source and build
+boundaries are in the [Android host guide](../native/android/README.md).
+Physical radio delivery remains unverified.
+
+The following connection-code flow is the browser's Wi-Fi transport.
 
 Open **Nearby** in chat or wallet. Both people must already have added and verified
 each other’s Lenz ID. Join the same reachable Wi-Fi network or hotspot, choose the
@@ -61,7 +70,8 @@ rejected, including after the old approval expires. Inbox limits are 32 requests
 4 MB and eight requests per sender. Failed writes acknowledge nothing.
 
 Open a received request to review its amount, minimum output, receiving wallet
-and deadline. Receiving does not execute it. The sender's receipt records only
+and deadline. Submit the approved swap separately through a connected participant.
+Receiving does not execute it. The sender's receipt records only
 that the chosen device stored the request; execution status, funds and
 reservations are unchanged. A saved receipt can return after approval expiry or
 through a replacement courier. A changed DeFi route makes incompatible approvals
@@ -69,8 +79,19 @@ unavailable while ordinary chat and saved receipt delivery remain usable.
 
 This uses the existing, explicitly approved public NEAR testnet Rhea route.
 Private-required approvals remain blocked; there is no fallback to this route.
-Production private execution, connecting this browser inbox to durable executor
-dispatch, and independent result reconciliation remain separate work.
+The signed submission, continuation and status routes check the original funded
+input and preserve dispatch fences after response loss or restart. The shared
+sponsor allows 12 dispatches per UTC day and swaps up to 100 tUSD. An uncertain
+submission must be checked before another attempt.
+
+The executor can return an encrypted update by file or courier. The sender checks
+the original request against a fresh final NEAR block, pinned contracts, exact
+order and reserve consumption before displaying a verified result. An executor
+report cannot credit funds or release the original reservation. Expiry prevents
+a new submission; an existing order can still be checked and continued for
+completion or refund. Physical radio delivery and production private settlement
+remain unverified. The native transport carries the same encrypted approval
+and receipt bytes without a Bitchat attachment step.
 
 ## Local spending approvals
 

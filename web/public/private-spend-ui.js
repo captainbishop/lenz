@@ -26,7 +26,7 @@ function feedback(error){
  if(/storage|quota|IndexedDB/i.test(error?.message))return 'Could not save this change. Check browser storage and try again.';
  return 'Could not complete this step. Check the selected wallet and request, then try again.';
 }
-export function mountPrivateSpend(session,before){
+export function mountPrivateSpend(session,before,{openSwap}={}){
  const style=el('link');style.rel='stylesheet';style.href='/private-spend.css';document.head.append(style);
  const panel=el('section');panel.id='wallet-private-approvals';panel.className='wallet-private-approvals';
  panel.innerHTML='<div class="section-heading"><h2>Lenz funds</h2><button id="private-spend-open" type="button" class="secondary">Pay</button></div><p class="quiet">Wallet funds → Private account → Offline approval</p>';
@@ -42,7 +42,7 @@ export function mountPrivateSpend(session,before){
   <div id="private-spend-route"><div class="private-spend-source"><label for="private-spend-asset">Asset</label><select id="private-spend-asset" required></select><div class="private-payment-value"><label for="private-spend-amount">Amount</label><input id="private-spend-amount" inputmode="decimal" autocomplete="off" placeholder="0.00" required></div></div>
   <span id="private-spend-route-arrow" hidden aria-hidden="true">${walletIcon('M4 12h16m-5-5 5 5-5 5')}</span><div id="private-spend-swap-fields" hidden><label for="private-spend-destination">Receive asset</label><select id="private-spend-destination"></select><div class="private-payment-value"><label for="private-spend-minimum">Receive at least</label><input id="private-spend-minimum" inputmode="decimal" autocomplete="off" placeholder="0.00"></div></div></div>
   <p id="private-spend-swap-note" class="quiet" hidden>The swapped asset stays in your Lenz account. A failed swap can return the original asset there.</p>
-  <label for="private-spend-executor">Send request through</label><select id="private-spend-executor" required></select>
+  <label for="private-spend-executor">Send request through</label><select id="private-spend-executor" required data-empty-label="No contacts yet" aria-describedby="private-spend-executor-note"></select>
   <p id="private-spend-executor-note" class="quiet">Choose a contact who agrees to complete this payment while online. They can read the details and submit only this approved payment.</p>
   <p class="quiet">Lenz and the transfer provider can see your wallet address, recipient and amount.</p>
   <button id="private-spend-prepare" type="submit">Review payment</button>
@@ -74,7 +74,8 @@ export function mountPrivateSpend(session,before){
  function discover(){dispatchEvent(new Event('eip6963:requestProvider'));if(window.ethereum&&!providers.some(p=>p.provider===window.ethereum))announce({detail:{provider:window.ethereum,info:{name:'Browser wallet'}}});}
  function control(){
   dialog.setAttribute('aria-busy',String(busy));
-  for(const node of dialog.querySelectorAll('input,select,button:not(#private-spend-close)'))node.disabled=busy;
+  for(const node of dialog.querySelectorAll('input,select,button:not(#private-spend-close):not(.lenz-choice-button)'))node.disabled=busy;
+  $('private-spend-asset').disabled=busy||!tokens.length;$('private-spend-destination').disabled=busy||!tokens.length;
   $('private-spend-prepare').disabled=busy||!paymentAccess||!navigator.onLine||!session.snapshot||!tokens.length;
   let valid=false;try{if(draft){checkConfidentialSpend(draft.offer);valid=true;}}catch{}
   $('private-spend-approve').disabled=busy||!paymentAccess||!valid||!providers[$('private-spend-signer').value]||$('private-spend-review').dataset.queued==='true';
@@ -92,6 +93,9 @@ export function mountPrivateSpend(session,before){
   const network=Object.values(FUNDING_NETWORKS).find(n=>n.asset===asset);
   return network?units(value,18)+' ETH · '+network.name:value+' base units · '+asset;
  }
+ function paintExecutorNote(){
+  $('private-spend-executor-note').textContent=$('private-spend-executor').options.length?(swapping?'Choose a contact who agrees to complete this swap while online. They can read the details and submit only this approved swap.':'Choose a contact who agrees to complete this payment while online. They can read the details and submit only this approved payment.'):'Add and verify a contact first. They can deliver this request when online.';
+ }
  function paintReview(){
   if(draft)swapping=draft.offer.terms.originAsset!==draft.offer.terms.destinationAsset;
   $('private-spend-title').textContent=paymentAccess?(swapping?'Swap Lenz funds':'Pay from Lenz'):'Request history';
@@ -99,7 +103,7 @@ export function mountPrivateSpend(session,before){
   $('private-spend-recipient-fields').hidden=swapping;$('private-spend-recipient').required=!swapping;
   $('private-spend-swap-fields').hidden=!swapping;$('private-spend-minimum').required=swapping;$('private-spend-destination').required=swapping;
   $('private-spend-route').classList.toggle('private-swap-route',swapping);$('private-spend-route-arrow').hidden=!swapping;$('private-spend-swap-note').hidden=!swapping;
-  $('private-spend-executor-note').textContent=swapping?'Choose a contact who agrees to complete this swap while online. They can read the details and submit only this approved swap.':'Choose a contact who agrees to complete this payment while online. They can read the details and submit only this approved payment.';
+  paintExecutorNote();
   $('private-spend-permission-note').textContent='Confirming allows this '+(swapping?'swap':'payment')+' until the deadline shown, even if funds arrive later. No money is set aside. Privacy and completion are not yet independently verified.';
   $('private-spend-prepare').textContent=swapping?'Review swap':'Review payment';
   $('private-spend-intro').hidden=!paymentAccess;
@@ -141,6 +145,7 @@ export function mountPrivateSpend(session,before){
    $('private-spend-history').append(item);
   }
   $('private-spend-executor').replaceChildren();for(const contact of s.contacts.filter(p=>p.id!==s.identity.profile.id&&!isRecoveredContact(s,p.id))){const option=el('option',contact.name);option.value=contact.id;$('private-spend-executor').append(option);}
+  paintExecutorNote();
   control();
  }
  async function act(fn){
@@ -158,13 +163,16 @@ export function mountPrivateSpend(session,before){
    await refresh();
    if(navigator.onLine){const response=await fetch('/api/receive/assets',{cache:'no-store',credentials:'omit',redirect:'error',signal:AbortSignal.timeout(5000)});if(response.ok){const result=await response.json();if(ticket!==version||!dialog.open)return;tokens=receiveAssets(result.tokens).filter(t=>/^nep141:[a-z0-9._-]{2,128}$/.test(t.assetId)&&t.decimals<=36);}}
    if(ticket!==version||!dialog.open)return;
-   $('private-spend-asset').replaceChildren();for(const token of tokens){const option=el('option',token.symbol+' · '+receiveChain(token.blockchain));option.value=token.assetId;$('private-spend-asset').append(option);}
-   $('private-spend-destination').replaceChildren();for(const token of tokens){const option=el('option',token.symbol+' · '+receiveChain(token.blockchain));option.value=token.assetId;$('private-spend-destination').append(option);}
+   for(const id of ['private-spend-asset','private-spend-destination']){
+    const choices=$(id);choices.replaceChildren();
+    for(const token of tokens){const option=el('option',token.symbol+' · '+receiveChain(token.blockchain));option.value=token.assetId;choices.append(option);}
+    if(!tokens.length){const option=el('option',navigator.onLine?'No eligible private assets':'Connect to load private assets');option.value='';option.disabled=true;choices.append(option);}
+   }
    await refresh();if(!paymentAccess)$('private-spend-feedback').textContent='Recovered history. Financial access remains paused.';
    else if(!session.snapshot&&!draft)$('private-spend-feedback').textContent='Connect an external wallet to prepare a request.';
   }catch(error){$('private-spend-feedback').textContent=feedback(error);}finally{control();}
  }
- panel.querySelector('#private-spend-open').onclick=()=>openRequest(false);swapOpen.onclick=()=>openRequest(true);
+ panel.querySelector('#private-spend-open').onclick=()=>openRequest(false);swapOpen.onclick=()=>openSwap?openSwap():openRequest(true);
  $('private-spend-form').onsubmit=event=>{event.preventDefault();void act(async signal=>{
   const state=await readState();assert(state.identity,'Create a Lenz profile first.');requirePaymentAccess(state.identity);
   const lease=session.capture(),token=tokens.find(t=>t.assetId===$('private-spend-asset').value),destinationToken=swapping?tokens.find(t=>t.assetId===$('private-spend-destination').value):token,executor=state.contacts.find(p=>p.id===$('private-spend-executor').value);

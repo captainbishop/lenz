@@ -3,7 +3,7 @@ import { compressed, displayUnits, nearLedger, readNearVault, transferTerms } fr
 import { digest } from './peer-crypto.js';
 import { prepareNearPayment } from './near-payment-service.js';
 import { confirmNearPayment, refreshNearPayments } from './near-payment-status.js';
-import { deliveryMode } from './delivery-mode.js';
+import { deliveryMode, internetConnection, bluetoothConnection, prepareChatDelivery } from './delivery-mode.js';
 import { walletError } from './wallet-feedback.js';
 import { deliveryAcknowledged } from './delivery-receipts.js';
 import {isRecoveredChat,isRecoveredContact} from './chat-access.js';
@@ -24,13 +24,16 @@ export async function loadChatMoney() {
 }
 export function mountChatMoney({ action, status, selected, expose }) {
   paymentAction = action;
-  let recipient = null;
+  let recipient = null, paymentOwner = null;
   const connection = () => {
     const mode = deliveryMode(selected()), payMode = deliveryMode($('#chat-pay-dialog').open ? recipient : selected());
     $('#prepare-message').textContent = 'Send';
-    if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = payMode !== 'file' ? 'Send payment' : 'Save payment to share';
-    $('#chat-pay-delivery').textContent = payMode === 'nearby' ? 'Sends directly nearby. Payment confirmation happens separately.' : payMode === 'automatic' ? 'Saved payments will deliver when connected. Your contact can pass them onward offline.' : 'Share the encrypted payment file. Your contact can pass it onward offline.';
-    $('#chat-connection').textContent = mode === 'nearby' ? 'Nearby · connected to ' + $('#conversation-name').textContent + ' · keep Lenz open' : mode === 'automatic' ? navigator.onLine ? 'Automatic delivery · keep Lenz open' : 'Offline · waiting for a delivery connection' : 'Saved automatically · Send opens sharing options';
+    if (!$('#chat-pay-submit').disabled) $('#chat-pay-submit').textContent = 'Send payment';
+    $('#chat-pay-delivery').textContent = payMode === 'nearby'||payMode==='bluetooth' ? 'Sends nearby. Payment confirmation happens separately.' : 'Saved payments wait for a connection. Your contact can pass them onward offline.';
+    const connection=internetConnection();
+    const radio=bluetoothConnection();
+    $('#chat-connection').textContent = mode === 'nearby' ? 'Nearby · connected to ' + $('#conversation-name').textContent + ' · keep Lenz open' : mode==='bluetooth'?radio.peers?'Nearby · '+radio.peers+' device'+(radio.peers===1?'':'s')+' · keep Lenz open':'Nearby · looking for devices':mode === 'automatic' ? !navigator.onLine ? 'Offline · messages will send when connected' : connection==='online'?'Online · encrypted chat':connection==='unavailable'?'Chat connection unavailable · retrying':connection==='connecting'?'Connecting to chat…':'Automatic delivery · keep Lenz open' : radio.supported?'Nearby is off · messages stay queued':'Messages stay queued until a connection returns';
+    const privacy=$('#chat-delivery-note');if(privacy)privacy.textContent=mode==='nearby'||mode==='bluetooth'?'Nearby devices carry encrypted messages. Presence, routing IDs, sizes and timing remain visible.':mode==='automatic'?'Keep Lenz open. Relays carry encrypted messages and can see your IP address and timing.':'Use Nearby on the native app or enable internet delivery.';
   };
   updateChatDelivery = connection;
   const updateConnection = () => { connection(); paymentConnection(); };
@@ -39,7 +42,7 @@ export function mountChatMoney({ action, status, selected, expose }) {
   $('#pay-tusd').onclick = () => action(async () => {
     const state = await readState(), contact = state.contacts.find(c => c.id === selected());
     if (!contact || !chatNearContract()) return;
-    recipient = contact.id;
+    recipient = contact.id;paymentOwner=state.identity.profile.id;
     $('#chat-pay-form').reset(); $('#chat-pay-title').textContent = `Pay ${contact.name}`;
     $('#chat-pay-feedback').textContent = ''; $('#chat-pay-dialog').showModal(); connection();
   });
@@ -47,10 +50,15 @@ export function mountChatMoney({ action, status, selected, expose }) {
   $('#chat-pay-form').onsubmit = event => { event.preventDefault(); action(async () => {
     const button = $('#chat-pay-submit'); button.disabled = true; button.textContent = 'Saving payment…';
     try {
-      const packet = await updateState(state => prepareNearPayment(state, chatNearContract(), recipient, $('#chat-pay-amount').value));
+      const owner=paymentOwner,amount=$('#chat-pay-amount').value;await prepareChatDelivery(owner);
+      const packet = await updateState(async state => {
+        if(state.identity?.profile.id!==owner)throw Error('Your account changed. Reload before sending.');
+        const packet=await prepareNearPayment(state, chatNearContract(), recipient, amount);
+        state.messages.find(record=>record.packet.id===packet.id).deliveryRequested=true;return packet;
+      });
       $('#chat-pay-dialog').close(); const automatic = await expose(packet, 'payment');
-      status(automatic ? 'Payment saved for delivery. Confirmation happens separately.' : 'Payment saved. Share the encrypted file. Your contact can pass the money onward offline.');
-    } catch (error) { const message = walletError(error); $('#chat-pay-feedback').textContent = message; throw Error(message); }
+      status(automatic ? 'Payment saved for delivery. Confirmation happens separately.' : 'Payment stays saved for delivery. Confirmation happens separately.');
+    } catch (error) { const message = error.message?.startsWith('Your account changed.')?'Your account changed. Open the payment again.':walletError(error); $('#chat-pay-feedback').textContent = message; throw Error(message); }
     finally { button.disabled = false; connection(); }
   }); };
 }
@@ -70,17 +78,17 @@ export async function renderNearPaymentCard(payload, packet, state, money) {
   const outgoing = packet.from === state.identity.profile.id, card = el('article', undefined, 'trade-card near-chat-card');
   const acknowledged = outgoing && await deliveryAcknowledged(state, state.messages.find(r => r.packet.id === packet.id));
   const id = await digest(transferTerms(payload.contract, payload.path.at(-1))), noteId = `${id}:0`;
-  card.append(el('p', 'tUSD · NEAR TESTNET', 'eyebrow'), el('h3', money?.ledger.blocked.has(noteId) ? 'Payment could not be confirmed' : outgoing ? acknowledged ? 'Payment file received' : 'Payment ready to share' : 'Payment received'));
+  card.append(el('p', 'tUSD · NEAR TESTNET', 'eyebrow'), el('h3', money?.ledger.blocked.has(noteId) ? 'Payment could not be confirmed' : outgoing ? acknowledged ? 'Payment received' : 'Payment waiting to send' : 'Payment received'));
   card.append(el('p', `${displayUnits(payload.path.at(-1).amount)} tUSD`, 'payment-amount'));
-  let detail = outgoing ? acknowledged ? 'Contact acknowledged the file · awaiting online confirmation' : 'Saved here · delivery not confirmed' : 'Received on this device · awaiting online confirmation';
+  let detail = outgoing ? acknowledged ? 'Contact acknowledged receipt · awaiting online confirmation' : 'Saved for delivery · confirmation is separate' : 'Received on this device · awaiting online confirmation';
   if (money?.ledger.blocked.has(noteId)) detail = 'Payment could not be confirmed · excluded from your balance';
   else if (!outgoing && money?.ledger.reserved.has(noteId)) detail = 'Set aside for a saved swap · check the wallet for its status';
   else if (!outgoing && money?.ledger.consumed.has(noteId)) detail = 'Used in a later payment or saved swap · check the wallet for its status';
-  else if (money?.vault.receipts[id]?.finality === 'FINAL') detail = outgoing ? acknowledged ? 'Confirmed on NEAR · receipt received' : 'Confirmed on NEAR · file delivery not confirmed' : 'Payment confirmed on NEAR';
+  else if (money?.vault.receipts[id]?.finality === 'FINAL') detail = outgoing ? acknowledged ? 'Confirmed on NEAR · receipt received' : 'Confirmed on NEAR · recipient arrival not confirmed' : 'Payment confirmed on NEAR';
   else if (!outgoing && money?.vault.confirmations?.[noteId]) detail = 'Confirmation pending · check for an update';
   card.append(el('p', detail, 'trade-state'));
-  if (acknowledged) card.append(el('p', 'Receipt received · your contact acknowledged the file. Payment confirmation is separate.', 'delivery-state'));
-  card.append(el('small', 'The file is encrypted. Settlement amounts and accounts are public on the test network.'));
+  if (acknowledged) card.append(el('p', 'Receipt received · your contact acknowledged the payment. Confirmation on NEAR is separate.', 'delivery-state'));
+  card.append(el('small', 'Payment instructions are encrypted. Settlement amounts and accounts are public on the test network.'));
   if (paymentAction && money?.ledger.notes?.has(noteId)) {
     const controls = el('div', undefined, 'near-payment-actions');
     const feedback = el('p', paymentFeedback.get(packet.id) ?? '', 'near-payment-feedback'); feedback.setAttribute('role', 'status');

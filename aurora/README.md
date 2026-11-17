@@ -1,4 +1,8 @@
-# Aurora development setup
+# Aurora integration and development setup
+
+The mounted Wallet uses owner-signed proof-funded Aurora Swap and durable funding/execution services. A November 14 test finalized the original funded note to 2 LTT through the deployed factory and fixed-rate test adapter, with exact final receipts and beneficiary credit. See [recorded execution](../docs/evidence/aurora-wallet-swap-20261114.json), [mounted source path](../docs/evidence/SOURCE-MAP.md) and [current addresses/privacy limits](../docs/testnet-integrations.md). Broader venues, private settlement and live interrupted-submission recovery remain unverified.
+
+## Local tooling and earlier experiments
 
 The [offline ETH budget rehearsal](../docs/offline-budgets.md) uses this toolchain
 for source-asset authorization, isolated venue callers and owner recovery. Its
@@ -7,7 +11,7 @@ connected Intents/private-settlement adapter. Run
 `node aurora/verify-offline-budget.mjs` from the repository root with the
 existing Playwright runtime on `NODE_PATH`.
 
-This folder supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and [transaction confirmation checks](engine-transactions.md) for Aurora testnet. A [durable submission journal](engine-submissions.md) validates and stores already signed calls, then recovers interrupted sends by hash. [Current access-key permissions](engine-access.md) gate each broadcast. A [direct ERC-20 receipt checker](engine-transfers.md) compares the reported token transfer with independently supplied payment terms. The pinned EthereumJS toolchain was verified on Windows with Node 24.21.0 on November 1, 2026. It does not yet connect Aurora to Lenz's wallet or deploy a contract on Aurora. No separate Aurora Intents adapter is present; [development status](../docs/status.md).
+This folder also supplies local EVM development tools, [Engine call/result codecs](engine-interface.md) and [transaction confirmation checks](engine-transactions.md) for Aurora testnet. A [durable submission journal](engine-submissions.md) validates and stores already signed calls, then recovers interrupted sends by hash. [Current access-key permissions](engine-access.md) gate each broadcast. A [direct ERC-20 receipt checker](engine-transfers.md) compares the reported token transfer with independently supplied payment terms. The November 1 EthereumJS tooling checks were local/read-only experiments; the later mounted Wallet route has separate execution evidence above.
 
 The [name lookup](names.md) resolves ENS Aurora records and native NEAR accounts,
 with final-block observations and a browser page for saved offline reference.
@@ -51,7 +55,7 @@ The November 1 [npm audit](dependency-audit.json) reports **zero known vulnerabi
 
 Lifecycle scripts remain disabled in `.npmrc`. The current lockfile contains no installation hooks. Tests check pinning, registry integrity metadata, installed versions and absence of nested Zod packages. Dependency packages stay outside the repository and are not imported by the web wallet.
 
-The [Engine interface](engine-interface.md) now has bounded call/result serialization and a live read-only mapping check. The configured tUSD token has no Aurora mapping at the checked block. A deployed execution adapter, account authorization and NEAR↔Aurora asset routing and payment-outcome verification remain required before connecting it to the product.
+The earlier [Engine interface](engine-interface.md) report has bounded call/result serialization and a read-only mapping check. Its configured tUSD token had no Aurora mapping at that checked block. The current proof-funded Wallet route uses its separately pinned LTS/LTT assets and deployed adapter; this does not establish general tUSD or NEAR↔Aurora routing.
 
 ## Payment-proof verifier experiment
 

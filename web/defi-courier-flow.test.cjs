@@ -67,6 +67,7 @@ async function pair(a,b,ap,bp){
   await until(recipient,async()=>(await(await import('/defi-courier.js')).defiInboxSummary()).enabled);
   await sender.locator('#nearby-close').click();await openWalletSection(sender,'defi');await sender.locator('#rhea-open').click();
   assert.equal(await sender.locator('#rhea-privacy').inputValue(),'private');assert.equal(await sender.locator('#rhea-form button[type=submit]').isDisabled(),true);
+  await sender.locator('.dex-settings>summary').click();
   await choose(sender,'rhea-privacy','public-testnet');await sender.locator('#rhea-amount').fill('4');await sender.locator('#rhea-minimum').fill('0.25');await sender.locator('#rhea-receiver').fill('receiver.testnet');
   await choose(sender,'defi-method','contact');await choose(sender,'defi-contact',profiles[2].id);await sender.locator('#rhea-form button[type=submit]').click();
   await sender.locator('#defi-approval').waitFor();assert.equal(await sender.locator('#defi-approve').isDisabled(),true);await sender.locator('#defi-consent').check();await sender.locator('#defi-approve').click();

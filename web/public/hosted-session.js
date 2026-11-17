@@ -2,7 +2,14 @@ import {readState} from './chat-store.js';
 import {bytes,hex} from './peer-crypto.js';
 import {requirePaymentAccess,isRecoveredChat} from './chat-access.js';
 const domain='lenz/hosted-operator-session/v1',privileged=['/api/intent-near/','/api/intent-aurora/','/api/intent-aurora-funds/','/api/intent-aurora-swap/','/api/intents/lending/','/api/intent-zcash/','/api/zcash/','/api/rhea/','/api/defi/','/api/private-spend/','/api/private-executor/','/api/hyperliquid-testnet/','/api/ai/','/api/hosted/jobs/'];
-const protectedPath=path=>privileged.some(prefix=>path.startsWith(prefix))||['/api/testnet/fund','/api/testnet/settle','/api/testnet/check'].includes(path);
+const ownerSignedPath=path=>[
+ '/api/testnet/fund','/api/testnet/settle','/api/testnet/check',
+ '/api/rhea/signed-submit','/api/rhea/signed-advance','/api/rhea/signed-order','/api/rhea/signed-recover','/api/defi/rhea/status','/api/defi/rhea/refund-status',
+ '/api/intent-aurora/config','/api/intent-aurora/snapshot',
+ '/api/intent-aurora-funds/config','/api/intent-aurora-funds/prepare','/api/intent-aurora-funds/submit','/api/intent-aurora-funds/reconcile','/api/intent-aurora-funds/resume','/api/intent-aurora-funds/cleanup',
+ '/api/intent-aurora-swap/config','/api/intent-aurora-swap/prepare','/api/intent-aurora-swap/submit','/api/intent-aurora-swap/reconcile','/api/intent-aurora-swap/recover'
+].includes(path);
+const protectedPath=path=>path!=='/api/defi/rhea/quote'&&privileged.some(prefix=>path.startsWith(prefix));
 
 async function requireSourceAccess(state,path){
  if(state.identity?.access===undefined)return;
@@ -44,6 +51,7 @@ export function createHostedSession({fetcher=globalThis.fetch.bind(globalThis),r
  }
  return {ensure,fetch:async(input,options={})=>{
   const path=typeof input==='string'?input:'';
+  if(hosted&&ownerSignedPath(path)){await requireSourceAccess(await read(),path);return fetcher(input,options);}
   if(!hosted||!protectedPath(path))return fetcher(input,options);
   await requireSourceAccess(await read(),path);
   const session=await ensure(options.signal),headers=new Headers(options.headers);

@@ -1,7 +1,6 @@
 import { readState, updateState } from './chat-store.js';
-import { savedPackets, sendable } from './carrier-client.js';
-import { receivePacket } from './receive-packet.js';
-import { DELIVERY_RECEIPT, prepareDeliveryReceipt } from './delivery-receipts.js';
+import { savedPackets, sendable } from './delivery-packets.js';
+import { receiveDeliveredPacket } from './receive-packet.js';
 import { createNearbyConnection } from './nearby-connection.js';
 import { setNearbyRecipient } from './delivery-mode.js';
 import {acceptCourierPacket,courierHandoff,dispatchCourierItem,markCourierSent} from './nearby-courier.js';
@@ -22,8 +21,7 @@ export async function nearbySession(contactId,{contract,defiConfig=null,onState=
     const receipt=await updateState(async state=>{
       if(stopped)throw Error('Nearby session ended.');
       if(await acceptCourierPacket(state,contactId,packet,deliveryOptions))return null;
-      const result=await receivePacket(state,packet,false,contract);
-      return result.kind===DELIVERY_RECEIPT?null:prepareDeliveryReceipt(state,packet.id);
+      return (await receiveDeliveredPacket(state,packet,{contract})).receipt;
     });
     if(receipt)allowed.add(receipt.id);
     changed();setTimeout(wake,0);

@@ -4,7 +4,8 @@ import {readDefiStatus,readDefiRefund} from './defi-status.mjs';
 const origin = 'http://127.0.0.1:4173';
 const send = (res, status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(data)); };
 // Read-only quotes and status. They do not sign, reserve, deposit or spend.
-export function createDefiRoute(clients = { rheaQuote, intentsPreview, intentsTokens, readDefiStatus, readDefiRefund }) {
+export function createDefiRoute(clients = { rheaQuote, intentsPreview, intentsTokens, readDefiStatus, readDefiRefund },{now=Date.now}={}) {
+  let readMinute=-1,readCount=0;
   return async function defiRoute(req, res) {
     if (!req.url.startsWith('/api/defi/')) return false;
     try {
@@ -15,6 +16,11 @@ export function createDefiRoute(clients = { rheaQuote, intentsPreview, intentsTo
       const limit=['/api/defi/rhea/status','/api/defi/rhea/refund-status'].includes(req.url)?65536:5000;
       for await (const chunk of req) { size += chunk.length; if (size > limit) throw new Error('Request too large'); chunks.push(chunk); }
       const input = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      if (['/api/defi/rhea/status','/api/defi/rhea/refund-status'].includes(req.url)) {
+        const minute=Math.floor(now()/60000);
+        if(minute!==readMinute){readMinute=minute;readCount=0;}
+        if(++readCount>60){send(res,429,{error:'The swap status service is busy. Keep the original request and check again shortly.'});return true;}
+      }
       let result;
       if (req.url === '/api/defi/rhea/status') result = await clients.readDefiStatus(input);
       else if (req.url === '/api/defi/rhea/refund-status') result = await clients.readDefiRefund(input);

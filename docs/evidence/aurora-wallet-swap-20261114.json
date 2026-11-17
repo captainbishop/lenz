@@ -1,0 +1,174 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "historical-testnet",
+  "summarizedAt": "2026-11-17T09:47:50.824Z",
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T09:47:50.763Z",
+    "head": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 of inspected working files. These hashes identify the current implementation; they are not a historical source snapshot.",
+    "files": [
+      {
+        "path": "web/public/money.js",
+        "bytes": 11040,
+        "sha256": "1c3974e510a985f7600856b1a737985d661a17f67097cf1386f13c5a5761f0ee"
+      },
+      {
+        "path": "web/public/intent-aurora-funding-ui.js",
+        "bytes": 17674,
+        "sha256": "abd080bd88abea283eee8da461d75b43d35f1ca35e3d41cc5173b4bb0b085e0d"
+      },
+      {
+        "path": "web/public/intent-aurora-route.js",
+        "bytes": 10088,
+        "sha256": "d75b72944bda8346894c98007e34a4d6b754b6b01845168bf2c22f78f7ddd6d2"
+      },
+      {
+        "path": "web/intent-aurora-funding.mjs",
+        "bytes": 17578,
+        "sha256": "aec45d414577ac2d3ff39c0b08eb36c6198c10e55e20787e039ff396c44a40e6"
+      },
+      {
+        "path": "web/intent-aurora-swap.mjs",
+        "bytes": 23529,
+        "sha256": "26de2ac793d1a13febeff764154f07f700ded10e3a664c0125fd345c6c22a559"
+      },
+      {
+        "path": "web/intent-aurora-sponsor.mjs",
+        "bytes": 16844,
+        "sha256": "3558c544821824da573972a7c69eeece98ac8d97d42b1114ef1c03d39e407031"
+      },
+      {
+        "path": "aurora/contracts/PrivateIntent.sol",
+        "bytes": 14431,
+        "sha256": "c8ef140a2d5804446c2f97f62828ef750683a3b98665e8abde551e476aa21eab"
+      },
+      {
+        "path": "web/public/intent-aurora-config.js",
+        "bytes": 1676,
+        "sha256": "dd3184b5bde00900faf7c5a253fb0ba890cbea97fc7f610f6b41b2e5c5987eac"
+      },
+      {
+        "path": "aurora/engine-codec.mjs",
+        "bytes": 4194,
+        "sha256": "86062d116e759dc7bc29affff122b6a2636346c92dae4c2eb0e0f95099dfc854"
+      }
+    ]
+  },
+  "provenanceScope": "Allowlisted summary of original local records. Hashes identify the preserved records; private records and raw signed artifacts are excluded.",
+  "integration": "Aurora proof-funded fixed-rate swap",
+  "observedAt": "2026-11-14T21:45:21.445Z",
+  "journey": "Mounted Wallet swap: original funded private note to 2 LTT",
+  "network": "Aurora testnet",
+  "execution": {
+    "transaction": "5JdaJkdHGcEufg6gqXQk4qwMJJkTcwma9iRqtQhPaq6M",
+    "receiver": "aurora",
+    "nearMethod": "call",
+    "gas": "1000000000000000",
+    "deposit": "0",
+    "evmOperation": "fulfill",
+    "evmCallArgsSha256": "470cb51888a246c1c4d464ec313a0abf107e03406838340b001511c0b7a23716",
+    "receiptIds": [
+      "CtGfETryufH7drXVjJcF2eUxXoCMzK1RN8AfXLE5TKaV",
+      "6hnJDzhKqT9ehWACWtDTtipFRtJUzKrtD6Sg35KLa6qm"
+    ],
+    "finalExecutionStatus": "FINAL",
+    "finalReceiptSuccess": true,
+    "allReceiptsSuccessful": true,
+    "recordedStatus": "executed",
+    "recordedVerified": true
+  },
+  "assets": {
+    "input": {
+      "token": "0xafa88fe18a46dda58e79d8f89abda51c13411590",
+      "baseUnits": "1000000",
+      "decimals": 6
+    },
+    "output": {
+      "token": "0x68884014da20174e79f9e7b06466f3a7c6085b09",
+      "baseUnits": "2000000",
+      "decimals": 6
+    },
+    "beneficiary": "0xff8d7a6e6543ec1c2fda6e6581567e189ea98e95",
+    "refundRecipient": "0xff8d7a6e6543ec1c2fda6e6581567e189ea98e95",
+    "vault": "0x2792ffc6191862593a7261f0165886f0694c23f0",
+    "nullifierHash": "0x1bd035d7e1a4ac16ecbc0de56af14b31101f60fbea7980fda34c63fb2cc067c0"
+  },
+  "finalObservation": {
+    "block": {
+      "number": "0x108d94ef",
+      "hash": "0x8d8b4a2b218337b770c4acf317b0e6855220180035962a2a0e8684570ed9ffbc",
+      "timestamp": 1794692695000
+    },
+    "vault": {
+      "status": 2,
+      "inputBalance": "0",
+      "outputBalance": "0",
+      "allowance": "0",
+      "inputToken": "0xafa88fe18a46dda58e79d8f89abda51c13411590",
+      "outputToken": "0x68884014da20174e79f9e7b06466f3a7c6085b09",
+      "beneficiary": "0xff8d7a6e6543ec1c2fda6e6581567e189ea98e95",
+      "refundRecipient": "0xff8d7a6e6543ec1c2fda6e6581567e189ea98e95",
+      "bindingsVerified": true
+    },
+    "beneficiaryOutputBalance": "2000000",
+    "codeSha256": {
+      "output": "30d4ac7f4aa6b99c61d9e7e2cc15ad1104f624164ffbf944cd560aae71ad2ce3",
+      "input": "30d4ac7f4aa6b99c61d9e7e2cc15ad1104f624164ffbf944cd560aae71ad2ce3",
+      "verifier": "01e6d1f75cb4a605cc92182430d4e3c2723b506468644e63bc983b414fb7e5c6",
+      "adapter": "53625bcd07861c4a49ab599f449aa0188931f3abb151926f9613cf2dc1a0ae9b",
+      "hasher": "e3e417a1bb6c4ef6a507c3bc67422eef85e4e27f7d4451934954bed0f8d1e6b5",
+      "factory": "c8e6878418a1f1eb8d4bf230ef5b76d172308f541f9a552efd97d6ecfb6f9e62",
+      "pool": "0dc72248da9eead2dabf605727010a774b8e3f96bef94f87b9270a0a8fca6aeb"
+    }
+  },
+  "independentChecks": [
+    "Exact NEAR call to aurora and successful final receipts",
+    "Original proof/nullifier and vault term binding",
+    "Exact beneficiary credit and zero vault balances/allowance"
+  ],
+  "recovery": {
+    "archiveRestored": true,
+    "offlineSameReceivingKey": true,
+    "scope": "The real encrypted archive was restored into fresh in-memory state. Physical passkey synchronization, cleared site storage and a subsequent spend were not tested."
+  },
+  "freshRead": {
+    "name": "aurora-swap",
+    "transaction": "5JdaJkdHGcEufg6gqXQk4qwMJJkTcwma9iRqtQhPaq6M",
+    "checkedAt": "2026-11-17T09:46:05.683Z",
+    "confirmed": true,
+    "finality": "FINAL",
+    "receiver": "aurora",
+    "method": "call",
+    "receiptIds": [
+      "CtGfETryufH7drXVjJcF2eUxXoCMzK1RN8AfXLE5TKaV",
+      "6hnJDzhKqT9ehWACWtDTtipFRtJUzKrtD6Sg35KLa6qm"
+    ],
+    "endpoint": "https://archival-rpc.testnet.near.org",
+    "scope": "Fresh read confirms finalized transaction method, receiver and receipt identifiers; it does not rerun the swap."
+  },
+  "explorer": {
+    "name": "aurora-near-page",
+    "url": "https://testnet.nearblocks.io/txns/5JdaJkdHGcEufg6gqXQk4qwMJJkTcwma9iRqtQhPaq6M",
+    "httpStatus": 403,
+    "available": false,
+    "checkedAt": "2026-11-17T09:43:06.831Z"
+  },
+  "limitations": [
+    "The venue is a funded FixedRateIntentAdapter with an exact 1-to-2 test offer.",
+    "No external Uniswap liquidity or arbitrary route execution is established.",
+    "The original proof hides deposit membership; beneficiary, denomination, swap terms and network/timing observations remain exposed.",
+    "The strict recorder blocked unrelated background APIs after financial success."
+  ],
+  "originalRecords": [
+    {
+      "record": "auroraProgress",
+      "bytes": 5896,
+      "sha256": "39455f0b6dd86f9111edbf0b8b8f528f95c3ea4c93bee5ab7bf67b1a4087b8b4"
+    },
+    {
+      "record": "auroraState",
+      "bytes": 28881,
+      "sha256": "55b29c6a5aee4f78979258bfd598b95a14533cef46345fd02c1cb50a9991b18a"
+    }
+  ]
+}

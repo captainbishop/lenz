@@ -1,0 +1,17 @@
+{
+  "name": "lenz",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lenz development and verification tools.",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": {
+    "prepare:web": "node web/prepare-public-assets.mjs",
+    "start": "node tooling/start.mjs",
+    "check": "node --test web/prepare-public-assets.test.mjs web/build-vercel.test.mjs web/server-integration.test.mjs",
+    "check:offline": "node web/verify-chat-static.mjs",
+    "test:browser": "node --test web/chat-automatic-send-browser.test.cjs web/chat-empty-people-browser.test.cjs",
+    "test:requests": "node --test --test-concurrency=1 web/chat-contact-requests-browser.test.cjs web/contact-request-nostr-browser.test.cjs web/contact-requests-browser.test.cjs web/contact-request-backup.test.mjs",
+    "build:hosted": "node web/build-git-vercel.mjs"
+  },
+  "devDependencies": { "playwright": "1.62.1" }
+}

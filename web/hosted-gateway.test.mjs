@@ -13,6 +13,8 @@ import {createHash} from 'node:crypto';
 import {createHostedNativeFetch} from './public/hosted-native-fetch.js';
 import {createHostedSession} from './public/hosted-session.js';
 import {requirePaymentAccess,RECOVERED_CHAT} from './public/chat-access.js';
+import {createTestnetRelay} from './testnet-relay.mjs';
+import {fundingRequest} from './public/near-protocol.js';
 const origin='https://lenz-test.vercel.app',gatewaySecret='g'.repeat(48),sessionSecret='s'.repeat(48);
 const demoIdentity=await createIdentity('Authorized demo identity');
 const nativeSource='native-zcash:a:'+'a'.repeat(64),nativeRecipient='utest1'+'q'.repeat(70),custody={[demoIdentity.profile.id]:{native:{accountId:nativeSource,wallet:'a',recipient:nativeRecipient}}};
@@ -24,6 +26,37 @@ async function listen(handler){const server=http.createServer(handler);await new
 async function close(server){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));await server.listeners('request')[0]?.close?.();}
 async function login(url,headers,identity=demoIdentity){const challenge=await(await fetch(url+'/api/hosted/session/challenge',{method:'POST',headers,body:JSON.stringify({id:identity.profile.id})})).json(),signature=await signValue(identity,[HOSTED_SESSION_REQUEST,origin,identity.profile.id,challenge.nonce,challenge.until]);return fetch(url+'/api/hosted/session',{method:'POST',headers,body:JSON.stringify({profile:identity.profile,nonce:challenge.nonce,until:challenge.until,signature})});}
 
+test('a fresh visitor can read a public Rhea rate without signing in or entering custody',async()=>{
+ const seen=[],input={network:'testnet',contract:'ref-finance-101.testnet',poolId:7,tokenIn:'reserve.lenz.testnet',tokenOut:'wrap.testnet',amountIn:'1000000',slippageBps:100};
+ const backend=await listen(async(req,res)=>{let body='';for await(const chunk of req)body+=chunk;seen.push({path:req.url,body:JSON.parse(body),identity:req.headers['x-lenz-hosted-identity']});res.setHeader('content-type','application/json');res.end(JSON.stringify({state:'quote',amountOut:'250000000000000000000000',minAmountOut:'247500000000000000000000',request:input}));});
+ const gateway=await listen(await createHostedGateway({origin,gatewaySecret,custody:{},backendURL:backend.url,backendOrigin:backend.url}));
+ const site=await listen(createHostedProxy({origin,gatewayURL:'https://gateway.example',gatewaySecret,sessionSecret,custody:{},fetcher:(url,options)=>fetch(gateway.url+url.pathname,options)}));
+ const paths=[],wallet=createHostedSession({origin,hosted:true,read:()=>assert.fail('Public quotes must not read or sign the account'),fetcher:(path,options={})=>{paths.push(path);return fetch(site.url+path,{...options,headers:{...Object.fromEntries(new Headers(options.headers)),host:new URL(origin).host,origin}});}});
+ try{
+  const options={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)},quote=await wallet.fetch('/api/defi/rhea/quote',options);
+  assert.equal(quote.status,200);assert.equal((await quote.json()).amountOut,'250000000000000000000000');assert.deepEqual(paths,['/api/defi/rhea/quote']);assert.deepEqual(seen,[{path:'/api/defi/rhea/quote',body:input,identity:undefined}]);
+  for(const path of ['/api/defi/intents/quote','/api/rhea/submit','/api/intents/lending/submit'])assert.equal((await fetch(site.url+path,{...options,headers:{...options.headers,host:new URL(origin).host,origin},body:'{}'})).status,401);
+  assert.equal((await fetch(site.url+'/api/defi/rhea/quote',{...options,headers:{...options.headers,host:new URL(origin).host,origin},body:JSON.stringify({data:'x'.repeat(5000)})})).status,413);
+  assert.equal((await fetch(site.url+'/api/defi/rhea/quote?source=private',{...options,headers:{...options.headers,host:new URL(origin).host,origin}})).status,404);assert.equal(seen.length,1);
+ }finally{await close(site.server);await close(gateway.server);await close(backend.server);}
+});
+
+test('a new hosted visitor funds its own signed offline reserve without entering configured custody',async()=>{
+ const visitor=await createIdentity('New hosted visitor'),contract='reserve.lenz.testnet',request=await fundingRequest(visitor,contract),folder=await mkdtemp(join(tmpdir(),'lenz-hosted-reserve-'));let root=null,sponsored=0;
+ let reserve;const backend=await listen((req,res)=>reserve(req,res));
+ reserve=createTestnetRelay({origin:backend.url,sponsorDir:folder,configuration:async()=>({network:'testnet',ready:true,contract}),relayAccount:async()=>({accountId:'sponsor.testnet'}),view:async(_contract,method)=>method==='get_root'?root:null,call:async()=>{sponsored++;root={id:request.id,owner:request.owner,amount:'100000000'};return {finality:'FINAL',value:root};}});
+ const gateway=await listen(await createHostedGateway({origin,gatewaySecret,custody:{},backendURL:backend.url,backendOrigin:backend.url}));
+ const site=await listen(createHostedProxy({origin,gatewayURL:'https://gateway.example',gatewaySecret,sessionSecret,custody:{},fetcher:(url,options)=>fetch(gateway.url+url.pathname,options)}));
+ const wallet=createHostedSession({origin,hosted:true,read:async()=>({identity:visitor}),fetcher:(url,options={})=>fetch(site.url+url,{...options,headers:{...Object.fromEntries(new Headers(options.headers)),host:new URL(origin).host,origin}})});
+ try{
+  const options={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...request,contract})};const funded=await wallet.fetch('/api/testnet/fund',options);assert.equal(funded.status,200);assert.equal((await funded.json()).root.owner,request.owner);
+  assert.equal((await wallet.fetch('/api/testnet/fund',options)).status,200);assert.equal(sponsored,1);
+  for(const path of ['/api/intent-zcash/config','/api/intent-near/config','/api/intents/lending/config'])assert.equal((await wallet.fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})).status,401);
+  const invalid=await wallet.fetch('/api/testnet/fund',{...options,body:JSON.stringify({...request,contract,signature:'0'.repeat(128)})});assert.equal(invalid.status,400);assert.equal(sponsored,1);
+  const recovered=createHostedSession({origin,hosted:true,read:async()=>({identity:{...visitor,access:RECOVERED_CHAT}}),fetcher:()=>{throw Error('Recovered funds must not reach the public relay.');}});await assert.rejects(recovered.fetch('/api/testnet/fund',options),/Offline funds are not restored/);
+ }finally{await close(site.server);await close(gateway.server);await close(backend.server);await rm(folder,{recursive:true,force:true});}
+});
+
 test('public reads reach the loopback service, custody requires a separate browser session, and hostile paths never reach it',async()=>{
  const seen=[],backend=await listen((req,res)=>{seen.push({url:req.url,headers:req.headers});res.setHeader('content-type','application/json');res.end('{"visible":"market result"}');});
  const folder=await mkdtemp(join(tmpdir(),'lenz-hosted-'));
@@ -33,7 +66,7 @@ test('public reads reach the loopback service, custody requires a separate brows
  try{
   const read=await fetch(site.url+'/api/markets/assets',{method:'POST',headers,body:'{"privacy":"public"}'});assert.equal(read.status,200);assert.equal((await read.json()).visible,'market result');
   assert.equal(seen[0].headers.host,new URL(backend.url).host);assert.equal(seen[0].headers.origin,backend.url);assert.equal(seen[0].headers.cookie,undefined);assert.equal(seen[0].headers.authorization,undefined);
-  for(const path of ['/api/intent-zcash/config','/api/intent-aurora-funds/config'])assert.equal((await fetch(site.url+path,{method:'POST',headers,body:'{}'})).status,401);
+  for(const path of ['/api/intent-zcash/config','/api/intents/lending/config'])assert.equal((await fetch(site.url+path,{method:'POST',headers,body:'{}'})).status,401);
   for(const path of ['/api/intent-zcash/config?x=1','/api/unknown','/api/intent-zcash/%2e%2e/config'])assert.equal((await fetch(site.url+path,{method:'POST',headers,body:'{}'})).status,404);
   assert.equal((await fetch(site.url+'/api/markets/assets',{method:'POST',headers:{...headers,origin:'https://attacker.example'},body:'{}'})).status,403);
   assert.equal((await fetch(gateway.url+'/api/intent-zcash/config',{method:'POST',headers:{'content-type':'application/json'},body:'{}'})).status,403);
@@ -177,16 +210,12 @@ test('each hosted identity can enter only its original custody family, source an
   assert.equal((await post(demoIdentity,'/api/zcash/refresh',{wallet:'b'})).status,403);
   assert.equal((await post(loan,'/api/intents/lending/funding/submit',{owner:demoIdentity.profile.id,ownerAddress:loanAddress,account:loanAccount})).status,403);
   assert.equal((await post(loan,'/api/intents/lending/setup',{owner:loanAddress,account:beneficiary})).status,403);
-  assert.equal((await post(privateOwner,'/api/intent-aurora-swap/prepare',{plan:{beneficiary,refundRecipient:loanAccount},nullifierHash:nullifier})).status,403);
-  assert.equal((await post(privateOwner,'/api/intent-aurora-swap/prepare',{plan:{beneficiary,refundRecipient:beneficiary},nullifierHash:'0x'+'8'.repeat(64)})).status,403);
-  assert.equal((await post(privateOwner,'/api/intent-aurora-funds/prepare',{owner:fundingOwner,commitment:'0x'+'8'.repeat(64)})).status,403);
   assert.equal((await post(nearOwner,'/api/intent-near/prepare-funds',{owner:nearAccount})).status,403);
   assert.equal((await post(nearOwner,'/api/intent-near/reconcile',{review:{source:{accountId:'8'.repeat(64)}}})).status,403);
   assert.equal(calls.length,0);
   const directlyDenied=await fetch(gateway.url+'/api/intent-zcash/authorize',{method:'POST',headers:{'x-lenz-gateway-authorization':gatewaySecret,'x-lenz-public-origin':origin,'x-lenz-privileged':'1','x-lenz-hosted-identity':nativeB.profile.id,'x-lenz-hosted-request-id':'1794690000000-'+'1'.repeat(32),'content-type':'application/json'},body:nativeBody('original')});assert.equal(directlyDenied.status,403);assert.equal(calls.length,0);
   const configuration=await(await post(demoIdentity,'/api/intent-zcash/config',{})).json();assert.deepEqual(configuration.sources,[{accountId:nativeSource,wallet:'a',recipient:nativeRecipient}]);
   assert.equal((await post(loan,'/api/intents/lending/funding/submit',{owner:loan.profile.id,ownerAddress:loanAddress,account:loanAccount})).status,200);
-  assert.equal((await post(privateOwner,'/api/intent-aurora-swap/prepare',{plan:{beneficiary,refundRecipient:beneficiary},nullifierHash:nullifier})).status,200);
   assert.equal((await post(nearOwner,'/api/intent-near/reconcile',{review:{source:{accountId:nearAccount}}})).status,200);
   const original=await post(demoIdentity,'/api/intent-zcash/authorize',{review:{source:{accountId:nativeSource}}},{'x-lenz-hosted-request-id':'1794690000000-'+'1'.repeat(32)});assert.equal(original.status,202);const job=(await original.json()).lenzHostedJob;
   const stolen=await fetch(site.url+'/api/hosted/jobs/'+job,{headers:identityHeaders(nativeB)});assert.equal(stolen.status,403);assert.equal((await stolen.json()).code,'HOSTED_CUSTODY_SCOPE');

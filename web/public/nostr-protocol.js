@@ -1,10 +1,12 @@
-import { assert, bytes, digest, unhex, keysAre, signValue, verifyValue, validateProfile } from './peer-crypto.js';
+import { CHAT_DOMAIN, assert, bytes, digest, unhex, keysAre, signValue, verifyValue, validateProfile } from './peer-crypto.js';
 import { MAX_ENVELOPE_BYTES, MAX_LIFETIME, wrapForCarrier, validateEnvelope } from './carrier-protocol.js';
-import { generateSecretKey, getPublicKey, wrapEvent, unwrapEvent, verifyEvent, getEventHash } from './nostr-vendor/nostr.js';
+import { generateSecretKey, getPublicKey, finalizeEvent, wrapEvent, unwrapEvent, verifyEvent, getEventHash } from './nostr-vendor/nostr.js';
 
 export const NOSTR_DOMAIN = 'lenz/nostr-envelope/v1';
 export const FRAGMENT_SIZE = 8192, MAX_PARTS = 25, MAX_EVENT_BYTES = 32768;
 export const RUMOR_KIND = 30078;
+export const CONTACT_REQUEST_DOMAIN = 'lenz/nostr-contact-request/v1';
+export const MAX_REQUEST_BYTES = 65536, MAX_REQUEST_PARTS = 8;
 const hex64 = v => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v);
 export function relayOrigin(value) {
   assert(typeof value === 'string' && value.length <= 256, 'Invalid relay address.');
@@ -113,6 +115,75 @@ export function createReassembler() {
         envelope.packet.from === f.from && envelope.packet.to === f.to, 'Relay envelope hash mismatch.');
       await validateEnvelope(envelope,now);
       return envelope;
+    },
+  };
+}
+
+const requestTerms = f => [NOSTR_DOMAIN,'contact-request',f.hash,f.from,f.to,f.createdAt,f.expiresAt,f.index,f.count,f.chunk];
+const requestTags = f => [['d',CONTACT_REQUEST_DOMAIN+':'+f.hash+':'+f.index],['p',f.to],['expiration',String(Math.floor(f.expiresAt/1000))]];
+// A first request cannot use a shared mailbox until the recipient knows the
+// sender. This discovery inbox exposes routing keys; its profile stays encrypted.
+export async function packContactRequest(identity, contact, packet, now = Date.now()) {
+  await validateProfile(contact);
+  assert(packet.to === contact.id, 'Wrong request recipient.');
+  const envelope=await wrapForCarrier(identity,packet,now),text=JSON.stringify(envelope);
+  assert(bytes(envelope).length<=MAX_REQUEST_BYTES && /^[\x20-\x7e]+$/.test(text),'Contact request is too large.');
+  const hash=await digest(envelope),count=Math.ceil(text.length/FRAGMENT_SIZE),events=[],secret=generateSecretKey();
+  assert(count<=MAX_REQUEST_PARTS,'Contact request is too large.');
+  try {
+    for(let index=0;index<count;index++){
+      const f={type:CONTACT_REQUEST_DOMAIN,hash,from:packet.from,to:packet.to,sender:envelope.sender,
+        createdAt:envelope.createdAt,expiresAt:envelope.expiresAt,index,count,chunk:text.slice(index*FRAGMENT_SIZE,(index+1)*FRAGMENT_SIZE)};
+      f.signature=await signValue(identity,requestTerms(f));
+      const event=finalizeEvent({kind:RUMOR_KIND,created_at:Math.floor(now/1000),tags:requestTags(f),content:JSON.stringify(f)},secret);
+      assert(bytes(event).length<=MAX_EVENT_BYTES,'Contact request event is too large.');events.push(event);
+    }
+  }finally{secret.fill(0);}
+  return {packetId:packet.id,to:packet.to,hash,expiresAt:envelope.expiresAt,events,storedBy:[],discovery:true};
+}
+
+async function openContactRequestFragment(raw, recipientId, now) {
+  assert(hex64(recipientId)&&bytes(raw).length<=MAX_EVENT_BYTES,'Invalid contact request event.');
+  const event=JSON.parse(JSON.stringify(raw));
+  assert(keysAre(event,['id','pubkey','created_at','kind','tags','content','sig'])&&event.kind===RUMOR_KIND&&
+    Number.isSafeInteger(event.created_at)&&event.created_at>=Math.floor((now-MAX_LIFETIME)/1000)&&event.created_at<=Math.floor(now/1000)+60&&
+    typeof event.content==='string'&&event.content.length<=FRAGMENT_SIZE+2048&&verifyEvent(event),'Invalid signed contact request event.');
+  const f=JSON.parse(event.content);
+  assert(keysAre(f,['type','hash','from','to','sender','createdAt','expiresAt','index','count','chunk','signature'])&&f.type===CONTACT_REQUEST_DOMAIN&&
+    hex64(f.hash)&&hex64(f.from)&&f.to===recipientId&&f.from!==f.to&&keysAre(f.sender,['id','signingPublic','boxPublic'])&&f.sender.id===f.from&&
+    Number.isSafeInteger(f.createdAt)&&Number.isSafeInteger(f.expiresAt)&&f.createdAt>=0&&f.createdAt<=now+60000&&f.expiresAt>now&&
+    f.expiresAt>f.createdAt&&f.expiresAt-f.createdAt<=MAX_LIFETIME&&event.created_at===Math.floor(f.createdAt/1000)&&
+    Number.isSafeInteger(f.count)&&f.count>0&&f.count<=MAX_REQUEST_PARTS&&Number.isSafeInteger(f.index)&&f.index>=0&&f.index<f.count&&
+    typeof f.chunk==='string'&&/^[\x20-\x7e]+$/.test(f.chunk)&&f.chunk.length<=FRAGMENT_SIZE&&
+    (f.index===f.count-1||f.chunk.length===FRAGMENT_SIZE)&&JSON.stringify(event.tags)===JSON.stringify(requestTags(f)),'Invalid contact request fragment.');
+  await validateProfile({type:CHAT_DOMAIN,...f.sender,name:'Message request'});
+  assert(await verifyValue(f.sender.signingPublic,requestTerms(f),f.signature),'Contact request sender signature rejected.');
+  return f;
+}
+
+export function createContactRequestReassembler() {
+  const pending=new Map();let retained=0;
+  const remove=key=>{retained-=pending.get(key).size;pending.delete(key);};
+  return {
+    get size(){return pending.size;},get bytes(){return retained;},
+    clear(){pending.clear();retained=0;},
+    async accept(event,recipientId,now=Date.now()){
+      for(const [key,entry]of pending)if(entry.deadline<=now)remove(key);
+      const f=await openContactRequestFragment(event,recipientId,now),key=f.from+':'+f.hash;let entry=pending.get(key);
+      if(!entry){
+        assert(pending.size<16&&[...pending.values()].filter(e=>e.from===f.from).length<2&&retained+f.chunk.length<=4*MAX_REQUEST_BYTES,'Contact request reassembly capacity reached.');
+        entry={...f,deadline:Math.min(f.expiresAt,now+30000),parts:new Map(),size:0};pending.set(key,entry);
+      }
+      assert(entry.count===f.count&&entry.to===f.to&&entry.createdAt===f.createdAt&&entry.expiresAt===f.expiresAt,'Conflicting contact request fragments.');
+      if(entry.parts.has(f.index)){assert(entry.parts.get(f.index)===f.chunk,'Conflicting contact request fragment.');return null;}
+      assert(entry.size+f.chunk.length<=MAX_REQUEST_BYTES&&retained+f.chunk.length<=4*MAX_REQUEST_BYTES,'Contact request reassembly capacity reached.');
+      entry.parts.set(f.index,f.chunk);entry.size+=f.chunk.length;retained+=f.chunk.length;
+      if(entry.parts.size!==entry.count)return null;
+      const text=Array.from({length:entry.count},(_,i)=>entry.parts.get(i)).join('');remove(key);
+      const envelope=JSON.parse(text);
+      assert(await digest(envelope)===f.hash&&envelope.createdAt===f.createdAt&&envelope.expiresAt===f.expiresAt&&
+        envelope.packet.from===f.from&&envelope.packet.to===f.to,'Contact request envelope hash mismatch.');
+      await validateEnvelope(envelope,now);return envelope;
     },
   };
 }

@@ -1,13 +1,14 @@
 import {readState,readStateLocked,updateState} from './chat-store.js';
 import {assert,bytes,hex,unhex,keysAre,sealMessage,openMessage,validateProfile} from './peer-crypto.js';
 import {wrapForCarrier,validateEnvelope} from './carrier-protocol.js';
-import {savedPackets,sendable} from './carrier-client.js';
-import {receivePacket} from './receive-packet.js';
-import {DELIVERY_RECEIPT,prepareDeliveryReceipt,deliveryAcknowledged} from './delivery-receipts.js';
+import {savedPackets,sendable} from './delivery-packets.js';
+import {receiveDeliveredPacket} from './receive-packet.js';
+import {deliveryAcknowledged} from './delivery-receipts.js';
 import {defiCourierItems,acceptDefiCourierEnvelope} from './defi-courier.js';
 import {budgetCourierItems,acceptBudgetCourierEnvelope} from './budget-courier.js';
 import {confidentialCourierItems,acceptConfidentialCourierEnvelope} from './intents-courier.js';
 import {confidentialSpendOutbox} from './intents-spend-outbox.js';
+import {contactRequestStatus} from './contact-requests.js';
 
 export const COURIER='lenz/nearby-courier/v1';
 const MAX_ITEM_BYTES=90000,MAX_ROWS=32,MAX_BYTES=4000000,MAX_PER_SENDER=8;
@@ -174,6 +175,7 @@ export async function acceptCourierPacket(s,peerId,packet,{contract=null,defiCon
  assert(packet.from===peerId&&packet.to===s.identity?.profile.id,'Wrong courier direction.');
  const payload=await openMessage(s.identity,contact(s,peerId),packet);
  if(payload?.kind!==COURIER)return null;
+ assert(contactRequestStatus(s,peerId)==='accepted','Accept this message request before carrying deliveries.');
  assert(keysAre(payload,['kind','operation','envelope'])&&['store','deliver'].includes(payload.operation),'Invalid courier request.');
  const v=await load(s);assert(v.enabled,'Carried deliveries are turned off.');
  const e=payload.envelope;assert(bytes(e).length<=MAX_ITEM_BYTES,'Carried item is too large.');await validateEnvelope(e);
@@ -182,15 +184,13 @@ export async function acceptCourierPacket(s,peerId,packet,{contract=null,defiCon
   await append(s,v,'carried',peerId,e);await save(s,v);await validateEnvelope(e);current(e);return {kind:COURIER,state:'stored'};
  }
  assert(e.packet.to===s.identity.profile.id&&e.packet.from!==peerId,'This carried item has a different recipient.');
- const defi=await acceptConfidentialCourierEnvelope(s,e)??await acceptBudgetCourierEnvelope(s,e)??await acceptDefiCourierEnvelope(s,defiConfig,e);
+ const defi=s.contacts.some(p=>p.id===e.packet.from)&&contactRequestStatus(s,e.packet.from)==='accepted'?await acceptConfidentialCourierEnvelope(s,e)??await acceptBudgetCourierEnvelope(s,e)??await acceptDefiCourierEnvelope(s,defiConfig,e):null;
  if(defi){
   if(defi.receipt)await outgoing(s,v,defi.receipt,peerId,{returnReceipt:true});
   await save(s,v);current(e);currentItem(defi);return {kind:COURIER,state:'received'};
  }
- const result=await receivePacket(s,e.packet,false,contract);
- if(result.kind!==DELIVERY_RECEIPT){
-  const receipt=await prepareDeliveryReceipt(s,e.packet.id);await outgoing(s,v,receipt,peerId,{returnReceipt:true});
- }
+ const {result,receipt}=await receiveDeliveredPacket(s,e.packet,{contract,sender:e.sender});
+ if(receipt)await outgoing(s,v,receipt,peerId,{returnReceipt:true});
  await save(s,v);await validateEnvelope(e);current(e);return {kind:COURIER,state:'received',duplicate:result.duplicate};
 }
 export async function receiveCourierPacket(peerId,packet,options={}){

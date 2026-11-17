@@ -15,15 +15,20 @@ import { mountWalletPortfolio } from './wallet-portfolio.js';
 import { mountNearWallet, loadNearConfig, renderNearWallet, openNearSend } from './near-wallet.js';
 import {createNearIntentWalletController} from './intent-near-ui.js';
 import {createAuroraFundingWalletController} from './intent-aurora-funding-ui.js';
+import {createWalletFundingController} from './wallet-funding.js';
 import {createZcashSendController} from './intent-zcash-send.js';
+import {mountWalletLending} from './wallet-lending.js';
+import {consumePrivateFundingReturn} from './account-return.js';
 mountProfilePanels();
 startAccountSync();
 const $ = selector => document.querySelector(selector);
 const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('proof-u-chat-refresh') : null;
 let busy = false, statusTimer, sendAfterContact=false,restoreSendAfterContact=null;
 const intentController=createNearIntentWalletController();
+const lendingController=mountWalletLending();
 const zcashSendController=createZcashSendController();
-const privateFundingController=createAuroraFundingWalletController({openPublicFunding:()=>intentController.openFunding(),editSwapSelection:selection=>intentController.editSwapSelection(selection)});
+const privateFundingController=createAuroraFundingWalletController({openPublicFunding:()=>fundingController.openFunding(),editSwapSelection:selection=>intentController.editSwapSelection(selection)});
+const fundingController=createWalletFundingController({openPrivateFunding:()=>privateFundingController.openFunding(),openSwapFunding:()=>intentController.openFunding(),openLendingFunding:asset=>lendingController.openFunding(asset),refreshWallet:()=>render()});
 const privateSwapRoute={open:selection=>privateFundingController.openSwap(selection),restore:row=>privateFundingController.restoreSwap(row),recipient:()=>privateFundingController.recipient()};
 privateFundingController.subscribe(snapshot=>intentController.setPrivateRoute({...privateSwapRoute,holdings:snapshot.balances}));
 function status(text, error = false, { transient = false } = {}) {
@@ -45,6 +50,8 @@ async function render() {
   intentController.render(state.identity?.profile.id??null);
   zcashSendController.render(state.identity?.profile.id??null);
   privateFundingController.render(state.identity?.profile.id??null);
+  fundingController.render(state.identity?.profile.id??null);
+  lendingController.render(state.identity?.profile.id??null);
   $('#wallet-onboarding').hidden = walletReady; $('#wallet-content').hidden = !walletReady; $('#my-profile').hidden = !hasIdentity;
   document.body.classList.toggle('wallet-entry', !walletReady);
   $('#wallet-entry-connect').disabled = false;
@@ -110,9 +117,9 @@ const evmWallet=mountEvmWallet({sendToContact:async(profile,text,proceed,restore
  proceed();
  if(state.contacts.some(c=>c.id===profile.id)){openNearSend(profile.id);return;}
  sendAfterContact=true;restoreSendAfterContact=restore;$('#show-add-contact').click();$('#add-title').textContent='Recipient';$('#contact-card').value=text;$('#review-contact').click();
-},sendShielded:selection=>zcashSendController.open(selection)});
+},sendShielded:selection=>zcashSendController.open(selection),openSwap:()=>portfolio.openSwap()});
 if($('#wallet-content'))mountWalletTokens({action,wallet:evmWallet,intentController,privateFundingController});
-const portfolio=mountWalletPortfolio(evmWallet,{intentController,fundingController:privateFundingController,zcashController:zcashSendController});
+const portfolio=mountWalletPortfolio(evmWallet,{intentController,fundingController,zcashController:zcashSendController});
 $('#wallet-entry-connect').onclick=()=>navigator.onLine?evmWallet.openConnect():location.assign('/account.html?next=wallet');
 addEventListener('lenz-evm-session',()=>{if(!busy)render().catch(error=>status(error.message,true));});
 $('#add-contact').addEventListener('close',()=>{
@@ -123,3 +130,6 @@ themeIcon($('#theme-toggle'));
 $('#wallet-settings-actions').addEventListener('click',event=>{if(event.target.closest('button'))$('.wallet-settings').open=false;});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('.wallet-settings').open){$('.wallet-settings').open=false;$('.wallet-settings summary').focus();}});
 try { await loadNearConfig(); await render(); if(!document.body.classList.contains('wallet-entry'))status('Your wallet is ready.', false, { transient: true });else status(''); } catch (error) { status(error.message, true); }
+if(consumePrivateFundingReturn()){
+ try{if((await readState()).identity)await privateFundingController.openFunding();}catch(error){status(error.message,true);}
+}

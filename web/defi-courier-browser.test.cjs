@@ -148,3 +148,81 @@ test('approval expiry during final dispatch verification cannot send the still-l
   return {dispatched,error,reserved:(await n.nearLedger(await n.readNearVault(await store.readState(),config.reserve))).reserved.size};
  },{id:approval.packet.id,peer:profiles[1].id});assert.equal(result.dispatched,0);assert.match(result.error,/expired/);assert.equal(result.reserved,1);
 }));
+
+test('executor reviews the exact stored request and dispatches it once with a durable response-loss fence',()=>fixture(async f=>{
+ const next=await prepared(f),{executor,profiles,approval,boot}=f;
+ await executor.evaluate(x=>courier.receiveCourierPacket(x.from,x.packet,{defiConfig:config}),{from:profiles[1].id,packet:next.packet});
+ const result=await executor.evaluate(async id=>{
+  const review=await inbox.reviewDefiInboxRequest(config,id);let calls=0,error='';
+  const invoke=async(operation,body)=>{calls++;if(operation!=='submit'||body.packet.id!==review.orderId)throw Error('Wrong reviewed request');throw Error('Response lost');};
+  try{await inbox.submitDefiInboxRequest(config,id,review,{invoke});}catch(e){error=e.message;}
+  await inbox.checkDefiInboxRequest(config,id,{invoke:async()=>({finality:'FINAL',order:null,reconciliation:{state:'unavailable'}})});
+  try{await inbox.submitDefiInboxRequest(config,id,review,{invoke});}catch{}
+  return {calls,error,summary:await inbox.defiInboxSummary()};
+ },approval.requestId);
+ assert.equal(result.calls,1);assert.match(result.error,/Response lost/);assert.equal(result.summary.requests[0].status,'submission-unresolved');
+ await boot(executor);await executor.evaluate(()=>window.inbox=import('/defi-courier.js'));await executor.evaluate(async()=>window.inbox=await inbox);
+ const again=await executor.evaluate(async id=>{let calls=0;try{const review=await inbox.reviewDefiInboxRequest(config,id);await inbox.submitDefiInboxRequest(config,id,review,{invoke:async()=>{calls++;}});}catch{}return {calls,summary:await inbox.defiInboxSummary()};},approval.requestId);
+ assert.equal(again.calls,0);assert.equal(again.summary.requests[0].status,'submission-unresolved');
+}));
+
+test('executor returns its bound encrypted result through a courier without crediting the sender',()=>fixture(async f=>{
+ const next=await prepared(f),{executor,carrier,sender,profiles,approval,hop}=f;
+ await executor.evaluate(x=>courier.receiveCourierPacket(x.from,x.packet,{defiConfig:config}),{from:profiles[1].id,packet:next.packet});
+ const before=await sender.evaluate(async()=>n.readNearVault(await store.readState(),config.reserve));
+ const executed=await executor.evaluate(async id=>{
+  const review=await inbox.reviewDefiInboxRequest(config,id);let calls=0;
+  const result=await inbox.submitDefiInboxRequest(config,id,review,{invoke:async(operation,body)=>{calls++;return {finality:'FINAL',order:{id:body.packet.id,instruction:Object.fromEntries(Object.entries(body.packet.instruction).reverse()),stage:'complete',output:'500000000000000000000000'},txHash:'1'.repeat(44)};}});
+  const update=await inbox.defiInboxUpdate(config,id);return {calls,result,update};
+ },approval.requestId);
+ assert.equal(executed.calls,1);assert.equal(executed.result.status,'complete');assert.equal(executed.update.to,profiles[0].id);assert(!JSON.stringify(executed.update).includes('receiver.testnet'));
+ await executor.evaluate(x=>courier.queueCourierItems([x.id],x.peer,{defiConfig:config}),{id:executed.update.id,peer:profiles[1].id});
+ const firstExecutor=await hop(executor,carrier,profiles[2],profiles[1]);await hop(executor,carrier,profiles[2],profiles[1],[firstExecutor.id]);const first=await hop(carrier,sender,profiles[1],profiles[0]);await hop(carrier,sender,profiles[1],profiles[0],[first.id]);
+ const after=await sender.evaluate(async()=>n.readNearVault(await store.readState(),config.reserve));assert.equal(after.rheaOrders[0].defi.executorUpdate.report.requestId,approval.requestId);assert.equal(after.rheaOrders[0].status,null);
+ assert.equal(await sender.evaluate(async()=>(await n.nearLedger(await n.readNearVault(await store.readState(),config.reserve))).reserved.size),1);
+ after.rheaOrders[0].defi.executorUpdate=undefined;before.rheaOrders[0].defi.executorUpdate=undefined;after.rheaOrders[0].defi.storageReceipt=null;assert.deepEqual(after,before);
+}));
+
+test('executor rejects substituted terms, failed persistence, expired review and changed account before dispatch',()=>fixture(async f=>{
+ const next=await prepared(f),{executor,profiles,approval}=f;
+ await executor.evaluate(x=>courier.receiveCourierPacket(x.from,x.packet,{defiConfig:config}),{from:profiles[1].id,packet:next.packet});
+ const checks=await executor.evaluate(async id=>{
+  const review=await inbox.reviewDefiInboxRequest(config,id),invoke=async()=>{calls++;throw Error('Must not dispatch');};let calls=0;
+  const changed=structuredClone(review);changed.receiver='wrong.testnet';try{await inbox.submitDefiInboxRequest(config,id,changed,{invoke});}catch{}
+  const put=IDBObjectStore.prototype.put;IDBObjectStore.prototype.put=()=>{throw Error('Disk full');};try{await inbox.submitDefiInboxRequest(config,id,review,{invoke});}catch{}finally{IDBObjectStore.prototype.put=put;}
+  const clock=Date.now;Date.now=()=>review.expiresAt;try{await inbox.submitDefiInboxRequest(config,id,review,{invoke});}catch{}finally{Date.now=clock;}
+  await store.updateState(async s=>{s.identity=await p.createIdentity('Changed executor');});try{await inbox.submitDefiInboxRequest(config,id,review,{invoke});}catch{}
+  return calls;
+ },approval.requestId);assert.equal(checks,0);
+}));
+
+test('executor review expiry at durable commit prevents the final submission dispatch',()=>fixture(async f=>{
+ const next=await prepared(f),{executor,profiles,approval}=f;
+ await executor.evaluate(x=>courier.receiveCourierPacket(x.from,x.packet,{defiConfig:config}),{from:profiles[1].id,packet:next.packet});
+ const result=await executor.evaluate(async id=>{
+  const review=await inbox.reviewDefiInboxRequest(config,id),clock=Date.now,transaction=IDBDatabase.prototype.transaction;
+  let calls=0,error='';
+  IDBDatabase.prototype.transaction=function(...args){
+   const tx=transaction.apply(this,args);
+   if(args[1]==='readwrite')tx.addEventListener('complete',()=>{Date.now=()=>review.expiresAt+1;});
+   return tx;
+  };
+  try{await inbox.submitDefiInboxRequest(config,id,review,{invoke:async()=>{calls++;throw Error('Expired review dispatched');}});}
+  catch(e){error=e.message;}
+  finally{Date.now=clock;IDBDatabase.prototype.transaction=transaction;}
+  return {calls,error,summary:await inbox.defiInboxSummary()};
+ },approval.requestId);
+ assert.equal(result.calls,0);assert.match(result.error,/expired/);assert.equal(result.summary.requests[0].id,approval.requestId);
+}));
+
+test('executor UI opens an encrypted request file and requires its own review before the signed swap dispatch',()=>fixture(async({sender,executor,approval})=>{
+ const envelope=await sender.evaluate(id=>wallet.defiHandoff(config,id,{envelope:true}),approval.requestId);let calls=0;
+ await executor.route('**/api/rhea/signed-submit',async route=>{calls++;const body=route.request().postDataJSON();assert.equal(body.packet.id,approval.orderId);assert.equal(body.packet.instruction.receiver_id,'receiver.testnet');await route.fulfill({json:{finality:'FINAL',order:{id:body.packet.id,instruction:body.packet.instruction,stage:'complete',output:'500000000000000000000000'},txHash:'1'.repeat(44)}});});
+ await executor.evaluate(async()=>{const dialog=document.createElement('dialog');dialog.innerHTML='<div id="nearby-courier"></div>';document.body.append(dialog);dialog.showModal();window.controls=(await import('/defi-courier-ui.js')).mountDefiInboxControls(dialog,{getConfig:()=>config});dialog.querySelector('details').open=true;await controls.refresh();});
+ await executor.locator('#defi-inbox-enabled').check();await executor.waitForFunction(()=>!document.querySelector('#defi-inbox-import').disabled);
+ await executor.locator('#defi-inbox-file').setInputFiles({name:'lenz-request.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(envelope))});
+ await executor.waitForFunction(()=>document.querySelector('#defi-inbox-items').textContent.includes('Awaiting your review'));
+ assert.equal(calls,0);await executor.locator('#defi-inbox-items summary').click();await executor.getByRole('button',{name:'Review swap',exact:true}).click();const submit=executor.getByRole('button',{name:'Submit approved swap',exact:true});await submit.waitFor();assert(await submit.isDisabled());
+ assert((await executor.locator('#defi-inbox-items').innerText()).includes('receiver.testnet'));await executor.getByRole('checkbox',{name:'I checked this swap and agree to submit it'}).check();await submit.click();
+ await executor.waitForFunction(()=>document.querySelector('#defi-inbox-items').textContent.includes('Swap reported complete'));assert.equal(calls,1);assert.equal(await submit.count(),0);assert(await executor.getByRole('button',{name:'Save update file',exact:true}).isVisible());
+}));

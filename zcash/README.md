@@ -1,8 +1,12 @@
-# Zcash integration in progress
+# Zcash integration
+
+Ordinary Wallet → Send uses a configured local native backend for PCZT review, proving, signing and submission. A November 14 shielded testnet payment has canonical effects checked in both native wallets and retained Activity. The browser requests that operation; spending keys remain in native custody. [Recorded Wallet Send](../docs/evidence/zcash-wallet-send-20261114.json) · [mounted source path](../docs/evidence/SOURCE-MAP.md) · [current custody/recovery limits](../docs/testnet-integrations.md). Browser backups retain action references and cannot restore native spending keys.
+
+## Developer lab and historical setup
 
 The developer browser supports local wallet reads, synchronization, [unsigned payment review](payment-review.md), [output and change verification](payment-effects.md), and [expiry/network checks](payment-freshness.md). It prepares a native test transaction, verifies its recipient, amount, fee and owned change locally, and preserves the unsigned request across reloads. Output checks also recover the encrypted payment and decrypt owned change against their committed terms. Older saved checks remain explicitly unverified for encryption until checked again. Signing, broadcast and recovery from this page remain incomplete. The recorded November 1 payment passed the earlier commitment verification but was expired; synthetic native tests cover the new encryption checks without another wallet transaction.
 
-A native shielded testnet payment is confirmed in the [October 31 PCZT evidence](pczt.md): wallet A paid B 0.1 test ZEC in a version-6 Ironwood transaction with a 0.0001-test-ZEC fee. At the recorded tip, both wallets reported fourteen confirmations and spendable balances of A 0.8999 / B 0.1 test ZEC. Five actual browser checks displayed those balances. The original tool omitted Ironwood signing; a separately hashed bounded signer uses the pinned library support. Browser routes never sign or send.
+A native shielded testnet payment is confirmed in the [October 31 PCZT evidence](pczt.md): wallet A paid B 0.1 test ZEC in a version-6 Ironwood transaction with a 0.0001-test-ZEC fee. At the recorded tip, both wallets reported fourteen confirmations and spendable balances of A 0.8999 / B 0.1 test ZEC. Five actual browser checks displayed those balances. The original tool omitted Ironwood signing; a separately hashed bounded signer uses the pinned library support. Those developer companion and unsigned-review routes never sign or send; the later mounted Wallet Send has the separate native execution path above.
 
 The [funding/read/sync report](companion.md) records the preceding observation of 1 spendable test ZEC in wallet A. Its funding source is unknown. That report's zero balance for wallet B predates the confirmed payment; faucet failures remain part of the record.
 
@@ -35,7 +39,7 @@ The October 26 funding checks reported failure: Fauzec returned HTTP 503 `runtim
 
 Current [Ironwood documentation](https://zcash.github.io/ironwood/concepts.html) distinguishes the Orchard protocol from the Orchard and Ironwood pools. After NU6.3, new value cannot enter the Orchard pool. The pinned library supports Ironwood; its [wallet tests](https://zcash.github.io/librustzcash/rustdoc/latest/zcash_client_backend/data_api/testing/pool/index.html) describe delivering an Orchard receiver through a version-6 Ironwood bundle. Do not infer which pool a payment used from its address alone. The faucet's generic address error does not prove a specific consensus cause.
 
-Next: reviewed browser transaction approval and signing, expiry/ambiguous-submission handling, wallet rescan/recovery and a supported ZEC↔DeFi route. Measure target-device performance before claiming phone support. The completed native transfer and browser read/sync checks do not finish these requirements.
+Remaining work includes native wallet rescan/recovery, broader expiry and ambiguous-submission coverage, and a supported shielded ZEC↔DeFi route. Measure target-device performance before claiming native phone financial support. The mounted Wallet Send and historical developer checks do not finish those requirements.
 
 ## Privacy boundary
 

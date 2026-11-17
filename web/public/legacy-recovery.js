@@ -1,13 +1,15 @@
 import {Mnemonic} from './evm-vendor/identity-recovery.js';
 import {stageIdentityRecovery} from './identity-recovery.js';
 import {CHAT_DOMAIN,assert,bytes,digest,hex,unhex,keysAre,randomId,validateProfile,signValue,verifyValue,openMessage} from './peer-crypto.js';
+import {isContactControl} from './contact-requests.js';
+import {validateContactRequestSnapshot,validateDeclinedContacts} from './contact-request-backup.js';
 
 const ARCHIVE='lenz/legacy-chat-archive/v1',LINK='lenz/chat-recovery-link/v1',MAX_BYTES=8_000_000;
 const enc=new TextEncoder(),dec=new TextDecoder('utf-8',{fatal:true});
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
 const packetHeader=p=>[p.type,p.id,p.from,p.to,p.iv];
 const linkTerms=l=>[l.type,l.scope,l.nonce,l.createdAt,l.from,l.to];
-const archiveTerms=a=>[ARCHIVE,a.createdAt,a.profile,a.successor,a.contacts,a.messages,a.secrets,a.link];
+const archiveTerms=a=>[ARCHIVE,a.createdAt,a.profile,a.successor,a.contacts,a.messages,a.secrets,a.link,...(Object.hasOwn(a,'contactRequests')?['contactRequests',a.contactRequests]:[]),...(Object.hasOwn(a,'declinedContactIds')?['declinedContactIds',a.declinedContactIds]:[])];
 const envelopeTerms=a=>bytes([a.type,a.kdf,a.salt,a.iv]);
 
 async function encryptionKey(phrase,salt){
@@ -37,12 +39,16 @@ export async function validateRecoveryLink(input,expectedOldId){
 }
 
 async function snapshot(input){
-  assert(keysAre(input,['profile','contacts','messages']),'Only profile, contacts and chat messages can be archived.');
+  const fields=['profile','contacts','messages'];for(const field of ['contactRequests','declinedContactIds'])if(Object.hasOwn(input,field))fields.push(field);
+  assert(keysAre(input,fields),'Only profile, contacts and chat messages can be archived.');
   assert(Array.isArray(input.contacts)&&input.contacts.length<=500&&Array.isArray(input.messages)&&input.messages.length<=1000,'Archive exceeds the contact or message limit.');
   assert(bytes(input).length<=MAX_BYTES,'Chat archive is too large.');
   // Both callers supply a private snapshot captured before any await.
   const value=input,profile=await validateProfile(value.profile),peers=new Map();
   for(const item of value.contacts){const p=await validateProfile(item);assert(p.id!==profile.id&&!peers.has(p.id),'Duplicate or own contact in archive.');peers.set(p.id,p);}
+  assert(!value.contactRequests||Array.isArray(value.contactRequests)&&value.contactRequests.length<=256,'Invalid archived request capacity.');
+  for(const row of value.contactRequests??[]){const p=await validateProfile(row.profile);assert(p.id===row.peerId&&p.id!==profile.id,'Invalid archived request peer.');if(!peers.has(p.id))peers.set(p.id,p);}
+  validateDeclinedContacts(value.declinedContactIds);
   const ids=new Set();
   for(const record of value.messages){assert(keysAre(record,['packet'])&&record.packet&&typeof record.packet.id==='string'&&!ids.has(record.packet.id),'Invalid or duplicate archived message.');ids.add(record.packet.id);}
   return {value,profile,peers};
@@ -74,7 +80,7 @@ async function historicalMessage(profile,peer,secret,input){
   try{
     const key=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']);
     plaintext=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(p.iv),additionalData:bytes(packetHeader(p)),tagLength:128},key,unhex(p.ciphertext)));
-    return chatPayload(JSON.parse(dec.decode(plaintext)));
+    const payload=JSON.parse(dec.decode(plaintext));return isContactControl(payload)?payload:chatPayload(payload);
   }finally{raw.fill(0);plaintext?.fill(0);}
 }
 
@@ -84,6 +90,7 @@ export async function sealLegacyChatArchive(activeIdentity,phrase,input){
   const captured=structuredClone(input),identity=structuredClone(activeIdentity);
   const {value,profile,peers}=await snapshot(captured);
   assert(profile.id===identity.profile.id&&profile.signingPublic===identity.profile.signingPublic&&profile.boxPublic===identity.profile.boxPublic,'Archive belongs to another account.');
+  await validateContactRequestSnapshot({identity,contacts:value.contacts,messages:value.messages,contactRequests:value.contactRequests??[],declinedContactIds:value.declinedContactIds??[]});
   const successor=await stageIdentityRecovery(phrase,profile.name);
   assert(successor.profile.id!==profile.id,'Use the existing phrase archive for this account.');
   const ownShared=await oldSharedSecret(identity,successor.profile),peerShared=await oldSharedSecret(successor,profile);
@@ -92,14 +99,14 @@ export async function sealLegacyChatArchive(activeIdentity,phrase,input){
   const secrets=[];
   for(const {packet} of value.messages){
     const peer=peers.get(packet.from===profile.id?packet.to:packet.from);assert(peer,'Archived message has no matching contact.');
-    chatPayload(await openMessage(identity,peer,packet));
+    const payload=await openMessage(identity,peer,packet);if(!isContactControl(payload))chatPayload(payload);
     const raw=await historicalKey(identity,peer,packet);
     try{secrets.push({message:packet.id,key:hex(raw)});}finally{raw.fill(0);}
   }
   const createdAt=Date.now(),link={type:LINK,scope:'chat-continuity',nonce:randomId(),createdAt,from:profile,to:successor.profile,oldSignature:'',newSignature:''};
   link.oldSignature=await signValue(identity,linkTerms(link));link.newSignature=await signValue(successor,linkTerms(link));
   await validateRecoveryLink(link,profile.id);
-  const content={createdAt,profile,successor:successor.profile,contacts:value.contacts,messages:value.messages,secrets,link,signature:''};
+  const content={createdAt,profile,successor:successor.profile,contacts:value.contacts,messages:value.messages,secrets,link,...(value.contactRequests?{contactRequests:value.contactRequests}:{}),...(value.declinedContactIds?{declinedContactIds:value.declinedContactIds}:{}),signature:''};
   content.signature=await signValue(identity,await digest(archiveTerms(content)));
   const plaintext=bytes(content);assert(plaintext.length<=MAX_BYTES,'Chat archive is too large.');
   const salt=crypto.getRandomValues(new Uint8Array(32)),iv=crypto.getRandomValues(new Uint8Array(12)),archive={type:ARCHIVE,kdf:'HKDF-SHA256/entropy256',salt:hex(salt),iv:hex(iv),ciphertext:''};
@@ -116,9 +123,10 @@ export async function openLegacyChatArchive(phrase,input){
     try{plaintext=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(archive.iv),additionalData:envelopeTerms(archive),tagLength:128},await encryptionKey(phrase,unhex(archive.salt)),unhex(archive.ciphertext)));}
     catch{throw Error('The recovery phrase or archive is incorrect.');}
     const content=JSON.parse(dec.decode(plaintext));
-    assert(keysAre(content,['createdAt','profile','successor','contacts','messages','secrets','link','signature']),'Invalid legacy archive content.');
+    const fields=['createdAt','profile','successor','contacts','messages','secrets','link','signature'];for(const field of ['contactRequests','declinedContactIds'])if(Object.hasOwn(content,field))fields.push(field);
+    assert(keysAre(content,fields),'Invalid legacy archive content.');
     assert(Number.isSafeInteger(content.createdAt)&&content.createdAt>=0,'Invalid archive time.');
-    const {profile,peers}=await snapshot({profile:content.profile,contacts:content.contacts,messages:content.messages});
+    const {profile,peers}=await snapshot({profile:content.profile,contacts:content.contacts,messages:content.messages,...(content.contactRequests?{contactRequests:content.contactRequests}:{}),...(content.declinedContactIds?{declinedContactIds:content.declinedContactIds}:{})});
     const link=await validateRecoveryLink(content.link,profile.id);
     assert(same(link.from,profile)&&same(link.to,content.successor)&&link.createdAt===content.createdAt,'Archive and recovery link differ.');
     const identity=await stageIdentityRecovery(phrase,content.successor.name);
@@ -129,6 +137,8 @@ export async function openLegacyChatArchive(phrase,input){
     for(const item of content.secrets){assert(keysAre(item,['message','key'])&&messageIds.has(item.message)&&!secrets.has(item.message)&&typeof item.key==='string'&&/^[0-9a-f]{64}$/.test(item.key),'Invalid archived message key.');secrets.set(item.message,item.key);}
     const history=[];
     for(const {packet} of content.messages){const peer=peers.get(packet.from===profile.id?packet.to:packet.from);assert(peer,'Archived message has no matching contact.');history.push({packet,payload:await historicalMessage(profile,peer,secrets.get(packet.id),packet)});}
-    return {identity,sourceProfile:profile,contacts:content.contacts,history,link,recovery:{scope:'legacy-chat',financialState:'not-restored'}};
+    const payloads=new Map(history.map(row=>[row.packet.id,row.payload]));
+    await validateContactRequestSnapshot({identity:{profile},contacts:content.contacts,messages:content.messages,contactRequests:content.contactRequests??[],declinedContactIds:content.declinedContactIds??[]},{readPayload:async(peer,packet)=>payloads.get(packet.id)});
+    return {identity,sourceProfile:profile,contacts:content.contacts,history,link,...(content.contactRequests?{sourceContactRequests:content.contactRequests}:{}),declinedContactIds:[...new Set([...(content.declinedContactIds??[]),...(content.contactRequests??[]).filter(row=>row.status==='declined').map(row=>row.peerId)])],recovery:{scope:'legacy-chat',financialState:'not-restored'}};
   }finally{plaintext?.fill(0);}
 }

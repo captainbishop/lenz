@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="brand/github-banner.svg" alt="Lenz — Talk privately. Use DeFi without internet." width="100%">
+  <a href="https://lenz-prototype.vercel.app"><img src="brand/github-banner.svg" alt="Lenz — Talk privately. Use DeFi without internet." width="100%"></a>
 </p>
 
 <p align="center">
@@ -12,144 +12,131 @@
 </p>
 
 <p align="center">
-  <a href="#experience">Experience</a> ·
-  <a href="#capabilities">Capabilities</a> ·
+  <a href="https://lenz-prototype.vercel.app">Experience</a> ·
+  <a href="#what-works-today">Capabilities</a> ·
   <a href="#architecture">Architecture</a> ·
-  <a href="#integrations">Integrations</a> ·
+  <a href="#integration-evidence">Integrations</a> ·
   <a href="#local-setup">Local setup</a> ·
   <a href="#hosting">Hosting</a> ·
-  <a href="#verification">Verification</a> ·
-  <a href="#authorship-and-license">Authorship</a>
+  <a href="#tests-and-evidence">Verification</a> ·
+  <a href="#development-and-license">Authorship</a>
 </p>
 
-Lenz brings private conversations, payments and DeFi into one web app. Start online, prepare an action, and retain your account, messages and pending requests when the connection drops.
+Lenz is a private messaging and DeFi app built for unreliable internet. It brings encrypted conversations and reviewed financial actions into one place, so losing a connection does not have to mean losing the conversation or starting a request again.
 
-Send a payment from a chat or your wallet. The recipient can use it to pay someone else while both of you remain offline. Reconnect when you can to settle payments or review and execute saved swaps. Your conversations, contacts and wallet stay under one profile.
+Its goal is to make private messaging and private offline DeFi usable without a continuous internet connection. Today's prototype keeps encrypted message history, cached market information and prepared requests available offline. Prepared Android devices can exchange encrypted messages over Bluetooth LE. Supported payments, swaps and lending actions use connected testnet services to execute and verify their outcomes.
 
-> **Testnet prototype.** Use test assets only. Saved requests and delivery receipts remain separate from blockchain settlement. The final original-account Swap, native Send and lending-exit checks are separate from component tests. [Current addresses and integration scope](docs/testnet-integrations.md) · [development status](docs/status.md).
+[Live testnet prototype](https://lenz-prototype.vercel.app) · [Current implementation](docs/implementation-status.md) · [Tests and evidence](docs/testing.md) · [Local setup](#local-setup)
 
-## Experience
+Test assets have no cash value. An offline message receipt confirms arrival; a payment or DeFi action needs its separate verified blockchain outcome. The hosted prototype depends on configured local execution services.
 
-<p align="center"><img src="web/evidence/home-desktop.png" alt="Lenz homepage showing the web chat and wallet experience" width="100%"></p>
+## The problem
 
-| Screen | Purpose |
+An interrupted connection can leave two questions unanswered: did the other person receive the message, and did the payment actually complete? Recreating a financial request can change its terms or create a second obligation. A cached balance or a saved confirmation screen cannot establish whether a blockchain action succeeded.
+
+Lenz keeps the original encrypted message or reviewed financial instruction with its pending state. It distinguishes a message reaching its recipient from money settling on a blockchain. Nearby delivery can carry conversations between prepared Android devices without mobile data; connected recovery checks or retries the original financial action and records the verified result.
+
+## Using Lenz
+
+| What you want to do | How Lenz handles it today |
 | --- | --- |
-| `/` | Lenz homepage and product overview |
-| `/chat.html` | Private conversations, contacts and tUSD payment handover |
-| `/money.html` | Standalone wallet, received payments and saved swaps |
-| `/markets.html` | Market data, lending accounts and action reviews |
-| `/account.html` and `/recovery.html` | Account creation, encrypted backup and original-request recovery |
-| `/zcash-lab.html` | Separate native Zcash accounts, read/sync and unsigned payment review |
-| `/wallet-lab.html` and `/swap-tools.html` | Developer signing, recovery and transaction diagnostics |
+| Talk privately with someone | Exchange signed, encrypted messages. Adding a contact queues a message request; the recipient can Accept or Decline. |
+| Keep talking when mobile data drops | Enable Nearby on prepared Android devices and keep Lenz open. Bluetooth LE carries the encrypted messages; the recipient's signed receipt confirms arrival. |
+| Check information while offline | Reopen the prepared app, read retained message history and view cached market snapshots. Live prices and blockchain balances need a connection. |
+| Prepare a supported payment or swap | Review the destination, asset and amount. Lenz retains the original signed request and reserved input for the supported route; connected execution confirms the outcome. |
+| Find out what happened to an interrupted action | Use the route's activity and recovery controls to check the recorded action or retry its original instruction. A pending result stays unresolved until verification. |
 
-Screenshots are recorded development views. [Wallet](web/evidence/wallet-desktop.png) · [Chat](web/evidence/private-chat-desktop.png) · [Trading](web/evidence/trade-desktop.png). [Open the live prototype](https://lenz-prototype.vercel.app), [run locally](#local-setup) or follow the [hosting setup](#hosting).
+## What works today
 
-## Capabilities
+| Area | Available today | Tested boundary |
+| --- | --- | --- |
+| Conversations and contacts | Send encrypted messages, receive automatic message requests, Accept/Decline and see arrival receipts | Browser/WebSocket and simulated native transport checks; request discovery exposes routing IDs and public keys |
+| Offline access | Use the cached app, read retained encrypted history, consult saved market snapshots and keep prepared requests for exact retries | Requires a prepared app and retained account state. Chat drafts last only while the page remains open; fresh blockchain reads and settlement need connectivity |
+| Android Nearby | Send messages directly over Bluetooth LE, with fragmentation, bounded forwarding and stored retries | Direct Samsung ↔ Xiaomi delivery observed; reverse delivery took about 20 seconds in the retry check. Multi-hop remains unverified |
+| NEAR payments and Rhea swaps | Send funded tUSD, pass backed value onward and swap through the bounded Rhea route | Recorded testnet transactions; November 17 hosted protocol swap needed three operator advances after the sponsor limit. Offline acceptance remains provisional |
+| NEAR Intents | Swap through the Wallet's route using the original NEP-413 verifier, with token-change and output checks | Recorded 1 LTS → 2 LTT testnet swap; 1Click partner execution is separate and unverified |
+| Aurora swaps | Review and sign a proof-funded Wallet swap, then check its receipt and reconcile the saved action | Recorded fixed-rate test venue; live interrupted-submission recovery, broader asset routes and private settlement remain unverified |
+| Aave lending on Sepolia | Review Supply, Borrow, Repay, Withdraw and transfer actions; inspect activity and recovery | Recorded Aave testnet operations; indexed residual collateral remained after exits |
+| Shielded Zcash payments | Send from Wallet through local PCZT review, proving and signing, then check the canonical wallet outcome | Recorded shielded testnet payment; browser backups do not restore native spending keys |
+| Markets | Browse public market data, charts and catalogues, with cached snapshots for offline reference | Hyperliquid funded trading and general liquidity/yield execution remain unfinished |
 
-- Exchange encrypted messages and contact cards with names and avatars.
-- Prepare and receive payments offline, then pass received value onward without a local validator group.
-- Use chat or the standalone wallet without creating a separate financial identity.
-- Settle signed tUSD payments on NEAR testnet and execute bounded Rhea swaps when connected.
-- Keep saved swaps reserved on reconnect; reconnection never starts them automatically.
-- Use the original NEAR Intents verifier with signed token changes and verified output withdrawal on testnet.
-- Review Aurora proof-funded Swap and Sepolia lending actions with exact account/amount bounds and durable activity.
-- Review native shielded Zcash payments through Wallet → Send with a configured local native signer and retained Activity.
-
-Offline acceptance is provisional. A copied wallet can create conflicting authorizations; local validation does not guarantee that every competing claim will redeem. A name or avatar is a label, not authentication. [Behavior and safety boundaries](docs/behavior.md).
+The [implementation table](docs/implementation-status.md) links each behavior to its code, verification commands and limitations. General private offline DeFi, never-online first use, iOS, production recovery and physical multi-hop are unfinished. The Android package has no financial API backend; funding and settlement use the configured hosted web services.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  C[Private chat] <--> W[Shared identity and tUSD wallet]
-  W --> H[Offline handover and onward transfer]
-  H --> N[NEAR testnet settlement]
-  W --> Q[Reviewed intent and durable activity]
-  Q --> R[NEAR Intents and Rhea]
-  Q --> A[Aurora proof-funded swap]
-  Q --> L[Sepolia lending account and Aave]
-  W --> Z[Native Zcash Send]
-  Z --> P[Local proof and signing]
-  P --> S[Online Zcash confirmation]
-```
+<p align="center"><img src="brand/architecture.svg" alt="Lenz architecture: device state and encrypted originals, message transports, connected financial execution and verified blockchain outcomes" width="100%"></p>
 
-The browser uses JavaScript modules, WebCrypto, IndexedDB, Web Locks, service workers and WebRTC. Node.js serves the app and execution journals. NEAR contracts use Rust; Aurora/Sepolia contracts use Solidity. Zcash uses pinned native Rust tooling and PCZTs. Proof tooling includes Circom, snarkjs and the original Tornado circuit. Native Zcash custody is a separate account boundary from the NEAR reserve. [Privacy and recovery boundaries](docs/testnet-integrations.md).
+[Full-size SVG](brand/architecture.svg) · [Detailed architecture and delivery flow](docs/architecture.md) · [Financial source map](docs/evidence/SOURCE-MAP.md)
 
-## Integrations
+Chat and Wallet share the Lenz identity and retained device state. Message transports carry the original encrypted packets into authenticated intake, which saves the result and a signed arrival receipt together. Financial routes retain their own signed authority and journals, then use configured connected executors and separate blockchain verification. The Android host provides the packaged app and BLE bridge; execution services retain separate operator or native wallet custody.
 
-| Component | Verified | Still open |
-| --- | --- | --- |
-| NEAR reserve | Testnet funding, settlement, conflict rejection and backed deposits | Private settlement, safe recovery and broader device coverage |
-| Rhea | Signed swaps, exact payouts/refunds, offline re-entry and bounded redemption recovery | External NEAR signing and other missing-callback recovery |
-| Native Zcash | Confirmed ordinary Wallet → Send testnet transfer; local PCZT proving/signing, canonical receipt checks and retained Activity | Native custody recovery/rescan and broader failure coverage; browser archives preserve action references |
-| NEAR Intents | Original verifier deployed on testnet, owner-issued LTS/LTT assets, NEP-413 signatures and atomic token changes | This route uses a testnet solver; 1Click partner access is a separate unavailable integration |
-| Aurora | Ordinary Wallet Swap finalized for 1 LTS→2 LTT, with NEAR/Aurora receipts, exact action/event checks and encrypted archive restoration offline using the same key | Broader asset routes and interrupted-submission recovery; the recorder aborted a background market read after financial success |
-| Aave lending | Sepolia LINK collateral/test USDC debt, bounded Supply/Borrow/Repay/Withdraw/transfer and durable recovery | Original repayment and free-fund exits finalized; residual indexed collateral remains |
-| Tornado | Original v2.1 circuit/prover and verifier used for fixed-denomination pool membership proofs | Limited test-pool anonymity; recipient, amounts and later DeFi activity remain public |
-| Hyperliquid | Browseable charts/markets and shared Coming soon dialog | Funded trading execution remains unverified |
+## Implementation map
 
-[NEAR contracts](contracts/README.md) · [Rhea adapter](contracts/adapter/README.md) · [Zcash evidence](zcash/pczt.md) · [Payment review](zcash/payment-review.md) · [Aurora scope](aurora/README.md) · [development status](docs/status.md).
+| Directory | Responsibility |
+| --- | --- |
+| [web/](web/README.md) | Browser UI, encrypted storage, delivery clients, account backup, service workers and hosted execution routes |
+| [native/android/](native/android/README.md) | Android WebView host and original Lenz BLE transport |
+| [contracts/](contracts/README.md) | NEAR reserve, Rhea adapter and pinned original Intents verifier deployment |
+| [aurora/](aurora/README.md) | Solidity execution accounts, proof-funded swaps, lending contracts and Engine codecs |
+| [integrations/](integrations/README.md) | Provider adapters, catalogues, quotes and testnet intent workflows |
+| [zcash/](zcash/README.md) | Native shielded payment review, PCZT execution and canonical outcome checks |
+| [carrier/](carrier/README.md) | Encrypted transport storage and separate DeFi executor protocols |
+| [docs/](docs/status.md) | Current scope, privacy/recovery boundaries and dated implementation reports |
+
+The [architecture guide](docs/architecture.md) follows storage, shared delivery policy, native transport and connected execution through their source modules. The web app uses JavaScript, WebCrypto, IndexedDB, Web Locks, service workers, WebRTC and Nostr. Node.js serves the app and execution journals. NEAR contracts use Rust; Aurora/Sepolia contracts use Solidity. Zcash uses pinned native Rust tooling. Proof tooling includes Circom, snarkjs and the original Tornado circuit.
+
+## Integration evidence
+
+<p align="center"><img src="web/evidence/home-desktop.png" alt="Recorded Lenz homepage" width="100%"></p>
+
+[Recorded Wallet](web/evidence/wallet-desktop.png) · [Recorded Chat](web/evidence/private-chat-desktop.png) · [Recorded Trading](web/evidence/trade-desktop.png). These earlier development captures are preserved; Chat now uses automatic delivery and message requests. The current implementation table describes the changed behavior.
+
+The [evidence index](docs/evidence/README.md) contains dated, machine-readable summaries of actual NEAR reserve, Rhea, Intents, Aurora, Zcash and Aave transactions, plus the two-phone Bluetooth observations. Each summary separates the original observation from current implementation hashes. The [source map](docs/evidence/SOURCE-MAP.md) follows the mounted UI through authority, execution and result checks.
+
+This is testnet evidence for the recorded paths. Fixture success, configured endpoints and installed SDKs do not establish a new transaction. Encryption of chat or an approval does not make its public blockchain settlement private. [Addresses, hosting and privacy boundaries](docs/testnet-integrations.md).
+
+## Tests and evidence
+
+The [testing record](docs/testing.md) lists dated results, reproduction commands and remaining limits for startup, delivery, contact requests, recovery, offline restart, markets, Android transport and financial integrations. November 17 checks include 39 startup tests, the same 50 delivery/contact tests before and after the refactor, and cache graphs of 881 Chat routes and 880 app routes. Migrated carrier, Nostr and WebRTC browser harnesses passed 11, ten and eight groups respectively. Separate evidence records the two-phone messages and eight finalized payment/swap transactions. The record retains the Bluetooth delay, sponsor-limit recovery and earlier harness failures; it does not claim a full-repository test pass.
 
 ## Local setup
 
-Use Node.js 24 or newer. Windows Edge is the browser used for the recorded tests. Rust and the native Zcash toolchain are needed for their respective integration tests, not for inspecting the source.
+Use Node.js 24 or newer. Install the existing locked dependency scopes from the repository root:
 
 ```sh
 git clone https://github.com/captainbishop/lenz.git
 cd lenz
+npm ci --ignore-scripts --no-audit --no-fund
 npm --prefix contracts ci --ignore-scripts --no-audit --no-fund
 npm --prefix aurora ci --ignore-scripts --no-audit --no-fund
-cd research/crypto-step
-npm ci --ignore-scripts --no-audit --no-fund
-npm run build
-cd ../../web
-node build.mjs
-node server.mjs
+npm --prefix integrations ci --ignore-scripts --no-audit --no-fund
+npm --prefix web/near-connector ci --ignore-scripts --no-audit --no-fund
+npm --prefix integrations/quote-verifier ci --ignore-scripts --no-audit --no-fund
+npm run prepare:web
+npm run check
+npm run check:offline
+npm start
 ```
 
-Open [Lenz locally](http://localhost:4173/), using the same origin as configured local execution services. The proof build creates **test-only** parameters; it can take several minutes. Fresh setup keys differ from saved evidence. Follow [proof build instructions](research/crypto-step/README.md), [web setup](web/README.md) and [backend configuration](docs/testnet-integrations.md#backend-setup). Native executables, wallet keys, scans, original proving artifacts and private PCZTs stay outside Git.
+Open the loopback address printed by the server. Without service configuration, the frontend opens while funded execution is unavailable. `prepare:web` downloads only eleven approved public bootstrap files and verifies their pinned hashes; it preserves the existing proving parameters. Rust and native wallet tooling are required for their component builds, not frontend startup.
 
-Unconfigured services report unavailable rather than accepting financial requests. Live execution requires separately funded disposable test accounts, pinned deployments and durable journals. Keep the same journal and sponsor through restart. Do not repeat deployments or faucet requests as setup checks.
+Microsoft Edge is required by the selected Playwright browser tests:
 
-Physical Bluetooth mesh, the never-online first-use journey, complete forward secrecy and production recovery remain further work.
+```sh
+npm run test:browser
+npm run test:requests
+```
+
+These commands use disposable identities and fixture transport boundaries. They do not submit a financial transaction. Component-specific verification commands are in the [implementation table](docs/implementation-status.md).
 
 ## Hosting
 
-Choose the package for the intended backend:
+`npm run build:hosted` creates a fresh `.vercel-package` and refuses an existing output directory. The root [Vercel configuration](vercel.json) uses the same pinned asset preparation before packaging. Packaging alone provides static pages; configured execution routes need the authenticated gateway and retained custody/journals described in [backend and hosting setup](docs/testnet-integrations.md#hosting).
 
-| Package | Build command from the repository root | Backend |
-| --- | --- | --- |
-| Static preview | `node web/build-vercel.mjs /absolute/path/to/a/new/preview-directory` | APIs return HTTP 503 `BACKEND_UNAVAILABLE` |
-| Connected Vercel app | `node web/build-hosted-vercel.mjs /absolute/path/to/a/new/connected-directory` | Authenticated server proxy to a separately configured private gateway |
+The Android APK build uses an explicit packaged public directory, Android platform/build tools and JDK. Follow [native build instructions](native/android/README.md); keep its output and signing key outside the repository.
 
-The [live prototype](https://lenz-prototype.vercel.app) serves the website and API proxy on Vercel. The proxy reaches this computer's authenticated local gateway through a temporary Cloudflare tunnel; availability depends on those local services. Signing keys, native wallets and execution journals stay on the operator's computer. Existing Lenz identity sign-in and an explicit source/owner mapping limit financial routes. Public pages, NEAR reserve reads and the configured access boundaries have passed read-only checks; real financial execution through the public origin remains separate. [Environment and gateway setup](docs/testnet-integrations.md#hosting).
+## Development and license
 
-The Vercel project is connected to this GitHub repository. Its root configuration
-runs `npm ci --prefix web/near-connector` and `node web/build-git-vercel.mjs`.
-The build verifies the pinned hashes in `web/git-public-assets.json` before
-using public bootstrap assets; it preserves the existing test proving parameters.
+Preserve identities, keys and pending obligations. Use factual verification dates and distinguish fixture results from live execution and physical transport. [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Detailed development history](docs/status.md).
 
-## Verification
-
-Run the local regression checks from the repository root:
-
-```sh
-node --test web/server-integration.test.mjs web/build-vercel.test.mjs
-node --test web/intent-near-relay.test.mjs web/intent-lending-read.test.mjs web/intent-zcash-recovery.test.mjs
-node web/verify-chat-static.mjs
-node tooling/check-freshness.mjs
-```
-
-The [funded social flow](research/offline-social-live.md) records actual tUSD funding, offline A → B → C handover and online settlement/Rhea execution. The [Zcash flow](zcash/pczt.md) records a separate native shielded payment. Fixture tests, saved-evidence checks and live chain observations are identified separately in each report.
-
-`node zcash/verify-pczt.mjs` also checks locally built executable hashes, so it needs the pinned native tooling. Source-only clones do not contain those binaries. Never run a transaction script merely to check that the repository works.
-
-## Development
-
-Work in small, reviewable changes. Preserve existing identities, keys, contacts and pending financial obligations. Record the checks run and retain unresolved failures. [Contributing](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Development status](docs/status.md).
-
-## Authorship and license
-
-Created and maintained by [captainbishop](https://github.com/captainbishop), Lenz's sole project author. Original project code is available under the [MIT license](LICENSE). Third-party software and source material retain their own licenses and notices; see [third-party notices](THIRD_PARTY_NOTICES.md).
-
-Proof of U remains the protocol and research namespace for compatibility.
+Created and maintained by [captainbishop](https://github.com/captainbishop), Lenz's sole project author. Original project code is available under the [MIT license](LICENSE). Third-party code retains its licenses and [notices](THIRD_PARTY_NOTICES.md). The Android transport is original Lenz Java code informed by pinned Bitchat techniques; its Lenz wire protocol does not interoperate with Bitchat clients. Proof of U remains the protocol/research namespace for compatibility.

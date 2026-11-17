@@ -1,5 +1,5 @@
 import { assert, bytes } from './peer-crypto.js';
-import { relayOrigin, MAX_EVENT_BYTES } from './nostr-protocol.js';
+import { relayOrigin, MAX_EVENT_BYTES, RUMOR_KIND } from './nostr-protocol.js';
 
 // One bounded exchange; all sockets close on completion, timeout, or opt-out.
 export async function openRelay(origin, {signal, allowed, WebSocketImpl = WebSocket, timeout = 10000} = {}) {
@@ -85,6 +85,26 @@ export async function readMailbox(relay, publicKey, cursor, accept, now = Date.n
       assert(limit < 512, 'Relay inbox is saturated at one timestamp. Delivery is incomplete; use file sharing.');
       limit *= 2;
     } else { until = oldest; limit = 128; }
+  }
+  return {until,limit};
+}
+
+export async function readContactRequestInbox(relay, recipientId, cursor, accept, now = Date.now()) {
+  assert(typeof recipientId==='string'&&/^[0-9a-f]{64}$/.test(recipientId),'Invalid request inbox.');
+  const since=Math.floor((now-86400000)/1000);
+  let until=cursor?.until??Math.floor(now/1000)+60,limit=cursor?.limit??64;
+  for(let page=0;page<2;page++){
+    const events=await relay.read({kinds:[RUMOR_KIND],'#p':[recipientId],since,until,limit});
+    assert(Array.isArray(events)&&events.length<=limit,'Contact request inbox exceeded its limit.');
+    const ids=new Set();let oldest=until;
+    for(const event of events){
+      assert(typeof event?.id==='string'&&!ids.has(event.id)&&Number.isSafeInteger(event.created_at)&&
+        event.created_at>=since&&event.created_at<=until,'Invalid contact request page or duplicates.');
+      ids.add(event.id);oldest=Math.min(oldest,event.created_at);await accept(event);
+    }
+    if(events.length<limit)return null;
+    if(oldest===until){assert(limit<128,'Contact request inbox is saturated. Some requests remain undelivered.');limit*=2;}
+    else{until=oldest;limit=64;}
   }
   return {until,limit};
 }

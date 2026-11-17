@@ -107,7 +107,7 @@ export function mountWalletPortfolio(wallet,{intentController,fundingController=
  ]){
   const link=document.createElement('a');link.href=href;
   link.innerHTML=`${walletIcon(icon)}<span><strong>${label}</strong><small>${detail}</small></span>${walletIcon('M6 18 18 6M6 6h12v12')}`;
-  if(label==='Swap'&&intentController){link.href='#rhea-wallet';link.querySelector('small').textContent='Use your funds';link.onclick=event=>{event.preventDefault();select('defi',{remember:true});$('#wallet-defi-positions').open=true;$('#rhea-open').click();};}
+  if(label==='Swap'&&intentController){link.href='#rhea-wallet';link.querySelector('small').textContent='Use your funds';link.onclick=event=>{event.preventDefault();openSwap();};}
   $('.wallet-markets').append(link);
  }
  function utilityDialog(id,title,nodes){
@@ -189,5 +189,6 @@ export function mountWalletPortfolio(wallet,{intentController,fundingController=
   if(hash==='wallet-people-section'&&!contacts.open)contacts.showModal();
  }
  addEventListener('hashchange',fromLocation);addEventListener('popstate',fromLocation);fromLocation();
- return {render(hasIdentity,{offlineOwned=null}={}){offline.hidden=!hasIdentity||offlineOwned===null||BigInt(offlineOwned)<=0n;}};
+ function openSwap(){select('defi',{remember:true});$('#wallet-defi-positions').open=true;[...document.querySelectorAll('.defi-tabs button')].find(button=>button.textContent==='Swap')?.click();$('#rhea-open').click();}
+ return {openSwap,render(hasIdentity,{offlineOwned=null}={}){offline.hidden=!hasIdentity||offlineOwned===null||BigInt(offlineOwned)<=0n;}};
 }

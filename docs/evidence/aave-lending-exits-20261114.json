@@ -1,0 +1,438 @@
+{
+  "schema": "lenz.integration-evidence.v1",
+  "evidenceClass": "historical-testnet",
+  "summarizedAt": "2026-11-17T09:47:50.824Z",
+  "currentImplementation": {
+    "checkedAt": "2026-11-17T09:47:50.763Z",
+    "head": "e1c06236c616992354c558022094a0cef257b85d",
+    "scope": "SHA256 of inspected working files. These hashes identify the current implementation; they are not a historical source snapshot.",
+    "files": [
+      {
+        "path": "web/public/money.js",
+        "bytes": 11040,
+        "sha256": "1c3974e510a985f7600856b1a737985d661a17f67097cf1386f13c5a5761f0ee"
+      },
+      {
+        "path": "web/public/wallet-lending.js",
+        "bytes": 3407,
+        "sha256": "f3fc2dc6cd115e7be8d668689b94b79af2c484578b737806c2a4f21ba4cfce73"
+      },
+      {
+        "path": "web/public/intent-lending-markets.js",
+        "bytes": 12691,
+        "sha256": "0b341ecaf373cd69d2a7fec0320685a47a2f63e7fcaa67731a50ed2516634e51"
+      },
+      {
+        "path": "web/public/intent-lending-ui.js",
+        "bytes": 31308,
+        "sha256": "007281d61c513e4b6a1128e706e5d3a37596ca67a49dcc6fba83d233710c13fe"
+      },
+      {
+        "path": "web/intent-lending-service.mjs",
+        "bytes": 22756,
+        "sha256": "800b3e49314fc97b99522116296909b4e8f3c8f59e31d0af8551d5587bfaaf2e"
+      },
+      {
+        "path": "web/intent-lending-read.mjs",
+        "bytes": 25874,
+        "sha256": "f26be10bf5fcb07ee0842a391fecededad3ba44db6d59eff75f10de2c5051b34"
+      },
+      {
+        "path": "aurora/contracts/LendingAccount.sol",
+        "bytes": 18876,
+        "sha256": "48f7bbeb122c2a29c5248325279d317ff96e4b0eb5c15e3ba78da6c0ecb9c670"
+      },
+      {
+        "path": "aurora/contracts/PrivateSupply.sol",
+        "bytes": 14889,
+        "sha256": "740c776225b21e9f6b56d91a84ba8b3225aca2300cccab8b1f01278b55081d83"
+      },
+      {
+        "path": "web/public/intent-lending-config.js",
+        "bytes": 1253,
+        "sha256": "e6a059dbcc4b253cc8b0b723a45a39979621535b8cbe9d733c39fe39a4bcb8df"
+      }
+    ]
+  },
+  "provenanceScope": "Allowlisted summary of original local records. Hashes identify the preserved records; private records and raw signed artifacts are excluded.",
+  "integration": "Aave V3 Sepolia lending exits",
+  "observedAt": "2026-11-14T23:10:45.163Z",
+  "journey": "Original lending account: borrow, cancel, repay, withdraw collateral and transfer free tokens",
+  "network": "Sepolia testnet",
+  "chainId": "eip155:11155111",
+  "account": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+  "ownerAddress": "0x6e52922c50532531fe07792787fe9f187bbad29a",
+  "tokens": {
+    "link": {
+      "address": "0xf8fb3713d459d7c1018bd0a49d19b4c44290ebe5",
+      "decimals": 18
+    },
+    "aaveTestUsdc": {
+      "address": "0x94a9d9ac8a22534e3faca9f4e7f2e2cf85d5e4c8",
+      "decimals": 6
+    }
+  },
+  "executions": [
+    {
+      "action": "borrow",
+      "method": "execute",
+      "transaction": "0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+      "nonce": "0",
+      "digest": "0x43e0729d1a60b2c0ab324956030f1722a637e420eaaa087bad579460e88fd059",
+      "amount": "5000000",
+      "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+      "result": "5000000",
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12134335",
+        "blockHash": "0xaf21890ae82c671835ec94bae50b80df2505b593dc14251cf39df1d21a2e5ae0"
+      },
+      "position": {
+        "freeLinkBaseUnits": "0",
+        "freeUsdcBaseUnits": "5000000",
+        "aLinkBalanceBaseUnits": "1000128063973713028",
+        "aLinkScaled": "17161188741568256",
+        "variableDebtBaseUnits": "5000002",
+        "variableDebtScaled": "1307693",
+        "blockNumber": "12134335",
+        "blockHash": "0xaf21890ae82c671835ec94bae50b80df2505b593dc14251cf39df1d21a2e5ae0"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+        "url": "https://sepolia.etherscan.io/tx/0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:39.199Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12134335",
+        "observedTransaction": "0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+        "matchesRecorded": true,
+        "bodySha256": "44887efac086812a0a6b29b11aad980f1b5ac836323d57473106c38dbc7317e9"
+      },
+      "executionEvent": {
+        "transaction": "0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+        "event": "Executed",
+        "nonce": "0",
+        "digest": "0x43e0729d1a60b2c0ab324956030f1722a637e420eaaa087bad579460e88fd059",
+        "amount": "5000000",
+        "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+        "action": 0,
+        "result": "5000000",
+        "matchedRecorded": true
+      }
+    },
+    {
+      "action": "cancel",
+      "method": "cancel",
+      "transaction": "0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+      "nonce": "1",
+      "digest": "0x09bd5c76b2dacdcb9913db339cfb98dfbb343a77ba7e357df925f15720157148",
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12135503",
+        "blockHash": "0xcdb6543c40d42cebf6da5b22a50cac8f49f6a9bed789a5e73ce1d228f0b6d282"
+      },
+      "position": {
+        "freeLinkBaseUnits": "0",
+        "freeUsdcBaseUnits": "6000000",
+        "aLinkBalanceBaseUnits": "1001212570781396279",
+        "aLinkScaled": "17161188741568256",
+        "variableDebtBaseUnits": "5001456",
+        "variableDebtScaled": "1307693",
+        "blockNumber": "12135522",
+        "blockHash": "0x731cf483df3395529cb760614007b63bd81f0abce4b1288ad5eaa8ca9f7ddd3b"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+        "url": "https://sepolia.etherscan.io/tx/0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:39.454Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12135503",
+        "observedTransaction": "0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+        "matchesRecorded": true,
+        "bodySha256": "e1a81c06341118607a9f0d72796938a448a70b83eb627f0721c5fdef837b5396"
+      },
+      "executionEvent": {
+        "transaction": "0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+        "event": "Cancelled",
+        "nonce": "1",
+        "digest": "0x09bd5c76b2dacdcb9913db339cfb98dfbb343a77ba7e357df925f15720157148",
+        "matchedRecorded": true
+      }
+    },
+    {
+      "action": "repay",
+      "method": "execute",
+      "transaction": "0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+      "nonce": "2",
+      "digest": "0x20520848761718bf860d82863bd87d4080efa4426d31c32f676ae6a03ef82801",
+      "amount": "6000000",
+      "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+      "result": "5001558",
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12135606",
+        "blockHash": "0xa93304887f484d73ed03d7ca7746060e4aa2093f75bb9f57c9154eaf9f8c94dc"
+      },
+      "position": {
+        "freeLinkBaseUnits": "0",
+        "freeUsdcBaseUnits": "998442",
+        "aLinkBalanceBaseUnits": "1001328975400677501",
+        "aLinkScaled": "17161188741568256",
+        "variableDebtBaseUnits": "0",
+        "variableDebtScaled": "0",
+        "blockNumber": "12135650",
+        "blockHash": "0x36c2f1c42cb1b4e9839f841d8d2f6a61f1bc4cb96c73dd71945b45b3a8fdcae4"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+        "url": "https://sepolia.etherscan.io/tx/0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:39.166Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12135606",
+        "observedTransaction": "0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+        "matchesRecorded": true,
+        "bodySha256": "9df0e67323abbc7a62de1165a8f41b7253ac3532b8e0b2b8ad32db66757cd78a"
+      },
+      "executionEvent": {
+        "transaction": "0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+        "event": "Executed",
+        "nonce": "2",
+        "digest": "0x20520848761718bf860d82863bd87d4080efa4426d31c32f676ae6a03ef82801",
+        "amount": "6000000",
+        "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+        "action": 1,
+        "result": "5001558",
+        "matchedRecorded": true
+      }
+    },
+    {
+      "action": "withdraw",
+      "method": "execute",
+      "transaction": "0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+      "nonce": "3",
+      "digest": "0x51a3af3d793e571281c8953dd89ef4cf89651894013d946b291199ef121d87ea",
+      "amount": "1001358079665104277",
+      "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+      "result": "1001358079665104277",
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12135755",
+        "blockHash": "0x89bc49b117ae47ee8dc9cc33514ddc8bd3b57c476a75487092867e3d09502cd9"
+      },
+      "position": {
+        "freeLinkBaseUnits": "1001358079665104277",
+        "freeUsdcBaseUnits": "998442",
+        "aLinkBalanceBaseUnits": "67307348471290",
+        "aLinkScaled": "1153373459438",
+        "variableDebtBaseUnits": "0",
+        "variableDebtScaled": "0",
+        "blockNumber": "12135809",
+        "blockHash": "0x5ee1287fdecf04dcc31b24de10d0bd20d47082ecd4719119a39ae502a3e1e523"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+        "url": "https://sepolia.etherscan.io/tx/0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:41.172Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12135755",
+        "observedTransaction": "0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+        "matchesRecorded": true,
+        "bodySha256": "59ff3907e6edd5df75b84cb338da05a273510bbf475ea0785ab1ec5e1e1566d0"
+      },
+      "executionEvent": {
+        "transaction": "0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+        "event": "Executed",
+        "nonce": "3",
+        "digest": "0x51a3af3d793e571281c8953dd89ef4cf89651894013d946b291199ef121d87ea",
+        "amount": "1001358079665104277",
+        "recipient": "0xa83ad37a264e3784e8b9da80ad0a0f6a4fa3e78b",
+        "action": 2,
+        "result": "1001358079665104277",
+        "matchedRecorded": true
+      }
+    },
+    {
+      "action": "transfer-link",
+      "method": "transferFunds",
+      "transaction": "0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+      "nonce": "4",
+      "digest": "0xdd0aeb0d5c2be9f74f8a7b180b268a39ac21d7e8880a7c905f869e3a5780e852",
+      "amount": "1001358079665104277",
+      "recipient": "0x6e52922c50532531fe07792787fe9f187bbad29a",
+      "asset": 0,
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12135889",
+        "blockHash": "0xa71c1751264a5ec621758fcc247802b0a3aa03dc7d70642553d062c1b3c29b17"
+      },
+      "position": {
+        "freeLinkBaseUnits": "0",
+        "freeUsdcBaseUnits": "998442",
+        "aLinkBalanceBaseUnits": "67324954595510",
+        "aLinkScaled": "1153373459438",
+        "variableDebtBaseUnits": "0",
+        "variableDebtScaled": "0",
+        "blockNumber": "12136095",
+        "blockHash": "0x6f5f2c3d60a1c9318441ba29f25f6d20fb6e2c977cc69cd646f96ee0d9484fdd"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+        "url": "https://sepolia.etherscan.io/tx/0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:39.150Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12135889",
+        "observedTransaction": "0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+        "matchesRecorded": true,
+        "bodySha256": "3ccae837af4415154947e8e4e86c2e4ee19909b78877b8734865ca82ae74d2b9"
+      },
+      "executionEvent": {
+        "transaction": "0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+        "event": "Transferred",
+        "nonce": "4",
+        "digest": "0xdd0aeb0d5c2be9f74f8a7b180b268a39ac21d7e8880a7c905f869e3a5780e852",
+        "amount": "1001358079665104277",
+        "recipient": "0x6e52922c50532531fe07792787fe9f187bbad29a",
+        "token": "0xf8fb3713d459d7c1018bd0a49d19b4c44290ebe5",
+        "matchedRecorded": true
+      }
+    },
+    {
+      "action": "transfer-usdc",
+      "method": "transferFunds",
+      "transaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+      "nonce": "5",
+      "digest": "0xfd0a8f01906c2f655eca06aecb4cd2724bb1453358e9995ad28cf132b8d789a3",
+      "amount": "998442",
+      "recipient": "0x6e52922c50532531fe07792787fe9f187bbad29a",
+      "asset": 1,
+      "recordedStatus": "executed",
+      "recordedVerified": true,
+      "receipt": {
+        "status": "0x1",
+        "blockNumber": "12136180",
+        "blockHash": "0xdde68f61a2fc74a090083142cf0a0b844117155c37ef3ca734e30b096336f81c"
+      },
+      "position": {
+        "freeLinkBaseUnits": "0",
+        "freeUsdcBaseUnits": "0",
+        "aLinkBalanceBaseUnits": "67330823303583",
+        "aLinkScaled": "1153373459438",
+        "variableDebtBaseUnits": "0",
+        "variableDebtScaled": "0",
+        "blockNumber": "12136190",
+        "blockHash": "0x62f66575bed50a88acf948266769d529f7ff9826d059c705673f8fe5514971ab"
+      },
+      "publicExplorerCheck": {
+        "transaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+        "url": "https://sepolia.etherscan.io/tx/0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+        "httpStatus": 200,
+        "checkedAt": "2026-11-17T09:44:39.185Z",
+        "observedStatus": "Success",
+        "observedBlockNumber": "12136180",
+        "observedTransaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+        "matchesRecorded": true,
+        "bodySha256": "a9249d1c7246b67d3b3148d25a02946983176d332dd80dce8273aa135bd0fc52"
+      },
+      "executionEvent": {
+        "transaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+        "event": "Transferred",
+        "nonce": "5",
+        "digest": "0xfd0a8f01906c2f655eca06aecb4cd2724bb1453358e9995ad28cf132b8d789a3",
+        "amount": "998442",
+        "recipient": "0x6e52922c50532531fe07792787fe9f187bbad29a",
+        "token": "0x94a9d9ac8a22534e3faca9f4e7f2e2cf85d5e4c8",
+        "matchedRecorded": true
+      }
+    }
+  ],
+  "finalRecordedRead": {
+    "checkedAt": "2026-11-14T23:10:45.163Z",
+    "transaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+    "status": "0x1",
+    "receiptBlock": "0xb92ef4",
+    "receiptHash": "0xdde68f61a2fc74a090083142cf0a0b844117155c37ef3ca734e30b096336f81c",
+    "canonical": true,
+    "finalizedBlock": "0xb92f1d",
+    "withinFinalizedHead": true
+  },
+  "freshRpcChecks": {
+    "endpoint": "https://ethereum-sepolia-rpc.publicnode.com",
+    "scope": "This endpoint returned null for the historical receipt queries. Etherscan displayed matching transaction hashes, Success status and recorded block numbers.",
+    "checks": [
+      {
+        "transaction": "0x8b5782d67daf1afab9946a1bf5716c114f962dd62b8cf6c7dba14057a03858e0",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      },
+      {
+        "transaction": "0x6c9dab70e449a78b5a63bc86fd99c07a56abddaca36f3b9b79b4f26dc6ea5da0",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      },
+      {
+        "transaction": "0x27f9050897de1af2d45e8f7a1710e130dc987cf7102c051e570b626dd6db80f0",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      },
+      {
+        "transaction": "0x3f69f0d70753b57bcc53fb680308efdc415f8fa016e5a2c427955a41d118621b",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      },
+      {
+        "transaction": "0xd7988337c4ada3ef95d916ec2c6b745fd333cacddc2cc933835ade76585811dc",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      },
+      {
+        "transaction": "0xf5d0b5831fc291fa796b74a21c91f7411f37523c8eaf15733487383d6792934c",
+        "checkedAt": "2026-11-17T09:43:06.831Z",
+        "available": false,
+        "httpStatus": 200
+      }
+    ]
+  },
+  "independentChecks": [
+    "One exact Executed/Cancelled/Transferred event bound to signed nonce/digest",
+    "Exact amount, result, recipient and token Transfer logs",
+    "Independent account position at the recorded canonical observation block"
+  ],
+  "limitations": [
+    "The recorded final position has zero free LINK/USDC and debt, but residual indexed aLINK remains: 67330823303583 base units at block 12136190.",
+    "Indexed aLINK changes across blocks; this is not a completely empty account.",
+    "Aave test USDC is distinct from Circle Sepolia USDC.",
+    "Account, collateral, debt, amounts and actions are public.",
+    "These historical runs require the original funded account, owner permission and sponsor configuration."
+  ],
+  "originalRecords": [
+    {
+      "record": "lendingState",
+      "bytes": 91294,
+      "sha256": "2e083a4b4559f81ff385ad372eb12d535e77def81dfca8a7d0880942ed6fc0c0"
+    },
+    {
+      "record": "lendingRead",
+      "bytes": 601,
+      "sha256": "e125a229983c79c7ee0341b7ff12e909dec5d51f29d353bc1c74b591e08a5ee4"
+    }
+  ]
+}

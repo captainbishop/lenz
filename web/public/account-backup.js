@@ -1,16 +1,15 @@
-import {assert,bytes,hex,unhex,openMessage,keysAre,digest} from './peer-crypto.js';
+import {assert,bytes,hex,unhex,keysAre,digest} from './peer-crypto.js';
 import {stageIdentityRecovery,sealChatArchive,openChatArchive,isChatArchiveType} from './identity-recovery.js';
 import {sealLegacyChatArchive,validateRecoveryLink} from './legacy-recovery.js';
 import {unlockLocalBackup} from './account-keys.js';
 import {readChatBackup} from './recovery-service.js';
 import {confidentialSpendOutbox} from './intents-spend-outbox.js';
 import {snapshotIntentRecovery,validateIntentRecovery} from './intent-account-recovery.js';
+import {chatSnapshot} from './contact-request-backup.js';
 export const ACCOUNT_BACKUP='lenz/account-backup/v1';
 const terms=a=>bytes([a.type,a.accountId,a.revision,a.previous]);
 export async function accountChatSnapshot(state,{receipts=true}={}){
-  const messages=[];
-  for(const record of state.messages){const {packet}=record,peer=state.contacts.find(p=>p.id===(packet.from===state.identity.profile.id?packet.to:packet.from));assert(peer,'A saved message has no contact.');const payload=await openMessage(state.identity,peer,packet);if(payload.kind==='chat'){assert(keysAre(payload,['kind','text']),'Unsupported chat message.');messages.push(receipts?structuredClone(record):{packet});}else assert(['lenz-near-payment-v1','trade-offer','trade-agreed','trade-payment'].includes(payload.kind),'Unsupported saved message.');}
-  return {profile:state.identity.profile,contacts:state.contacts,messages};
+  return chatSnapshot(state,{receipts});
 }
 export async function createAccountBackup(state){
   const sync=state.accountSync,phrase=await unlockLocalBackup(sync),own=await stageIdentityRecovery(phrase,state.identity.profile.name);

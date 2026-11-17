@@ -42,10 +42,10 @@ export function mountCourierControls(dialog,{getSession,getContract,getDefiConfi
  function feedback(text){$('courier-feedback').dataset.result='true';$('courier-feedback').textContent=text;}
  async function act(fn){
   if(working)return;working=true;panel.setAttribute('aria-busy','true');
-  for(const control of panel.querySelectorAll('input,select,button'))control.disabled=true;
+  for(const control of panel.querySelectorAll('input,select,button:not(.lenz-choice-button)'))control.disabled=true;
   try{await refresh();await fn();}catch(error){feedback(error.message);}finally{
    working=false;panel.removeAttribute('aria-busy');
-   for(const control of panel.querySelectorAll('input,select,button'))control.disabled=false;
+   for(const control of panel.querySelectorAll('input,select,button:not(.lenz-choice-button)'))control.disabled=false;
    try{await refresh();}catch(error){feedback(error.message);}
   }
  }

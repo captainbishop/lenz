@@ -1,5 +1,7 @@
 # Active DeFi integration
 
+The current Wallet mounts the original NEAR Intents verifier route, proof-funded Aurora Swap and native Zcash Send, alongside NEAR reserve/Rhea and Sepolia lending. [Recorded testnet outcomes](../docs/evidence/README.md) and the [implementation source map](../docs/evidence/SOURCE-MAP.md) identify the actual authority, execution and result paths. These are separate from the quote adapters and general route previews described below. Broader routes, private settlement and production recovery remain open.
+
 [Market discovery](../docs/market-discovery.md) connects public Uniswap/Aave
 Base markets and Hyperliquid perpetual contexts to the Markets page and route
 candidate matcher. Explicit refresh and saved offline snapshots are available.
@@ -9,15 +11,16 @@ candles/depth and a compact order ticket, with explicit public-data consent.
 Hyperliquid order-book previews. [Route drafts](../docs/route-drafts.md) match
 bounded swap/order objectives and persist encrypted non-executable records.
 Markets provides a draft review, and Drafts supports offline reading and explicit
-estimate refresh/delete. Complete fees, account positions, cross-chain legs,
-private quotes, signing, execution and recovery remain open.
+estimate refresh/delete. These general route drafts have no execution authority;
+complete fees, account positions, cross-chain legs, private quotes and their
+signing/execution/recovery path remain open.
 
 The [shared route planner](../docs/route-planner.md) adds provider-independent
 catalogue discovery and validated objectives for EVM/NEAR routes, credit and
 Hyperliquid orders. It is a pure developer module with synthetic examples;
 its previews cannot sign, dispatch, release reservations or credit a wallet.
 
-Rhea, NEAR Intents, Zcash and privacy are part of the current Lenz build alongside NEAR settlement. These modules implement the quote stage. The separate [Rhea adapter](../contracts/adapter/README.md) now has funded testnet swap/refund and browser evidence. A [native shielded Zcash transfer](../zcash/pczt.md) is confirmed, with separate [unsigned browser review and expiry checks](../zcash/payment-freshness.md). NEAR Intents execution, browser Zcash signing, the shielded DeFi route and private NEAR settlement remain incomplete. Aurora has local execution/verifier evidence; no separate Aurora Intents connection is implemented.
+The quote adapters implement bounded provider previews. The separate [Rhea adapter](../contracts/adapter/README.md) has funded testnet swap/refund evidence. The mounted [original NEAR Intents verifier route](../docs/evidence/near-intents-wallet-20261113.json) has a final testnet swap; 1Click partner execution is separate and unverified. [Native Zcash Wallet Send](../docs/evidence/zcash-wallet-send-20261114.json) delegates signing to configured native custody, while its developer browser lab retains [unsigned review](../zcash/payment-freshness.md). [Aurora Wallet Swap](../docs/evidence/aurora-wallet-swap-20261114.json) has a deployed fixed-rate test venue and final receipts. General shielded DeFi and private NEAR settlement remain incomplete.
 
 November 2: [installation checks](installation-results.json) confirm the empty-authentication payload builder and the Aurora EVM toolchain. The isolated [1Click verifier](quote-verifier/README.md) retains SDK 0.1.26 and requires valid signatures on preview quotes. November 9 live checks accepted confidential dry quotes and EVM ownership authentication; the [account adapter](../docs/confidential-account.md) adds private balance reads and fresh same-key reauthentication.
 
@@ -69,9 +72,11 @@ authentication. Quote routes retain their separate verifier.
 The [cleanup evidence](../research/security/dependency-cleanup-2026-11-02.md)
 records compatibility checks and scope. The original [dependency audit](dependency-audit.json)
 and [protobuf update](../research/security/intents-protobuf-refresh-2026-11-02.md)
-describe the retired SDK environment. No bridge/token execution is implemented
-by this replacement; full Intents integration remains open.
+describe the retired SDK environment. This quote-adapter dependency replacement
+implements no bridge/token execution. The mounted original verifier route uses
+its separate signed testnet swap and result checks; general funded asset/return
+routes and 1Click execution remain open.
 
 The NEAR reserve now builds, deploys and redeems. [Rhea's funded test](../contracts/rhea-flow-results.json) created tUSD/wrapped-NEAR pool 2870, rejected an impossible minimum without debiting deposits, swapped one tUSD for `16631929970821175489787` base units of wrapped test NEAR and withdrew the output into the disposable account. Every successful call includes final receipts. The documented `register_tokens` example omitted the required one-yocto deposit; a live failure identified it and the corrected run passed. The deployed code hash is recorded; source-to-bytecode equivalence has not been established.
 
-Next Intents work is production recovery, a supported funded execution/return route, and a verified binding for the requested confidentiality mode. Rhea follow-through includes external signing and recovery for missing contract callbacks; [receipt checks](../research/rhea-receipt-recovery.md) are implemented. Native shielded wallet work is in [zcash/](../zcash/README.md), and contract-verifier evidence is in [aurora/proof-results.json](../aurora/proof-results.json).
+Remaining Intents work includes production recovery, broader funded execution/return routes and a verified binding for the requested confidentiality mode. The current original-verifier testnet swap does not satisfy those broader requirements. Rhea follow-through includes external signing and recovery for missing contract callbacks; [receipt checks](../research/rhea-receipt-recovery.md) are implemented. Native shielded wallet work is in [zcash/](../zcash/README.md); the local Aurora verifier experiment retains its separate [proof evidence](../aurora/proof-results.json).

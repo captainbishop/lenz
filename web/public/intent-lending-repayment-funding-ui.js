@@ -35,15 +35,17 @@ export function mountLendingRepaymentFundingUI(target, { config, getContext, run
     $('resume').hidden = outcome?.resubmissionSafe !== true || reviewing;
     $('check').hidden = reviewing;
   }
-  $('open').onclick = () => run(async options => {
+  async function openReview(options) {
+    const context = getContext(); check(context.mode === 'Repay' && context.account && context.snapshot && BigInt(context.snapshot.account.position.variableDebtBaseUnits) > 0n, 'Test USDC is available only for an outstanding loan in this lending account.');
     const value = await step('reconcile', options); if (value.status !== 'not-requested' || !value.available) return;
     reviewing = true; const details = $('details'); details.replaceChildren();
     for (const [name, text] of [['Recipient', input.account], ['Token', config.usdc], ['Faucet', config.faucet]]) { const row = document.createElement('div'), label = document.createElement('dt'), content = document.createElement('dd'); label.textContent = name; content.textContent = text; row.append(label, content); details.append(row); }
     update(); $('confirm').focus();
-  });
+  }
+  $('open').onclick = () => run(openReview);
   $('confirm').onclick = () => run(async options => { check(reviewing && outcome?.status === 'not-requested' && outcome.available, 'Review the fixed original Repay grant first.'); await step('submit', options); });
   $('check').onclick = () => run(options => step('reconcile', options));
   $('resume').onclick = () => run(options => step('resume', options));
   $('cancel').onclick = () => { reviewing = false; $('status').textContent = ''; update(); };
-  return Object.freeze({ update, reset() { input = null; outcome = null; reviewing = false; $('status').textContent = ''; update(); }, dispose() { section.remove(); } });
+  return Object.freeze({ openReview, update, reset() { input = null; outcome = null; reviewing = false; $('status').textContent = ''; update(); }, dispose() { section.remove(); } });
 }

@@ -2,6 +2,8 @@
 import {Mnemonic,p256} from './evm-vendor/identity-recovery.js';
 import {CHAT_DOMAIN,assert,bytes,hex,unhex,digest,keysAre,validateProfile,openMessage} from './peer-crypto.js';
 import {validateDeliveryReceipt} from './delivery-receipts.js';
+import {isContactControl,contactForPacket} from './contact-requests.js';
+import {validateContactRequestSnapshot,validateDeclinedContacts,validateChatBackupRecord,validateChatBackupPayload} from './contact-request-backup.js';
 const DOMAIN='lenz/identity-recovery/v1',ARCHIVE='lenz/chat-archive/v2',PREVIOUS_ARCHIVE='lenz/chat-archive/v1',MAX_BYTES=8_000_000;
 export const isChatArchiveType=type=>type===ARCHIVE||type===PREVIOUS_ARCHIVE;
 const enc=new TextEncoder(),dec=new TextDecoder('utf-8',{fatal:true});
@@ -46,7 +48,8 @@ export async function stageIdentityRecovery(phrase,name){
   try {return await identityFromEntropy(entropy,name);}finally {entropy.fill(0);}
 }
 async function validateChatSnapshot(identity,input,withReceipts){
-  assert(keysAre(input,['profile','contacts','messages']),'Only identity and chat history can be archived.');
+  const fields=['profile','contacts','messages'];for(const field of ['contactRequests','declinedContactIds'])if(withReceipts&&Object.hasOwn(input,field))fields.push(field);
+  assert(keysAre(input,fields),'Only identity and chat history can be archived.');
   assert(Array.isArray(input.contacts)&&input.contacts.length<=500&&Array.isArray(input.messages)&&input.messages.length<=1000,'Archive exceeds the contact or message limit.');
   // Bound the whole serialized input before cloning/cryptographic validation.
   assert(bytes(input).length<=MAX_BYTES,'Chat archive is too large.');
@@ -54,16 +57,17 @@ async function validateChatSnapshot(identity,input,withReceipts){
   assert(profile.id===identity.profile.id,'Recovery phrase belongs to another identity.');
   const contacts=new Map();
   for(const value of snapshot.contacts){const p=await validateProfile(value);assert(p.id!==profile.id&&!contacts.has(p.id),'Duplicate or own contact in archive.');contacts.set(p.id,p);}
+  const state={identity,contacts:snapshot.contacts,messages:snapshot.messages,contactRequests:snapshot.contactRequests??[],declinedContactIds:snapshot.declinedContactIds??[]};
+  if(withReceipts)await validateContactRequestSnapshot(state);
   const ids=new Set();
   for(const record of snapshot.messages){
     assert(record?.packet&&typeof record.packet.id==='string'&&!ids.has(record.packet.id),'Invalid or duplicate archived message.');
-    const packet=record.packet,peer=contacts.get(packet.from===profile.id?packet.to:packet.from);
-    const receiptField=packet.from===profile.id?'receivedReceipt':'receiptToShare';
-    assert(keysAre(record,['packet'])||(withReceipts&&keysAre(record,['packet',receiptField])),'Invalid archived message fields.');
+    const packet=record.packet,peer=withReceipts?contactForPacket(state,packet):contacts.get(packet.from===profile.id?packet.to:packet.from);
+    const receiptField=validateChatBackupRecord(record,profile.id,withReceipts);
     assert(peer,'Archived message has no matching contact.');
     const payload=await openMessage(identity,peer,packet);
-    assert(keysAre(payload,['kind','text'])&&payload.kind==='chat'&&typeof payload.text==='string'&&payload.text.trim().length>0&&bytes(payload.text).length<=16002,'Financial records cannot be restored as chat.');
-    if(Object.hasOwn(record,receiptField))await validateDeliveryReceipt({identity,contacts:snapshot.contacts},record,record[receiptField]);
+    if(!withReceipts||!isContactControl(payload))validateChatBackupPayload(payload);
+    if(Object.hasOwn(record,receiptField))await validateDeliveryReceipt(state,record,record[receiptField]);
     ids.add(packet.id);
   }
   return snapshot;
@@ -97,6 +101,6 @@ export async function openChatArchive(phrase,input){
     const identity=await identityFromEntropy(entropy,input.profile?.name);
     const snapshot=await validateChatSnapshot(identity,input,archive.type===ARCHIVE);
     identity.profile=snapshot.profile;
-    return {identity,contacts:snapshot.contacts,messages:snapshot.messages,recovery:{scope:'chat-only',financialState:'not-restored'}};
+    return {identity,contacts:snapshot.contacts,messages:snapshot.messages,...(snapshot.contactRequests?{contactRequests:snapshot.contactRequests}:{}),...(snapshot.declinedContactIds?{declinedContactIds:validateDeclinedContacts(snapshot.declinedContactIds)}:{}),recovery:{scope:'chat-only',financialState:'not-restored'}};
   } finally {entropy.fill(0);plaintext?.fill(0);}
 }

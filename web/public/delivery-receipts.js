@@ -1,9 +1,10 @@
 import { assert, digest, keysAre, openMessage, sealMessage } from './peer-crypto.js';
 import { isNearPayment } from './near-payment-service.js';
+import {contactForPacket,isContactControl} from './contact-requests.js';
 
 export const DELIVERY_RECEIPT = 'lenz-delivery-receipt-v1';
 const packetHash = packet => digest([packet.type, packet.id, packet.from, packet.to, packet.iv, packet.ciphertext, packet.signature]);
-const supported = payload => payload?.kind === 'chat' || isNearPayment(payload);
+const supported = payload => payload?.kind === 'chat' || isNearPayment(payload) || isContactControl(payload);
 function receiptTerms(payload) {
   assert(keysAre(payload, ['kind', 'messageId', 'messageHash']) && payload.kind === DELIVERY_RECEIPT &&
     typeof payload.messageId === 'string' && typeof payload.messageHash === 'string' &&
@@ -13,7 +14,7 @@ export async function validateDeliveryReceipt(state, record, packet) {
   const original = record.packet;
   assert(packet && typeof packet === 'object', 'Invalid delivery receipt.');
   assert(packet.from === original.to && packet.to === original.from, 'This receipt is from a different recipient.');
-  const peer = state.contacts.find(c => c.id === (original.from === state.identity.profile.id ? original.to : original.from));
+  const peer = contactForPacket(state,original);
   assert(peer, 'Add and verify the contact first.');
   const payload = await openMessage(state.identity, peer, packet); receiptTerms(payload);
   assert(payload.messageId === original.id && payload.messageHash === await packetHash(original), 'This receipt does not match the saved file.');
@@ -25,17 +26,18 @@ export async function validateDeliveryReceipt(state, record, packet) {
 export async function prepareDeliveryReceipt(state, messageId) {
   const record = state.messages.find(r => r.packet.id === messageId);
   assert(record && record.packet.to === state.identity.profile.id, 'Open the received message or payment first.');
-  const peer = state.contacts.find(c => c.id === record.packet.from);
+  const peer = contactForPacket(state,record.packet);
   assert(peer, 'Add and verify the sender first.');
   const payload = await openMessage(state.identity, peer, record.packet);
   assert(supported(payload), 'Receipts are available for messages and tUSD payments.');
-  if (record.receiptToShare) { await validateDeliveryReceipt(state, record, record.receiptToShare); return record.receiptToShare; }
+  if (record.receiptToShare) { await validateDeliveryReceipt(state, record, record.receiptToShare); record.receiptDeliveryRequested=true; return record.receiptToShare; }
   const packet = await sealMessage(state.identity, peer, {kind: DELIVERY_RECEIPT, messageId, messageHash: await packetHash(record.packet)});
   record.receiptToShare = packet;
+  record.receiptDeliveryRequested = true;
   return packet;
 }
 export async function acceptDeliveryReceipt(state, packet, {financialOnly = false, nearContract = null} = {}) {
-  const peer = state.contacts.find(c => c.id === packet.from);
+  const peer = contactForPacket(state,packet);
   assert(peer, 'Add and verify the recipient first.');
   const payload = await openMessage(state.identity, peer, packet); receiptTerms(payload);
   const record = state.messages.find(r => r.packet.id === payload.messageId);

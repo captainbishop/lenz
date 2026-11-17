@@ -12,6 +12,7 @@ import {snapshotAuroraNoteRecovery} from './intent-aurora-source.js';
 import {snapshotAuroraAccountRecovery} from './intent-aurora-account.js';
 import {snapshotLendingAccountRecovery} from './intent-lending-account.js';
 import {snapshotIntentActionRecovery} from './intent-action-store.js';
+import {mergeContactRequestHistory,validateDeclinedContacts} from './contact-request-backup.js';
 const empty=s=>keysAre(s,['identity','contacts','messages'])&&s.identity===null&&s.contacts.length===0&&s.messages.length===0;
 const receiptOrder=packet=>JSON.stringify([packet.id,packet.iv,packet.ciphertext,packet.signature]);
 const makeSync=(m,revision=0,hash='')=>({type:'lenz/account-sync/v1',accountId:m.accountId,authority:m.authority,backupKey:m.backupKey,deviceKey:m.deviceKey,phraseBox:m.phraseBox,revision,digest:hash,version:1,savedVersion:0,pending:null,status:'pending',savedAt:null});
@@ -49,7 +50,7 @@ export async function retrieveAccount(material){
   if(value.intentRecovery?.lendingAccount)sync.lendingAccountBackup={ownerAddress:value.intentRecovery.lendingAccount.ownerAddress,account:value.intentRecovery.lendingAccount.account,digest:await digest(value.intentRecovery.lendingAccount),version:1};
   if(value.intentRecovery?.actions)sync.intentActionsBackup={digest:await digest(value.intentRecovery.actions),version:1};
   if(isChatArchiveType(value.chat.type)){
-    await updateState(async state=>{assert(empty(state),'This browser already has an account.');state.identity=value.recovered.identity;state.identity.access=RECOVERED_CHAT;state.contacts=value.recovered.contacts;state.messages=value.recovered.messages;state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;if(Object.hasOwn(value,'privateSpend'))await confidentialSpendOutbox.restore(state,value.privateSpend);if(value.intentRecovery)await restoreIntentRecovery(state,value.intentRecovery);},{markBackup:false});
+    await updateState(async state=>{assert(empty(state),'This browser already has an account.');state.identity=value.recovered.identity;state.identity.access=RECOVERED_CHAT;state.contacts=value.recovered.contacts;state.messages=value.recovered.messages;if(value.recovered.contactRequests)state.contactRequests=value.recovered.contactRequests;if(value.recovered.declinedContactIds)state.declinedContactIds=value.recovered.declinedContactIds;state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;if(Object.hasOwn(value,'privateSpend'))await confidentialSpendOutbox.restore(state,value.privateSpend);if(value.intentRecovery)await restoreIntentRecovery(state,value.intentRecovery);},{markBackup:false});
   }else{
     const stage=createChatRestorer({read:readState,update:fn=>updateState(async state=>{const result=await fn(state);state.contactRecoveries=value.contactRecoveries;state.accountSync=sync;if(value.intentRecovery)await restoreIntentRecovery(state,value.intentRecovery);return result;},{markBackup:false})});
     await(await stage(material.phrase,new File([JSON.stringify(value.chat)],'backup.json'))).install();
@@ -84,12 +85,15 @@ async function reconcileBackup(sync,{request,metadata,check}){
     const updates=new Map(remote.contactRecoveries.map(link=>[link.from.id,link]));for(const link of state.contactRecoveries??[]){const earlier=updates.get(link.from.id);assert(!earlier||earlier.to.id===link.to.id,'Contact updates disagree.');updates.set(link.from.id,link);}
     assert(contacts.size<=500&&messages.size<=1000,'Combined conversations exceed the backup limit.');
     state.contacts=[...contacts.values()];state.messages=[...messages.values()];state.contactRecoveries=[...updates.values()];
+    const requests=mergeContactRequestHistory(state.contactRequests,remote.recovered.contactRequests),declinedContactIds=validateDeclinedContacts([...new Set([...(state.declinedContactIds??[]),...(remote.recovered.declinedContactIds??[])])]);
+    if(requests.length||state.contactRequests)state.contactRequests=requests;
+    if(declinedContactIds.length||state.declinedContactIds)state.declinedContactIds=declinedContactIds;
     if(!dirty)state.identity.profile=remote.recovered.identity.profile;
-    const contents=({profile,contacts,messages},links)=>JSON.stringify([profile,[...contacts].sort((a,b)=>a.id.localeCompare(b.id)),messages.map(r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null]).sort((a,b)=>a[0].id.localeCompare(b[0].id)),[...links].sort((a,b)=>a.from.id.localeCompare(b.from.id))]);
+    const contents=({profile,contacts,messages,contactRequests=[],declinedContactIds=[]},links)=>JSON.stringify([profile,[...contacts].sort((a,b)=>a.id.localeCompare(b.id)),messages.map(r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null,r.deliveryRequested??null,r.receiptDeliveryRequested??null]).sort((a,b)=>a[0].id.localeCompare(b[0].id)),[...contactRequests].sort((a,b)=>a.requestId.localeCompare(b.requestId)),[...declinedContactIds].sort(),[...links].sort((a,b)=>a.from.id.localeCompare(b.from.id))]);
     const remotePrivate=remote.privateSpend??{type:'lenz/private-spend-history/v1',identity:state.identity.profile.id,rows:[]},mergedPrivate=await confidentialSpendOutbox.restore(state,remotePrivate);
     if(remote.intentRecovery)await restoreIntentRecovery(state,remote.intentRecovery);const mergedIntents=await snapshotIntentRecovery(state);
     const canonical=value=>JSON.stringify(value,(_,v)=>v&&!Array.isArray(v)&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(key=>[key,v[key]])):v);
-    const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages},remote.contactRecoveries)||canonical(mergedPrivate)!==canonical(remotePrivate)||canonical(mergedIntents)!==canonical(remote.intentRecovery??null);
+    const changed=contents(await accountChatSnapshot(state),state.contactRecoveries)!==contents({profile:remote.recovered.identity.profile,contacts:remote.recovered.contacts,messages:remote.recovered.messages,contactRequests:remote.recovered.contactRequests,declinedContactIds:remote.recovered.declinedContactIds},remote.contactRecoveries)||canonical(mergedPrivate)!==canonical(remotePrivate)||canonical(mergedIntents)!==canonical(remote.intentRecovery??null);
     if(remote.intentRecovery?.nearSource)current.nearSourceBackup={publicKey:remote.intentRecovery.nearSource.publicKey,version:current.version+1};
     if(remote.intentRecovery?.auroraNotes)current.auroraNotesBackup={publicKey:remote.intentRecovery.auroraNotes.publicKey,commitments:remote.intentRecovery.auroraNotes.records.map(row=>row.note.commitment),version:current.version+1};
     if(remote.intentRecovery?.auroraAccount)current.auroraAccountBackup={address:remote.intentRecovery.auroraAccount.address,digest:await digest(remote.intentRecovery.auroraAccount),version:current.version+1};

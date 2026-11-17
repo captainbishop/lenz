@@ -1,0 +1,37 @@
+import {cpSync,existsSync,mkdirSync,mkdtempSync,readFileSync,readdirSync,writeFileSync} from 'node:fs';
+import {resolve,join,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+
+const source=dirname(fileURLToPath(import.meta.url));
+const args=new Map();
+for(let i=2;i<process.argv.length;i+=2){if(!process.argv[i].startsWith('--')||!process.argv[i+1])throw Error('Pass named paths as --option path.');args.set(process.argv[i].slice(2),resolve(process.argv[i+1]));}
+for(const required of ['platform','build-tools','web-root','output-dir'])if(!args.has(required))throw Error(`Missing --${required}.`);
+const platform=args.get('platform'),buildTools=args.get('build-tools'),webRoot=args.get('web-root'),output=args.get('output-dir');
+for(const file of [join(platform,'android.jar'),join(buildTools,'aapt.exe'),join(buildTools,'lib/d8.jar'),join(buildTools,'lib/apksigner.jar'),join(webRoot,'chat.html'),join(webRoot,'chat.js'),join(webRoot,'bluetooth-client.js')])if(!existsSync(file))throw Error(`Required build input missing: ${file}`);
+mkdirSync(output,{recursive:true});const work=mkdtempSync(join(output,'android-build-')),assets=join(work,'assets'),classes=join(work,'classes'),nativeInputs=join(work,'native-source');
+mkdirSync(assets);mkdirSync(classes);cpSync(webRoot,join(assets,'web'),{recursive:true,dereference:false});cpSync(source,nativeInputs,{recursive:true,dereference:false});
+const java=args.has('java-home')?join(args.get('java-home'),'bin/java.exe'):'java';
+const javac=args.has('java-home')?join(args.get('java-home'),'bin/javac.exe'):'javac';
+const jar=args.has('java-home')?join(args.get('java-home'),'bin/jar.exe'):'jar';
+const keytool=args.has('java-home')?join(args.get('java-home'),'bin/keytool.exe'):'keytool';
+const run=(program,parameters)=>execFileSync(program,parameters,{cwd:work,stdio:'inherit',windowsHide:true});
+const sources=readdirSync(join(nativeInputs,'src/app/lenz/nearby')).filter(name=>name.endsWith('.java')).map(name=>join(nativeInputs,'src/app/lenz/nearby',name));
+run(javac,['--release','8','-Xlint:-options','-cp',join(platform,'android.jar'),'-d',classes,...sources]);
+run(jar,['--create','--file',join(work,'classes.jar'),'-C',classes,'.']);
+run(java,['-cp',join(buildTools,'lib/d8.jar'),'com.android.tools.r8.D8','--lib',join(platform,'android.jar'),'--min-api','26','--output',work,join(work,'classes.jar')]);
+const unsigned=join(work,'unsigned.apk'),aligned=join(work,'aligned.apk'),apk=join(output,'lenz-nearby-debug.apk');
+run(join(buildTools,'aapt.exe'),['package','-f','-M',join(nativeInputs,'AndroidManifest.xml'),'-I',join(platform,'android.jar'),'-A',assets,'-F',unsigned]);
+run(join(buildTools,'aapt.exe'),['add',unsigned,'classes.dex']);
+run(join(buildTools,'zipalign.exe'),['-f','4',unsigned,aligned]);
+const keystore=join(output,'local-debug.keystore');
+if(!existsSync(keystore))run(keytool,['-genkeypair','-keystore',keystore,'-storepass','android','-keypass','android','-alias','androiddebugkey','-dname','CN=Lenz local debug','-keyalg','RSA','-keysize','2048','-validity','3650']);
+run(java,['-jar',join(buildTools,'lib/apksigner.jar'),'sign','--ks',keystore,'--ks-pass','pass:android','--key-pass','pass:android','--out',apk,aligned]);
+run(java,['-jar',join(buildTools,'lib/apksigner.jar'),'verify','--verbose',apk]);
+const hash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
+const inputs={};
+const record=(root,prefix='')=>{for(const entry of readdirSync(root,{withFileTypes:true})){const rel=prefix+entry.name;if(entry.isDirectory())record(join(root,entry.name),rel+'/');else if(entry.isFile())inputs[rel]=hash(join(root,entry.name));else throw Error(`Unsupported build input: ${rel}`);}};
+record(join(assets,'web'),'web/');record(nativeInputs,'native/');
+writeFileSync(join(output,'android-build.json'),JSON.stringify({schemaVersion:1,builtAt:new Date().toISOString(),apk,sha256:hash(apk),platform:hash(join(platform,'android.jar')),webRoot,inputs,signing:'local debug key; not a store release',verification:'compiled, dexed, packaged and signature-verified; no physical Bluetooth test'},null,2)+'\n');
+console.log(`Android APK: ${apk}`);

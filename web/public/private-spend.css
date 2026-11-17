@@ -9,7 +9,9 @@
 #private-executor-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px 24px;margin:24px 0;font-variant-numeric:tabular-nums}#private-executor-dialog dt{color:var(--muted);font-size:14px}#private-executor-dialog dd{margin:0;text-align:right;overflow-wrap:anywhere;min-width:0}
 #private-executor-dialog :is(p,input[type=file],summary){max-width:100%;overflow-wrap:anywhere}#private-executor-dialog summary{min-height:44px;align-content:center;cursor:pointer}
 #private-executor-dialog ul{list-style:none;padding:0}#private-executor-dialog li{border-top:1px solid var(--line);padding:16px 0}#private-executor-dialog li p{font-size:14px}#private-executor-dialog li button{margin:8px 8px 0 0}
-#private-executor-dialog button{min-height:44px}#private-executor-dialog #private-executor-submit{width:100%;min-height:48px;margin:16px 0}#private-executor-dialog :is(input,select,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+#private-executor-dialog button{min-height:44px}#private-executor-dialog #private-executor-submit{width:100%;min-height:48px;margin:16px 0}#private-executor-dialog :is(input[type=checkbox],button):focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+#private-executor-dialog input:not([type=file]):not([type=checkbox]):focus{outline:none;border-color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+#private-executor-dialog .lenz-choice{display:block;width:100%}#private-executor-dialog .lenz-choice-button{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 0;background:transparent;color:var(--ink);box-shadow:none}
 #private-executor-dialog button.secondary{color:var(--ink);background:transparent;border-color:var(--line)}
 @media(max-width:380px){.money-page #private-executor-dialog{padding:16px}#private-executor-dialog dl{grid-template-columns:1fr;gap:8px}#private-executor-dialog dd{text-align:left;margin-bottom:12px}}
 .money-page #private-funding-dialog{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px}

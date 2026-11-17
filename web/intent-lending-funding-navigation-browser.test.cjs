@@ -1,0 +1,37 @@
+const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.join(__dirname,'public'),evidence=process.env.LENZ_LENDING_FUNDING_EVIDENCE_DIR;
+(async()=>{
+ const {LENDING_TESTNET}=await import('./public/intent-lending-config.js'),{LENDING_DEPLOYMENT}=await import('./public/intent-lending-deployment.js'),config={...LENDING_TESTNET,...LENDING_DEPLOYMENT};
+ const fixture=String.raw`import {mountLendingIntentUI} from '/intent-lending-ui.js';
+const config=CONFIG;
+const state={identity:{profile:{id:'11'.repeat(32)}}},calls=[];let deployed=false,disposed=false,hold=false,holdSource=false,release=null;
+const identity=()=>({lenzIdentity:state.identity.profile.id,ownerAddress:'0x'+'2'.repeat(40),account:'0x'+'3'.repeat(40),deployed,nonce:'0'});
+const snapshot=()=>({chainId:config.chain,block:{number:'100',hash:'0x'+'4'.repeat(64),timestamp:String(Math.floor(Date.now()/1000)),finality:'finalized',requireCanonical:true},routeVerified:true,trust:{executionPinsVerified:true,codePinsVerified:true,implementationPinsVerified:true},account:{status:deployed?'verified':'undeployed',address:identity().account,owner:identity().ownerAddress,route:{factory:config.lendingFactory},position:{freeLinkBaseUnits:'0',freeUsdcBaseUnits:'0',aLinkBalanceBaseUnits:'0',aLinkScaled:'0',variableDebtBaseUnits:'0',variableDebtScaled:'0',accountData:{healthFactorWad:'4500000000000000000'}}},reserves:{LINK:{asset:config.link,variableBorrowRateRay:'0'},USDC:{asset:config.usdc,variableBorrowRateRay:'0',normalizedVariableDebtRay:'1000000000000000000000000000'}}});
+const account={identity,connect:async()=>{calls.push('connect');return identity();},refreshAccount:async()=>{calls.push('refreshAccount');return identity();},capture:()=>{const initial=identity();return {identity:initial,assertCurrent(){if(disposed||state.identity.profile.id!==initial.lenzIdentity)throw Error('Original account changed');},async requireRecovery(options){calls.push('recovery');if(hold||holdSource&&options.forSupply)await new Promise(r=>release=r);options.signal?.throwIfAborted();if(disposed)throw Error('Original account disposed');}};},dispose(){disposed=true;}};
+const ui=mountLendingIntentUI(document.getElementById('fixture'),{config,read:async()=>state,account,service:{configuration:async()=>({execute:true}),pending:async()=>[]},readSnapshot:async()=>snapshot(),setupAccount:async()=>{calls.push('setup');deployed=true;return {verified:true};},supply:{available:true,open:async({account,snapshot})=>calls.push({privateSupply:account.identity().account,deployed:account.identity().deployed,snapshotOwner:snapshot.account.owner})}});
+globalThis.fixture={ui,calls,get deployed(){return deployed;},holdRecovery(){hold=true;},holdPrivateSource(){holdSource=true;},release(){hold=false;holdSource=false;release?.();},change(){state.identity.profile.id='55'.repeat(32);dispatchEvent(new Event('lenz-account-identity'));}};
+`;
+ const server=http.createServer(async(req,res)=>{const pathname=new URL(req.url,'http://fixture').pathname;try{if(pathname==='/'){res.setHeader('content-type','text/html');res.end('<!doctype html><html><body><div id="fixture"></div><script type="module" src="/fixture.js"></script></body></html>');return;}if(pathname==='/fixture.js'){res.setHeader('content-type','text/javascript');res.end(fixture.replace('CONFIG',JSON.stringify(config)));return;}if(pathname.startsWith('/api/'))throw Error('No financial endpoint permitted in this fixture');const file=path.resolve(root,'.'+pathname);assert(file.startsWith(root+path.sep));res.setHeader('content-type',({'.js':'text/javascript','.css':'text/css','.json':'application/json'})[path.extname(file)]??'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.writeHead(503);res.end(e.message);}});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await chromium.launch({channel:'msedge',headless:true}),results=[];
+ try{
+ for(const mode of ['continue','new-action','account-change','hide-setup','hide-source','hide-ancestor']){
+ const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port);await page.waitForFunction(()=>!!fixture);
+ await page.evaluate(()=>fixture.ui.openFunding('LINK'));
+ assert.equal(await page.locator('[data-il=action-title]').textContent(),'Supply LINK');assert.deepEqual(await page.evaluate(()=>fixture.calls),[]);
+ await page.getByRole('button',{name:'Open lending account',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[data-il=setup-review]').hidden===false&&document.querySelector('.intent-lending').getAttribute('aria-busy')==='false');
+ assert(!await page.evaluate(()=>fixture.calls.some(v=>v==='setup'||v.privateSupply)));
+ if(mode==='new-action')await page.evaluate(()=>fixture.ui.setAction('Borrow'));
+ if(mode==='account-change'||mode==='hide-setup')await page.evaluate(()=>fixture.holdRecovery()); if(mode==='hide-source'||mode==='hide-ancestor')await page.evaluate(()=>fixture.holdPrivateSource());
+ await page.getByRole('button',{name:'Confirm account setup',exact:true}).click();
+ if(mode.startsWith('hide-')){await page.waitForFunction(count=>fixture.calls.filter(v=>v==='recovery').length===count,mode==='hide-setup'?2:3);await page.evaluate(mode=>{if(mode==='hide-ancestor')document.getElementById('fixture').hidden=true;else fixture.ui.show(false);fixture.release();},mode);await page.waitForFunction(()=>document.querySelector('.intent-lending').getAttribute('aria-busy')==='false');} else if(mode==='account-change'){await page.waitForFunction(()=>fixture.calls.filter(v=>v==='recovery').length===2);await page.evaluate(()=>{fixture.change();fixture.release();});await page.waitForFunction(()=>document.querySelector('.intent-lending').getAttribute('aria-busy')==='false');}
+ else await page.waitForFunction(()=>fixture.deployed&&document.querySelector('.intent-lending').getAttribute('aria-busy')==='false');
+ const calls=await page.evaluate(()=>fixture.calls),opens=calls.filter(v=>v.privateSupply),setups=calls.filter(v=>v==='setup');
+ if(mode.startsWith('hide-')){assert.equal(setups.length,1);assert.equal(opens.length,0,'A delayed funding source cannot reopen from a hidden lending screen');} else if(mode==='continue'){assert.equal(setups.length,1);assert.equal(opens.length,1);assert.equal(opens[0].deployed,true);assert.equal(opens[0].privateSupply,'0x'+'3'.repeat(40));}
+ else if(mode==='new-action'){assert.equal(setups.length,1);assert.equal(opens.length,0);}
+ else{assert.equal(setups.length,0);assert.equal(opens.length,0);}
+ assert.deepEqual(errors,[]);results.push({mode,calls});await context.close();
+ }
+ if(evidence){await fs.mkdir(evidence,{recursive:true});await fs.writeFile(path.join(evidence,'link-funding-continuation-results.json'),JSON.stringify({passed:results.length,results,scope:'Actual lending UI with explicitly synthetic account recovery/setup and source callbacks; no signatures, grants, network authority or settlement.'},null,2)+'\n');}console.log(JSON.stringify({passed:results.length,results},null,2));
+ }finally{await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -12,16 +12,22 @@ switch between Chart, Book and Order. Reviews show transaction terms above inlin
 editable limits. They save encrypted drafts, not orders. Reduce-only reviews use
 Buy/Sell labels without claiming a new long or short position.
 
-The wallet swap has opposing asset amounts and inline route/privacy/protection
-controls. Its Supply/Borrow/Liquidity/Stake/Farm/Claims/Withdraw views have no entry
-forms or invented balances. Unsupported position/claim reads remain explicit.
-The existing Rhea testnet reserve, signing, refund and approval behavior is unchanged.
+The wallet swap has opposing asset amounts and compact route/privacy settings.
+Public rates update automatically after the route is chosen. Online Confirm swap
+saves the signed request before submitting it through Rhea. Offline review and
+signed authorization remain separate; reconnecting does not submit a saved swap.
+The start deadline limits an unstarted request, without delaying submission.
+Supply/Borrow/Repay/Withdraw share the owned
+Aave Sepolia workspace, showing checked collateral, debt, borrowing capacity and
+Health factor. Switching actions retains the account and its checked position.
+Unsupported Liquidity/Stake/Farm/Claims reads remain explicit, with no invented
+balances or entry forms.
 
-Wallet Supply, Borrow and Liquidity links open the matching market category and
-action. Unconnected actions explain their purpose and unavailable execution;
-blank position totals are omitted. This navigation does not supply assets, add
-liquidity or establish a current rate. Balance/rate reads, deposit quotes, private
-execution, approval and verified position/withdrawal paths remain required.
+Wallet market links open the matching category directly. Opening a lending view
+does not fund, sign or execute an action. Supply selects funded LINK collateral;
+Borrow reviews USDC, its sourced rate and minimum health before approval. Missing
+account data stays unknown. The original account, funding, custody and recovery
+checks apply to execution.
 
 ## Public reads
 

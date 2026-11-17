@@ -3,6 +3,7 @@ import { relayAccount, view, call } from '../contracts/client.mjs';
 import { serialize } from './testnet-relay.mjs';
 import { returnRefund, depositReceipt } from '../contracts/refund-return.mjs';
 import { reconcileAdapterOrder } from '../contracts/adapter-recovery.mjs';
+import {createSignedRheaRoute} from './rhea-signed-relay.mjs';
 const send=(res,code,value)=>{res.writeHead(code,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(value));};
 export function createRheaRoute(clients={adapterConfig,verifyAdapter,verifyPacketRoot,adapterCall,relayAccount,view,call,serialize,returnRefund,depositReceipt,reconcileAdapterOrder}) {
   return async(req,res)=>{
@@ -47,4 +48,5 @@ export function createRheaRoute(clients={adapterConfig,verifyAdapter,verifyPacke
     }catch(error){send(res,400,{error:error.message.slice(0,400)});}return true;
   };
 }
-export const rheaRoute=createRheaRoute();
+const operatorRoute=createRheaRoute();let signedRoute;
+export const rheaRoute=async(req,res)=>await(signedRoute??=createSignedRheaRoute())(req,res)||operatorRoute(req,res);

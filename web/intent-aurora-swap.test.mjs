@@ -53,7 +53,7 @@ test('changed private authority and unavailable proof state stop before sponsor 
 });
 test('private swap success requires exact final withdrawal, output transfers and cleared vault state',async()=>{
  const f=fixture();f.rpc.send=async()=>f.final();const result=await f.service.submit(f.request);
- assert.equal(result.status,'executed');assert.equal(result.verified,true);assert.equal(result.evidence.transaction,f.state().requests[f.request.id].stages[0].signed.txHash);assert.equal(result.evidence.outputAmount,'2000000');assert.equal(result.evidence.beneficiary,f.request.plan.beneficiary);assert.equal(result.evidence.allowance,'0');assert.equal(f.state().pending,null);
+ assert.equal(result.status,'executed');assert.equal(result.verified,true);assert.equal(result.evidence.transaction,Object.values(f.state().requests)[0].stages[0].signed.txHash);assert.equal(result.evidence.outputAmount,'2000000');assert.equal(result.evidence.beneficiary,f.request.plan.beneficiary);assert.equal(result.evidence.allowance,'0');assert.equal(f.state().pending,null);
  await f.service.submit(f.request);await f.service.reconcile(f.request);assert.equal(f.counts().signs,1);
 });
 test('wrong output or an incomplete final receipt graph cannot release the original note fence',async()=>{
@@ -66,14 +66,14 @@ test('expired original proof refunds only after a fresh status check and explici
  await f.service.recover({request:f.request,operation:'withdrawRefund'});assert.equal(f.counts().signs,2);
 });
 test('an offline retained but never submitted proof can read expiry and explicitly refund without a replacement plan',async()=>{
- const f=fixture();f.options({clock:1794620400000});const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'withdrawRefund');assert.deepEqual(f.counts(),{signs:0,sends:0});f.rpc.send=async()=>f.final({refunded:true});const result=await f.service.recover({request:f.request,operation:'withdrawRefund'});assert.equal(result.status,'refunded');assert.equal(f.counts().signs,1);assert.deepEqual(f.state().requests[f.request.id].request,f.request);
+ const f=fixture();f.options({clock:1794620400000});const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'withdrawRefund');assert.deepEqual(f.counts(),{signs:0,sends:0});f.rpc.send=async()=>f.final({refunded:true});const result=await f.service.recover({request:f.request,operation:'withdrawRefund'});assert.equal(result.status,'refunded');assert.equal(f.counts().signs,1);assert.deepEqual(Object.values(f.state().requests)[0].request,f.request);
 });
 test('final vault allowance, terms, code, nullifier and receiving balance are required independently',async()=>{
  for(const modify of [state=>state.vault.allowance='1',state=>state.vault.deadline='1',state=>state.factoryBindingsVerified=false,state=>state.spent=false,state=>state.beneficiaryOutputBalance='0']){const f=fixture();f.options({lost:true});await f.service.submit(f.request);f.rpc.transaction=async()=>f.final();const read=f.rpc.swapState;f.rpc.swapState=async(...args)=>{const state=await read(...args);modify(state);return state;};await assert.rejects(f.service.reconcile(f.request));assert(f.state().pending);assert.equal(f.counts().signs,1);}
 });
-test('journal persistence failure prevents dispatch and a changed original request cannot reuse its note',async()=>{
+test('journal persistence failure prevents dispatch and another wrapper never duplicates a spend',async()=>{
  const f=fixture(),write=f.journal.write;f.journal.write=async state=>{if(state.pending)throw Error('Fixture persistence failure');return write(state);};await assert.rejects(f.service.submit(f.request),/persistence/);assert.equal(f.counts().sends,0);
- const g=fixture();g.options({lost:true});await g.service.submit(g.request);const changed=structuredClone(g.request);changed.id='aurora-swap:'+'b'.repeat(64);changed.artifactId='aurora-proof:'+keccak256(toUtf8Bytes(JSON.stringify({intentId:changed.id,proof:changed.proof,publicSignals:changed.publicSignals}))).slice(2);await assert.rejects(g.service.submit(changed),/original/);assert.deepEqual(g.counts(),{signs:1,sends:1});
+ const g=fixture();g.options({lost:true});await g.service.submit(g.request);const changed=rewrap(g.request,{id:'aurora-swap:'+'b'.repeat(64)});assert.equal((await g.service.submit(changed)).intentId,changed.id);assert.deepEqual(g.counts(),{signs:1,sends:1});
 });
 test('consuming the last venue output does not invalidate an exact verified swap payout',async()=>{
  const f=fixture();f.snapshot.venue.outputBalance='2000000';f.rpc.send=async()=>{const result=f.final();f.snapshot.venue.outputBalance='0';return result;};const result=await f.service.submit(f.request);assert.equal(result.status,'executed');assert.equal(result.evidence.outputAmount,'2000000');
@@ -82,8 +82,42 @@ test('original input refunds do not depend on available output liquidity',async(
  const f=fixture();f.options({clock:1794620400000});f.snapshot.venue.outputBalance='0';const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'withdrawRefund');f.rpc.send=async()=>f.final({refunded:true});assert.equal((await f.service.recover({request:f.request,operation:'withdrawRefund'})).status,'refunded');
 });
 test('an originally proof-funded vault recovers without a replacement withdrawal or relying on remaining pool inventory',async()=>{
- const f=fixture();f.options({spent:true,status:0,inputBalance:'1000000'});f.snapshot.pool.inputBalance='0';f.snapshot.pool.withdrawals=[{nullifierHash:f.request.nullifierHash,recipient:f.request.vault,relayer:f.request.plan.relayer,fee:'0'}];const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'recover');assert.equal(f.counts().signs,0);f.rpc.send=async()=>f.final();const result=await f.service.recover({request:f.request,operation:'recover'});assert.equal(result.status,'executed');assert.equal(f.state().requests[f.request.id].stages[0].operation,'recover');assert.equal(f.counts().signs,1);
+ const f=fixture();f.options({spent:true,status:0,inputBalance:'1000000'});f.snapshot.pool.inputBalance='0';f.snapshot.pool.withdrawals=[{nullifierHash:f.request.nullifierHash,recipient:f.request.vault,relayer:f.request.plan.relayer,fee:'0'}];const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'recover');assert.equal(f.counts().signs,0);f.rpc.send=async()=>f.final();const result=await f.service.recover({request:f.request,operation:'recover'});assert.equal(result.status,'executed');assert.equal(Object.values(f.state().requests)[0].stages[0].operation,'recover');assert.equal(f.counts().signs,1);
 });
 test('unfunded venue still cannot authorize a new private execution',async()=>{
  const f=fixture();f.snapshot.venue.outputBalance='0';await assert.rejects(f.service.submit(f.request),/venue/);assert.deepEqual(f.counts(),{signs:0,sends:0});
+});
+function rewrap(request,changes={}){
+ const value={...structuredClone(request),...structuredClone(changes)};value.vault=auroraVaultAddress(value.plan);value.publicSignals=[value.root,value.nullifierHash,value.vault,value.plan.relayer,'0','0'].map(v=>BigInt(v).toString());value.artifactId='aurora-proof:'+keccak256(toUtf8Bytes(JSON.stringify({intentId:value.id,proof:value.proof,publicSignals:value.publicSignals}))).slice(2);return value;
+}
+test('a copied proof under another caller id preserves the original packet status and recovery',async()=>{
+ const f=fixture(),alias=rewrap(f.request,{id:'aurora-swap:'+'b'.repeat(64)});
+ f.options({lost:true});await f.service.submit(alias);const original=f.state().pending.signed.bytes;
+ const pending=await f.service.reconcile(f.request);assert.equal(pending.intentId,f.request.id);assert.equal(pending.artifactId,f.request.artifactId);assert.equal(pending.status,'unknown');assert.equal(f.state().pending.signed.bytes,original);assert.deepEqual(f.counts(),{signs:1,sends:1});
+ f.rpc.transaction=async()=>f.final();const result=await f.service.reconcile(f.request);assert.equal(result.status,'executed');assert.equal(result.intentId,f.request.id);assert.equal(result.artifactId,f.request.artifactId);
+ const recovery=await f.service.recover({request:f.request,operation:'recover'});assert.deepEqual(recovery,result);assert.deepEqual(f.counts(),{signs:1,sends:1});assert.equal(Object.keys(f.state().requests).length,1);assert.deepEqual(Object.values(f.state().requests)[0].request,alias);
+});
+test('legacy pending and finalized row keys remain intact when equivalent callers return',async()=>{
+ const f=fixture(),alias=rewrap(f.request,{id:'aurora-swap:'+'b'.repeat(64)});f.options({lost:true});await f.service.submit(alias);const state=f.state(),row=Object.values(state.requests)[0];state.requests={[alias.id]:row};state.pending.id=alias.id;await f.journal.write(state);const bytes=state.pending.signed.bytes;
+ const pending=await f.service.reconcile(f.request);assert.equal(pending.intentId,f.request.id);assert.equal(f.state().pending.id,alias.id);assert.equal(f.state().pending.signed.bytes,bytes);assert.deepEqual(Object.keys(f.state().requests),[alias.id]);
+ f.rpc.transaction=async()=>f.final();const result=await f.service.reconcile(f.request);assert.equal(result.status,'executed');assert.equal(result.intentId,f.request.id);assert.deepEqual(await f.service.recover({request:f.request,operation:'recover'}),result);assert.deepEqual(Object.keys(f.state().requests),[alias.id]);assert.deepEqual(f.state().requests[alias.id].request,alias);assert.deepEqual(f.counts(),{signs:1,sends:1});
+});
+test('unrelated public requests sharing a caller id never overwrite or inherit one another',async()=>{
+ const f=fixture();await f.service.reconcile(f.request);const state=f.state();state.requests={[f.request.id]:Object.values(state.requests)[0]};await f.journal.write(state);
+ const other=rewrap(f.request,{nullifierHash:'0x'+'03'.repeat(32)}),second=await f.service.reconcile(other);assert.equal(second.artifactId,other.artifactId);assert.equal(second.verified,false);assert.equal(Object.keys(f.state().requests).length,2);assert.deepEqual(f.state().requests[f.request.id].request,f.request);
+ assert.equal((await f.service.reconcile(f.request)).artifactId,f.request.artifactId);assert.equal((await f.service.reconcile(other)).artifactId,other.artifactId);assert.deepEqual(f.counts(),{signs:0,sends:0});
+});
+test('proof rerandomization requires actual verification and retains the original stored authority',async()=>{
+ const f=fixture();await f.service.reconcile(f.request);const changed=rewrap(f.request,{id:'aurora-swap:'+'b'.repeat(64),proof:'0x'+'01'.repeat(256)}),before=f.state();let reads=0;const read=f.rpc.swapState;f.rpc.swapState=async(...args)=>{reads++;return read(...args);};
+ const accepted=await f.service.submit(changed);assert.equal(accepted.intentId,changed.id);assert.equal(accepted.artifactId,changed.artifactId);assert.equal(reads,1);assert.deepEqual(f.state(),before);assert.deepEqual(f.counts(),{signs:0,sends:0});
+ f.options({proofValid:false});for(const operation of ['submit','reconcile'])await assert.rejects(f.service[operation](changed),/proof did not verify/);await assert.rejects(f.service.recover({request:changed,operation:'recover'}),/proof did not verify/);assert.deepEqual(f.state(),before);assert.deepEqual(f.counts(),{signs:0,sends:0});
+});
+test('changing a retained nullifier plan cannot replace its original recipient or terms',async()=>{
+ const f=fixture();await f.service.reconcile(f.request);const before=f.state(),changed=rewrap(f.request,{plan:{...f.request.plan,beneficiary:'0x'+'78'.repeat(20),refundRecipient:'0x'+'78'.repeat(20)}});
+ await assert.rejects(f.service.submit(changed),/original private request/);assert.deepEqual(f.state(),before);assert.deepEqual(f.counts(),{signs:0,sends:0});
+});
+test('an expired aliased proof refunds through the original packet without replacing saved authority',async()=>{
+ const f=fixture(),alias=rewrap(f.request,{id:'aurora-swap:'+'b'.repeat(64)});f.options({clock:1794620400000});await f.service.reconcile(alias);const status=await f.service.reconcile(f.request);assert.equal(status.recovery.operation,'withdrawRefund');assert.deepEqual(f.counts(),{signs:0,sends:0});
+ const send=f.rpc.send;f.rpc.send=async bytes=>{await send(bytes);return f.final({refunded:true});};const result=await f.service.recover({request:f.request,operation:'withdrawRefund'});assert.equal(result.intentId,f.request.id);assert.equal(result.artifactId,f.request.artifactId);assert.equal(result.status,'refunded');assert.equal(result.evidence.refundRecipient,f.request.plan.refundRecipient);assert.deepEqual(Object.values(f.state().requests)[0].request,alias);
+ assert.deepEqual(await f.service.recover({request:f.request,operation:'withdrawRefund'}),result);assert.equal((await f.service.reconcile(alias)).intentId,alias.id);assert.deepEqual(f.counts(),{signs:1,sends:1});
 });

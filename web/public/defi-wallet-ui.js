@@ -15,15 +15,15 @@ function download(envelope){
 }
 export function mountDefiApproval({config,run,notice,wrapped}) {
   const refund=mountDefiRefund({config,run,notice});
-  let contacts=[],draft=null,approving=false;
+  let contacts=[],draft=null,approving=false,contactOwner=null;
   const controls=el('div');controls.className='defi-choice';
-  controls.innerHTML='<label for="defi-method">Who will make the swap?</label><select id="defi-method"><option value="self">Me, when online</option><option value="contact">Lenz contact</option></select><div id="defi-contact-choice" hidden><label for="defi-contact">Contact</label><select id="defi-contact"><option value="">Choose a person</option></select><p class="quiet">Check that this person has set up Lenz to make swaps for you.</p></div>';
-  $('#rhea-form button[type="submit"]').before(controls);
+  controls.innerHTML='<label for="defi-method">Who will make the swap?</label><select id="defi-method" aria-describedby="defi-method-note"><option value="self">Me, when online</option><option value="contact">Lenz contact</option></select><p id="defi-method-note" class="quiet">Lenz detects connectivity. Choose a contact to submit while this device stays offline.</p><div id="defi-contact-choice" hidden><label for="defi-contact">Contact</label><select id="defi-contact"><option value="">Choose a person</option></select><p class="quiet">Check that this person has set up Lenz to make swaps for you.</p></div>';
+  ($('#rhea-form .dex-settings-body')??$('#rhea-form')).append(controls);
   const panel=el('dialog');panel.id='defi-approval';panel.setAttribute('aria-labelledby','defi-approval-title');
   panel.innerHTML='<div class="dialog-top"><h2 id="defi-approval-title">Approve this swap</h2><button id="defi-back" type="button" class="secondary">Back</button></div><div class="defi-person"><span class="avatar" aria-hidden="true"></span><strong id="defi-person-name"></strong></div><dl id="defi-terms"></dl><p>You agree to no extra fee for this person. Trading fees are included in the rate; your minimum still applies. This person pays the network fee.</p><p>This person can read your swap, amounts, receiving wallet and included payment history. The swap is public on the NEAR test network. People passing it along can see who it is from and for, delivery times and file sizes. The payment itself is not private.</p><p>The amount stays set aside until the swap is resolved, even after its time limit. Approval cannot be recalled once shared.</p><label class="defi-consent" for="defi-consent"><input id="defi-consent" type="checkbox">I checked this person’s contact card and agree to the terms above.</label><button id="defi-approve" type="button" disabled>Approve and save</button><p class="wallet-feedback error" role="status"></p>';
   document.body.append(panel);
   const method=$('#defi-method'),contact=$('#defi-contact'),consent=$('#defi-consent'),approve=$('#defi-approve');
-  method.onchange=()=>{const asked=method.value==='contact';$('#defi-contact-choice').hidden=!asked;contact.required=asked;$('#rhea-form button[type="submit"]').textContent=asked?'Review request':'Save swap';};
+  method.onchange=()=>{const asked=method.value==='contact';$('#defi-contact-choice').hidden=!asked;contact.required=asked;$('#rhea-form button[type="submit"]').textContent=asked?'Review request':navigator.onLine?'Review swap':'Review offline swap';};
   consent.onchange=()=>{approve.disabled=approving||!consent.checked;};
   const back=()=>{if(approving)return;panel.close();draft=null;$('#rhea-dialog').showModal();};
   $('#defi-back').onclick=back;panel.addEventListener('cancel',event=>{event.preventDefault();back();});
@@ -41,9 +41,10 @@ export function mountDefiApproval({config,run,notice,wrapped}) {
   };
   return {
     async open(){
-      contacts=(await readState()).contacts;contact.replaceChildren(new Option('Choose a person',''));
+      const state=await readState(),sameOwner=contactOwner===state.identity?.profile.id,previousContact=sameOwner?contact.value:'',previousMethod=sameOwner?method.value:'self';contactOwner=state.identity?.profile.id??null;
+      contacts=state.contacts;contact.replaceChildren(new Option('Choose a person',''));
       for(const person of contacts)contact.append(new Option(person.name,person.id));
-      contact.value='';method.value='self';method.onchange();
+      contact.value=contacts.some(person=>person.id===previousContact)?previousContact:'';method.value=previousMethod;method.onchange();
     },
     review(swap){
       if(method.value!=='contact')return false;

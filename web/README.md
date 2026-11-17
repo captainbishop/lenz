@@ -1,233 +1,55 @@
 # Lenz web app
 
-The current app mounts NEAR Intents, Aurora Swap, Sepolia lending and native
-Zcash Send alongside encrypted chat and offline tUSD. Hyperliquid trading uses
-the shared Coming soon dialog. See [current addresses, execution/privacy scope
-and backend setup](../docs/testnet-integrations.md). Older proof-only examples
-below retain their original scope.
+The app combines encrypted conversations, Wallet, Markets, Account and retained offline state. The [current implementation](../docs/implementation-status.md) links working capabilities to code and checks. The [architecture guide](../docs/architecture.md) maps browser storage, transport and connected execution.
 
-Open the configured local origin, normally `http://localhost:4173/`, for the homepage, `/money.html` for the wallet or `/chat.html` for conversations. Keep the same origin for account storage and local execution services. The product name is Lenz; the logo uses two opposing L forms. Native Android and iPhone apps remain on the roadmap.
+## Run and host
 
-## Run and host the app
+Follow the [root setup](../README.md#local-setup). Run `npm start` from the repository root, or `node server.mjs` from `web/`. Use the same configured origin for account storage and local execution. The homepage is `/`, Wallet is `/money.html`, Conversations is `/chat.html`, and Markets is `/markets.html`.
 
-Follow the [root setup](../README.md#local-setup) to install locked dependencies and build proof assets. From this directory, `node build.mjs` builds the browser files and `node server.mjs` starts the local app. Configure only the required execution services using [backend setup](../docs/testnet-integrations.md#backend-setup).
+[Backend setup](../docs/testnet-integrations.md#backend-setup) describes optional funded services and native custody. The [live prototype](https://lenz-prototype.vercel.app) serves the website and authenticated proxy on Vercel, reaching this computer's gateway and signers through a temporary Cloudflare tunnel. Availability depends on those services. Local signers and journals remain separate from browser keys.
 
-The [hosting guide](../docs/testnet-integrations.md#hosting) covers two separate packages: `build-vercel.mjs` creates a static preview with unavailable APIs; `build-hosted-vercel.mjs` adds an authenticated proxy to a private gateway. The [live prototype](https://lenz-prototype.vercel.app) runs that website and proxy on Vercel, reaching this computer's gateway and local signers through a temporary Cloudflare tunnel. It depends on those local services. Operator custody and journals remain on this computer, and financial routes require the original identity/source mapping. Public read-only acceptance has passed; live financial execution through the public origin remains separate.
+`build-vercel.mjs` creates a static preview with unavailable APIs. `build-hosted-vercel.mjs` adds the authenticated proxy. Root `npm run build:hosted` prepares pinned assets and creates a fresh package; see [hosting](../docs/testnet-integrations.md#hosting). Packaging does not establish financial execution.
 
-October 31: ordinary chat **Pay** now sends tUSD using the same encrypted vault/history as the wallet. Received payments can be passed onward offline. Saved swaps explain what needs connectivity and never execute automatically on reconnect. Historical synthetic records remain preserved; demo funding and trading controls have been removed. [Product flow and fresh verification](../research/offline-social-money.md): 54 Node tests, 50 browser checks and 41 cache routes; browser initial backing is a fixture.
+## Conversations and delivery
 
-The wallet now uses plain actions and payment states. Raw signed-swap import and deposit-action export are on `/swap-tools.html`, outside normal navigation. `/wallet-lab.html` contains the external-signer experiment; MyNearWallet announced retirement on October 31, 2026, so it is not enabled as a product default. Read [connector status and verification](near-connector/README.md) before continuing signer work. These developer pages share the existing browser identity and encrypted vault.
+[Chat](public/chat.js) retains signed encrypted originals in [the account store](public/chat-store.js). Adding someone sends a message request; the recipient can Accept or Decline without manually adding the sender. Profile names are labels, not identity proofs. Lenz IDs bind public keys and remain stable across profile edits.
 
-The homepage uses illustrated replays of tested application flows, keyboard-operated feature tabs, expanding explanations, section navigation, scroll entrances and theme/motion controls. It respects reduced motion and works from its offline cache. The wallet now opens on a zero-balance tUSD view. See the [NEAR reserve](../contracts/README.md) for the deployed testnet implementation and its verification limits. Existing identities, messages and encrypted demo vaults remain preserved. The conversation background is a local SVG that also works offline in both themes.
+Ordinary Send queues direct delivery and retries the saved original. [Shared packet rules](public/delivery-packets.js) apply across Bluetooth, Nostr, carrier and WebRTC clients. [Authenticated intake](public/receive-packet.js) and [signed receipts](public/delivery-receipts.js) enforce recipient, request, replay and storage rules.
 
-## Name lookup
+The [Android host](../native/android/README.md) packages the interface with native BLE. Direct Samsung-to-Xiaomi and reverse delivery were observed on November 17; the user reported about 20 seconds for the reverse retry check. Physical multi-hop, radio interruption, process-restart recovery and background delivery remain unverified. Browser-only Nearby uses WebRTC on reachable Wi-Fi or a hotspot; see [Nearby](../docs/nearby-delivery.md). The Lenz BLE protocol does not interoperate with Bitchat clients.
 
-Open /name-lab.html to check ENS records for Aurora or a native NEAR account.
-The [naming integration](../aurora/names.md) supports both themes, explicit
-network options and automatically saved verified results marked as past observations offline.
-The name suffix selects NEAR mainnet or testnet automatically. ENS defaults to
-Aurora testnet; its destination network is under Options & privacy.
-It does not link contacts, sign or send payments, or enable account recovery.
+Chat uses P-256 signatures, static ECDH and AES-GCM without forward secrecy. An unlocked or compromised device remains a separate exposure. BLE and relay routing, size and timing metadata remain observable.
 
-## Profiles and the standalone wallet
+## Wallet and execution
 
-The eye button hides wallet amounts, including payment history and saved-swap
-amounts. This browser remembers the choice across tabs and offline reloads.
-Amounts being entered or approved remain visible. This is display privacy;
-on-chain records and shared files are unchanged. Startup readiness notices clear
-after 3.5 seconds, while errors remain visible. Lenz ID sharing uses labelled
-share, copy and PNG-download icons in both themes.
+Wallet and Chat use the same encrypted tUSD vault and reservation rules. Payments remain available outside conversations. Funding, exact recipient review and signed acceptance precede onward transfer; offline acceptance is provisional until canonical settlement. Payment and swap file handovers remain available.
 
-Run `node web/wallet-visibility-browser.test.cjs` for the [visibility checks](wallet-visibility-browser-results.json).
-The test uses disposable Edge profiles and local fixture backing, verifies existing
-keys/vault/reservations are unchanged, and sends no financial API request.
+The [reserve/Rhea](../contracts/README.md), [original Intents verifier](../contracts/intents-testnet/README.md), [Aurora](../aurora/README.md), [Aave](../docs/lending-testnet.md) and [native Zcash](../zcash/README.md) routes have separate authority, execution and result checks. [Recorded evidence](../docs/evidence/README.md) distinguishes testnet transactions, fixture backing and operator recovery. November 17's hosted payment/Rhea run reached final outcomes; the Rhea swap required three operator advances after the sponsor cap stopped normal progression.
 
-Both wallet and chat use the same IndexedDB identity and encrypted vault. A user can create a profile, share Lenz IDs, prepare a payment, import an incoming payment and pass received value onward entirely from the wallet. No chat message or conversation screen is required. Send/import uses the same signatures, balance reservations and atomic storage writes as chat. With automatic delivery enabled, Send saves the encrypted packet and wakes the enabled delivery clients. Offline packets survive reload and resume when connected. With delivery off, the app opens the file-sharing dialog. Neither mode implies blockchain confirmation. See [internet delivery](../docs/internet-delivery.md) for existing public relays or [carrier setup and privacy](../carrier/README.md) for separately operated Lenz carriers.
+The Android host serves packaged GET files and BLE operations. It has no financial POST backend. Use the configured hosted or local web services for connected financial execution. A saved approval, transport acknowledgement or encrypted request does not establish settlement or private blockchain execution.
 
-Edit profile changes the display name, one of four symbols, or an optional photo without changing keys, contacts, history or funds. Pick a name for me in the wallet, or Continue privately in chat, generates a readable alias and uses the default moon avatar. Names are not globally unique usernames or authentication. A profile edit does not unlink the account from existing contacts.
+Hyperliquid funded trading and general LP/yield/staking/claims execution remain unfinished. Markets provides public catalogues, charts and cached snapshots; owned balances and positions need their own verified reads.
 
-Photos are centre-cropped to 128×128 JPEG locally and re-encoded without the original metadata. Remote URLs and SVG uploads are rejected. Public contact files carry the photo; compact QR cards carry the name, symbol and public keys. An updated contact card requires source confirmation before replacing the existing contact with the same keys. Profile metadata is a label confirmed by the user, not a cryptographic assertion of someone's real-world identity.
+## Offline state and recovery
 
-Lenz saves application files automatically on this device. Wait for Ready offline before disconnecting. Each feature retains its checked observations separately; saved observations are historical. Encrypted backup export remains deliberate. The original proof experiment is `/payment-demo.html`.
+Wait for Ready offline before disconnecting. Prepared app files, encrypted history, profile changes, drafts, requests, market snapshots and reviewed actions remain available through the applicable caches. Current quotes, fresh chain state and final settlement need connectivity. Never-online first use and broad private offline DeFi remain unfinished.
 
-Clearing site data loses a device-only profile without a usable backup. The app
-now mounts encrypted account/chat and original-action recovery. Restored money
-must be reconciled with later spends and outstanding authorizations; a browser
-archive cannot replace native Zcash custody. See [recovery scope](../docs/testnet-integrations.md)
-and [behavior and safety boundaries](../docs/behavior.md).
+[Account backup](../docs/automatic-backup.md), [identity recovery](../docs/identity-recovery.md) and [financial recovery](../docs/financial-recovery.md) retain original authority and outstanding liabilities. Clearing device-only storage loses an account without a usable backup. Browser archives do not restore native Zcash spending keys or prove canonical funds.
 
-The conversation screen has a people list, search, a message thread and a composer with Pay and Swap actions. Pay prepares an encrypted tUSD payment; Swap opens the wallet's saved swaps. On narrow screens, choose a person to open their conversation and use the back button to return. About Lenz contains a short explanation of private chat and pending payments.
+## Source and verification
 
-Share contact opens a name, avatar and QR card. Add someone accepts a camera scan, QR image or legacy contact JSON and asks you to confirm its source. Full fingerprints and JSON remain in technical details. QR processing stays local.
+Browser source is in `public/`; Node routes, build tools and tests are in this directory. Browser tests use disposable identities and simulated external/native boundaries. Component results distinguish local checks from recorded transactions.
 
-## Archived demo records
+Run the root [nonfinancial checks](../README.md#local-setup) and the route checks in [implementation status](../docs/implementation-status.md#reproduce-the-nonfinancial-checks). More focused checks include:
 
-Previously saved demo cards remain readable and exportable in their original encrypted form. They have no cash value. New demo card imports are rejected in the current app; tUSD payments use the separate testnet vault. Legacy protocol modules remain for compatibility and component tests, without demo funding or trading controls in the product.
-
-The encrypted trade vault has a nonextractable AES-GCM key. Chat uses P-256 signatures, static ECDH and AES-GCM; it has no forward secrecy. Contact names are labels, not identity proofs. Clearing browser storage loses the keys. Copied or rolled-back storage and hidden remote conflicts remain outside the local reservation guarantee.
-
-Wait for Ready offline, then reload. The chat cache is separate from the older proof wallet. All application and QR dependencies are local. A browser’s initial download needs a secure origin (localhost or HTTPS). Physical phone, camera, BLE and native share-sheet compatibility have not been established on this Windows host.
-
-## Checks
-
-Run from `web/`:
-
-```powershell
-node --test profile.test.mjs trade.test.mjs contact-card.test.mjs peer.test.mjs proof-worker.test.mjs
-node peer-mutations.mjs
-node trade-mutations.mjs
-node verify-chat-static.mjs
-node verify-static.mjs
-# Playwright on NODE_PATH; installed Edge:
-node peer-browser.test.cjs
-node trade-browser.test.cjs
-node reservation-browser.test.cjs
-node reservation-mutations.cjs
-node profile-browser.test.cjs
-node money-browser.test.cjs
-node home-browser.test.cjs
+```sh
+node --test web/delivery-receipts.test.mjs web/nostr-protocol.test.mjs web/nostr-contact-request.test.mjs
+node web/carrier-browser.test.cjs
+node web/nostr-browser.test.cjs
+node web/nearby-browser.test.cjs
+node web/verify-chat-static.mjs
 ```
 
-[Trade browser results](trade-browser-results.json) cover three isolated browser contexts, offline file handover, swap acceptance, onward receipt, duplicates, encrypted storage, failed writes and concurrent tabs. [Trade mutation results](trade-mutation-results.json) check backing validation, participant binding and matching local offers. The [behavior and safety boundaries](../docs/behavior.md) explains the protocol boundaries.
+Run these commands from the repository root after installing the locked dependencies. Selected browser checks require Microsoft Edge. They do not submit financial transactions.
 
-The original payment experiment below remains available from About Lenz.
-
-## Run locally
-
-The pinned dependencies and TEST-ONLY proof artifacts must already exist;
-see [the cryptographic build instructions](../research/crypto-step/README.md).
-From this directory:
-
-```powershell
-node build.mjs
-node server.mjs
-```
-
-Open `http://127.0.0.1:4173/payment-demo.html` for this original experiment. The server binds only to localhost. The proof page generates proofs and stores its
-wallet state in the browser. The same server separately exposes bounded developer
-APIs for NEAR/Rhea, Intents quotes and the Zcash companion; those are not used by
-this proof-only page.
-The build checks all eight recorded proof-artifact hashes before copying
-the WASM, proving key, trusted test verification key and local dependencies.
-
-## Try the handover
-
-1. Start with Amina (100.00 demo units). Send 40.00 to Bola.
-2. Switch to Bola and choose Receive → Open payment. Bola now has 40.00.
-3. Open the same payment again. It must not credit the balance twice.
-4. Send 30.00 from Bola to Chidi, then receive as Chidi.
-5. The balances are Amina 60.00, Bola 10.00, Chidi 30.00.
-
-Each send creates an actual PLONK payment-step proof in a module worker,
-verifies it locally and encrypts the handover using AES-256-GCM. Receipt
-checks the proof history and recipient opening. Values use integer cents.
-The demo spends one sufficiently large note at a time; it cannot merge
-smaller notes. History is limited to 16 steps.
-
-All three people, their spending secrets, delivery keys and the unbacked
-genesis live in **one browser workspace**. Exported encrypted payment files
-only work in that same workspace. This is not a cross-device key exchange.
-The file is available only after the complete updated state is saved.
-Web Locks serialize operations between tabs; a failed proof leaves state
-unchanged. This is not secure storage or rollback-resistant wallet recovery.
-
-## Reproduce the server-stopped test
-
-1. Click **Prepare offline demo** and wait for confirmation. Current assets
-   occupy about 48.23 MB of cached responses, including identity files.
-2. Reload to pick up the cached release. The page checks cached resource
-   presence and reports missing files when detected.
-3. Stop `node server.mjs` with Ctrl+C in its terminal.
-4. Reload the same browser URL. Send, receive, reopen a payment and send onward.
-5. Reload again and check the saved balances.
-6. Restart the server with `node server.mjs` when finished.
-
-The header's online/offline indicator comes from `navigator.onLine` and is
-not proof that the application server is reachable. It can say online with
-the server stopped. The proof-only page has no remote CDN, font, wallet, RPC or API calls.
-Resource caching requires a secure context: localhost for this developer
-demo, or HTTPS for a hosted deployment. Initial app distribution/preparation
-and browser storage eviction are separate constraints. PWA metadata and
-icons exist, but installation on Android/iPhone has not been tested.
-
-Caching is a research implementation; authenticated release updates, atomic
-multi-file upgrades and recovery from evicted storage remain production work.
-
-## Verification
-
-From this directory:
-
-```powershell
-node --test proof-worker.test.mjs
-node proof-worker-mutations.mjs
-node verify-static.mjs
-```
-
-Open `http://127.0.0.1:4173/tests.html` for the browser suite. It uses a fresh
-in-memory store and leaves the visible wallet untouched. To run offline,
-cache resources first, stop the server, open the cached test page, select
-**Require the app server to be unavailable**, and run the checks.
-
-Evidence saved on 2026-10-25:
-
-- [Browser report](browser-test-results.json): **25 passed, 0 failed**, in
-  Windows desktop Chromium 156. The app server was unavailable
-  before and after the run. Two actual worker proofs took **22.578 s** and
-  **25.163 s**, including worker startup and witness calculation; the suite
-  took 48.337 s. These are two observations, not a performance distribution.
-- Checks include exact amounts, failed-prove atomicity, invalid proof
-  rejection, wrong recipient/root, ciphertext and authenticated plaintext
-  tampering, public transcript mutation, field bounds, local conflicts,
-  duplicate and spent-receipt replay, missing ancestry, onward transfer and
-  serialization round-trip.
-- **6 worker-client tests passed**. [Both targeted regressions](worker-mutation-results.json)
-  were detected: premature input delivery and progress treated as completion.
-- Static check: **36 cache routes**, local cached module dependencies, and
-  manifest PNG dimensions checked. Build passed with verified artifact hashes.
-- Manual wallet flow also produced 60/10/30 balances; the onward send,
-  receipt and reload were performed with the server stopped. The browser
-  suite tests the same wallet and worker code.
-
-The initial browser attempt timed out after five minutes without debiting
-the balance. Waiting for an explicit worker-ready message resolved the
-observed failure. A readiness regression reproduces the client contract
-failure; the precise original browser scheduling trace was not captured.
-The offline preparation code now waits for a newly registered worker to
-activate before sending its cache request.
-
-`layout-check.html` renders the wallet and identity page in 375×812 and
-1024×768 browser frames. All four frames passed the horizontal-overflow
-and image-load checks; the narrow wallet was also visually inspected.
-This checks layout, not target-phone compatibility or full accessibility.
-
-## Scope of the earlier proof-only demo
-
-- No funded reserve, actual money, canonical chain state or guaranteed redemption.
-- No completed private settlement/recursive proof. The seven public step
-  fields expose a commitment graph if published, and recipients receive
-  ancestry. Encrypting the file does not solve that privacy problem.
-- No NEAR deployment, Zcash shielding route, native BLE transport or real
-  Android/iPhone proving benchmark.
-- No ability to detect conflicting spends hidden in disconnected partitions.
-
-The intended network workaround is voluntary relayers: users can stay
-offline while a connected participant submits authorized settlement data.
-Some path to the chain remains necessary for canonical settlement. See the
-[behavior and safety boundaries](../docs/behavior.md) for the guarantees and
-tradeoffs still requiring resolution.
-
-The [identity page](public/brand/index.html) and [brand documentation](../brand/README.md) use Lenz. Protocol domains and saved test state retain the Proof of U namespace.
-
-The recorded [layout checks](evidence/layout-results.txt) cover the branded pages.
-Current integration boundaries are listed in [development status](../docs/status.md).
-
-Lenz IDs contain both public keys and a checksum. They remain stable when the
-display name changes; an ID is not a recovery key. Copy/paste and older QR/profile
-imports use the same contact validation. See [browser evidence](lenz-id-browser-results.json)
-and [preview rendering](preview-rendering.md).
-
-## Nearby transfer
-
-Open **Nearby** in chat or wallet to pair with a verified contact on the same
-Wi-Fi or hotspot. New sends then travel directly; older saved items require an
-explicit action. [Setup, security boundaries and browser evidence](../docs/nearby-delivery.md).
+The [original proof payment experiment](legacy-proof-demo.md) retains its single-workspace demo and dated results. `/payment-demo.html`, `/swap-tools.html`, `/wallet-lab.html` and other lab pages remain separate from the normal product journey. Existing encrypted legacy records remain readable; new unbacked demo imports are rejected by the current Wallet/Chat flows.

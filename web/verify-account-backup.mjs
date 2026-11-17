@@ -4,7 +4,7 @@ import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {join} from 'node:path';
 const root=new URL('../',import.meta.url),run=(env={})=>spawnSync(process.execPath,['--test','web/account-backup.test.mjs'],{cwd:root,env:{...process.env,...env},windowsHide:true,encoding:'utf8',timeout:90000,maxBuffer:8*1024*1024});
-const files=['web/public/account-keys.js','web/public/account-backup.js','web/public/account-sync.js','web/public/chat-store.js','web/public/identity-recovery.js','web/public/delivery-receipts.js','web/public/legacy-recovery.js','web/public/peer-crypto.js','web/public/chat-access.js','web/public/chat-restore.js','web/public/recovery-service.js','web/public/evm-vendor/identity-recovery.js','web/account-store.mjs','web/account-relay.mjs','web/account-backup.test.mjs','web/verify-account-backup.mjs'];
+const files=['web/public/account-keys.js','web/public/account-backup.js','web/public/account-sync.js','web/public/chat-store.js','web/public/identity-recovery.js','web/public/delivery-receipts.js','web/public/legacy-recovery.js','web/public/peer-crypto.js','web/public/chat-access.js','web/public/chat-restore.js','web/public/recovery-service.js','web/public/contact-requests.js','web/public/contact-request-backup.js','web/public/evm-vendor/identity-recovery.js','web/account-store.mjs','web/account-relay.mjs','web/account-backup.test.mjs','web/verify-account-backup.mjs'];
 const hashes=async()=>Object.fromEntries(await Promise.all(files.map(async f=>[f,createHash('sha256').update(await readFile(new URL(f,root))).digest('hex')]))),sources=await hashes();
 const base=run();assert.equal(base.status,0,base.stdout+base.stderr);
 const alterations=[
@@ -18,10 +18,10 @@ const alterations=[
  ['revision-compare-and-swap','account-store.mjs','STORE',"if((old?.revision??0)!==expected||(old?.digest??'')!==previous)",'if(false)'],
  ['durable-retry-candidate','public/account-sync.js','SYNC','else current.accountSync.pending=pending;','else current.accountSync.pending=null;'],
  ['acknowledgement-binding','public/account-sync.js','SYNC',"assert(result.revision===pending.expected+1&&result.digest===await digest(pending.archive)&&Number.isSafeInteger(result.savedAt),",'assert(true,'],
- ['idle-device-sync','public/account-sync.js','SYNC','if(s.savedVersion===s.version&&!s.pending){await reconcileBackup(s,{request,metadata});return;}','if(s.savedVersion===s.version&&!s.pending)return;'],
+ ['idle-device-sync','public/account-sync.js','SYNC','if(s.savedVersion===s.version&&!s.pending){await reconcileBackup(s,{request:requestCurrent,metadata,check});return;}','if(s.savedVersion===s.version&&!s.pending)return;'],
  ['pending-newer-edits','public/account-sync.js','SYNC','c.savedVersion=pending.version;','c.savedVersion=c.version;'],
  ['receipt-convergence','public/account-sync.js','SYNC','if(remoteReceipt&&(!localReceipt||receiptOrder(remoteReceipt)<=receiptOrder(localReceipt)))','if(false)'],
- ['receipt-change-detection','public/account-sync.js','SYNC','r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null]','r=>[r.packet]'],
+ ['receipt-change-detection','public/account-sync.js','SYNC','r=>[r.packet,r.receiptToShare??null,r.receivedReceipt??null,r.deliveryRequested??null,r.receiptDeliveryRequested??null]','r=>[r.packet]'],
  ];
 for(const [guard,file,key,from,to]of alterations){
  const url=new URL('web/'+file,root),source=(await readFile(url,'utf8')).replaceAll('\r\n','\n');assert.equal(source.split(from).length,2,guard);
